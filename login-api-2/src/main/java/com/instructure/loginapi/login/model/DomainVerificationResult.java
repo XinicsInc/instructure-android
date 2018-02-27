@@ -129,7 +129,7 @@ public class DomainVerificationResult implements Parcelable {
             protocol = api_protocol;
         }
         else {
-            protocol = "https";
+            protocol = "http";
         }
     }
 

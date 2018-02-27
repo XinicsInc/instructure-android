@@ -345,8 +345,16 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         @Override
         public void onResponse(Response<DomainVerificationResult> response, LinkHeaders linkHeaders, ApiType type) {
             if(type.isCache()) return;
-
             DomainVerificationResult domainVerificationResult = response.body();
+
+            //로그인 URL을 만들기 위해 값을 하드코딩함
+            domainVerificationResult.setApi_key("TOMOu3w6eXzduFgAjHt6tM7jZYVStoB3t4gIVl34R5PD4TnAoi3y48zPJPACIsNJ");
+            domainVerificationResult.setAuthorized(true);
+            domainVerificationResult.setBase_url("http://xgcanvas2.westus2.cloudapp.azure.com");
+            domainVerificationResult.setClient_id("10000000000003");
+            domainVerificationResult.setClient_secret("TOMOu3w6eXzduFgAjHt6tM7jZYVStoB3t4gIVl34R5PD4TnAoi3y48zPJPACIsNJ");
+            domainVerificationResult.setResult(DomainVerificationResult.DomainVerificationCode.Success);
+
 
             if (domainVerificationResult.getResult() == DomainVerificationResult.DomainVerificationCode.Success) {
                 //Domain is now verified.
@@ -469,7 +477,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
             //Skip mobile verify
             builder.appendQueryParameter("redirect_uri", "urn:ietf:wg:oauth:2.0:oob");
         } else {
-            builder.appendQueryParameter("redirect_uri", "https://canvas.instructure.com/login/oauth2/auth");
+            builder.appendQueryParameter("redirect_uri", "http://xgcanvas2.westus2.cloudapp.azure.com/login/oauth2/auth");
         }
 
         //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.

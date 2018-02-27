@@ -301,6 +301,9 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
                 domains.add(5, createAccountForDebugging("mobileqa.test.instructure.com"));
             }
 
+            //Debuga모드일 때만 우리 사이트를 찾을 수 있도록 도메인 코드를 추가함
+            domains.add(6, createAccountForDebugging("http://xgcanvas2.westus2.cloudapp.azure.com"));
+
             if (mDomainAdapter != null) {
                 mDomainAdapter.setItems(domains);
                 mDomainAdapter.getFilter().filter(mDomainInput.getText().toString());
