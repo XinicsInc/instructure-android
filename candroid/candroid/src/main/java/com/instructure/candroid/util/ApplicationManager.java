@@ -79,7 +79,8 @@ public class ApplicationManager extends MultiDexApplication implements Analytics
     @Override
     public void onCreate() {
         super.onCreate();
-        initPSPDFKit();
+        //Bundle Identifier가 같아 인증이 안되는 것 같은데. 일단 임시 주석처리함.
+        //initPSPDFKit();
         Fabric.with(this, new Crashlytics());
 
         CanvasContextColor.init(getPrefs(getApplicationContext()), R.color.defaultPrimary, R.color.defaultPrimaryDark);
