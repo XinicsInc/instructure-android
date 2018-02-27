@@ -31,8 +31,8 @@ repositories {
     maven {
         url 'https://customers.pspdfkit.com/maven/'
         credentials {
-            username pspdfMavenUser
-            password pspdfMavenPass
+            username 'pspdfkit'
+            password 'TRIAL-Gkpss4ZmwCOyNtJeyQTcSZVIMoL1jmcb8STL4Y_RNt2nLsKxw3HLhkR9q6UKawrAF2CKzojYBpu3uLmU80HtPA'
         }
     }
     flatDir {
@@ -150,8 +150,8 @@ android {
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
         /* Add private data */
-        buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfLicenseKey\""
-        buildConfigField "String", "PUSH_SERVICE_PROJECT_ID", "\"$pushServiceProjectId\""
+        buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"TRIAL-Gkpss4ZmwCOyNtJeyQTcSZVIMoL1jmcb8STL4Y_RNt2nLsKxw3HLhkR9q6UKawrAF2CKzojYBpu3uLmU80HtPA\""
+        //buildConfigField "String", "PUSH_SERVICE_PROJECT_ID", "\"$pushServiceProjectId\""
         addManifestPlaceholders([
                 crashlyticsApiKey:"$crashlyticsApiKey"
         ])
