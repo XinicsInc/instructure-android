@@ -199,4 +199,6 @@
 
     <string name="whatsYourStudentsSchoolName">Enter student\'s school name</string>
     <string name="findYourStudentsSchoolHint">Find your student\s school or district</string>
+    <string name="noGradeText">N/A</string>
+    <string name="locked">Locked</string>
 </resources>

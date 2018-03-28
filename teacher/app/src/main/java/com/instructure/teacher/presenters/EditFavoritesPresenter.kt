@@ -48,11 +48,11 @@ class EditFavoritesPresenter(filter: (Course) -> Boolean) : SyncPresenter<Canvas
         loadData(forceNetwork)
     }
 
-    //region Favorite Courses Request
+    //region FavoriteApiModel Courses Request
 
     private val mCoursesCallback = object :  StatusCallback<List<Course>>() {
         override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-            data.addOrUpdate(response.body().filter(filter))
+            response.body()?.let { data.addOrUpdate(it.filter(filter)) }
         }
 
         override fun onFinished(type: ApiType) {
@@ -69,7 +69,7 @@ class EditFavoritesPresenter(filter: (Course) -> Boolean) : SyncPresenter<Canvas
                 EventBus.getDefault().postSticky(CourseUpdatedEvent(canvasContext as Course))
             }
 
-            override fun onFail(response: Call<Favorite>, error: Throwable) {
+            override fun onFail(call: Call<Favorite>?, error: Throwable, response: Response<*>?) {
                 //we already set the canvasContext to be favorited before we made the api call. Because it
                 //failed we need to flip it
                 (canvasContext as Course).isFavorite = !canvasContext.isFavorite

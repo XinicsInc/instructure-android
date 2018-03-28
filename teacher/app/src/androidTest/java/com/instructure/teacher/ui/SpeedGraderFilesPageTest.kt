@@ -15,15 +15,22 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.models.CanvasUser
+import com.instructure.soseedy.*
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
+import com.instructure.soseedy.SubmissionType.*
 
-class SpeedGraderFilesPageTest : TeacherTest(){
+class SpeedGraderFilesPageTest : TeacherTest() {
 
     @Test
     override fun displaysPageObjects() {
-        goToSpeedGraderFilesPage()
+        goToSpeedGraderFilesPage(
+                submissions = listOf(
+                        SubmissionSeed.newBuilder()
+                                .setSubmissionType(ONLINE_UPLOAD)
+                                .setAmount(1)
+                                .setFileType(FileType.TEXT).build())
+        )
         speedGraderFilesPage.assertPageObjects()
     }
 
@@ -35,28 +42,66 @@ class SpeedGraderFilesPageTest : TeacherTest(){
 
     @Test
     fun displaysFilesList() {
-        goToSpeedGraderFilesPage()
-        speedGraderFilesPage.assertHasFiles(getNextSubmission().attachments)
+        val submissions = goToSpeedGraderFilesPage(
+                submissions = listOf(
+                        SubmissionSeed.newBuilder()
+                                .setSubmissionType(ONLINE_UPLOAD)
+                                .setAmount(1)
+                                .setFileType(FileType.TEXT).build())
+        )
+        speedGraderFilesPage.assertHasFiles(submissions.getSubmissions(0).attachmentsList)
     }
 
     @Test
     fun displaysSelectedFile() {
-        goToSpeedGraderFilesPage()
-        val position = 1
+        goToSpeedGraderFilesPage(
+                submissions = listOf(
+                        SubmissionSeed.newBuilder()
+                                .setSubmissionType(ONLINE_UPLOAD)
+                                .setAmount(1)
+                                .setFileType(FileType.TEXT).build())
+        )
+        val position = 0
+
         speedGraderFilesPage.selectFile(position)
         speedGraderFilesPage.assertFileSelected(position)
     }
 
-    private fun goToSpeedGraderFilesPage(): CanvasUser {
-        val teacher = logIn()
-        val course = getNextCourse()
+    private fun goToSpeedGraderFilesPage(assignments: Int = 1,
+                                         withDescription: Boolean = false,
+                                         lockAt: String = "",
+                                         unlockAt: String = "",
+                                         submissions: List<SubmissionSeed> = emptyList(),
+                                         submissionComments: List<CommentSeed> = emptyList()): SeededCourseAssignmentSubmissions {
+        val data = seedData(teachers = 1, favoriteCourses = 1, students = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+        val assignment = seedAssignments(
+                assignments = assignments,
+                courseId = course.id,
+                withDescription = withDescription,
+                lockAt = lockAt,
+                unlockAt = unlockAt,
+                submissionTypes = submissions.map { it.submissionType },
+                teacherToken = teacher.token)
+
+        val submissionList = seedAssignmentSubmission(
+                submissionSeeds = submissions,
+                assignmentId = assignment.assignmentsList[0].id,
+                courseId = course.id,
+                studentToken = if (data.studentsList.isEmpty()) "" else data.studentsList[0].token,
+                commentSeeds = submissionComments
+        )
+
+        tokenLogin(teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(getNextAssignment())
+        assignmentListPage.clickAssignment(assignment.assignmentsList[0])
         assignmentDetailsPage.openSubmissionsPage()
-        assignmentSubmissionListPage.clickSubmission(getNextStudent(course))
-        speedGraderPage.selectFilesTab()
-        return teacher
-    }
+        assignmentSubmissionListPage.clickSubmission(student)
 
+        speedGraderPage.selectFilesTab()
+        return submissionList
+    }
 }

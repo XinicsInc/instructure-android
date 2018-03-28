@@ -41,14 +41,8 @@ import retrofit2.Response;
 public class PeopleListPresenter extends SyncPresenter<User, PeopleListView> {
 
 
-    public enum PeopleFilter{
-        SORT_BY_NAME,
-        SORT_GRADE_HIGH_TO_LOW,
-        SORT_GRADE_LOW_TO_HIGH
-    }
-
+    private ArrayList<CanvasContext> mCanvasContextList = new ArrayList<>();
     private CanvasContext mCanvasContext;
-    private PeopleFilter mFilter = PeopleFilter.SORT_BY_NAME;
     private ArrayList<User> mUserList = new ArrayList<>();
     private RecipientRunnable mRun;
     //If we try to automate this class the handler might create some issues. Cross that bridge when we come to it
@@ -72,16 +66,45 @@ public class PeopleListPresenter extends SyncPresenter<User, PeopleListView> {
 
     @Override
     public void refresh(boolean forceNetwork) {
-        onRefreshStarted();
-        mUserListCallback.reset();
-        mUserList.clear();
-        clearData();
-        loadData(forceNetwork);
+        if (mCanvasContextList.isEmpty()) {
+            onRefreshStarted();
+            mUserListCallback.reset();
+            mUserList.clear();
+            clearData();
+            loadData(forceNetwork);
+        } else if(getViewCallback() != null) {
+            getViewCallback().checkIfEmpty();
+            getViewCallback().onRefreshFinished();
+        }
     }
+
+    private void getGroupUsers(CanvasContext group) {
+        UserManager.getAllPeopleList(group, mGroupUserCallback, true);
+    }
+
+    private StatusCallback<List<User>> mGroupUserCallback = new StatusCallback<List<User>>() {
+        @Override
+        public void onResponse(@NonNull Response<List<User>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
+            // Group user api doesn't return the enrollment, so we need to add the user from the mUserList
+            for (User user : response.body()) {
+                User currentUser = mUserList.get(mUserList.indexOf(user));
+                getData().addOrUpdate(currentUser);
+            }
+            // all the users in this group should already be in the user list, so we don't need to add them again
+        }
+
+        @Override
+        public void onFinished(ApiType type) {
+            if(getViewCallback() != null) {
+                getViewCallback().checkIfEmpty();
+                getViewCallback().onRefreshFinished();
+            }
+        }
+    };
 
     private StatusCallback<List<User>> mUserListCallback = new StatusCallback<List<User>>() {
         @Override
-        public void onResponse(Response<List<User>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<User>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             getData().addOrUpdate(response.body());
             mUserList.addAll(response.body());
         }
@@ -119,7 +142,7 @@ public class PeopleListPresenter extends SyncPresenter<User, PeopleListView> {
 
     private StatusCallback<List<Recipient>> mRecipientCallback = new StatusCallback<List<Recipient>>() {
         @Override
-        public void onResponse(Response<List<Recipient>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<Recipient>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             clearData();
             getData().beginBatchedUpdates();
             for (Recipient recipient : response.body()) {
@@ -167,48 +190,79 @@ public class PeopleListPresenter extends SyncPresenter<User, PeopleListView> {
 
     @Override
     protected int compare(User item1, User item2) {
-        switch(mFilter) {
-            case SORT_BY_NAME:
-                return compareName(item1, item2);
-            case SORT_GRADE_HIGH_TO_LOW:
-                return Double.compare(getUserGrade(item2), getUserGrade(item1));
-            default:
-                //Low_to_high
-                return Double.compare(getUserGrade(item1), getUserGrade(item2));
-        }
-    }
-
-    private int compareName(User item1, User item2) {
         return item1.getSortableName().compareToIgnoreCase(item2.getSortableName());
     }
 
-    private double getUserGrade(User user) {
-        for(Enrollment enrollment : user.getEnrollments()){
-            if(enrollment.isStudent()) {
-                if (enrollment.isMultipleGradingPeriodsEnabled()) {
-                    return enrollment.getCurrentPeriodComputedCurrentScore();
-                } else {
-                    return enrollment.getCurrentScore();
-                }
-            }
-        }
-        return 0.0;
-    }
 
     @Override
     protected boolean areItemsTheSame(User user1, User user2) {
         return user1.getId() == user2.getId();
     }
 
-    public void setFilter(PeopleFilter filter) {
-        mFilter = filter;
-
-        //Reset the data to use the new filter
+    public void setCanvasContextList(ArrayList<CanvasContext> canvasContextList) {
+        mCanvasContextList.clear();
+        mGroupUserCallback.reset();
         clearData();
-        getData().addOrUpdate(mUserList);
-        if (getViewCallback() != null) {
-            getViewCallback().onRefreshFinished();
-            getViewCallback().checkIfEmpty();
+
+        for (CanvasContext canvasContext : canvasContextList) {
+            if (CanvasContext.Type.isGroup(canvasContext)) {
+                // make api call to get group members
+                getGroupUsers(canvasContext);
+            }
+            // add it to the list so we can search for sections and remember which contexts we have selected if the user re-opens the dialog
+            mCanvasContextList.add(canvasContext);
+
+        }
+
+        // we've made api calls to get the groups, now filter the rest
+        filterCanvasContexts();
+    }
+
+    public ArrayList<CanvasContext> getCanvasContextList() {
+        return mCanvasContextList;
+    }
+
+    /**
+     * Convert the list of CanvasContexts to a list of just ids so the dialog can know which CanvasContexts
+     * have been selected
+     *
+     * @return
+     */
+    public ArrayList<Long> getCanvasContextListIds() {
+        ArrayList<Long> contextIds = new ArrayList<>();
+        for(CanvasContext canvasContext : mCanvasContextList) {
+            contextIds.add(canvasContext.getId());
+        }
+        return contextIds;
+    }
+
+    public void clearCanvasContextList() {
+        mCanvasContextList.clear();
+        refresh(false);
+    }
+
+    public void filterCanvasContexts() {
+        clearData();
+
+        // filter the list based on the user's enrollments
+        if (!mCanvasContextList.isEmpty()) {
+            // get a list of ids to make it easier to check section enrollments
+            ArrayList<Long> contextIds = new ArrayList<>();
+            for(CanvasContext canvasContext : mCanvasContextList) {
+                if(CanvasContext.Type.isSection(canvasContext)) {
+                    contextIds.add(canvasContext.getId());
+                }
+            }
+
+            for (User user : mUserList) {
+                for (Enrollment enrollment: user.getEnrollments()) {
+                    if (contextIds.contains(enrollment.getCourseSectionId())) {
+                        getData().addOrUpdate(user);
+                    }
+                }
+            }
+        } else {
+            refresh(false);
         }
     }
 

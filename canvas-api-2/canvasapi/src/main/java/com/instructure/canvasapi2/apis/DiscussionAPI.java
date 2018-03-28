@@ -76,11 +76,25 @@ public class DiscussionAPI {
                 @Part("lock_at") RequestBody lockAt,
                 @Part MultipartBody.Part attachment);
 
+        @Multipart
+        @POST("{contextType}/{contextId}/discussion_topics")
+        Call<DiscussionTopicHeader> createStudentCourseDiscussion(
+                @Path("contextType") String contextType,
+                @Path("contextId") long contextId,
+                @Part("title") RequestBody title,
+                @Part("message") RequestBody message,
+                @Part("is_announcement") boolean isAnnouncement,
+                @Part("delayed_post_at") RequestBody delayedPostAt,
+                @Part("discussion_type") RequestBody discussionType,
+                @Part("require_initial_post") boolean isUsersMustPost,
+                @Part("lock_at") RequestBody lockAt,
+                @Part MultipartBody.Part attachment);
+
         @POST("{contextType}/{contextId}/discussion_topics/")
         Call<DiscussionTopicHeader> createNewDiscussion(@Path("contextType") String contextType, @Path("contextId") long courseId, @Query("title") String title, @Query("message")String message, @Query("is_announcement")int announcement, @Query("published") int published, @Query("discussion_type")String discussionType);
 
-        @GET("courses/{contextId}/discussion_topics?override_assignment_dates=true&include[]=all_dates&include[]=overrides")
-        Call<List<DiscussionTopicHeader>> getFirstPageDiscussionTopicHeaders(@Path("contextId") long contextId);
+        @GET("{contextType}/{contextId}/discussion_topics?override_assignment_dates=true&include[]=all_dates&include[]=overrides")
+        Call<List<DiscussionTopicHeader>> getFirstPageDiscussionTopicHeaders(@Path("contextType") String contextType, @Path("contextId") long contextId);
 
         @GET("{contextType}/{contextId}/discussion_topics?scope=pinned")
         Call<List<DiscussionTopicHeader>> getFirstPagePinnedDiscussions(@Path("contextType") String contextType, @Path("contextId") long courseId);
@@ -208,6 +222,28 @@ public class DiscussionAPI {
 
     }
 
+    public static void createStudentDiscussion(@NonNull RestBuilder adapter,
+                                        @NonNull RestParams params,
+                                        CanvasContext canvasContext,
+                                        DiscussionTopicHeader newDiscussionHeader,
+                                        @Nullable MultipartBody.Part attachment,
+                                        StatusCallback<DiscussionTopicHeader> callback) {
+        callback.addCall(adapter.build(DiscussionInterface.class, params)
+                .createStudentCourseDiscussion(
+                        CanvasContext.getApiContext(canvasContext),
+                        canvasContext.getId(),
+                        APIHelper.makeRequestBody(newDiscussionHeader.getTitle()),
+                        APIHelper.makeRequestBody(newDiscussionHeader.getMessage()),
+                        newDiscussionHeader.isAnnouncement(),
+                        newDiscussionHeader.getDelayedPostAt() == null ? null : APIHelper.makeRequestBody(newDiscussionHeader.getDelayedPostAt().toString()),
+                        APIHelper.makeRequestBody(newDiscussionHeader.getDiscussionType()),
+                        newDiscussionHeader.isRequireInitialPost(),
+                        newDiscussionHeader.getLockAt() == null ? null : APIHelper.makeRequestBody(newDiscussionHeader.getLockAt().toString()),
+                        attachment
+                )).enqueue(callback);
+
+    }
+
     public static void createDiscussion(@NonNull RestBuilder adapter,
                                            @NonNull RestParams params,
                                            CanvasContext canvasContext,
@@ -229,16 +265,18 @@ public class DiscussionAPI {
     }
 
 
-    public static void getDiscussions(long contextId, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {
+    public static void getDiscussions(@NonNull CanvasContext canvasContext, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {
         if (StatusCallback.isFirstPage(callback.getLinkHeaders())) {
-            callback.addCall(adapter.build(DiscussionInterface.class, params).getFirstPageDiscussionTopicHeaders(contextId)).enqueue(callback);
+            final String contextType = CanvasContext.getApiContext(canvasContext);
+            callback.addCall(adapter.build(DiscussionInterface.class, params).getFirstPageDiscussionTopicHeaders(contextType, canvasContext.getId())).enqueue(callback);
         } else if (StatusCallback.moreCallsExist(callback.getLinkHeaders()) && callback.getLinkHeaders() != null) {
             callback.addCall(adapter.build(DiscussionInterface.class, params).getNextPage(callback.getLinkHeaders().nextUrl)).enqueue(callback);
         }
     }
 
-    public static void getFirstPageDiscussionTopicHeaders(long contextId, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {
-        callback.addCall(adapter.build(DiscussionInterface.class, params).getFirstPageDiscussionTopicHeaders(contextId)).enqueue(callback);
+    public static void getFirstPageDiscussionTopicHeaders(@NonNull CanvasContext canvasContext, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {
+        final String contextType = CanvasContext.getApiContext(canvasContext);
+        callback.addCall(adapter.build(DiscussionInterface.class, params).getFirstPageDiscussionTopicHeaders(contextType, canvasContext.getId())).enqueue(callback);
     }
 
     public static void getFirstPagePinnedDiscussions(@NonNull CanvasContext canvasContext, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {
@@ -278,12 +316,12 @@ public class DiscussionAPI {
     }
 
     public static void replyToDiscussionEntryWithAttachment(@NonNull RestBuilder adapter, CanvasContext canvasContext, long topicId, long entryId,
-                                                            String message, File attachment, StatusCallback<DiscussionEntry> callback, @NonNull RestParams params) {
+                                                            String message, File attachment, String mimeType, StatusCallback<DiscussionEntry> callback, @NonNull RestParams params) {
         final String contextType = CanvasContext.getApiContext(canvasContext);
 
         RequestBody messagePart = RequestBody.create(MediaType.parse("multipart/form-data"), message);
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), attachment);
+        RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), attachment);
         MultipartBody.Part attachmentPart = MultipartBody.Part.createFormData("attachment", attachment.getName(), requestFile);
 
         callback.addCall(adapter.build(DiscussionInterface.class, params).postDiscussionReplyWithAttachment(contextType, canvasContext.getId(), topicId, entryId, messagePart, attachmentPart)).enqueue(callback);
@@ -315,12 +353,12 @@ public class DiscussionAPI {
         callback.addCall(adapter.build(DiscussionInterface.class, params).postDiscussionEntry(contextType, canvasContext.getId(), topicId, messagePart)).enqueue(callback);
     }
 
-    public static void postToDiscussionTopicWithAttachment(@NonNull RestBuilder adapter, CanvasContext canvasContext, long topicId, String message, File attachment, StatusCallback<DiscussionEntry> callback, @NonNull RestParams params) {
+    public static void postToDiscussionTopicWithAttachment(@NonNull RestBuilder adapter, CanvasContext canvasContext, long topicId, String message, File attachment, String mimeType, StatusCallback<DiscussionEntry> callback, @NonNull RestParams params) {
         final String contextType = CanvasContext.getApiContext(canvasContext);
 
         RequestBody messagePart = RequestBody.create(MediaType.parse("multipart/form-data"), message);
 
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), attachment);
+        RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), attachment);
         MultipartBody.Part attachmentPart = MultipartBody.Part.createFormData("attachment", attachment.getName(), requestFile);
 
         callback.addCall(adapter.build(DiscussionInterface.class, params).postDiscussionEntryWithAttachment(contextType, canvasContext.getId(), topicId, messagePart, attachmentPart)).enqueue(callback);

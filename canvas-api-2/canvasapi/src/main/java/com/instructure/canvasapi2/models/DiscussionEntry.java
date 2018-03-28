@@ -79,8 +79,8 @@ public class DiscussionEntry extends CanvasModel<DiscussionEntry> {
         return message;
     }
 
-    public void init(DiscussionTopic topic, DiscussionEntry parent) {
-        this.parent = parent;
+    public void init(DiscussionTopic topic, DiscussionEntry parentEntry) {
+        parent = parentEntry;
 
         HashMap<Long, DiscussionParticipant> participantHashMap = topic.getParticipantsMap();
         DiscussionParticipant discussionParticipant = participantHashMap.get(getUserId());
@@ -91,7 +91,7 @@ public class DiscussionEntry extends CanvasModel<DiscussionEntry> {
             author = discussionParticipant;
         }
 
-        this._hasRated = topic.hasRated(parent.id);
+        _hasRated = topic.hasRated(id);
 
         //Get whether or not the topic is unread;
         unread = topic.getUnreadEntriesMap().containsKey(this.getId());
@@ -356,6 +356,7 @@ public class DiscussionEntry extends CanvasModel<DiscussionEntry> {
         dest.writeInt(this.ratingSum);
         dest.writeString(this.userName);
         dest.writeLong(this.editorId);
+        dest.writeInt(this._hasRated ? (byte) 1 : (byte) 0);
     }
 
     protected DiscussionEntry(Parcel in) {
@@ -378,6 +379,7 @@ public class DiscussionEntry extends CanvasModel<DiscussionEntry> {
         this.ratingSum = in.readInt();
         this.userName = in.readString();
         this.editorId = in.readLong();
+        this._hasRated = in.readByte() != 0;
     }
 
     public static final Creator<DiscussionEntry> CREATOR = new Creator<DiscussionEntry>() {

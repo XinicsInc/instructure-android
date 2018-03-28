@@ -32,12 +32,15 @@ object NotificationPreferencesManager : BaseManager() {
     fun getNotificationPreferences(
             userId: Long,
             commChannelId: Long,
+            forceNetwork: Boolean,
             callback: StatusCallback<NotificationPreferenceResponse>) {
         if (isTesting() || mTesting) {
             // TODO
         } else {
             val adapter = RestBuilder(callback)
-            val params = RestParams.Builder().build()
+            val params = RestParams.Builder()
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build()
             NotificationPreferencesAPI.getNotificationPreferences(
                     userId,
                     commChannelId,
@@ -62,6 +65,28 @@ object NotificationPreferencesManager : BaseManager() {
             NotificationPreferencesAPI.updateMultipleNotificationPreferences(
                     commChannelId,
                     notifications,
+                    frequency,
+                    adapter,
+                    params,
+                    callback
+            )
+        }
+    }
+
+    @JvmStatic
+    fun updatePreferenceCategory(
+            categoryName: String,
+            channelId: Long,
+            frequency: String,
+            callback: StatusCallback<NotificationPreferenceResponse>) {
+        if (isTesting() || mTesting) {
+            // TODO
+        } else {
+            val adapter = RestBuilder(callback)
+            val params = RestParams.Builder().build()
+            NotificationPreferencesAPI.updatePreferenceCategory(
+                    categoryName,
+                    channelId,
                     frequency,
                     adapter,
                     params,

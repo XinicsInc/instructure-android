@@ -17,12 +17,12 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,11 +32,13 @@ import android.widget.Toast;
 import com.instructure.candroid.R;
 import com.instructure.candroid.activity.ParentActivity;
 import com.instructure.candroid.adapter.NotificationListRecyclerAdapter;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl;
+import com.instructure.interactions.Navigation;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.interfaces.NotificationAdapterToFragmentCallback;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.RouterUtils;
-import com.instructure.canvasapi2.models.BasicUser;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Conversation;
 import com.instructure.canvasapi2.models.Course;
@@ -44,18 +46,19 @@ import com.instructure.canvasapi2.models.Group;
 import com.instructure.canvasapi2.models.StreamItem;
 import com.instructure.canvasapi2.models.Submission;
 import com.instructure.canvasapi2.models.Tab;
-import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.canvasapi2.utils.pageview.PageView;
 import com.instructure.pandarecycler.PandaRecyclerView;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@PageView
 public class NotificationListFragment extends ParentFragment {
 
     //View
     private View mRootView;
     private View mEditOptions;
+    private Toolbar mToolbar;
 
     private NotificationAdapterToFragmentCallback<StreamItem> mAdapterToFragmentCallback;
     private NotificationListRecyclerAdapter mRecyclerAdapter;
@@ -66,12 +69,23 @@ public class NotificationListFragment extends ParentFragment {
         void invalidateNotificationsCount();
     }
 
-    @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.MASTER; }
+    @PageViewUrl
+    @SuppressWarnings("unused")
+    private String makePageViewUrl() {
+        String url = ApiPrefs.getFullDomain();
+        if (getCanvasContext().getType() == CanvasContext.Type.USER) return url;
+        return url + getCanvasContext().toAPIString();
+    }
 
     @Override
-    public String getFragmentTitle() {
-        return getString(R.string.notifications);
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.MASTER; }
+
+    @Override
+    @NonNull
+    public String title() {
+        if(navigationContextIsCourse()) return getString(R.string.homePageIdForNotifications);
+        else return getString(R.string.notifications);
     }
 
     @Override
@@ -86,11 +100,6 @@ public class NotificationListFragment extends ParentFragment {
         return Tab.NOTIFICATIONS_ID;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // LifeCycle
-    ///////////////////////////////////////////////////////////////////////////
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +109,7 @@ public class NotificationListFragment extends ParentFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = getLayoutInflater().inflate(R.layout.fragment_list_notification, container, false);
-
+        mToolbar = mRootView.findViewById(R.id.toolbar);
         mAdapterToFragmentCallback = new NotificationAdapterToFragmentCallback<StreamItem>() {
             @Override
             public void onRowClicked(StreamItem streamItem, int position, boolean isOpenDetail) {
@@ -127,9 +136,9 @@ public class NotificationListFragment extends ParentFragment {
             }
         };
         mRecyclerAdapter = new NotificationListRecyclerAdapter(getContext(), getCanvasContext(), onNotificationCountInvalidated, mAdapterToFragmentCallback);
-        configureRecyclerViewAsGrid(mRootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
 
-        PandaRecyclerView pandaRecyclerView = (PandaRecyclerView) mRootView.findViewById(R.id.listView);
+        PandaRecyclerView pandaRecyclerView = mRootView.findViewById(R.id.listView);
         pandaRecyclerView.setSelectionEnabled(false);
         configureViews(mRootView);
 
@@ -137,16 +146,28 @@ public class NotificationListFragment extends ParentFragment {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        configureRecyclerViewAsGrid(mRootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mToolbar.setTitle(title());
     }
 
-    public String getTitle() {
-        if (getCanvasContext() != null && getCanvasContext().getType() == CanvasContext.Type.COURSE) {
-            return getString(R.string.Notifications);
+    @Override
+    public void applyTheme() {
+        CanvasContext canvasContext = getCanvasContext();
+        if(canvasContext instanceof Course || canvasContext instanceof Group) {
+            PandaViewUtils.setupToolbarBackButton(mToolbar, this);
+            ViewStyler.themeToolbar(getActivity(), mToolbar, canvasContext);
+        } else {
+            Navigation navigation = getNavigation();
+            if(navigation != null) navigation.attachNavigationDrawer(this, mToolbar);
+            //Styling done in attachNavigationDrawer
         }
-        return "";
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
     }
 
     /* fixme not sure Unread count is even used anymore, but the code is still here if it is ever put in again
@@ -232,73 +253,64 @@ public class NotificationListFragment extends ParentFragment {
 
         switch (streamItem.getType()) {
             case SUBMISSION:
-                if (streamItem.getAssignment() == null) {
-                    fragment = FragUtils.getFrag(AssignmentFragment.class, AssignmentFragment.createBundle((Course)streamItem.getCanvasContext(), streamItem.getAssignmentId()));
-                } else {
+                if (streamItem.getAssignment() == null && streamItem.getCanvasContext() instanceof Course) {
+                    fragment = FragUtils.getFrag(AssignmentFragment.class, AssignmentFragment.Companion.createBundle(streamItem.getCanvasContext(), streamItem.getAssignmentId()));
+                } else if(streamItem.getAssignment() != null && streamItem.getCanvasContext() instanceof Course){
                     //add an empty submission with the grade to the assignment so that we can see the score.
                     Submission emptySubmission = new Submission();
                     emptySubmission.setGrade(streamItem.getGrade());
                     streamItem.getAssignment().setSubmission(emptySubmission);
-                    fragment = FragUtils.getFrag(AssignmentFragment.class, AssignmentFragment.createBundle((Course)streamItem.getCanvasContext(), streamItem.getAssignment()));
+                    fragment = FragUtils.getFrag(AssignmentFragment.class, AssignmentFragment.Companion.createBundle((Course)streamItem.getCanvasContext(), streamItem.getAssignment()));
                 }
                 break;
             case ANNOUNCEMENT:
-                fragment = FragUtils.getFrag(DetailedDiscussionFragment.class, DetailedDiscussionFragment.createBundle(streamItem.getCanvasContext(), streamItem.getDiscussionTopicId(), true));
+                if(streamItem.getCanvasContext() != null) {
+                    fragment = FragUtils.getFrag(DiscussionDetailsFragment.class, DiscussionDetailsFragment.makeBundle(streamItem.getCanvasContext(), streamItem.getDiscussionTopicId(), true));
+                }
                 break;
             case CONVERSATION:
                 Conversation conversation = streamItem.getConversation();
-
-                //Check to see if the conversation has been deleted.
-                if(conversation != null && conversation.isDeleted()){
-                    Toast.makeText(activity, R.string.deleteConversation, Toast.LENGTH_SHORT).show();
-                   return null;
-                }
-
-                //Check to see if it's unread.
-                boolean hasUnread = false;
-                boolean isStarred = false;
-                if (conversation != null && conversation.getWorkflowState() == Conversation.WorkflowState.UNREAD) {
-                    hasUnread = true;
-                    isStarred = conversation.isStarred();
-                }
-                long userId = ApiPrefs.getUser().getId();
-                String messageTitle = "";
                 if (conversation != null) {
-                    messageTitle = conversation.getMessageTitle(activity, userId, activity.getString(R.string.monologue));
+                    //Check to see if the conversation has been deleted.
+                    if (conversation.isDeleted()) {
+                        Toast.makeText(activity, R.string.deleteConversation, Toast.LENGTH_SHORT).show();
+                        return null;
+                    }
+                    Bundle extras = InboxConversationFragment.createBundle(conversation, 0, null);
+                    fragment = FragUtils.getFrag(InboxConversationFragment.class, extras);
                 }
-
-                Bundle extras = DetailedConversationFragment.createBundle(streamItem.getCanvasContext(), conversation, messageTitle, hasUnread);
-
-                List<BasicUser> conversations = new ArrayList<>();
-                if(conversation != null && conversation.getParticipants() != null) {
-                    conversations = conversation.getParticipants();
-                }
-                extras.putParcelableArrayList(Const.FROM_PEOPLE, new ArrayList<Parcelable>(conversations));
-
-                fragment = FragUtils.getFrag(DetailedConversationFragment.class, extras);
                 break;
             case DISCUSSION_TOPIC:
-                fragment = FragUtils.getFrag(DetailedDiscussionFragment.class, DetailedDiscussionFragment.createBundle(streamItem.getCanvasContext(), streamItem.getDiscussionTopicId(), false));
+                if(streamItem.getCanvasContext() != null) {
+                    fragment = FragUtils.getFrag(DiscussionDetailsFragment.class, DiscussionDetailsFragment.makeBundle(streamItem.getCanvasContext(), streamItem.getDiscussionTopicId(), false));
+                }
                 break;
             case MESSAGE:
                 if(streamItem.getAssignmentId() > 0) {
-                    fragment = FragUtils.getFrag(AssignmentFragment.class, AssignmentFragment.createBundle(activity, (Course)streamItem.getCanvasContext(), streamItem.getAssignmentId(), streamItem));
+                    if(streamItem.getCanvasContext() != null) {
+                        fragment = FragUtils.getFrag(AssignmentFragment.class, AssignmentFragment.Companion.createBundle(activity, streamItem.getCanvasContext(), streamItem.getAssignmentId(), streamItem));
+                    }
                 } else{
                     fragment = FragUtils.getFrag(UnknownItemFragment.class, UnknownItemFragment.createBundle(streamItem.getCanvasContext(), streamItem));
                 }
                 break;
             case COLLABORATION:
-                unsupportedLabel = activity.getString(R.string.collaborations);
-                fragment = FragUtils.getFrag(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(streamItem.getCanvasContext(), FRAGMENT_PLACEMENT.DETAIL, Tab.COLLABORATIONS_ID));
+                if(streamItem.getCanvasContext() != null) {
+                    unsupportedLabel = activity.getString(R.string.collaborations);
+                    fragment = UnSupportedTabFragment.createFragment(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(streamItem.getCanvasContext(), Tab.COLLABORATIONS_ID, R.string.collaborations));
+                }
                 break;
             case CONFERENCE:
-                unsupportedLabel = activity.getString(R.string.conferences);
-                fragment = FragUtils.getFrag(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(streamItem.getCanvasContext(), FRAGMENT_PLACEMENT.DETAIL, Tab.CONFERENCES_ID));
+                if(streamItem.getCanvasContext() != null) {
+                    unsupportedLabel = activity.getString(R.string.conferences);
+                    fragment = UnSupportedTabFragment.createFragment(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(streamItem.getCanvasContext(), Tab.CONFERENCES_ID, R.string.conferences));
+                }
                 break;
             default:
-                unsupportedLabel = streamItem.getType().toString();
-
-                fragment = FragUtils.getFrag(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(streamItem.getCanvasContext(), FRAGMENT_PLACEMENT.DETAIL, unsupportedLabel));
+                if(streamItem.getCanvasContext() != null) {
+                    unsupportedLabel = streamItem.getType().toString();
+                    fragment = FragUtils.getFrag(UnSupportedFeatureFragment.class, UnSupportedFeatureFragment.createBundle(streamItem.getCanvasContext(), unsupportedLabel, streamItem.getUrl()));
+                }
                 break;
         }
 
@@ -308,7 +320,7 @@ public class NotificationListFragment extends ParentFragment {
             }
         } else {
 
-            if(activity instanceof Navigation) {
+            if(activity instanceof Navigation && fragment != null) {
                 ((Navigation)activity).addFragment(fragment);
             }
 
@@ -349,10 +361,6 @@ public class NotificationListFragment extends ParentFragment {
             }
         });
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void handleIntentExtras(Bundle extras) {

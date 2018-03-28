@@ -34,14 +34,10 @@
     <string name="signIntoCanvasNetwork">Trying to sign into Canvas Network?</string>
     <string name="remove">Remove</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
-    <string name="masquerade">Masquerade</string>
     <string name="userId">User ID</string>
     <string name="domain">Domain</string>
-
-    <string name="masqueradingUserId">Masquerade User ID</string>
-    <string name="masqueradingUserDomain">Masquerade Domain</string>
-    <string name="masqueradingBegin">Begin Masquerading</string>
-    <string name="masqueradingStop">Stop Masquerading</string>
+    <string name="actAsUser">Act as User</string>
+    <string name="stopActAsUser">Stop Acting as User</string>
 
     <!--Multiple User Sign in -->
     <string name="removeUser">Remove this user?</string>
@@ -58,8 +54,8 @@
     <string name="password">Password</string>
     <string name="authenticationRequired">Authentication Required</string>
     <string name="invalidEmailPassword">Invalid email or password</string>
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
+    <string name="login">Log In</string>
+    <string name="logout">Log Out</string>
 
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Are you sure you want to logout?</string>
@@ -111,9 +107,6 @@
     <string name="previousLoginTitle">Previous Logins</string>
     <string name="canvasNetworks">Canvas Network</string>
     <string name="findMySchool">Find my school</string>
-    <string name="appTypeTeacher">Teacher</string>
-    <string name="appTypeStudent">Student</string>
-    <string name="appTypeParent">Parent</string>
     <string name="canvasLowerCase">canvas</string>
     <string name="whatsYourSchoolName">What\'s your school\'s name?</string>
     <string name="next">Next</string>
@@ -129,6 +122,10 @@
     <string name="scrollInstructions">Scroll to see all details</string>
 
     <string name="masqueradeErrorUserId">You must enter a user id.</string>
-    <string name="masqueradeErrorDomain">You must enter a domain.</string>
+    <string name="masqueradeErrorDomain">You must enter a valid domain.</string>
     <string name="masqueradeError">Error trying to masquerade.</string>
+    <string name="masqueradeInfo">\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.</string>
+    <string name="masqueradingAs">You are acting as %s</string>
+    <string name="stopActingAsTitle">Stop acting as...</string>
+    <string name="stopActingAsMessage">You will stop acting as %s and return to your account.</string>
 </resources>

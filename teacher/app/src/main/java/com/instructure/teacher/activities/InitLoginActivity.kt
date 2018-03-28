@@ -19,21 +19,25 @@ package com.instructure.teacher.activities
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
+import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
+import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
-import com.instructure.teacher.utils.ColorKeeper
+
 import com.instructure.teacher.utils.TeacherPrefs
 
 class InitLoginActivity : BaseLoginInitActivity() {
 
     override fun beginLoginFlowIntent(): Intent = LoginLandingPageActivity.createIntent(this)
-    override fun launchApplicationMainActivityIntent(): Intent = createLaunchApplicationMainActivityIntent(this)
+    override fun launchApplicationMainActivityIntent(): Intent = createLaunchApplicationMainActivityIntent(this, intent?.extras)
     override fun themeColor(): Int = ContextCompat.getColor(this, R.color.login_teacherAppTheme)
 
     override fun finish() {
@@ -48,8 +52,10 @@ class InitLoginActivity : BaseLoginInitActivity() {
             return intent
         }
 
-        fun createLaunchApplicationMainActivityIntent(context: Context): Intent {
-            return SplashActivity.createIntent(context)
+        fun createLaunchApplicationMainActivityIntent(context: Context, extras: Bundle?): Intent {
+            PushNotificationRegistrationService.scheduleJob(context, ApiPrefs.isMasquerading, BuildConfig.PUSH_SERVICE_PROJECT_ID)
+
+            return SplashActivity.createIntent(context, extras)
         }
     }
 
@@ -72,6 +78,6 @@ class InitLoginActivity : BaseLoginInitActivity() {
             ColorKeeper.hasPreviouslySynced = true
         }
         finish()
-        startActivity(SplashActivity.createIntent(this))
+        startActivity(SplashActivity.createIntent(this, intent?.extras))
     }
 }

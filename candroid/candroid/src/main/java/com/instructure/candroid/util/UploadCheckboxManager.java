@@ -28,7 +28,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.CheckedTextView;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.dialog.FileUploadDialog;
+import com.instructure.pandautils.dialogs.UploadFilesDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,14 +65,14 @@ public class UploadCheckboxManager {
         return  currentCheckBox;
     }
 
-    public FileUploadDialog.FileUploadType getSelectedType(){
+    public UploadFilesDialog.FileUploadType getSelectedType(){
         switch (currentCheckBox.getId()){
             case R.id.myFilesCheckBox:
-                return FileUploadDialog.FileUploadType.USER;
+                return UploadFilesDialog.FileUploadType.USER;
             case R.id.assignmentCheckBox:
-                return FileUploadDialog.FileUploadType.ASSIGNMENT;
+                return UploadFilesDialog.FileUploadType.ASSIGNMENT;
         }
-        return FileUploadDialog.FileUploadType.USER;
+        return UploadFilesDialog.FileUploadType.USER;
     }
 
 
@@ -124,18 +124,18 @@ public class UploadCheckboxManager {
         final float fromRatio = ((float)fromView.getHeight())/((float)selectionIndicator.getHeight());
 
         ScaleAnimation scaleAnimation
-                = new ScaleAnimation(   1.f,        // fromXType
-                                        1.f,        // toX
-                                        fromRatio,  // fromY
-                                        toRatio,    // toY
-                                        .5f,        // pivotX
-                                        0.0f);      // pivotY
+                = new ScaleAnimation(1.f,        // fromXType
+                1.f,        // toX
+                fromRatio,  // fromY
+                toRatio,    // toY
+                .5f,        // pivotX
+                0.0f);      // pivotY
 
         TranslateAnimation translateAnimation
-                = new TranslateAnimation(   Animation.RELATIVE_TO_SELF, 0.0f,       // fromXType, fromXValue
-                                            Animation.RELATIVE_TO_SELF, 0.0f,       // toXType, toXValue
-                                            Animation.ABSOLUTE, fromView.getTop(),  // fromYType, fromYValue
-                                            Animation.ABSOLUTE, toView.getTop());   // toYTyp\e, toYValue
+                = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,       // fromXType, fromXValue
+                Animation.RELATIVE_TO_SELF, 0.0f,       // toXType, toXValue
+                Animation.ABSOLUTE, fromView.getTop(),  // fromYType, fromYValue
+                Animation.ABSOLUTE, toView.getTop());   // toYTyp\e, toYValue
 
         translateAnimation.setInterpolator(new AccelerateDecelerateInterpolator());
         translateAnimation.setFillAfter(true);

@@ -25,7 +25,7 @@ import com.instructure.candroid.holders.PageViewHolder;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
 import com.instructure.canvasapi2.models.Page;
 import com.instructure.canvasapi2.utils.DateHelper;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 public class PageBinder extends BaseBinder {
 
@@ -39,12 +39,12 @@ public class PageBinder extends BaseBinder {
         holder.title.setText(page.getTitle());
 
         if (page.isFrontPage()) {
-            holder.icon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_page_fill, courseColor));
+            holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_pages, courseColor));
         } else {
-            holder.icon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_document_fill, courseColor));
+            holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_document, courseColor));
         }
 
-        holder.modifiedDate.setText(DateHelper.getFormattedDate(context, page.getUpdatedAt()));
+        holder.modifiedDate.setText(String.format(context.getString(R.string.lastModified), DateHelper.getFormattedDate(context, page.getUpdatedAt())));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

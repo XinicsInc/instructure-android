@@ -17,9 +17,9 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +27,9 @@ import android.widget.Button;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.MasteryPathOptionsRecyclerAdapter;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.ModuleManager;
@@ -41,6 +42,7 @@ import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.pandautils.utils.Const;
 
+import retrofit2.Response;
 
 public class MasteryPathOptionsFragment extends ParentFragment {
 
@@ -55,7 +57,8 @@ public class MasteryPathOptionsFragment extends ParentFragment {
     private long mModuleItemId;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.MASTER; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.MASTER; }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,7 +81,7 @@ public class MasteryPathOptionsFragment extends ParentFragment {
 
             }
         });
-        configureRecyclerViewAsGrid(mRootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
 
         //disable the swiperefreshlayout because we don't want to pull to refresh. It doesn't make an API call, so it wouldn't refresh anything
         mRootView.findViewById(R.id.swipeRefreshLayout).setEnabled(false);
@@ -97,15 +100,20 @@ public class MasteryPathOptionsFragment extends ParentFragment {
         return mRootView;
     }
 
+    @Override
+    public void applyTheme() {
+
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        configureRecyclerViewAsGrid(mRootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
     }
 
     @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.choose_assignment_group);
     }
 
@@ -113,19 +121,21 @@ public class MasteryPathOptionsFragment extends ParentFragment {
     private void setupCallbacks() {
         mSelectOptionCallback = new StatusCallback<MasteryPathSelectResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<MasteryPathSelectResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<MasteryPathSelectResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 //we have successfully selected the module. Now go back and refresh the list
                 Navigation navigation = getNavigation();
-                ModuleListFragment moduleListFragment = null;
-                if(navigation.getPeekingFragment() instanceof ModuleListFragment) {
-                    //the top fragment is the course module progression, the next one (peeking fragment) is the ModuleListFragment. We need
-                    //to refresh that because they now have selected something.
-                    moduleListFragment = ((ModuleListFragment)navigation.getPeekingFragment());
-                }
-                navigation.popCurrentFragment();
+                if(navigation != null) {
+                    ModuleListFragment moduleListFragment = null;
+                    if (navigation.getPeekingFragment() instanceof ModuleListFragment) {
+                        //the top fragment is the course module progression, the next one (peeking fragment) is the ModuleListFragment. We need
+                        //to refresh that because they now have selected something.
+                        moduleListFragment = ((ModuleListFragment) navigation.getPeekingFragment());
+                    }
+                    navigation.popCurrentFragment();
 
-                if(moduleListFragment != null) {
-                    moduleListFragment.refreshModuleList();
+                    if (moduleListFragment != null) {
+                        moduleListFragment.refreshModuleList();
+                    }
                 }
             }
         };

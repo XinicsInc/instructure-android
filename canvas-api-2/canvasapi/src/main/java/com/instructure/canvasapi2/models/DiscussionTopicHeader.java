@@ -112,6 +112,9 @@ public class DiscussionTopicHeader extends CanvasModel<DiscussionTopicHeader> {
     @SerializedName("lock_at")
     private Date lockAt;
 
+    @SerializedName("user_can_see_posts")
+    private boolean userCanSeePosts = true;
+
     @Override
     public long getId() {
         return id;
@@ -178,6 +181,7 @@ public class DiscussionTopicHeader extends CanvasModel<DiscussionTopicHeader> {
         return discussionType;
     }
 
+    @Nullable
     public String getTitle() {
         return title;
     }
@@ -324,6 +328,10 @@ public class DiscussionTopicHeader extends CanvasModel<DiscussionTopicHeader> {
 
     public Date getLockAt() {
         return lockAt;
+    }
+
+    public void setUserCanSeePosts(boolean userCanSeePosts) {
+        this.userCanSeePosts = userCanSeePosts;
     }
 
     //endregion
@@ -507,6 +515,11 @@ public class DiscussionTopicHeader extends CanvasModel<DiscussionTopicHeader> {
     public void setLockAtDate(Date lockAt) {
         this.lockAt = lockAt;
     }
+
+    public boolean getUserCanSeePosts() {
+        return userCanSeePosts;
+    }
+
     //endregion
 
     //region Parcelable
@@ -557,6 +570,7 @@ public class DiscussionTopicHeader extends CanvasModel<DiscussionTopicHeader> {
         dest.writeString(this.contextCode);
         dest.writeByte(this.subscribed ? (byte) 1 : (byte) 0);
         dest.writeLong(this.lockAt != null ? this.lockAt.getTime() : -1);
+        dest.writeByte(this.userCanSeePosts ? (byte) 1 : (byte) 0);
     }
 
     protected DiscussionTopicHeader(Parcel in) {
@@ -601,6 +615,7 @@ public class DiscussionTopicHeader extends CanvasModel<DiscussionTopicHeader> {
         this.subscribed = in.readByte() != 0;
         long tmpLockAt = in.readLong();
         this.lockAt = tmpLockAt == -1 ? null : new Date(tmpLockAt);
+        this.userCanSeePosts = in.readByte() != 0;
     }
 
     public static final Creator<DiscussionTopicHeader> CREATOR = new Creator<DiscussionTopicHeader>() {

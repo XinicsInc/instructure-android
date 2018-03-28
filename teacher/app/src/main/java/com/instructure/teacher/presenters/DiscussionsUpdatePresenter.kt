@@ -16,19 +16,18 @@
  */
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.post_models.DiscussionEntryPostBody
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.models.FileSubmitObject
 import com.instructure.teacher.viewinterface.DiscussionsUpdateView
 import instructure.androidblueprint.FragmentPresenter
-import retrofit2.Call
-import retrofit2.Response
+import kotlinx.coroutines.experimental.Job
 
 class DiscussionsUpdatePresenter(
         val canvasContext: CanvasContext,
@@ -36,65 +35,41 @@ class DiscussionsUpdatePresenter(
         val discussionEntry: DiscussionEntry,
         val discussionTopic: DiscussionTopic) : FragmentPresenter<DiscussionsUpdateView>() {
 
+    private var updateDiscussionJob: Job? = null
     var attachmentRemoved = false
 
-    override fun loadData(forceNetwork: Boolean) {
+    override fun loadData(forceNetwork: Boolean) {}
 
-    }
-
-    override fun refresh(forceNetwork: Boolean) {
-        mSendMessageCallback.reset()
-        mEditMessageWithAttachmentCallback.reset()
-    }
+    override fun refresh(forceNetwork: Boolean) {}
 
     fun editMessage(message: String?) {
-        //Handle debouncing
-        if(mEditMessageWithAttachmentCallback.isCallInProgress || mSendMessageCallback.isCallInProgress) {
+        if(updateDiscussionJob?.isActive == true) {
             viewCallback?.messageFailure(REASON_MESSAGE_IN_PROGRESS)
             return
         }
 
-        if(message == null) {
-            viewCallback?.messageFailure(REASON_MESSAGE_EMPTY)
-        } else {
-            if (attachmentRemoved) {
-                discussionEntry.attachments = null
-            }
+        updateDiscussionJob = tryWeave {
+            if (attachmentRemoved) discussionEntry.attachments = null
 
-            DiscussionManager.updateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntry.id,
-                    DiscussionEntryPostBody(message, discussionEntry.attachments), mSendMessageCallback)
-
-        }
-    }
-
-    private val mSendMessageCallback = object : StatusCallback<DiscussionEntry>() {
-        override fun onResponse(response: Response<DiscussionEntry>, linkHeaders: LinkHeaders, type: ApiType) {
-            if (response.code() in 200..299) {
-                val entry = response.body()
-                // Server doesn't send back attachments in the response for some reason
-                entry.attachments = discussionEntry.attachments
-                viewCallback?.messageSuccess(entry)
+            if(message == null) {
+                viewCallback?.messageFailure(REASON_MESSAGE_EMPTY)
             } else {
-                viewCallback?.messageFailure(REASON_MESSAGE_FAILED_TO_SEND)
+                val response = awaitApiResponse<DiscussionEntry> {
+                    DiscussionManager.updateDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntry.id,
+                            DiscussionEntryPostBody(message, discussionEntry.attachments), it) }
+
+                if (response.code() in 200..299) {
+                    response.body()?.let {
+                        // Server doesn't send back attachments in the response for some reason
+                        it.attachments = discussionEntry.attachments
+                        viewCallback?.messageSuccess(it)
+                    }
+                } else {
+                    viewCallback?.messageFailure(REASON_MESSAGE_FAILED_TO_SEND)
+                }
             }
-        }
-
-        override fun onFail(response: Call<DiscussionEntry>, error: Throwable) {
-            error.printStackTrace()
-            viewCallback?.messageFailure(REASON_MESSAGE_FAILED_TO_SEND)
-        }
-    }
-
-    private val mEditMessageWithAttachmentCallback = object : StatusCallback<DiscussionEntry>() {
-        override fun onResponse(response: Response<DiscussionEntry>, linkHeaders: LinkHeaders, type: ApiType) {
-            if (response.code() in 200..299) {
-                viewCallback?.messageSuccess(response.body())
-            } else {
-                viewCallback?.messageFailure(REASON_MESSAGE_FAILED_TO_SEND)
-            }
-        }
-
-        override fun onFail(response: Call<DiscussionEntry>, error: Throwable) {
+        } catch  {
+            //Message update failure
             viewCallback?.messageFailure(REASON_MESSAGE_FAILED_TO_SEND)
         }
     }
@@ -104,5 +79,10 @@ class DiscussionsUpdatePresenter(
         val REASON_MESSAGE_EMPTY = 2
         val REASON_MESSAGE_FAILED_TO_SEND = 3
         var attachment: FileSubmitObject? = null
+    }
+
+    override fun onDestroyed() {
+        super.onDestroyed()
+        updateDiscussionJob?.cancel()
     }
 }

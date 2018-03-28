@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@
     <string name="tab_inbox">Inbox</string>
     <string name="tab_details">Details</string>
     <string name="tab_questions">Vragen</string>
-    <string name="tab_submissions">Inzendingen</string>
+    <string name="tab_submissions">Inleveringen</string>
     <string name="tab_assignments">Opdrachten</string>
     <string name="tab_profile">Profiel</string>
     <string name="tab_people">Personen</string>
@@ -29,9 +29,10 @@
     <string name="tab_discussions">Discussies</string>
     <string name="tab_announcements">Aankondigingen</string>
     <string name="tab_attendance">Aanwezigheid</string>
+    <string name="tab_pages">Pagina\'s</string>
+    <string name="tab_todo">To-do lijst</string>
     <string name="content_description_school_logo">Schoollogo</string>
-    <string name="content_description_avatar">Avatar</string>
-    <string name="search_guides">Zoeken in de Canvas-handleidingen</string>
+    <string name="search_guides">In Canvas-handleidingen zoeken</string>
     <string name="canvas_guides">Canvas-handleidingen</string>
     <string name="search_guides_icon">Pictogram voor Canvas-handleidingen</string>
     <string name="search_guides_details">Antwoorden op veelgestelde vragen</string>
@@ -65,14 +66,14 @@
     <string name="newMessage">Nieuw bericht</string>
     <string name="courses">Cursussen</string>
     <string name="compose_message_no_ellipsis">Bericht opstellen</string>
-    <string name="send">Verzenden</string>
+    <string name="send">Versturen</string>
     <string name="attachment">Bijlage</string>
     <string name="attachments">Bijlagen</string>
     <string name="not_available_offline">Functionaliteit niet beschikbaar als je offline bent</string>
     <string name="empty_message">Het bericht mag niet leeg zijn!</string>
     <string name="message_has_no_recipients">Dit bericht heeft momenteel geen ontvangers.</string>
     <string name="course_spinner_title">Cursus:</string>
-    <string name="reply_to_message">Antwoorden</string>
+    <string name="reply_to_message">Antwoord</string>
     <string name="forward_message">Bericht doorsturen</string>
     <string name="label_to">Naar</string>
     <string name="label_course">Cursus</string>
@@ -84,7 +85,7 @@
     <!-- Feature Request -->
     <string name="feature_subject">Idee voor Docent-app [Android]</string>
     <string name="understand_request">De volgende informatie helpt ons een beter idee te krijgen van jouw idee:</string>
-    <string name="send_mail">E-mail verzenden&#8230; </string>
+    <string name="send_mail">E-mail versturen&#8230;</string>
 
     <string name="color_1">Rood</string>
     <string name="color_2">Felroze</string>
@@ -139,10 +140,10 @@
     <string name="with">met</string>
     <string name="discussion_attachment">Bestand bijvoegen</string>
     <string name="select_files_or_photos">Bestanden of foto\'s selecteren</string>
-    <string name="uploading_files">Bestanden uploaden&#8230;</string>
+    <string name="uploading_files">Bestanden aan het uploaden&#8230;</string>
     <string name="no_attachment">(Geen bijlage)</string>
     <string name="remove_attachment">Bijlage verwijderen</string>
-    <string name="creating_announcement">Aankondiging maken&#8230;</string>
+    <string name="creating_announcement">Aankondiging aanmaken&#8230;</string>
 
     <string name="copy_email">E-mailadres kopiëren</string>
     <string name="all_grading_periods">Alle beoordelingsperioden</string>
@@ -151,7 +152,7 @@
     <string name="icon">pictogram</string>
     <plurals name="grading_status_assignment">
         <item quantity="one">%d inzending moet beoordeeld worden</item>
-        <item quantity="other">%d inzendingen moeten beoordeeld worden</item>
+        <item quantity="other">%d inleveringen nog te beoordelen</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
@@ -166,7 +167,7 @@
 
     <string name="download_attachment">Bijlage downloaden</string>
 
-    <string name="reply">Antwoorden</string>
+    <string name="reply">Antwoord</string>
     <string name="replyAll">Allen beantwoorden</string>
     <string name="forward">Doorsturen</string>
     <string name="star">Ster</string>
@@ -211,7 +212,7 @@
     </plurals>
     <plurals name="submissionNeedsGrading">
         <item quantity="one">%d inzending moet beoordeeld worden</item>
-        <item quantity="other">%d inzendingen moeten beoordeeld worden</item>
+        <item quantity="other">%d inleveringen nog te beoordelen</item>
     </plurals>
 
     <string name="delete_assignment_message">Weet je zeker dat je deze opdracht wilt verwijderen?</string>
@@ -257,7 +258,7 @@
     <string name="content_description_course_tab">Tabblad Cursus</string>
     <string name="content_description_inbox_tab">Tabblad Inbox</string>
     <string name="content_description_profile_tab">Tabblad Profiel</string>
-    <string name="close">Sluiten</string>
+    <string name="close">Afronding</string>
     <string name="no_course_selected">Selecteer een cursus</string>
     <string name="discussion_reply_to_entry">Antwoord op discussie</string>
     <string name="announcement_reply_to_entry">Antwoord op aankondiging</string>
@@ -267,14 +268,14 @@
     <string name="error_occurred">Er is een onverwachte fout opgetreden.</string>
     <string name="no_assignments_with_file_upload">Deze cursus heeft geen opdrachten die het uploaden van bestanden toestaat.</string>
     <string name="extension_not_allowed">Het geselecteerde bestandstype is niet toegestaan.</string>
-    <string name="allowed_extensions">Toegestane extensies:&#160;</string>
+    <string name="allowed_extensions">Toegestane extensies: </string>
     <string name="files_uploaded_successfully">Bestanden zijn geüpload.</string>
     <string name="error_uploading_file">Er is een fout opgetreden bij het uploaden van je bestand. Probeer het opnieuw.</string>
-    <string name="uploading_file">Bestand uploaden&#8230;</string>
+    <string name="uploading_file">Bestanden aan het uploaden&#8230;</string>
     <string name="no_apps">Er zijn op je apparaat geen applicaties geïnstalleerd die dit bestand kunnen verwerken.</string>
     <string name="turn_in">Inleveren</string>
     <string name="error_getting_photo">Er is een fout opgetreden bij het ophalen van de foto. Probeer het opnieuw.</string>
-    <string name="loading_files_indeterminate">Bestanden laden&#8230;</string>
+    <string name="loading_files_indeterminate">Bestanden aan het laden&#8230;</string>
     <string name="no_files_uploaded">Je hebt geen bestanden geselecteerd.</string>
     <string name="file_upload_not_supported">Je kunt geen bestanden uploaden naar de geselecteerde opdracht.</string>
     <string name="one_or_more_extension_not_allowed">Een of meer bestanden hebben een bestandsextensie die niet is toegestaan.</string>
@@ -285,18 +286,18 @@
     <string name="inbox_sent">Verzonden</string>
     <string name="inbox_archived">Gearchiveerd</string>
     <string name="inbox_all_messages">Alle berichten</string>
-    <string name="uploading_file_num" formatted="false">Uploaden van %d van %d</string>
+    <string name="uploading_file_num" formatted="false">%d van %d wordt geüpload</string>
     <string name="page_not_found">Pagina niet gevonden.</string>
     <string name="no_connection">Geen verbinding</string>
     <string name="unauthorized_access">Je hebt geen toestemming voor toegang tot dit item. Of je hebt geen machtiging, of je hebt nog geen toegang (je cursus is bijvoorbeeld nog niet begonnen)</string>
     <string name="server_error">Er is een serverfout opgetreden.</string>
     <string name="error_loading_files">Er is een fout opgetreden bij het laden van je bestand. Controleer je internetverbinding en probeer het nogmaals.</string>
     <string name="files_submitted_successfully">Bestanden zijn ingediend.</string>
-    <string name="no_data_connection"> Controleer je dataverbinding en probeer het nogmaals. </string>
+    <string name="no_data_connection">Controleer je dataverbinding en probeer het nogmaals.</string>
     <string name="teacher_logout_warning">Weet je zeker dat je je wilt afmelden?</string>
     <string name="teacher_yes">Ja</string>
     <string name="teacher_no">Nee</string>
-    <string name="teacher_sending">Verzenden&#8230;</string>
+    <string name="teacher_sending">Aan het zenden&#8230;</string>
     <string name="teacher_cancel">Annuleren</string>
     <string name="teacher_okay">OK</string>
     <string name="teacher_upload">Uploaden</string>
@@ -308,14 +309,14 @@
     <!--Course Settings-->
     <string name="course_settings">Cursusinstellingen</string>
     <string name="course_name">Cursusnaam</string>
-    <string name="set_home_to">\'Start\' instellen op…</string>
+    <string name="set_home_to">\'Start\' instellen op&#8230;</string>
     <string name="course_activity_stream">Activiteitenstroom van cursus</string>
     <string name="pages_front_page">Voorpagina van pagina\'s</string>
+    <string name="frontPage">Voorpagina</string>
     <string name="course_modules">Cursusmodules</string>
     <string name="assignments_list">Opdrachtenlijst</string>
     <string name="syllabus">Syllabus</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Meerdere inleverdatums</string>
     <string name="everyone">Iedereen</string>
@@ -323,7 +324,7 @@
     <string name="unknown_student">Onbekende cursist</string>
     <string name="closed">Gesloten</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">In te leveren op %s om %s</string>
+    <string name="due_date_at_time" formatted="false">In te leveren op %1s om %2s</string>
     <string name="last_post" formatted="false">Laatste bericht %s</string>
     <string name="submission_types">Inleveringstypen</string>
     <string name="full_due_date_details">Alle details inleverdatum</string>
@@ -389,13 +390,13 @@
     <string name="content_description_submission_donut_graded" formatted="false">Beoordeeld, %s van %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Moet worden beoordeeld, %s van %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Niet ingeleverd, %s van %s</string>
-    <string name="display_grade_as">Beoordeling weergeven als&#8230;</string>
+    <string name="display_grade_as">Geef cijfer weer als&#8230;</string>
     <string name="percentage">Percentage</string>
     <string name="complete_incomplete">Compleet/incompleet</string>
     <string name="points">Punten</string>
     <string name="gpa_scale">Gemiddeld eindcijfer</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -404,7 +405,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -451,7 +452,7 @@
     <string name="rating_button_content_description_custom">Aangepaste score %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">"%1$s, %2$s</string>
+    <string name="rating_button_content_description">%1$s, %2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="one">van %s pt</item>
@@ -472,9 +473,11 @@
     <string name="assignments">Opdrachten</string>
     <string name="clear_filter">Filter wissen</string>
     <string name="due">Inleverdatum %1$s</string>
+    <string name="updated">Bijgewerkt %1$s</string>
+
     <plurals name="needsGradingCount">
         <item quantity="one">%s moet worden beoordeeld</item>
-        <item quantity="other">%s moeten beoordeeld worden</item>
+        <item quantity="other">%s nog te beoordelen</item>
     </plurals>
     <plurals name="needsGradingNoQuantity">
         <item quantity="one">Moet worden beoordeeld</item>
@@ -483,7 +486,7 @@
     <string name="at">om</string>
     <plurals name="quantityPointsAbbreviated">
         <item quantity="one">%s pt</item>
-        <item quantity="other">%s ptn</item>
+        <item quantity="other">%s punten</item>
     </plurals>
     <plurals name="quantityPointsFull">
         <item quantity="one">%s punt</item>
@@ -498,7 +501,7 @@
         <item quantity="other">%d groepen</item>
     </plurals>
     <string name="cmp_closed">Gesloten</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022  </string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">favoriet</string>
     <string name="content_description_not_favorite">niet favoriet</string>
@@ -530,10 +533,9 @@
     <string name="contentDescriptionFileIcon">Bestandspictogram</string>
     <string name="contentDescriptionExpandPage">Pagina uitvouwen</string>
     <string name="contentDescriptionCollapsePage">Pagina samenvouwen</string>
-
     <string name="noInternetConnectionTitle">Geen internetverbinding</string>
     <string name="noInternetConnectionMessage">Voor deze actie is een internetverbinding vereist.</string>
-  
+
     <string name="emptyDetailsMessage">Tik op een item in de lijst om de details te bekijken</string>
 
     <string name="assignmentQuizzes">Toetsen met opdrachten</string>
@@ -553,7 +555,7 @@
     <string name="gradedSurvey">Beoordeelde enquête</string>
     <string name="ungradedSurvey">Niet-beoordeelde enquête</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -616,8 +618,8 @@
     </plurals>
 
     <plurals name="minutes">
-        <item quantity="one">%s Minuut</item>
-        <item quantity="other">%s Minuten</item>
+        <item quantity="one">%s minuut</item>
+        <item quantity="other">%s minuten</item>
     </plurals>
 
     <string name="discussion_details">Details over discussie</string>
@@ -629,14 +631,14 @@
     <string name="discussions_unpin">Losmaken</string>
     <string name="contentDescriptionDiscussionsOverflow">Meer opties</string>
     <string name="discussions_options">Opties</string>
-    <string name="discussions_replies" formatted="false">%s Antwoorden</string>
-    <string name="discussions_unread" formatted="false">%s Ongelezen</string>
+    <string name="discussions_replies" formatted="false">%s antwoorden</string>
+    <string name="discussions_unread" formatted="false">%s ongelezen</string>
     <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
     <string name="discussions_delete_warning">Weet je zeker dat je dit antwoord wilt verwijderen?</string>
     <string name="discussions_replies_title">Antwoorden</string>
     <string name="discussions_reply">Antwoord</string>
     <string name="discussions_edit">Bewerken</string>
-    <string name="discussions_deleted" formatted="false">Verwijder dit antwoord %s</string>
+    <string name="discussions_deleted" formatted="false">Heeft dit antwoord verwijderd %s</string>
     <string name="discussions_forbidden">Antwoorden zijn alleen zichtbaar voor degenen die minimaal één antwoord hebben geplaatst.</string>
     <string name="discussions_unknown_author">Onbekende auteur</string>
     <string name="discussions_delete">Discussie verwijderen</string>
@@ -650,8 +652,8 @@
     <string name="submissionIsMediaFile">Deze inzending betreft een mediabestand</string>
     <string name="tryAgain">Opnieuw proberen</string>
     <string name="couldNotPlayFormat">Deze media-indeling wordt niet ondersteund</string>
-    <string name="openWithAnotherApp">Openen met…</string>
-    
+    <string name="openWithAnotherApp">Openen met&#8230;</string>
+
     <string name="speedgraderCommentAddedSubmission">Opdracht ingezonden. Tik om weer te geven.</string>
     <string name="speedgraderCommentSubmittedFiles">Ingezonden bestanden:</string>
     <string name="no_submission_comments">Er zijn geen opmerkingen bij de inzending</string>
@@ -699,7 +701,7 @@
     <string name="viewQuizSubmission">Inlevering weergeven</string>
     <string name="gradeQuizSubmission">Inzenden van cijfers</string>
     <string name="comment">Opmerking</string>
-    <string name="messageStudentsWho">Bericht naar cursisten die&#8230;</string>
+    <string name="messageStudentsWho">Bericht sturen naar cursisten die&#8230;</string>
 
     <string name="on">voor</string>
 
@@ -746,7 +748,7 @@
     <string name="canvasGuides">Canvas-handleidingen</string>
     <string name="featureSubject">Idee voor Canvas-docent [Android]</string>
     <string name="understandRequest">De volgende informatie helpt ons een beter idee te krijgen van jouw idee:</string>
-    <string name="sendMail">E-mail&#8230; versturen</string>
+    <string name="sendMail">E-mail versturen&#8230;</string>
     <string name="editProfile">Profiel bewerken</string>
     <string name="name">Naam</string>
     <string name="bio">Bio</string>
@@ -777,7 +779,7 @@
     <string name="addDescription">Beschrijving toevoegen</string>
     <string name="post_time">Tijd van posten</string>
     <string name="allPeople">Alle personen</string>
-    <string name="loading">Bezig met laden...</string>
+    <string name="loading">Bezig met laden&#8230;</string>
     <string name="saving">Opslaan</string>
     <string name="sendingSimple">Bezig met verzenden</string>
     <string name="uploading">Bezig met uploaden</string>
@@ -800,4 +802,92 @@
     <string name="markAllAsPresent">Allen markeren als aanwezig</string>
     <string name="calendar">Kalender</string>
     <string name="filterSections">Secties filteren</string>
+    <string name="addVideoComment">Videocommentaar toevoegen</string>
+    <string name="addAudioComment">Audiocommentaar toevoegen</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d uur, %2$d minuten en %3$d seconden</string>
+    <string name="recordingTimerSpeechDivider">%1$s van %2$s</string>
+    <string name="replay">Opnieuw afspelen</string>
+    <string name="stop">Stoppen</string>
+    <string name="startRecordingAudio">Opname audio straten</string>
+    <string name="stopRecordingAudio">Opname audio stoppen</string>
+    <string name="startRecordingVideo">Opname video starten</string>
+    <string name="stopRecordingVideo">Opname video stoppen</string>
+    <string name="closeRecordingView">Opnamevenster sluiten</string>
+    <string name="deleteRecording">Opname verwijderen</string>
+    <string name="videoCommentReplay">Opnieuw afspelen videocommentaar</string>
+    <string name="addMediaComment">Mediacommentaar toevoegen</string>
+    <string name="copyrightHolder">Houder van auteursrecht</string>
+    <string name="access">Toegang</string>
+    <string name="usageRights">Gebruiksrechten</string>
+    <string name="deleteFile">Bestand verwijderen</string>
+    <string name="holdCopyright">Ik heb het auteursrecht</string>
+    <string name="havePermission">Ik heb toestemming om het bestand te gebruiken</string>
+    <string name="publicDomain">Bestand in openbaar domein</string>
+    <string name="fairUse">Uitzondering redelijk gebruik</string>
+    <string name="creativeCommons">Creative Commons-bestand</string>
+    <string name="editFile">Bestand bewerken</string>
+    <string name="deleteFolder">Map verwijderen</string>
+    <string name="editFolder">Map bewerken</string>
+    <string name="deleteFileMessage">Weet je zeker dat je dit bestand wilt verwijderen?</string>
+    <string name="deleteFolderMessage">Weet je zeker dat je deze map wilt verwijderen? Daarmee wordt ook alle inhoud van deze map verwijderd.</string>
+    <string name="newFolder">Nieuwe map</string>
+    <string name="createAFolder">Map aanmaken</string>
+    <string name="createFolder">Map aanmaken</string>
+    <string name="createAFile">Bestand aanmaken</string>
+    <string name="createFileFolderFabContentDesc">Knoppen Bestand aanmaken en Map aanmaken weergeven</string>
+    <string name="unpublish">Publicatie ongedaan maken</string>
+    <string name="restrictedAccess">Beperkte toegang</string>
+    <string name="restricted">Beperkt</string>
+    <string name="hidden">Verborgen, bestanden zullen met links beschikbaar zijn.</string>
+    <string name="studentsWithLink">Alleen beschikbaar voor cursisten met koppeling. Niet beschikbaar in cursistbestanden.</string>
+    <string name="scheduleAvailability">Schema met beschikbaarheid van cursist</string>
+    <string name="folderCreationError">Fout tijdens het aanmaken van de map.</string>
+
+    <string name="setAsFrontPage">Instellen als voorpagina</string>
+    <string name="canEdit">Kan bewerken</string>
+    <string name="pageDetails">Paginadetails</string>
+    <string name="pageSuccessfullyUpdated">Pagina is bijgewerkt.</string>
+    <string name="pageSuccessfullyCreated">Pagina is aangemaakt.</string>
+    <string name="editPageTitle">Pagina bewerken</string>
+    <string name="createPageTitle">Pagina aanmaken</string>
+    <string name="pageTitleMustBeSet">Paginatitel moet worden ingesteld.</string>
+    <string name="pageDeleteTitle">Pagina verwijderen?</string>
+    <string name="pageDelete">Pagina verwijderen</string>
+    <string name="pageDeleteMessage">Hiermee wordt de pagina verwijderd. Deze actie kan niet ongedaan worden gemaakt.</string>
+    <string name="errorSavingPage">Er is een fout opgetreden bij het opslaan van deze pagina. Probeer het nog eens.</string>
+    <string name="frontPageUnpublishedError">Een pagina kan niet de voorpagina zijn zonder gepubliceerd te zijn.</string>
+
+    <string name="onlyTeachers">Alleen docenten</string>
+    <string name="teachersAndStudents">Docenten en cursisten</string>
+    <string name="anyone">Iedereen</string>
+    <string name="groupMembers">Alleeen leden</string>
+    <string name="license">Licentie</string>
+    <string name="availableFromAfterTo">Einddatum beschikbaarheid moet na begindatum liggen</string>
+    <string name="errorDeletingFile">Er is een fout opgetreden bij het verwijderen van dit bestand</string>
+    <string name="errorDeletingFolder">Er is een fout opgetreden bij het verwijderen van deze map</string>
+    <string name="errorUpdatingFile">Er is een fout opgetreden bij het bijwerken van dit bestand</string>
+    <string name="errorUpdatingFolder">Er is een fout opgetreden bij het bijwerken van deze map</string>
+
+    <string name="toDoEmpty">Dat was alles!\n Een fijne dag gewenst.</string>
+    <string name="toDoNoSubmissions">Er zijn geen inzendingen die voor deze opdracht moeten worden beoordeeld.</string>
+    <string name="errorToDoRouteFailed">Er is een fout opgetreden bij het weergeven van dit To-do-item.</string>
+    <string name="errorIsDesigner">Ontwerperinschrijving kan dit niet zien.</string>
+
+    <string name="sections">Secties</string>
+    <string name="filterBy">Filteren op&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">voor %s</string>
+    <string name="filterBySection">Filteren op sectie</string>
+    <string name="filterSubmissionsLowercase">Inzendingen filteren</string>
+
+    <string name="latePenalty">Sanctie indien te laat</string>
+    <string name="finalGrade">Eindcijfer</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s pt</item>
+        <item quantity="other">-%s ptn</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s punt</item>
+        <item quantity="other">-%s punten</item>
+    </plurals>
 </resources>

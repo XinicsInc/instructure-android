@@ -19,7 +19,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_attachment"
-        android:icon="@drawable/vd_attachment"
+        android:icon="@drawable/vd_utils_attachment"
         android:title="@string/attachment"
         android:visible="false"
         app:showAsAction="ifRoom" />

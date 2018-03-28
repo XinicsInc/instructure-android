@@ -64,6 +64,7 @@ def app_libraries
       'login-api-2',
       'pandautils',
       'recyclerview',
-      'rceditor'
+      'rceditor',
+      'interactions'
   ]
 end

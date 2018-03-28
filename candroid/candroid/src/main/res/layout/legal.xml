@@ -18,49 +18,132 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <TextView
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingTop="16dp">
+
+    <LinearLayout
         android:id="@+id/eula"
-        android:text="@string/EULA"
-        android:textSize="18sp"
-        android:drawablePadding="20dp"
-        android:gravity="center_vertical"
-        android:textColor="@color/defaultPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:visibility="gone"
+        tools:ignore="UseCompoundDrawables">
 
-    <TextView
-        android:layout_marginTop="10dip"
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/vd_document"/>
+
+        <TextView
+            android:id="@+id/eulaLabel"
+            style="@style/TextFont.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/EULA"
+            android:textColor="@color/defaultPrimary"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/privacyPolicy"
-        android:text="@string/privacyPolicy"
-        android:textSize="18sp"
-        android:drawablePadding="20dp"
-        android:gravity="center_vertical"
-        android:textColor="@color/defaultPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:visibility="gone"
+        tools:ignore="UseCompoundDrawables">
 
-    <TextView
-        android:layout_marginTop="10dip"
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/vd_document"/>
+
+        <TextView
+            android:id="@+id/privacyPolicyLabel"
+            style="@style/TextFont.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/privacyPolicy"
+            android:textColor="@color/defaultPrimary"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/termsOfUse"
-        android:textSize="18sp"
-        android:drawablePadding="20dp"
-        android:gravity="center_vertical"
-        android:text="@string/termsOfUse"
-        android:textColor="@color/defaultPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:visibility="gone"
+        tools:ignore="UseCompoundDrawables">
 
-    <TextView
-        android:layout_marginTop="10dip"
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/vd_document"/>
+
+        <TextView
+            android:id="@+id/termsOfUseLabel"
+            style="@style/TextFont.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/termsOfUse"
+            android:textColor="@color/defaultPrimary"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/openSource"
-        android:textSize="18sp"
-        android:drawablePadding="20dp"
-        android:gravity="center_vertical"
-        android:text="@string/openSource"
-        android:textColor="@color/defaultPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:visibility="gone"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/vd_document"/>
+
+        <TextView
+            android:id="@+id/openSourceLabel"
+            style="@style/TextFont.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/openSource"
+            android:textColor="@color/defaultPrimary"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -38,22 +38,20 @@
         android:layout_marginTop="4dp"
         android:contentDescription="@string/contentDesc_colored_calendar_indicator"
         android:gravity="center"
-        android:textColor="@color/white"
-        tools:src="@drawable/ic_bookmark_shortcut" />
+        android:textColor="@color/white" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/indicator"
-        android:layout_toStartOf="@+id/check_box"
+        android:layout_toStartOf="@+id/checkBox"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/course_name"
+            android:id="@+id/courseName"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="2"
@@ -62,20 +60,21 @@
             tools:text="This is the course name, it's really really long because I'm testing it for longness!" />
 
         <TextView
-            android:id="@+id/course_code"
+            android:id="@+id/courseCode"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textColor="@color/courseGrey"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/courseName"
+            android:textColor="@color/defaultTextGray"
             tools:text="RFC-120" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <CheckBox
-        android:id="@+id/check_box"
+        android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
         android:clickable="false"
         android:focusable="false" />

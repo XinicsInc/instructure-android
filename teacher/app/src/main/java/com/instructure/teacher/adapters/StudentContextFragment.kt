@@ -17,10 +17,12 @@ package com.instructure.teacher.adapters
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.instructure.canvasapi2.models.*
+import android.view.*
+import com.instructure.canvasapi2.StudentContextCardQuery.*
+import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.*
@@ -29,12 +31,15 @@ import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.factory.StudentContextPresenterFactory
 import com.instructure.teacher.fragments.AddMessageFragment
 import com.instructure.teacher.holders.StudentContextSubmissionView
-import com.instructure.teacher.interfaces.MasterDetailInteractions
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.teacher.presenters.StudentContextPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
-import com.instructure.teacher.utils.ProfileUtils
+import com.instructure.teacher.utils.displayText
+import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.StudentContextView
 import instructure.androidblueprint.PresenterFragment
 import kotlinx.android.synthetic.main.fragment_student_context.*
@@ -71,19 +76,22 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     override fun onPresenterPrepared(presenter: StudentContextPresenter) {}
 
     override fun onReadySetGo(presenter: StudentContextPresenter) {
-        loadMoreButton.onClick { presenter.loadMoreSubmissions() }
         if (!mHasLoaded) {
             presenter.loadData(false)
             mHasLoaded = true
         }
     }
 
-    override fun setData(course: Course, sections: List<Section>, student: User, summary: StudentSummary?, isStudent: Boolean) {
+    override fun setData(course: AsCourse, student: User, summary: Analytics?, isStudent: Boolean) {
+        val courseColor = ColorKeeper.getOrGenerateColor("course_${course.id}")
+
+        setupScrollListener()
+
         // Toolbar setup
         if (activity is MasterDetailInteractions) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this) {
                 toolbar.updateToolbarExpandCollapseIcon(this)
-                ViewStyler.themeToolbar(activity, toolbar, course.color, Color.WHITE)
+                ViewStyler.themeToolbar(activity, toolbar, courseColor, Color.WHITE)
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
         } else {
@@ -91,49 +99,58 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         }
         toolbar.title = student.name
         toolbar.subtitle = course.name
-        ViewStyler.themeToolbar(activity, toolbar, course.color, Color.WHITE)
+        ViewStyler.themeToolbar(activity, toolbar, courseColor, Color.WHITE)
 
         // Message FAB
         messageButton.setVisible()
         ViewStyler.themeFAB(messageButton, ThemePrefs.buttonColor)
         messageButton.setOnClickListener {
-            val args = AddMessageFragment.createBundle(arrayListOf(BasicUser.userToBasicUser(student)), "", course.contextId, true)
+            val basicUser = BasicUser().apply {
+                id = student.id.toLong()
+                name = student.name
+                avatarUrl = student.avatarUrl
+            }
+            val args = AddMessageFragment.createBundle(arrayListOf(basicUser), "", "course_${course.id}", true)
             RouteMatcher.route(context, Route(AddMessageFragment::class.java, null, args))
         }
 
-        // Student name and email
         studentNameView.text = student.name
-        val email = student.primaryEmail ?: student.email
-        studentEmailView.setVisible(email.isValid()).text = email
+        studentEmailView.setVisible(student.email.isValid()).text = student.email
 
         // Avatar
-        ProfileUtils.loadAvatarForUser(context, avatarView, student.name, student.avatarUrl)
+        ProfileUtils.loadAvatarForUser(avatarView, student.name, student.avatarUrl)
 
         // Course and section names
         courseNameView.text = course.name
         sectionNameView.text = if (isStudent) {
-            getString(R.string.sectionFormatted, sections.map { it.name }.joinToString())
+            getString(R.string.sectionFormatted, student.enrollments.joinToString { it.section?.name ?: "" })
         } else {
-            val getEnrollmentType = { section: Section -> student.enrollments.first { it.courseSectionId == section.id }.displayType }
-            getString(R.string.sectionFormatted, sections.map { "${it.name} (${getEnrollmentType(it)})" }.joinToString())
+            val enrollmentsString = student.enrollments.joinToString { "${it.section?.name} (${it.type.displayText})" }
+            getString(R.string.sectionFormatted, enrollmentsString)
         }
 
         // Latest activity
-        student.enrollments.firstOrNull()?.lastActivityAt?.let {
-            val dateString = DateHelper.getFormattedDate(context, student.enrollments.first().lastActivityAt)
-            val timeString = DateHelper.getFormattedTime(context, student.enrollments.first().lastActivityAt)
-            lastActivityView.text = getString(R.string.latestStudentActivityAtFormatted, dateString, timeString)
-        } ?: lastActivityView.setGone()
+        student.enrollments
+            .filter { it.lastActivityAt != null }
+            .sortedBy { it.lastActivityAt }
+            .firstOrNull()?.lastActivityAt
+            ?.let {
+                val dateString = DateHelper.getFormattedDate(context, it)
+                val timeString = DateHelper.getFormattedTime(context, it)
+                lastActivityView.text = getString(R.string.latestStudentActivityAtFormatted, dateString, timeString)
+            } ?: lastActivityView.setGone()
 
         if (isStudent) {
             // Grade
-            gradeView.text = student.enrollments.firstOrNull()?.grades?.let { it.currentGrade ?: it.currentScore.toString() } ?: "-"
+            gradeView.text = student.enrollments
+                .find { it.type == EnrollmentType.StudentEnrollment }
+                ?.grades?.let { it.currentGrade ?: it.currentScore?.toString() } ?: "-"
 
             // Missing
-            missingCountView.text = summary?.tardinessBreakdown?.missing?.toString() ?: "-"
+            missingCountView.text = summary?.tardinessBreakdown?.missing?.toInt()?.toString() ?: "-"
 
             // Late
-            lateCountView.text = summary?.tardinessBreakdown?.late?.toString() ?: "-"
+            lateCountView.text = summary?.tardinessBreakdown?.late?.toInt()?.toString() ?: "-"
         } else {
             messageButton.setGone()
             val lastIdx = scrollContent.indexOfChild(additionalInfoContainer)
@@ -141,27 +158,67 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         }
     }
 
-    override fun addSubmissions(submissions: List<Submission>, course: Course, student: User) {
+    private fun setupScrollListener() {
+        contentContainer.viewTreeObserver.addOnScrollChangedListener(scrollListener)
+    }
+
+    private val scrollListener = object : ViewTreeObserver.OnScrollChangedListener {
+
+        private var triggered = false
+        private val touchSlop by lazy { ViewConfiguration.get(context).scaledTouchSlop }
+
+        override fun onScrollChanged() {
+            if (!isAdded || contentContainer.height == 0 || scrollContent.height == 0 || loadMoreContainer.height == 0) return
+            val threshold = scrollContent.height - loadMoreContainer.top
+            val bottomOffset = contentContainer.height + contentContainer.scrollY - scrollContent.bottom
+            if (scrollContent.height <= contentContainer.height) {
+                presenter?.loadMoreSubmissions()
+            } else if (triggered && (threshold + touchSlop + bottomOffset < 0)) {
+                triggered = false
+            } else if (!triggered && (threshold + bottomOffset > 0)) {
+                triggered = true
+                presenter?.loadMoreSubmissions()
+            }
+        }
+
+    }
+
+    override fun addSubmissions(submissions: List<Submission>, course: AsCourse, student: User) {
+        val courseColor = ColorKeeper.getOrGenerateColor("course_${course.id}")
         submissions.forEach { submission ->
-            val view = StudentContextSubmissionView(context, submission, course.color)
+            val view = StudentContextSubmissionView(context, submission, courseColor)
             if (mLaunchSubmissions) view.onClick {
-                val studentSubmission = GradeableStudentSubmission(StudentAssignee(student), submission)
-                val bundle = SpeedGraderActivity.makeBundle(course, submission.assignment!!, listOf(studentSubmission), 0)
-                RouteMatcher.route(context, Route(bundle, Route.RouteContext.SPEED_GRADER))
+                val user = com.instructure.canvasapi2.models.User().apply {
+                    avatarUrl = student.avatarUrl
+                    id = student.id.toLongOrNull() ?: 0
+                    name = student.name
+                    shortName = student.shortName
+                    email = student.email
+                }
+                val studentSubmission = GradeableStudentSubmission(StudentAssignee(user), null)
+                val bundle = SpeedGraderActivity.makeBundle(
+                    course.id.toLongOrNull() ?: 0,
+                    submission.assignment?.id?.toLongOrNull() ?: 0,
+                    listOf(studentSubmission), 0)
+                RouteMatcher.route(context, Route(bundle, RouteContext.SPEED_GRADER))
             }
             submissionListContainer.addView(view)
         }
+        contentContainer.post { scrollListener.onScrollChanged() }
     }
 
-    override fun showLoadMoreButton(show: Boolean) {
-        loadMoreButton.setVisible(show)
+    override fun showLoadMoreIndicator(show: Boolean) {
+        loadMoreIndicator.setVisible(show)
     }
 
-    override fun onErrorLoading() {
-        toast(R.string.errorLoadingStudentContextCard)
+    override fun onErrorLoading(isDesigner: Boolean) {
+        if (isDesigner) {
+            toast(R.string.errorIsDesigner)
+        } else {
+            toast(R.string.errorLoadingStudentContextCard)
+        }
         activity.onBackPressed()
     }
-
 
     companion object {
         @JvmStatic

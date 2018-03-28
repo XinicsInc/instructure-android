@@ -1,51 +1,44 @@
-# Strings #
-candroid/src/main/res/values/com_crashlytics_export_strings.xml
-candroid/crashlytics.properties
-
-# built application files #
+#built application files
 *.apk
 *.ap_
 
-# files for the dex VM #
+# files for the dex VM
 *.dex
 
-# Java class files #
+# Java class files
 *.class
 
-# generated files #
-bin
-gen
-target
+# generated files
+bin/
+gen/
 
-# Local configuration file (sdk path, etc) #
+# Local configuration file (sdk path, etc)
 local.properties
 
-# Windows thumbnail db #
+# Windows thumbnail db
 Thumbs.db
 
 # OSX files
 .DS_Store
 
-# Eclipse project files #
+# Eclipse project files
 .classpath
 .project
 
-# Android Studio #
+# Android Studio
 .idea
 *.iml
-build
 *.iws
-
-# Package Files #
-*.war
-*.ear
-
-# Project Files #
-.gitconfig
+.gradle
+build/
+/build
+annotations/build
 
 # Gradle Files #
 gradle.properties
-.gradle
 
-# Private data
-pspdfkit-2.2.1/pspdfkit-2.2.1.aar
+# Private Data
+private.properties
+
+# Snicker Doodles - File added at build time, don't remove this
+snickers.json

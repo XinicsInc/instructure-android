@@ -29,13 +29,16 @@ class ContinuationCallback<T>(private val continuation: CancellableContinuation<
 
     private var succeededOrFailed = false
 
-    override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders?, type: ApiType?, code: Int) {
-        succeededOrFailed = true
-        if (continuation.isCancelled) return
-        if (response.isSuccessful) {
-            onSuccess(response.body())
-        } else {
-            onError(StatusCallbackError(response = response))
+    override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
+        synchronized(continuation) {
+            succeededOrFailed = true
+            if (continuation.isCancelled) return
+            if (response.isSuccessful) {
+                @Suppress("UNCHECKED_CAST")
+                onSuccess(response.body() as T)
+            } else {
+                onError(StatusCallbackError(response = response))
+            }
         }
     }
 
@@ -43,16 +46,12 @@ class ContinuationCallback<T>(private val continuation: CancellableContinuation<
         if (!succeededOrFailed && type != ApiType.CACHE) onError(StatusCallbackError())
     }
 
-    override fun onFail(response: Call<T>?, error: Throwable?) {
-        succeededOrFailed = true
-        if (continuation.isCancelled) return
-        onError(StatusCallbackError(response, error))
-    }
-
-    override fun onFail(callResponse: Call<T>?, error: Throwable?, response: Response<*>?) {
-        succeededOrFailed = true
-        if (continuation.isCancelled) return
-        onError(StatusCallbackError(callResponse, error, response))
+    override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
+        synchronized(continuation) {
+            succeededOrFailed = true
+            if (continuation.isCancelled) return
+            onError(StatusCallbackError(call, error, response))
+        }
     }
 }
 
@@ -60,6 +59,7 @@ suspend inline fun <reified A, reified B> awaitApis(
         crossinline callerA: (StatusCallback<A>) -> Unit,
         crossinline callerB: (StatusCallback<B>) -> Unit
 ): Pair<A, B> {
+    val originStackTrace = Thread.currentThread().stackTrace
     return suspendCancellableCoroutine { continuation ->
 
         val payloads = arrayOfNulls<Any?>(2)
@@ -79,7 +79,7 @@ suspend inline fun <reified A, reified B> awaitApis(
         val onError: ErrorCall = {
             callbackA.cancel()
             callbackB.cancel()
-            continuation.resumeSafelyWithException(it)
+            continuation.resumeSafelyWithException(it, originStackTrace)
         }
 
         callbackA.onError = onError
@@ -102,6 +102,7 @@ suspend inline fun <reified A, reified B, reified C> awaitApis(
         crossinline callerB: (StatusCallback<B>) -> Unit,
         crossinline callerC: (StatusCallback<C>) -> Unit
 ): Triple<A, B, C> {
+    val originStackTrace = Thread.currentThread().stackTrace
     return suspendCancellableCoroutine { continuation ->
 
         val payloads = arrayOfNulls<Any?>(3)
@@ -123,7 +124,7 @@ suspend inline fun <reified A, reified B, reified C> awaitApis(
             callbackA.cancel()
             callbackB.cancel()
             callbackC.cancel()
-            continuation.resumeSafelyWithException(it)
+            continuation.resumeSafelyWithException(it, originStackTrace)
         }
 
         callbackA.onError = onError

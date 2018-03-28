@@ -17,8 +17,8 @@ package com.instructure.teacher.ui
 
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.TestRail
-import com.instructure.teacher.ui.utils.getNextCourse
-import com.instructure.teacher.ui.utils.logIn
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class CourseBrowserPageTest : TeacherTest() {
@@ -26,8 +26,11 @@ class CourseBrowserPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3108909")
     override fun displaysPageObjects() {
-        logIn()
-        coursesListPage.openCourse(getNextCourse())
+        val data = seedData(teachers = 1, favoriteCourses = 3)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        tokenLogin(teacher)
+        coursesListPage.openCourse(course)
         courseBrowserPage.assertPageObjects()
     }
 }

@@ -45,16 +45,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "com.android.support:appcompat-v7:$GLOBAL_SUPPORT_LIBRARY_VERSION"
-    testCompile 'junit:junit:4.12'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'com.google.android.support:wearable:2.0.0-alpha3'
-    compile "com.google.android.gms:play-services-wearable:$GLOBAL_PLAY_SERVICES_VERSION"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$GLOBAL_KOTLIN_VERSION"
-}
-repositories {
+    implementation ("com.android.support:appcompat-v7:$GLOBAL_SUPPORT_LIBRARY_VERSION")
+    testImplementation 'junit:junit:4.12'
+    api 'com.google.code.gson:gson:2.4'
+    api 'com.google.android.support:wearable:2.0.0-alpha3'
+    api 'com.google.android.wearable:wearable:2.0.0-alpha3'
+    api "com.google.android.gms:play-services-wearable:$GLOBAL_PLAY_SERVICES_VERSION"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$GLOBAL_KOTLIN_VERSION"
 }

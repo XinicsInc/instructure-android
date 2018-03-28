@@ -17,18 +17,21 @@
 package com.instructure.teacher.ui.pages
 
 import android.support.test.espresso.Espresso
+import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.contrib.PickerActions
-import android.support.test.espresso.matcher.ViewMatchers
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.widget.DatePicker
 import android.widget.TimePicker
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.espresso.ClickUntilMethod
+import com.instructure.espresso.WaitForViewMatcher.waitForView
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
 import com.instructure.teacher.view.AssignmentOverrideView
-import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,12 +42,12 @@ class EditQuizDetailsPage : BasePage(), PageAssert by SimplePageAssert() {
     private val publishSwitch by WaitForViewWithId(R.id.publishSwitch)
     private val accessCodeSwitch by WaitForViewWithId(R.id.accessCodeSwitch)
     private val accessCodeEditText by WaitForViewWithId(R.id.editAccessCode)
-    private val saveButton by OnViewWithId(R.id.menu_save)
+    private val saveButton by OnViewWithId(R.id.menuSave)
     private val descriptionWebView by OnViewWithId(R.id.descriptionWebView, autoAssert = false)
     private val noDescriptionTextView by OnViewWithId(R.id.noDescriptionTextView, autoAssert = false)
 
     fun saveQuiz() {
-        saveButton.click()
+        callOnClick(withId(R.id.menuSave))
     }
 
     fun clickQuizTitleEditText() {
@@ -90,18 +93,27 @@ class EditQuizDetailsPage : BasePage(), PageAssert by SimplePageAssert() {
         onViewWithId(android.R.id.button1).click()
     }
 
-    fun removeFirstOverride() {
-        waitForViewWithContentDescription("remove_override_button_0").scrollTo().click()
+    fun removeSecondOverride() {
+        // scroll to bottom to make the 2nd override button visible
+        addOverrideButton().scrollTo()
+
+        ClickUntilMethod.run(
+                onView(withContentDescription("remove_override_button_1")),
+                onView(withText("Remove Due Date"))
+        )
+
+        // Wait for alert dialog to display before clicking "Remove"
+        waitForViewWithText(R.string.removeDueDate).assertVisible()
         waitForViewWithText(R.string.remove).click()
     }
 
     fun assertDateChanged(year: Int, month: Int, dayOfMonth: Int, id: Int) {
-        val cal = Calendar.getInstance().apply {set(year, month, dayOfMonth)}
+        val cal = Calendar.getInstance().apply { set(year, month, dayOfMonth) }
         waitForViewWithId(id).assertHasText(DateHelper.getFullMonthNoLeadingZeroDateFormat().format(cal.time))
     }
 
     fun assertTimeChanged(hour: Int, min: Int, id: Int) {
-        val cal = Calendar.getInstance().apply {set(0, 0, 0, hour, min)}
+        val cal = Calendar.getInstance().apply { set(0, 0, 0, hour, min) }
         val sdh = SimpleDateFormat("H:mm a", Locale.US)
         waitForViewWithId(id).assertHasText(sdh.format(cal.time))
     }
@@ -127,8 +139,11 @@ class EditQuizDetailsPage : BasePage(), PageAssert by SimplePageAssert() {
     }
 
     fun assertNoAssigneesErrorShown() {
-        Espresso.onView(withIndex(ViewMatchers.withId(R.id.assignToTextInput), 1)).check(ViewAssertions.matches(hasTextInputLayoutErrorText(R.string.assignee_blank_error)))
+        Espresso.onView(withIndex(withId(R.id.assignToTextInput), 1)).check(ViewAssertions.matches(hasTextInputLayoutErrorText(R.string.assignee_blank_error)))
     }
+
+    private fun addOverrideButton() = waitForView(allOf(withId(R.id.addOverride),
+            withEffectiveVisibility(Visibility.VISIBLE)))
 
     fun editAssignees() = waitForViewWithId(R.id.assignTo).scrollTo().click()
     fun clickEditDueDate() = waitForViewWithId(R.id.dueDate).scrollTo().click()
@@ -137,5 +152,5 @@ class EditQuizDetailsPage : BasePage(), PageAssert by SimplePageAssert() {
     fun clickEditUnlockTime() = waitForViewWithId(R.id.fromTime).scrollTo().click()
     fun clickEditLockDate() = waitForViewWithId(R.id.toDate).scrollTo().click()
     fun clickEditLockTime() = waitForViewWithId(R.id.toTime).scrollTo().click()
-    fun clickAddOverride() = Espresso.onView(CoreMatchers.allOf(ViewMatchers.withId(R.id.addOverride), ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))).scrollTo().click()
+    fun clickAddOverride() = addOverrideButton().scrollTo().click()
 }

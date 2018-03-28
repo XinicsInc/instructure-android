@@ -83,8 +83,6 @@ public class ParentInstructureRunner extends AndroidJUnitRunner {
         TestButler.setup(InstrumentationRegistry.getTargetContext());
 
         enableScreenshots();
-        // Ensure screenshots from previous runs are removed.
-        EspressoScreenshot.deleteAllScreenshots();
 
         OkHttpClient client = CanvasRestAdapter.getOkHttpClient();
         resource = OkHttp3IdlingResource.create("okhttp", client);

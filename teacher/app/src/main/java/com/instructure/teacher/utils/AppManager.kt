@@ -27,11 +27,13 @@ import com.instructure.canvasapi2.models.CanvasErrorCode
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.tasks.LogoutAsyncTask
 import com.pspdfkit.PSPDFKit
+import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 import io.fabric.sdk.android.Fabric
 import org.greenrobot.eventbus.EventBus
@@ -61,6 +63,8 @@ class AppManager : com.instructure.canvasapi2.AppManager() {
             PSPDFKit.initialize(this, BuildConfig.PSPDFKIT_LICENSE_KEY)
         } catch (e: PSPDFKitInitializationFailedException) {
             Logger.e("Current device is not compatible with PSPDFKIT!")
+        } catch (e: InvalidPSPDFKitLicenseException) {
+            Logger.e("Invalid or Trial PSPDFKIT License!")
         }
 
         EventBus.getDefault().register(this)
@@ -83,10 +87,7 @@ class AppManager : com.instructure.canvasapi2.AppManager() {
     fun onAssignmentDeleted(event: CanvasErrorCode) {
         if(event.code == 401) {
             UserManager.getSelf(true, object: StatusCallback<User>(){
-                override fun onFail(callResponse: Call<User>?, error: Throwable?, response: Response<*>?) {
-                    LogoutAsyncTask().execute()
-                }
-                override fun onFail(response: Call<User>?, error: Throwable?) {
+                override fun onFail(callResponse: Call<User>?, error: Throwable, response: Response<*>?) {
                     LogoutAsyncTask().execute()
                 }
             })

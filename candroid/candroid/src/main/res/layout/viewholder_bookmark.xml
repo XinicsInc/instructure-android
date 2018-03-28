@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,83 +15,57 @@
   ~
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
+    android:gravity="center_vertical"
     android:minHeight="?android:listPreferredItemHeight"
-    android:paddingBottom="4dp"
-    android:paddingLeft="@dimen/card_header_margins"
-    android:paddingStart="@dimen/card_header_margins"
-    android:paddingTop="4dp">
+    android:orientation="horizontal">
 
-    <RelativeLayout
-        android:id="@+id/titleContainer"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/gridIconSize"
+        android:layout_height="@dimen/gridIconSize"
+        android:layout_marginStart="16dp"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/vd_navigation_bookmarks" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextFont.Medium"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/overflowRipple"
-        android:layout_toStartOf="@+id/overflowRipple">
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingBottom="4dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="12dp"
+        android:paddingTop="4dp"
+        android:textSize="16sp"
+        tools:text="Course Bookmark" />
 
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="@dimen/gridIconSize"
-            android:layout_height="@dimen/gridIconSize"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/icon"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_bookmark" />
-
-        <!--Wrapped for RTL support-->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/icon"
-            android:layout_toRightOf="@id/icon"
-            android:layout_marginLeft="12dp"
-            android:layout_marginStart="12dp" >
-
-            <TextView
-                android:id="@+id/title"
-                style="@style/TextStyle.Primary.CardView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"/>
-
-        </FrameLayout>
-
-    </RelativeLayout>
-
-    <com.instructure.pandautils.views.RippleView
-        android:id="@+id/overflowRipple"
+    <FrameLayout
+        android:id="@+id/overflow"
         android:layout_width="?android:listPreferredItemHeight"
         android:layout_height="?android:listPreferredItemHeight"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        app:rv_alpha="@integer/ripple_alpha"
-        app:rv_centered="true"
-        app:rv_color="@color/lightgray"
-        app:rv_rippleDuration="@integer/ripple_duration_very_short">
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/options">
 
         <ImageView
-            android:id="@+id/overflow"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_centerInParent="true"
-            android:contentDescription="@string/options"
-            android:padding="4dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_overflow" />
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/vd_overflow_white_18dp"
+            android:tint="@color/gray"
+            android:importantForAccessibility="no"/>
 
-    </com.instructure.pandautils.views.RippleView>
+    </FrameLayout>
 
-</RelativeLayout>
+</LinearLayout>

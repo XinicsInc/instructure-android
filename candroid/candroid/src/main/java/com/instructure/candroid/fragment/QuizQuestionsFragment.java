@@ -18,22 +18,18 @@
 package com.instructure.candroid.fragment;
 
 import android.animation.ValueAnimator;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +39,8 @@ import android.widget.TextView;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.QuizSubmissionQuestionListRecyclerAdapter;
-import com.instructure.candroid.dialog.FileUploadDialog;
 import com.instructure.candroid.dialog.QuizQuestionDialog;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.interfaces.QuizFileUploadListener;
 import com.instructure.candroid.util.PreCachingLayoutManager;
 import com.instructure.candroid.view.ViewUtils;
@@ -60,10 +56,22 @@ import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse;
 import com.instructure.canvasapi2.models.QuizSubmissionResponse;
 import com.instructure.canvasapi2.models.QuizSubmissionTime;
 import com.instructure.canvasapi2.utils.ApiType;
+import com.instructure.canvasapi2.utils.pageview.BeforePageView;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.pandautils.dialogs.UploadFilesDialog;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam;
 import com.instructure.pandautils.services.FileUploadService;
-import com.instructure.pandautils.utils.CanvasContextColor;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.FileUploadEvent;
+import com.instructure.pandautils.utils.FileUploadNotification;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.QuizFileUploadStarted;
+import com.instructure.pandautils.utils.ViewStyler;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +79,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class QuizQuestionsFragment extends ParentFragment implements FileUploadDialog.FileUploadStartedInterface {
+import kotlin.Pair;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import retrofit2.Response;
+
+@PageView(url = "{canvasContext}/quizzes/{quizId}/take")
+public class QuizQuestionsFragment extends ParentFragment {
 
     private final int MILLISECOND = 1000;
     private final int SECONDS_IN_MINUTE = 60;
@@ -85,16 +99,13 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
     private RecyclerView recyclerView;
     private QuizSubmissionQuestionListRecyclerAdapter quizQuestionAdapter;
 
-    private FileUploadDialog mUploadFileSourceFragment;
-    private BroadcastReceiver errorBroadcastReceiver;
-    private BroadcastReceiver allUploadsCompleteBroadcastReceiver;
-
     private Course course;
     private Quiz quiz;
     private QuizSubmission quizSubmission;
     private boolean shouldLetAnswer;
     private boolean shouldShowTimer = true;
 
+    private Toolbar toolbar;
     private RelativeLayout timerLayout;
     private TextView timer;
     private Chronometer chronometer;
@@ -108,20 +119,21 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
     private StatusCallback<QuizSubmissionTime> quizSubmissionTimeCanvasCallback;
     private QuizFileUploadListener quizFileUploadListener;
 
-    @Override
-    public String getFragmentTitle() {
-        return getString(R.string.quizzes);
-    }
-
-    @Nullable
-    @Override
-    protected String getActionbarTitle() {
-        return quiz != null ? quiz.getTitle() : null;
+    @PageViewUrlParam(name = "quizId")
+    private Long getQuizId() {
+        return quiz != null ? quiz.getId() : 0;
     }
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {
-        return FRAGMENT_PLACEMENT.DETAIL;
+    @NonNull
+    public String title() {
+        return quiz != null ? quiz.getTitle() : getString(R.string.quizzes);
+    }
+
+    @Override
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {
+        return FragmentInteractions.Placement.DETAIL;
     }
 
     @Override
@@ -158,13 +170,32 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
         super.onCreateView(inflater, container, savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.quiz_list, container, false);
-
-        setupTitle(getActionbarTitle());
+        toolbar = rootView.findViewById(R.id.toolbar);
+        toolbar.setTitle(title());
         setupViews(rootView);
         setupCallbacks();
 
         return rootView;
     }
+
+    @Override
+    public void applyTheme() {
+        PandaViewUtils.setupToolbarBackButton(toolbar, this);
+        setupToolbarMenu(toolbar);
+
+        toolbar.getMenu().add(Menu.NONE, R.id.toggleTimer, 0, R.string.toggleTimer)
+                .setIcon(R.drawable.vd_timer)
+                .setTitle(getString(R.string.toggleTimer))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        toolbar.getMenu().add(Menu.NONE, R.id.showFlaggedQuestions, 1, R.string.showFlaggedQuestions)
+                .setIcon(R.drawable.vd_navigation_bookmarks)
+                .setTitle(getString(R.string.showFlaggedQuestions))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        ViewStyler.themeToolbar(getActivity(), toolbar, getCanvasContext());
+    }
+
 
     @Override
     public void onPause() {
@@ -183,35 +214,68 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
     @Override
     public void onStart() {
         super.onStart();
-        registerReceivers();
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        unregisterReceivers();
+        EventBus.getDefault().unregister(this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFileUploadStarted(QuizFileUploadStarted event) {
+        //update the adapter item
+        event.get(new Function1<Pair<? extends Long, ? extends Integer>, Unit>() {
+            @Override
+            public Unit invoke(Pair<? extends Long, ? extends Integer> pair) {
+                quizQuestionAdapter.setIsLoading(pair.getFirst(), true, pair.getSecond());
+                return null;
+            }
+        });
+    }
 
-    @Override
-    public void createOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.createOptionsMenu(menu, inflater);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFileUploadEvent(FileUploadEvent event) {
+        //update the adapter item
+        event.get(new Function1<FileUploadNotification, Unit>() {
+            @Override
+            public Unit invoke(FileUploadNotification notification) {
+                final Intent statusIntent = notification.getIntent();
+                if(statusIntent != null) {
+                    if (FileUploadService.QUIZ_UPLOAD_COMPLETE.equals(statusIntent.getAction())) {
+                        if (statusIntent.hasExtra(Const.ATTACHMENT)) {
+                            long questionId = statusIntent.getLongExtra(Const.QUIZ_ANSWER_ID, -1);
+                            int position = statusIntent.getIntExtra(Const.POSITION, -1);
+                            Attachment attachment = (Attachment) statusIntent.getExtras().get(Const.ATTACHMENT);
+                            if (attachment != null && questionId != -1) {
+                                quizQuestionAdapter.setFileUploadForQuiz(questionId, attachment, position);
+                            }
+                        }
+                    } else if(FileUploadService.UPLOAD_ERROR.equals(statusIntent.getAction())) {
+                        final Bundle bundle = statusIntent.getExtras();
+                        if(bundle != null && bundle.containsKey(Const.MESSAGE)) {
+                            String errorMessage = bundle.getString(Const.MESSAGE);
+                            if (null == errorMessage || "".equals(errorMessage)) {
+                                errorMessage = getString(R.string.errorUploadingFile);
+                            }
+                            showToast(errorMessage);
+                        }
 
-        Drawable d = CanvasContextColor.getColoredDrawable(getActivity(), R.drawable.ic_av_timer_white, getResources().getColor(R.color.white));
-        menu.add(Menu.NONE, R.id.toggleTimer, 0, R.string.toggleTimer)
-                .setIcon(d)
-                .setTitle(getString(R.string.toggleTimer))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        d = CanvasContextColor.getColoredDrawable(getActivity(), R.drawable.ic_bookmark_outline_white, getResources().getColor(R.color.white));
-        menu.add(Menu.NONE, R.id.showFlaggedQuestions, 1, R.string.showFlaggedQuestions)
-                .setIcon(d)
-                .setTitle(getString(R.string.showFlaggedQuestions))
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                        final long questionId = statusIntent.getLongExtra(Const.QUIZ_ANSWER_ID, -1);
+                        if (questionId != -1) {
+                            final int position = statusIntent.getIntExtra(Const.POSITION, -1);
+                            quizQuestionAdapter.setIsLoading(questionId, false, position);
+                        }
+                    }
+                }
+                return null;
+            }
+        });
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.toggleTimer) {
             if (shouldShowTimer) {
                 shouldShowTimer = false;
@@ -261,7 +325,7 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
     }
 
     private void setupViews(View rootView) {
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView = rootView.findViewById(R.id.recycler_view);
         //Setup layout manager
         PreCachingLayoutManager layoutManager = new PreCachingLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -270,26 +334,29 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        timerLayout = (RelativeLayout) rootView.findViewById(R.id.timer_layout);
-        timer = (TextView) rootView.findViewById(R.id.timer);
-        chronometer = (Chronometer) rootView.findViewById(R.id.chronometer);
+        timerLayout = rootView.findViewById(R.id.timer_layout);
+        timer = rootView.findViewById(R.id.timer);
+        chronometer = rootView.findViewById(R.id.chronometer);
     }
 
     private void setupCallbacks() {
         quizFileUploadListener = new QuizFileUploadListener() {
             @Override
             public void onFileUploadClicked(long quizQuestionId, int position) {
-                Bundle bundle = FileUploadDialog.createQuizFileBundle(quizQuestionId, course.getId(), quiz.getId(), position);
-                mUploadFileSourceFragment = FileUploadDialog.newInstance(getFragmentManager(),bundle);
-                mUploadFileSourceFragment.setTargetFragment(QuizQuestionsFragment.this, 1234);
-                mUploadFileSourceFragment.show(getFragmentManager(), FileUploadDialog.TAG);
+                Bundle bundle = UploadFilesDialog.createQuizFileBundle(quizQuestionId, course.getId(), quiz.getId(), position);
+                UploadFilesDialog.show(getFragmentManager(), bundle, new Function1<Integer, Unit>() {
+                    @Override
+                    public Unit invoke(Integer integer) {
+                        return null;
+                    }
+                });
             }
         };
 
         quizSubmissionQuestionResponseCanvasCallback = new StatusCallback<QuizSubmissionQuestionResponse>() {
 
             @Override
-            public void onResponse(retrofit2.Response<QuizSubmissionQuestionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<QuizSubmissionQuestionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type == ApiType.CACHE) return;
 
                 List<QuizSubmissionQuestion> questions = response.body().getQuizSubmissionQuestions();
@@ -329,7 +396,7 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
 
         submitQuizCallback = new StatusCallback<QuizSubmissionResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<QuizSubmissionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<QuizSubmissionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type == ApiType.CACHE) return;
 
                 switch (auto_submit_reason) {
@@ -359,7 +426,7 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
 
         quizSubmissionTimeCanvasCallback = new StatusCallback<QuizSubmissionTime>() {
             @Override
-            public void onResponse(retrofit2.Response<QuizSubmissionTime> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<QuizSubmissionTime> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type == ApiType.CACHE) return;
 
                 mQuizSubmissionTime = response.body();
@@ -523,84 +590,6 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
         }.start();
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(mUploadFileSourceFragment != null){
-            mUploadFileSourceFragment.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    private void registerReceivers() {
-        errorBroadcastReceiver = getErrorReceiver();
-        allUploadsCompleteBroadcastReceiver = getAllUploadsCompleted();
-
-        getActivity().registerReceiver(errorBroadcastReceiver, new IntentFilter(FileUploadService.UPLOAD_ERROR));
-        getActivity().registerReceiver(allUploadsCompleteBroadcastReceiver, new IntentFilter(FileUploadService.QUIZ_UPLOAD_COMPLETE));
-    }
-
-    private void unregisterReceivers() {
-        if(getActivity() == null){return;}
-
-        if(errorBroadcastReceiver != null){
-            getActivity().unregisterReceiver(errorBroadcastReceiver);
-            errorBroadcastReceiver = null;
-        }
-
-        if(allUploadsCompleteBroadcastReceiver != null){
-            getActivity().unregisterReceiver(allUploadsCompleteBroadcastReceiver);
-            allUploadsCompleteBroadcastReceiver = null;
-        }
-    }
-
-    //Creates new discussion reply with attachments for the user
-    private BroadcastReceiver getAllUploadsCompleted() {
-        return new BroadcastReceiver() {
-            @Override
-            public void onReceive(final Context context, final Intent intent) {
-                if(!isAdded()){return;}
-                if(intent != null && intent.hasExtra(Const.ATTACHMENT)) {
-                    long questionId = intent.getLongExtra(Const.QUIZ_ANSWER_ID, -1);
-                    int position = intent.getIntExtra(Const.POSITION, -1);
-                    Attachment attachment = (Attachment)intent.getExtras().get(Const.ATTACHMENT);
-                    if (attachment != null && questionId != -1) {
-                        quizQuestionAdapter.setFileUploadForQuiz(questionId, attachment, position);
-                    }
-                }
-            }
-        };
-    }
-
-    private BroadcastReceiver getErrorReceiver() {
-        return new BroadcastReceiver() {
-            @Override
-            public void onReceive(final Context context, final Intent intent) {
-                if(!isAdded()){return;}
-
-                final Bundle bundle = intent.getExtras();
-                String errorMessage = bundle.getString(Const.MESSAGE);
-                if(null == errorMessage || "".equals(errorMessage)){
-                    errorMessage = getString(R.string.errorUploadingFile);
-                }
-                showToast(errorMessage);
-
-                long questionId = intent.getLongExtra(Const.QUIZ_ANSWER_ID, -1);
-                int position = intent.getIntExtra(Const.POSITION, -1);
-                if(questionId != -1){
-                    quizQuestionAdapter.setIsLoading(questionId, false, position);
-                }
-
-                //todo Update progress for upload file?
-            }
-        };
-    }
-
-    @Override
-    public void onFileUploadStarted(long questionId, int position) {
-        //update the adapter item
-        quizQuestionAdapter.setIsLoading(questionId, true, position);
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -610,12 +599,7 @@ public class QuizQuestionsFragment extends ParentFragment implements FileUploadD
         outState.putBoolean(Const.QUIZ_SHOULD_LET_ANSWER, shouldLetAnswer);
     }
 
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
-
-
+    @BeforePageView
     @Override
     public void handleIntentExtras(Bundle extras) {
         super.handleIntentExtras(extras);

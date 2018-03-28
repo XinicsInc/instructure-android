@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -27,15 +26,16 @@ import android.view.animation.AnimationUtils
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.FileListAdapter
 import com.instructure.teacher.dialog.CreateFolderDialog
-import com.instructure.teacher.dialog.FileUploadDialog
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.FileFolderDeletedEvent
 import com.instructure.teacher.events.FileFolderUpdatedEvent
@@ -43,7 +43,7 @@ import com.instructure.teacher.factory.FileListPresenterFactory
 import com.instructure.teacher.holders.FileFolderViewHolder
 import com.instructure.teacher.models.EditableFile
 import com.instructure.teacher.presenters.FileListPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.FileListView
@@ -59,11 +59,11 @@ class FileListFragment : BaseSyncFragment<
         FileFolderViewHolder,
         FileListAdapter>(), FileListView {
 
-    lateinit private var mRecyclerView: RecyclerView
-    private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCanvasContext) }
+    private lateinit var mRecyclerView: RecyclerView
+    private val courseColor by lazy { ColorKeeper.getOrGenerateColor(mCanvasContext) }
     private var mCanvasContext: CanvasContext by ParcelableArg(Course())
-    private var mCurrentFolder: FileFolder by ParcelableArg(FileFolder())
-    private var mFabOpen = false
+    private var currentFolder: FileFolder by ParcelableArg(FileFolder())
+    private var fabOpen = false
 
     // FAB animations
     private val fabRotateForward by lazy { AnimationUtils.loadAnimation(activity, R.anim.fab_rotate_forward) }
@@ -79,25 +79,12 @@ class FileListFragment : BaseSyncFragment<
         }
     }
 
-    private val mFileUploadDialogCallback = object : FileUploadDialog.DialogLifecycleCallback {
-        override fun onCancel(dialog: Dialog) {}
-
-        override fun onAllUploadsComplete(dialog: Dialog?, uploadedFiles: List<RemoteFile>) {
-            if (isAdded) {
-                uploadedFiles.forEach {
-                    presenter.data.add(it.mapToFileFolder())
-                    checkIfEmpty()
-                }
-            }
-        }
-    }
-
     // Handles File/Folder Updated/Deleted events
     // FileFolder - The modified file/folder
     // Boolean - Whether this is a delete event
     private val handleFileFolderUpdatedDeletedEvent: (FileFolder, Boolean) -> Unit = { fileFolder, delete ->
         when {
-            presenter.currentFolder == fileFolder -> {
+            presenter.currentFolder.id == fileFolder.id -> {
                 // We are in the folder we just edited
 
                 if (delete) {
@@ -112,6 +99,7 @@ class FileListFragment : BaseSyncFragment<
                     presenter.currentFolder = fileFolder
                 }
             }
+
             presenter.data.indexOfItemById(fileFolder.id) != -2 -> {
                 // The modified file/folder is in the current directory
                 if (delete) {
@@ -131,7 +119,7 @@ class FileListFragment : BaseSyncFragment<
     override fun layoutResId() = R.layout.fragment_file_list
     override fun getList() = presenter.data
     override fun onCreateView(view: View?) = Unit
-    override fun getPresenterFactory() = FileListPresenterFactory(mCurrentFolder, mCanvasContext)
+    override fun getPresenterFactory() = FileListPresenterFactory(currentFolder, mCanvasContext)
     override fun getRecyclerView(): RecyclerView = fileListRecyclerView
 
     override fun onPresenterPrepared(presenter: FileListPresenter?) {
@@ -165,12 +153,12 @@ class FileListFragment : BaseSyncFragment<
 
     override fun getAdapter(): FileListAdapter {
         if (mAdapter == null) {
-            mAdapter = FileListAdapter(context, mCourseColor, presenter) {
+            mAdapter = FileListAdapter(context, courseColor, presenter) {
 
                 if (it.displayName.isValid()) {
                     // This is a file
-                    val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, mCourseColor, presenter.mCanvasContext, R.drawable.vd_document)
-                    viewMedia(context, it.displayName, it.contentType, it.url, it.thumbnailUrl, it.displayName, R.drawable.vd_document, mCourseColor, editableFile)
+                    val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.mCanvasContext, R.drawable.vd_document)
+                    viewMedia(context, it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.vd_document, courseColor, editableFile)
                 } else {
                     // This is a folder
                     val args = FileListFragment.makeBundle(presenter.mCanvasContext, it)
@@ -206,12 +194,14 @@ class FileListFragment : BaseSyncFragment<
         addFileFab.setOnClickListener {
             animateFabs()
             handleClick(fragmentManager) {
-                val bundle = FileUploadDialog.createCourseBundle(null, mCanvasContext as Course, presenter.currentFolder.id)
-                val mFileUploadDialog = FileUploadDialog.newInstance(activity.supportFragmentManager, bundle)
-                mFileUploadDialog.setDialogLifecycleCallback(mFileUploadDialogCallback)
-                mFileUploadDialog.show(activity.supportFragmentManager, FileUploadDialog::class.java.simpleName)
+                val bundle = if (mCanvasContext.isCourse)
+                    UploadFilesDialog.createCourseBundle(null, mCanvasContext as Course, presenter.currentFolder.id)
+                else
+                    UploadFilesDialog.createUserBundle(null, mCanvasContext as User, presenter.currentFolder.id)
+                UploadFilesDialog.show(fragmentManager, bundle, { _ -> })
             }
         }
+
         addFolderFab.setOnClickListener {
             animateFabs()
             handleClick(fragmentManager) {
@@ -240,11 +230,14 @@ class FileListFragment : BaseSyncFragment<
             fileListToolbar.title = getString(R.string.sg_tab_files)
         }
 
-        ViewStyler.themeToolbar(activity, fileListToolbar, mCourseColor, Color.WHITE)
+        if (mCanvasContext.isUser) {
+            // User's files, no CanvasContext
+            ViewStyler.themeToolbar(activity, fileListToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        } else ViewStyler.themeToolbar(activity, fileListToolbar, courseColor, Color.WHITE)
     }
 
 
-    private fun animateFabs() = if (mFabOpen) {
+    private fun animateFabs() = if (fabOpen) {
         addFab.startAnimation(fabRotateBackwards)
         addFolderFab.startAnimation(fabHide)
         addFolderFab.isClickable = false
@@ -255,7 +248,7 @@ class FileListFragment : BaseSyncFragment<
         // Needed for accessibility
         addFileFab.setInvisible()
         addFolderFab.setInvisible()
-        mFabOpen = false
+        fabOpen = false
     } else {
         addFab.startAnimation(fabRotateForward)
         addFolderFab.apply {
@@ -272,32 +265,43 @@ class FileListFragment : BaseSyncFragment<
         addFileFab.setVisible()
         addFolderFab.setVisible()
 
-        mFabOpen = true
+        fabOpen = true
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
     @Suppress("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun fileFolderDeleted(event: FileFolderDeletedEvent) {
-        if (presenter.currentFolder == event.deletedFileFolder) {
-            // We just deleted this folder, go back
-            activity.onBackPressed()
-        } else if (presenter.data.indexOfItemById(event.deletedFileFolder.id) != -2) {
-            // A file in this folder was deleted, remove it
-            presenter.data.remove(event.deletedFileFolder)
+    fun onFileEvent(event: FileUploadEvent) {
+        event.get {
+            event.remove()
+            presenter.refresh(true)
         }
     }
 
     companion object {
-        const val CANVAS_CONTEXT = "canvasContext"
-        const val CURRENT_FOLDER = "currentFolder"
+        private const val CANVAS_CONTEXT = "canvasContext"
+        private const val CURRENT_FOLDER = "currentFolder"
 
         @JvmStatic
-        fun newInstance(args: Bundle) = FileListFragment().apply {
+        fun newInstance(canvasContext: CanvasContext, args: Bundle) = FileListFragment().apply {
             if (args.containsKey(CANVAS_CONTEXT)) {
                 mCanvasContext = args.getParcelable(CANVAS_CONTEXT)
+            } else {
+                mCanvasContext = canvasContext
             }
             if (args.containsKey(CURRENT_FOLDER)) {
-                mCurrentFolder = args.getParcelable(CURRENT_FOLDER)
+                currentFolder = args.getParcelable(CURRENT_FOLDER)
+            } else {
+                currentFolder = FileFolder().apply { id = -1L; name = ""}
             }
         }
 
@@ -309,6 +313,13 @@ class FileListFragment : BaseSyncFragment<
             args.putParcelable(CURRENT_FOLDER, folder)
             return args
         }
-    }
 
+        @JvmStatic
+        fun createBundle(folderId: Long, canvasContext: CanvasContext): Bundle {
+            val args = Bundle()
+            args.putParcelable(CANVAS_CONTEXT, canvasContext)
+            args.putLong(Const.FOLDER_ID, folderId)
+            return args
+        }
+    }
 }

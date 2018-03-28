@@ -73,41 +73,41 @@ class ParentLoginActivity : AppCompatActivity() {
     private fun setupListeners() {
         parentLoginButton.setOnClickListener {
             UserManager.authenticateParentAirwolf(ApiPrefs.airwolfDomain, username.text.toString(), password.text.toString(), object : StatusCallback<ParentResponse>() {
-                    override fun onResponse(response: Response<ParentResponse>, linkHeaders: LinkHeaders, type: ApiType) {
-                        ApiPrefs.token = response.body().token
-                        val prefs = Prefs(ContextKeeper.appContext, getString(R.string.app_name_parent))
-                        prefs.save(Const.ID, response.body().parentId)
-                        prefs.save(Const.NAME, username.text.toString())
+                override fun onResponse(response: Response<ParentResponse>, linkHeaders: LinkHeaders, type: ApiType) {
+                    response.body()?.let { ApiPrefs.token = it.token }
+                    val prefs = Prefs(ContextKeeper.appContext, getString(R.string.app_name_parent))
+                    prefs.save(Const.ID, response.body()?.parentId)
+                    prefs.save(Const.NAME, username.text.toString())
 
-                        UserManager.getStudentsForParentAirwolf(ApiPrefs.airwolfDomain, response.body().parentId, object : StatusCallback<List<Student>>() {
-                                override fun onResponse(response: Response<List<Student>>, linkHeaders: LinkHeaders, type: ApiType) {
-                                    if (!APIHelper.isCachedResponse(response)) {
-                                        if (response.body() != null && !response.body().isEmpty()) {
-                                            //finish the activity so they can't hit the back button and see the login screen again
-                                            //they have students that they are observing, take them to that activity
-                                            startActivity(StudentViewActivity.createIntent(ContextKeeper.appContext, response.body()))
-                                            finish()
-                                        } else {
-                                            //Take the parent to the add user page.
-                                            startActivity(FindSchoolActivity.createIntent(ContextKeeper.appContext, true))
-                                            finish()
-                                        }
-                                    }
+                    UserManager.getStudentsForParentAirwolf(ApiPrefs.airwolfDomain, response.body()?.parentId, object : StatusCallback<List<Student>>() {
+                        override fun onResponse(response: Response<List<Student>>, linkHeaders: LinkHeaders, type: ApiType) {
+                            if (!APIHelper.isCachedResponse(response)) {
+                                val body = response.body()
+                                if (body != null && body.isNotEmpty()) {
+                                    // They have students that they are observing, take them to that activity
+                                    startActivity(StudentViewActivity.createIntent(ContextKeeper.appContext, body))
+                                } else {
+                                    // No response or no students observable; Take the parent to the add user page.
+                                    startActivity(FindSchoolActivity.createIntent(ContextKeeper.appContext, true))
                                 }
-                            })
-                    }
+                                // Finish the activity so they can't hit the back button and see the login screen again
+                                finish()
+                            }
+                        }
+                    })
+                }
 
-                    override fun onFail(response: Call<ParentResponse>, error: Throwable) {
-                        Toast.makeText(this@ParentLoginActivity, getString(R.string.invalid_username_password), Toast.LENGTH_SHORT).show()
-                    }
-                })
+                override fun onFail(call: Call<ParentResponse>?, error: Throwable, response: Response<*>?) {
+                    Toast.makeText(this@ParentLoginActivity, getString(R.string.invalid_username_password), Toast.LENGTH_SHORT).show()
+                }
+            })
         }
 
         createAccount.setOnClickListener { startActivity(CreateAccountActivity.createIntent(ContextKeeper.appContext)) }
 
         forgotPassword.setOnClickListener {
             ForgotPasswordDialog.newInstance {
-                if(it == ForgotPasswordDialog.SUCCESS) {
+                if (it == ForgotPasswordDialog.SUCCESS) {
                     Toast.makeText(ContextKeeper.appContext, getString(R.string.password_reset_success), Toast.LENGTH_SHORT).show()
                 }
             }.show(supportFragmentManager, ForgotPasswordDialog::class.java.simpleName)

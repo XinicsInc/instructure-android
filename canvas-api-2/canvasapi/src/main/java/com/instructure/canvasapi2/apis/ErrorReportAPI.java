@@ -19,16 +19,15 @@ package com.instructure.canvasapi2.apis;
 
 import android.support.annotation.NonNull;
 
-import com.instructure.canvasapi2.AppManager;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.builders.RestBuilder;
 import com.instructure.canvasapi2.builders.RestParams;
 import com.instructure.canvasapi2.models.ErrorReportResult;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
-import retrofit2.Call;
 
 
 public class ErrorReportAPI {
@@ -37,7 +36,15 @@ public class ErrorReportAPI {
 
     public interface ErrorReportInterface {
         @POST("/error_reports.json")
-        Call<ErrorReportResult> postErrorReport(@Query("error[subject]") String subject, @Query("error[url]") String url, @Query("error[email]") String email, @Query("error[comments]") String comments, @Query("error[user_perceived_severity") String userPerceivedSeverity, @Body String body);
+        Call<ErrorReportResult> postErrorReport(@Query("error[subject]") String subject,
+                                                @Query("error[url]") String url,
+                                                @Query("error[email]") String email,
+                                                @Query("error[comments]") String comments,
+                                                @Query("error[user_perceived_severity") String userPerceivedSeverity,
+                                                @Query("error[name]") String name,
+                                                @Query("error[user_roles]") String userRoles,
+                                                @Query("error[become_user]") String becomeUser,
+                                                @Body String body);
     }
 
     private static ErrorReportInterface buildInterface(StatusCallback<?> callback) {
@@ -68,11 +75,27 @@ public class ErrorReportAPI {
         return adapter.build(ErrorReportInterface.class, params);
     }
 
-    public static void postErrorReport(@NonNull String subject, @NonNull String url, @NonNull String email, @NonNull String comments, @NonNull String userPerceivedSeverity, @NonNull StatusCallback<ErrorReportResult> callback) {
-        callback.addCall(buildInterface(callback).postErrorReport(subject, url, email, comments, userPerceivedSeverity, "")).enqueue(callback);
+    public static void postErrorReport(@NonNull String subject,
+                                       @NonNull String url,
+                                       @NonNull String email,
+                                       @NonNull String comments,
+                                       @NonNull String userPerceivedSeverity,
+                                       @NonNull String name,
+                                       @NonNull String userRoles,
+                                       @NonNull String becomeUser,
+                                       @NonNull StatusCallback<ErrorReportResult> callback) {
+        callback.addCall(buildInterface(callback).postErrorReport(subject, url, email, comments, userPerceivedSeverity, name, userRoles, becomeUser, "")).enqueue(callback);
     }
 
-    public static void postGenericErrorReport(@NonNull String subject, @NonNull String url, @NonNull String email, @NonNull String comments, @NonNull String userPerceivedSeverity, @NonNull StatusCallback<ErrorReportResult> callback) {
-        callback.addCall(buildGenericInterface(callback).postErrorReport(subject, url, email, comments, userPerceivedSeverity, "")).enqueue(callback);
+    public static void postGenericErrorReport(@NonNull String subject,
+                                              @NonNull String url,
+                                              @NonNull String email,
+                                              @NonNull String comments,
+                                              @NonNull String userPerceivedSeverity,
+                                              @NonNull String name,
+                                              @NonNull String userRoles,
+                                              @NonNull String becomeUser,
+                                              @NonNull StatusCallback<ErrorReportResult> callback) {
+        callback.addCall(buildGenericInterface(callback).postErrorReport(subject, url, email, comments, userPerceivedSeverity, name, userRoles, becomeUser, "")).enqueue(callback);
     }
 }

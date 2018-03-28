@@ -28,12 +28,15 @@ import com.instructure.canvasapi2.models.Favorite;
 import com.instructure.canvasapi2.models.GradingPeriodResponse;
 import com.instructure.canvasapi2.models.Group;
 import com.instructure.canvasapi2.models.User;
+import com.instructure.canvasapi2.utils.APIHelper;
+import com.instructure.canvasapi2.utils.LinkHeaders;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -62,7 +65,7 @@ public class CourseAPI {
         @GET("users/self/favorites/courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=current_grading_period_scores&include[]=course_image&include[]=favorites")
         Call<List<Course>> getFavoriteCourses();
 
-        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image")
+        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available")
         Call<List<Course>> getFirstPageCourses();
 
         @GET
@@ -136,6 +139,34 @@ public class CourseAPI {
 
     public static void getFavoriteCourses(@NonNull RestBuilder adapter, @NonNull StatusCallback<List<Course>> callback, @NonNull RestParams params) {
         callback.addCall(adapter.build(CoursesInterface.class, params).getFavoriteCourses()).enqueue(callback);
+    }
+
+    public static Response<List<Course>> getFavoriteCoursesSynchronously(@NonNull RestBuilder adapter, @NonNull RestParams params) throws IOException{
+        return (adapter.build(CoursesInterface.class, params).getFavoriteCourses()).execute();
+    }
+
+    public static List<Course> getCoursesSynchronously(@NonNull RestBuilder adapter, @NonNull RestParams params) throws IOException {
+        Response<List<Course>> firstPageResponse = adapter.build(CoursesInterface.class, params).getFirstPageCourses().execute();
+        return getCoursesRecursive(adapter, params, firstPageResponse, firstPageResponse.body());
+    }
+
+    private static List<Course> getCoursesRecursive(@NonNull RestBuilder adapter, @NonNull RestParams params, Response<List<Course>> response, List<Course> data) {
+        LinkHeaders linkHeaders = APIHelper.parseLinkHeaderResponse(response.headers());
+
+        if(linkHeaders.nextUrl != null) {
+            try {
+                Response<List<Course>> nextPageResponse = adapter.build(CoursesInterface.class, params).next(linkHeaders.nextUrl).execute();
+                if(nextPageResponse.body() != null) {
+                    data.addAll(nextPageResponse.body());
+                }
+                return getCoursesRecursive(adapter, params, nextPageResponse, data);
+            } catch (IOException e) {
+                return null;
+            }
+        } else {
+            return data;
+        }
+
     }
 
     public static void getFirstPageFavoriteCourses(@NonNull RestBuilder adapter, @NonNull StatusCallback<List<Course>> callback, @NonNull RestParams params) {
@@ -296,75 +327,5 @@ public class CourseAPI {
                 .getCourseWithGradeAirwolf(parentId, studentId, courseId)).enqueue(callback);
     }
 
-    public static List<Course> getAllCoursesSynchronous(
-            @NonNull RestBuilder adapter,
-            @NonNull RestParams params) {
-        //If not able to parse (no network for example), this will crash. Handle that case.
-        try {
-            ArrayList<Course> allCourses = new ArrayList<>();
-            int page = 1;
-            long firstItemId = -1;
-
-            //for(ever) loop. break once we've run outta stuff;
-            for (; ; ) {
-                List<Course> courses = adapter.build(CoursesInterface.class, params).getAllCoursesSynchronous(page);
-                page++;
-
-                //This is all or nothing. We don't want partial data.
-                if (courses == null) {
-                    return null;
-                } else if (courses.size() == 0) {
-                    break;
-                } else if (courses.get(0).getId() == firstItemId) {
-                    break;
-                } else {
-                    firstItemId = courses.get(0).getId();
-
-                    allCourses.addAll(courses);
-                }
-            }
-
-            return allCourses;
-
-        } catch (Exception E) {
-            return null;
-        }
-    }
-
-    public static List<Course> getFavCoursesSynchronous(
-            @NonNull RestBuilder adapter,
-            @NonNull RestParams params) {
-
-        //If not able to parse (no network for example), this will crash. Handle that case.
-        try {
-            ArrayList<Course> favoriteCourses = new ArrayList<>();
-            int page = 1;
-            long firstItemId = -1;
-
-            //for(ever) loop. break once we've run outta stuff;
-            for (; ; ) {
-                List<Course> courses = adapter.build(CoursesInterface.class, params).getFavCoursesSynchronous(page);
-                page++;
-
-                //This is all or nothing. We don't want partial data.
-                if (courses == null) {
-                    return null;
-                } else if (courses.size() == 0) {
-                    break;
-                } else if (courses.get(0).getId() == firstItemId) {
-                    break;
-                } else {
-                    firstItemId = courses.get(0).getId();
-
-                    favoriteCourses.addAll(courses);
-                }
-            }
-
-            return favoriteCourses;
-
-        } catch (Exception E) {
-            return null;
-        }
-    }
     //endregion
 }

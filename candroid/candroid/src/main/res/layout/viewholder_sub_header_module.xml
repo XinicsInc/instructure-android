@@ -19,11 +19,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/moduleItemBackground">
 
     <TextView
         android:id="@+id/subTitle"
-        style="@style/TextStyle.Primary"
+        style="@style/AdapterItemTitleText"
         android:gravity="center_vertical|start"
         android:minLines="2"
         android:layout_width="match_parent"
@@ -32,7 +33,7 @@
         android:layout_marginTop="12dp"
         android:paddingLeft="@dimen/card_header_margins"
         android:paddingRight="@dimen/card_header_margins"
-        android:textStyle="bold" />
+        tools:text="Sub Header for Module"/>
 
     <View
         android:id="@+id/shadowTop"

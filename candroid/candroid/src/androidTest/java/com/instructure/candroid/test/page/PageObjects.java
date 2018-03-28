@@ -21,5 +21,4 @@ public abstract class PageObjects {
 
     public DomainPickerPage domainPickerPage = new DomainPickerPage();
     public LoginPage loginPage = new LoginPage();
-    public TutorialPage tutorialPage = new TutorialPage();
 }

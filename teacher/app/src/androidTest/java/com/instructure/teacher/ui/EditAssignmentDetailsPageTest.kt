@@ -17,8 +17,9 @@
 package com.instructure.teacher.ui
 
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.soseedy.Assignment
+import com.instructure.soseedy.SubmissionType
 import com.instructure.teacher.R.id.*
-import com.instructure.teacher.ui.models.CanvasUser
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
@@ -159,13 +160,32 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
         editAssignmentDetailsPage.assertNoAssigneesErrorShown()
     }
 
-    private fun getToEditAssignmentDetailsPage(): CanvasUser {
-        val teacher = logIn()
-        val assignment = getNextAssignment()
-        coursesListPage.openCourse(getNextCourse())
+    private fun getToEditAssignmentDetailsPage(
+            assignments: Int = 1,
+            withDescription: Boolean = false,
+            lockAt: String = "",
+            unlockAt: String = "",
+            submissionTypes: List<SubmissionType> = emptyList()): Assignment {
+
+        val data = seedData(teachers = 1, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val assignment = seedAssignments(
+                assignments = assignments,
+                courseId = course.id,
+                withDescription = withDescription,
+                lockAt = lockAt,
+                unlockAt = unlockAt,
+                submissionTypes = submissionTypes,
+                teacherToken = teacher.token)
+
+        tokenLogin(teacher)
+
+        coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(assignment)
+        assignmentListPage.clickAssignment(assignment.assignmentsList[0])
+
         assignmentDetailsPage.openEditPage()
-        return teacher
+        return assignment.assignmentsList[0]
     }
 }

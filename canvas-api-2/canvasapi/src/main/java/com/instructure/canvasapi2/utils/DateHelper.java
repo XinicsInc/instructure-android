@@ -181,7 +181,7 @@ public class DateHelper {
         if (DateFormat.is24HourFormat(context)) {
             return new SimpleDateFormat("HH:mm", Locale.getDefault());
         } else {
-            return new SimpleDateFormat("h:mma", Locale.getDefault());
+            return new SimpleDateFormat("h:mm a", Locale.getDefault());
         }
     }
 
@@ -197,7 +197,7 @@ public class DateHelper {
         if(DateFormat.is24HourFormat(context)) {
             return new SimpleDateFormat("HH:mm", Locale.getDefault());
         }
-        return new SimpleDateFormat("MMM dd, h:mma", Locale.getDefault());
+        return new SimpleDateFormat("MMM dd, h:mm a", Locale.getDefault());
     }
 
 

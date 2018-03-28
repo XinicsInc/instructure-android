@@ -17,10 +17,8 @@
 
 package com.instructure.candroid.holders;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,17 +26,15 @@ import com.instructure.candroid.R;
 
 public class TodoViewHolder extends RecyclerView.ViewHolder {
 
-    public CardView cardView;
     public TextView title, description, course;
     public ImageView icon;
 
     public TodoViewHolder(View itemView) {
         super(itemView);
-        cardView = (CardView) itemView.findViewById(R.id.cardView);
-        title = (TextView) itemView.findViewById(R.id.title);
-        description = (TextView) itemView.findViewById(R.id.description);
-        course = (TextView) itemView.findViewById(R.id.course);
-        icon = (ImageView) itemView.findViewById(R.id.icon);
+        title = itemView.findViewById(R.id.title);
+        description = itemView.findViewById(R.id.description);
+        course = itemView.findViewById(R.id.course);
+        icon = itemView.findViewById(R.id.icon);
     }
 
     public static int holderResId() {

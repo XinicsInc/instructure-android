@@ -17,14 +17,6 @@ buildscript {
     }
 }
 
-plugins {
-    id "org.standardout.versioneye" version "1.4.0"
-}
-
-versioneye {
-    includeSubProjects = true
-}
-
 ext {
     compileSdkVersion = GLOBAL_COMPILE_SDK
     buildToolsVersion = GLOBAL_BUILD_TOOLS_VERSION

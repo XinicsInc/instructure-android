@@ -16,14 +16,13 @@
 
 package com.instructure.teacher.fragments
 
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
-import com.instructure.canvasapi2.apis.ConversationAPI
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -32,6 +31,7 @@ import com.instructure.pandarecycler.util.UpdatableSortedList
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.InboxAdapter
 import com.instructure.teacher.dialog.CanvasContextListDialog
 import com.instructure.teacher.events.ConversationDeletedEvent
@@ -41,9 +41,10 @@ import com.instructure.teacher.factory.InboxPresenterFactory
 import com.instructure.teacher.holders.InboxViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.presenters.InboxPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.InboxView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_inbox.*
@@ -137,7 +138,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
         //phone specific event for updates (archives/read/unread/stars)
         val event = EventBus.getDefault().getStickyEvent(ConversationUpdatedEvent::class.java)
         event?.once(javaClass.simpleName) {
-            if(presenter.scope == event.scope && presenter.scope != ConversationAPI.ConversationScope.UNREAD)
+            if(presenter.scope == event.scope && presenter.scope != InboxApi.Scope.UNREAD)
             //for removed stars and archives, we need to update the list completely
                 presenter.refresh(true)
             else
@@ -151,10 +152,8 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
     }
 
     private fun setupToolbar() {
-        titleTextView.adoptToolbarStyle(toolbar)
-        logoImageView.loadUri(Uri.parse(ThemePrefs.logoUrl), R.mipmap.canvas_logo_white)
         toolbar.setupMenu(R.menu.menu_filter_inbox, menuItemCallback)
-        ViewStyler.themeToolbar(activity, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        (activity as? InitActivity)?.attachNavigationDrawer(toolbar)
         ViewStyler.themeFAB(addMessage, ThemePrefs.buttonColor)
         toolbar.requestAccessibilityFocus()
     }
@@ -183,10 +182,10 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
     private val mAdapterCallback = AdapterToFragmentCallback<Conversation> { conversation, position ->
         //we send a parcel copy so that we can properly propagate updates through our events
         if (resources.getBoolean(R.bool.is_device_tablet)) { //but tablets need reference, since the detail view remains in view
-            val args = MessageThreadFragment.createBundle(conversation, position, ConversationAPI.conversationScopeToString(presenter.scope))
+            val args = MessageThreadFragment.createBundle(conversation, position, InboxApi.conversationScopeToString(presenter.scope))
             RouteMatcher.route(context, Route(null, MessageThreadFragment::class.java, null, args))
         } else { //phones use the parcel copy
-            val args = MessageThreadFragment.createBundle(conversation.parcelCopy(), position, ConversationAPI.conversationScopeToString(presenter.scope))
+            val args = MessageThreadFragment.createBundle(conversation.parcelCopy(), position, InboxApi.conversationScopeToString(presenter.scope))
             RouteMatcher.route(context, Route(null, MessageThreadFragment::class.java, null, args))
         }
     }
@@ -222,11 +221,11 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
             popup.menuInflater.inflate(R.menu.conversation_scope, popup.menu)
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.inbox_all -> onScopeChanged(ConversationAPI.ConversationScope.ALL)
-                    R.id.inbox_unread -> onScopeChanged(ConversationAPI.ConversationScope.UNREAD)
-                    R.id.inbox_starred -> onScopeChanged(ConversationAPI.ConversationScope.STARRED)
-                    R.id.inbox_sent -> onScopeChanged(ConversationAPI.ConversationScope.SENT)
-                    R.id.inbox_archived -> onScopeChanged(ConversationAPI.ConversationScope.ARCHIVED)
+                    R.id.inbox_all -> onScopeChanged(InboxApi.Scope.ALL)
+                    R.id.inbox_unread -> onScopeChanged(InboxApi.Scope.UNREAD)
+                    R.id.inbox_starred -> onScopeChanged(InboxApi.Scope.STARRED)
+                    R.id.inbox_sent -> onScopeChanged(InboxApi.Scope.SENT)
+                    R.id.inbox_archived -> onScopeChanged(InboxApi.Scope.ARCHIVED)
                 }
 
                 true
@@ -254,11 +253,11 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
         }
     }
 
-    private fun onScopeChanged(scope: ConversationAPI.ConversationScope) {
+    private fun onScopeChanged(scope: InboxApi.Scope) {
         filterText.text = getTextByScope(scope)
         presenter.scope = scope
 
-        if(scope == ConversationAPI.ConversationScope.STARRED) {
+        if(scope == InboxApi.Scope.STARRED) {
             emptyPandaView.setEmptyViewImage(ContextCompat.getDrawable(context, R.drawable.vd_star_empty))
             emptyPandaView.setMessageText(R.string.inbox_empty_starred_message)
             emptyPandaView.setTitleText(R.string.inbox_empty_starred_title)
@@ -269,13 +268,13 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
         }
     }
 
-    private fun getTextByScope(scope: ConversationAPI.ConversationScope): String {
+    private fun getTextByScope(scope: InboxApi.Scope): String {
         when (scope) {
-            ConversationAPI.ConversationScope.ALL -> return getString(R.string.inbox_all_messages)
-            ConversationAPI.ConversationScope.UNREAD -> return getString(R.string.inbox_unread)
-            ConversationAPI.ConversationScope.STARRED -> return getString(R.string.inbox_starred)
-            ConversationAPI.ConversationScope.SENT -> return getString(R.string.inbox_sent)
-            ConversationAPI.ConversationScope.ARCHIVED -> return getString(R.string.inbox_archived)
+            InboxApi.Scope.ALL -> return getString(R.string.inbox_all_messages)
+            InboxApi.Scope.UNREAD -> return getString(R.string.inbox_unread)
+            InboxApi.Scope.STARRED -> return getString(R.string.inbox_starred)
+            InboxApi.Scope.SENT -> return getString(R.string.inbox_sent)
+            InboxApi.Scope.ARCHIVED -> return getString(R.string.inbox_archived)
             else -> return getString(R.string.inbox_all_messages)
         }
     }
@@ -284,7 +283,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onConversationUpdated(event: ConversationUpdatedEventTablet) {
         event.once(javaClass.simpleName) {
-            if(presenter.scope == event.scope && presenter.scope != ConversationAPI.ConversationScope.UNREAD)
+            if(presenter.scope == event.scope && presenter.scope != InboxApi.Scope.UNREAD)
                 //for removed stars and archives, we need to update the list completely
                 presenter.refresh(true)
             else

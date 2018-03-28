@@ -18,6 +18,8 @@
 package com.instructure.candroid.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -44,11 +46,12 @@ import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.pandarecycler.util.GroupSortedList;
 import com.instructure.pandarecycler.util.Types;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class AssignmentGroupListRecyclerAdapter extends ExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder> implements GradingPeriodsCallback {
@@ -85,7 +88,7 @@ public class AssignmentGroupListRecyclerAdapter extends ExpandableRecyclerAdapte
         mAssignmentGroupCallback = new StatusCallback<List<AssignmentGroup>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<AssignmentGroup>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<AssignmentGroup>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 for (AssignmentGroup assignmentGroup : response.body()) {
                     addOrUpdateAllItems(assignmentGroup, assignmentGroup.getAssignments());
                 }
@@ -95,7 +98,7 @@ public class AssignmentGroupListRecyclerAdapter extends ExpandableRecyclerAdapte
             }
 
             @Override
-            public void onFail(Call<List<AssignmentGroup>> callResponse, Throwable error, retrofit2.Response response) {
+            public void onFail(@Nullable Call<List<AssignmentGroup>> call, @NonNull Throwable error, @Nullable Response response) {
                 mAdapterToAssignmentsCallback.setTermSpinnerState(true);
             }
         };
@@ -130,8 +133,8 @@ public class AssignmentGroupListRecyclerAdapter extends ExpandableRecyclerAdapte
 
     @Override
     public void onBindChildHolder(RecyclerView.ViewHolder holder, AssignmentGroup assignmentGroup, Assignment assignment) {
-        AssignmentBinder.bind(getContext(), (AssignmentViewHolder) holder, assignment, CanvasContextColor.getCachedColor(getContext(),
-                mCanvasContext), mAdapterToAssignmentsCallback);
+        AssignmentBinder.bind(getContext(), (AssignmentViewHolder) holder, assignment,
+                ColorKeeper.getOrGenerateColor(mCanvasContext), mAdapterToAssignmentsCallback);
     }
 
     @Override

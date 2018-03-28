@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.utils;
 
+import android.Manifest;
 import android.support.test.rule.GrantPermissionRule;
 
 import com.instructure.espresso.ScreenshotTestRule;
@@ -43,19 +44,17 @@ import com.instructure.teacher.ui.pages.InboxPage;
 import com.instructure.teacher.ui.pages.LoginFindSchoolPage;
 import com.instructure.teacher.ui.pages.LoginLandingPage;
 import com.instructure.teacher.ui.pages.LoginSignInPage;
+import com.instructure.teacher.ui.pages.NavDrawerPage;
 import com.instructure.teacher.ui.pages.NotATeacherPage;
-import com.instructure.teacher.ui.pages.ProfilePage;
 import com.instructure.teacher.ui.pages.QuizDetailsPage;
 import com.instructure.teacher.ui.pages.QuizListPage;
 import com.instructure.teacher.ui.pages.QuizSubmissionListPage;
-import com.instructure.teacher.ui.pages.RCEditorPage;
 import com.instructure.teacher.ui.pages.SpeedGraderCommentsPage;
 import com.instructure.teacher.ui.pages.SpeedGraderFilesPage;
 import com.instructure.teacher.ui.pages.SpeedGraderGradePage;
 import com.instructure.teacher.ui.pages.SpeedGraderPage;
 import com.instructure.teacher.ui.pages.SpeedGraderQuizSubmissionPage;
 import com.instructure.teacher.ui.pages.WebViewLoginPage;
-import android.support.test.runner.permission.PermissionRequester;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -83,7 +82,7 @@ public abstract class TeacherTest {
     protected LoginSignInPage loginSignInPage = new LoginSignInPage();
     protected NotATeacherPage notATeacherPage = new NotATeacherPage();
     protected InboxPage inboxPage = new InboxPage();
-    protected ProfilePage profilePage = new ProfilePage();
+    protected NavDrawerPage navDrawerPage = new NavDrawerPage();
     protected SpeedGraderPage speedGraderPage = new SpeedGraderPage();
     protected SpeedGraderGradePage speedGraderGradePage = new SpeedGraderGradePage();
     protected SpeedGraderCommentsPage speedGraderCommentsPage = new SpeedGraderCommentsPage();
@@ -100,12 +99,23 @@ public abstract class TeacherTest {
     protected WebViewLoginPage webViewLoginPage = new WebViewLoginPage();
     protected AnnouncementsListPage announcementsListPage = new AnnouncementsListPage();
 
-    private TeacherActivityTestRule<InitLoginActivity> mActivityRule =
+    protected TeacherActivityTestRule<InitLoginActivity> mActivityRule =
             new TeacherActivityTestRule<>(InitLoginActivity.class);
 
     public TeacherActivityTestRule<InitLoginActivity> getActivityRule() {
         return mActivityRule;
     }
+
+
+    @Rule
+    public GrantPermissionRule rule = GrantPermissionRule.grant(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            // Both read & write permission are required for saving screenshots
+            // otherwise the code will error with permission denied.
+            // Read also required due to a bug specifically with full read/write external storage not being granted
+            // https://issuetracker.google.com/issues/64389280
+            Manifest.permission.READ_EXTERNAL_STORAGE);
+
 
     @Rule
     public TestRule chain = RuleChain
@@ -123,7 +133,7 @@ public abstract class TeacherTest {
             configChecked = true;
         }
         mActivityRule.launchActivity(null);
-        UiControllerSingleton.get();
+        UiControllerSingleton.INSTANCE.get();
     }
 
     private static void checkBuildConfig() {

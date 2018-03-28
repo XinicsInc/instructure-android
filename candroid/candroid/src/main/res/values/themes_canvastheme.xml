@@ -24,7 +24,7 @@
         <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
         <item name="colorAccent">@color/defaultAccent</item>
 
-        <item name="android:windowBackground">@color/canvasBackgroundOffWhite</item>
+        <item name="android:windowBackground">@color/canvasBackgroundWhite</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:buttonStyle">@style/ButtonCanvasTheme</item>
@@ -69,11 +69,11 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
-    <style name="OssTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/defaultPrimary</item>
-        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
-        <item name="colorAccent">@color/defaultAccent</item>
-        <item name="android:windowBackground">@color/canvasBackgroundOffWhite</item>
+    <style name="OssTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/dim_lighter_gray</item>
+        <item name="colorAccent">@color/canvas_default_accent</item>
+        <item name="android:windowBackground">@color/canvasBackgroundWhite</item>
         <item name="android:buttonStyle">@style/ButtonCanvasTheme</item>
     </style>
 

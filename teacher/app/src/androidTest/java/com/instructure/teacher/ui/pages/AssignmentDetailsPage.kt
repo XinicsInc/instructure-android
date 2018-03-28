@@ -16,8 +16,8 @@
 package com.instructure.teacher.ui.pages
 
 import android.support.test.InstrumentationRegistry
+import com.instructure.soseedy.Assignment
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.Assignment
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.PageWithIdAssert
@@ -67,7 +67,7 @@ class AssignmentDetailsPage : BasePage(), PageAssert by PageWithIdAssert(R.id.as
     }
 
     fun openSubmissionsPage() {
-        viewAllSubmissions.click()
+        viewAllSubmissions.scrollTo().click()
     }
 
     fun assertAssignmentDetails(assignment: Assignment) {

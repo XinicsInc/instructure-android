@@ -161,7 +161,7 @@ public abstract class BaseRouterActivity extends BaseParentActivity {
                     Long.toString(assignmentId),
                     new StatusCallback<Assignment>() {
                         @Override
-                        public void onResponse(Response<Assignment> response, LinkHeaders linkHeaders, ApiType type) {
+                        public void onResponse(@NonNull Response<Assignment> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                             assignmentHelper(response.body());
                         }
 
@@ -173,8 +173,8 @@ public abstract class BaseRouterActivity extends BaseParentActivity {
                         }
 
                         @Override
-                        public void onFail(Call<Assignment> response, Throwable error, int code) {
-                            if (code == 404) {
+                        public void onFail(@Nullable Call<Assignment> call, @NonNull Throwable error, @Nullable Response response) {
+                            if (response != null && response.code() == 404) {
                                 Toast.makeText(BaseRouterActivity.this, R.string.could_not_route_assignment, Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -193,13 +193,13 @@ public abstract class BaseRouterActivity extends BaseParentActivity {
                     Long.toString(announcementId),
                     new StatusCallback<DiscussionTopicHeader>() {
                         @Override
-                        public void onResponse(Response<DiscussionTopicHeader> response, LinkHeaders linkHeaders, ApiType type) {
+                        public void onResponse(@NonNull Response<DiscussionTopicHeader> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                             startActivity(DetailViewActivity.createIntent(BaseRouterActivity.this, DetailViewActivity.DETAIL_FRAGMENT.ANNOUNCEMENT, response.body(), canvasContext.getName(), student));
                             overridePendingTransition(R.anim.slide_from_bottom, android.R.anim.fade_out);
                         }
 
                         @Override
-                        public void onFail(Call<DiscussionTopicHeader> response, Throwable error, int code) {
+                        public void onFail(@Nullable Call<DiscussionTopicHeader> call, @NonNull Throwable error, @Nullable Response response) {
                             Toast.makeText(BaseRouterActivity.this, R.string.errorOccurred, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -215,13 +215,13 @@ public abstract class BaseRouterActivity extends BaseParentActivity {
                     Long.toString(eventId),
                     new StatusCallback<ScheduleItem>() {
                         @Override
-                        public void onResponse(Response<ScheduleItem> response, LinkHeaders linkHeaders, ApiType type) {
+                        public void onResponse(@NonNull Response<ScheduleItem> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                             startActivity(DetailViewActivity.createIntent(BaseRouterActivity.this, DetailViewActivity.DETAIL_FRAGMENT.EVENT, response.body(), student));
                             overridePendingTransition(R.anim.slide_from_bottom, android.R.anim.fade_out);
                         }
 
                         @Override
-                        public void onFail(Call<ScheduleItem> response, Throwable error, int code) {
+                        public void onFail(@Nullable Call<ScheduleItem> call, @NonNull Throwable error, @Nullable Response response) {
                             Toast.makeText(BaseRouterActivity.this, R.string.errorOccurred, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -254,8 +254,8 @@ public abstract class BaseRouterActivity extends BaseParentActivity {
                 new StatusCallback<AccountNotification>() {
 
                     @Override
-                    public void onResponse(Response<AccountNotification> accountNotificationResponse, LinkHeaders linkHeaders, ApiType type) {
-                        if (accountNotificationResponse != null && accountNotificationResponse.body() != null) {
+                    public void onResponse(@NonNull Response<AccountNotification> accountNotificationResponse, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
+                        if (accountNotificationResponse.body() != null) {
                             startActivity(DetailViewActivity.createIntent(BaseRouterActivity.this, DetailViewActivity.DETAIL_FRAGMENT.ACCOUNT_NOTIFICATION, accountNotificationResponse.body(), student));
                             overridePendingTransition(R.anim.slide_from_bottom, android.R.anim.fade_out);
                         }
@@ -271,7 +271,7 @@ public abstract class BaseRouterActivity extends BaseParentActivity {
                 id,
                 new StatusCallback<Course>() {
                     @Override
-                    public void onResponse(Response<Course> response, LinkHeaders linkHeaders, ApiType type) {
+                    public void onResponse(@NonNull Response<Course> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                         if (response.body() == null) {
                             Toast.makeText(BaseRouterActivity.this, getString(R.string.could_not_route_course), Toast.LENGTH_SHORT).show();
                         } else {
@@ -409,10 +409,10 @@ public abstract class BaseRouterActivity extends BaseParentActivity {
                 "files/" + fileID,
                 new StatusCallback<FileFolder>() {
                     @Override
-                    public void onResponse(Response<FileFolder> response, LinkHeaders linkHeaders, ApiType type, int code) {
+                    public void onResponse(@NonNull Response<FileFolder> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                         if (type == ApiType.API) {
                             FileFolder fileFolder = response.body();
-                            if (fileFolder == null || code == 404) {
+                            if (fileFolder == null || response.code() == 404) {
                                 Toast.makeText(BaseRouterActivity.this, R.string.fileNoLongerExists, Toast.LENGTH_LONG).show();
                             } else {
                                 if (fileFolder.isLocked() || fileFolder.isLockedForUser()) {
@@ -425,8 +425,8 @@ public abstract class BaseRouterActivity extends BaseParentActivity {
                     }
 
                     @Override
-                    public void onFail(Call<FileFolder> response, Throwable error, int code) {
-                        if (code == 404) {
+                    public void onFail(@Nullable Call<FileFolder> call, @NonNull Throwable error, @Nullable Response response) {
+                        if (response != null && response.code() == 404) {
                             Toast.makeText(BaseRouterActivity.this, R.string.fileNoLongerExists, Toast.LENGTH_LONG).show();
                         }
                     }

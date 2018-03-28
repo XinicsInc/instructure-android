@@ -25,7 +25,8 @@ import com.instructure.teacher.dialog.CustomizeGradeDialog
 import com.instructure.teacher.dialog.PassFailGradeDailog
 import com.instructure.teacher.factory.SpeedGraderGradePresenterFactory
 import com.instructure.teacher.presenters.SpeedGraderGradePresenter
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.TeacherPrefs
+import com.instructure.teacher.utils.getGradeText
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.SpeedGraderGradeView
 import kotlinx.android.synthetic.main.fragment_speedgrader_grade.*
@@ -58,6 +59,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         super.onStop()
     }
 
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onQuizSaved(event: QuizSubmissionGradedEvent) {
         event.once("GradeFragment|${mCourse.id}|${mAssignment.id}|${mSubmission?.id}|${mAssignee.id}") {
@@ -88,8 +90,36 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         } else {
             gradeValueText.setVisible(true)
             addGradeIcon.setVisible(false)
-            gradeValueText.text = grade
+
+            var currentGrade = grade
+            // check to see if this submission has a late penalty
+            if(presenter.submission?.pointsDeducted != null && presenter.submission?.pointsDeducted as Double > 0.0) {
+                // make the late policy information visible
+                finalGradeValueText.setVisible(true)
+                latePenaltyValue.setVisible(true)
+                latePolicy.setVisible(true)
+                finalGradeContainer.setVisible(true)
+
+                latePenalty.setTextColor(ThemePrefs.brandColor)
+                latePenaltyValue.setTextColor(ThemePrefs.brandColor)
+
+                finalGradeValueText.text = grade
+                latePenaltyValue.text = context.resources.getQuantityString(R.plurals.latePolicyPenalty, if(presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
+                latePenaltyValue.contentDescription = context.resources.getQuantityString(R.plurals.latePolicyPenaltyFull, if(presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
+
+                // change the currentGrade variable to the entered grade because the actual grade on the submission applies the late penalty
+                currentGrade = presenter.assignment.getGradeText(presenter.submission, context, true, true)
+            }
+            gradeValueText.text = currentGrade
+
+            // if the submission is late, we want to show the entered score here
+            var score = if (presenter.submission?.pointsDeducted == null) presenter.submission?.score as Double else presenter.submission?.enteredScore as Double
             gradeValueText.contentDescription = when (grade.contains("/")) {
+                true -> context.getString(R.string.grade_value_format_talk_back, NumberHelper.formatDecimal(score, 2, true), NumberHelper.formatDecimal(presenter.assignment.pointsPossible, 2, true))
+                false -> grade
+            }
+
+            finalGradeValueText.contentDescription = when (finalGradeValueText.text.contains("/")) {
                 true -> context.getString(R.string.grade_value_format_talk_back, NumberHelper.formatDecimal(presenter.submission?.score as Double, 2, true), NumberHelper.formatDecimal(presenter.assignment.pointsPossible, 2, true))
                 false -> grade
             }
@@ -106,6 +136,16 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     }
 
     private fun setupViews() {
+
+        /* Mobile doesn't support moderated grading yet. If moderated grading is enabled
+        for this assignment, hide all grading options and display a message to the user */
+        if (presenter.assignment.isModeratedGrading) {
+            gradeContainer.setGone()
+            rubricEditView.setGone()
+            moderatedGradingMessage.setVisible()
+            return
+        }
+
         updateGradeText()
 
         if (presenter.assignment.isUseRubricForGrading) {
@@ -115,7 +155,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             gradeSubtext.setVisible(false)
         }
 
-        gradeValueContainer.onClickWithRequireNetwork {
+        gradeTextContainer.onClickWithRequireNetwork {
             // Scores for submitted quizzes must be edited in the WebView, so we disallow editing here
             if (presenter.assignment.quizId > 0 && presenter.assignment.getGradeText(presenter.submission, context).isNotBlank()) {
                 return@onClickWithRequireNetwork

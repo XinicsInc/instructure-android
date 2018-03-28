@@ -34,9 +34,9 @@ public class ModuleHeaderViewHolder extends RecyclerView.ViewHolder {
 
     public ModuleHeaderViewHolder(View itemView) {
         super(itemView);
-        title = (TextView) itemView.findViewById(R.id.title);
-        moduleStatus = (ImageView) itemView.findViewById(R.id.moduleStatus);
-        expandCollapse = (ImageView) itemView.findViewById(R.id.expandCollapse);
+        title = itemView.findViewById(R.id.title);
+        moduleStatus = itemView.findViewById(R.id.moduleStatus);
+        expandCollapse = itemView.findViewById(R.id.expandCollapse);
         divider = itemView.findViewById(R.id.divider);
     }
 

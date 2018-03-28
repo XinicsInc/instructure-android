@@ -32,7 +32,6 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
-import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
@@ -40,11 +39,11 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.QuizDetailsPresenterFactory
-import com.instructure.teacher.interfaces.Identity
-import com.instructure.teacher.interfaces.MasterDetailInteractions
+import com.instructure.interactions.Identity
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter.SubmissionListFilter
 import com.instructure.teacher.presenters.QuizDetailsPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.QuizDetailsView
@@ -209,11 +208,9 @@ class QuizDetailsFragment : BasePresenterFragment<
             }
         }
 
-        if (BuildConfig.POINT_TWO) {
-            submissionsLayout.setVisible()
-        } else {
-            submissionsLayout.setGone()
-        }
+        // If the user is a designer we don't want to show the submissions layout
+        submissionsLayout.setVisible(!mCourse.isDesigner)
+
 
         if (!isGradeable) {
             // Quiz is not gradeable, don't show submission dials
@@ -343,10 +340,10 @@ class QuizDetailsFragment : BasePresenterFragment<
             override fun onPageStartedCallback(webView: WebView?, url: String?) {}
             override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
             override fun routeInternallyCallback(url: String?) {
-                RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)
+                RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, true)
             }
 
-            override fun canRouteInternallyDelegate(url: String?): Boolean = RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
+            override fun canRouteInternallyDelegate(url: String?): Boolean = RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, false)
 
         }
 

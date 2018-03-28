@@ -65,6 +65,7 @@ public class SwipeRefreshLayoutAppBar extends SwipeRefreshLayout implements AppB
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        this.setEnabled(i == 0);
+        // Keep enabled if it's currently refreshing
+        setEnabled(i == 0 || isRefreshing());
     }
 }

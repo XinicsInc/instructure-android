@@ -33,9 +33,9 @@ class CanvasContextPermissionUnitTest : Assert() {
         Assert.assertNotNull(course)
         Assert.assertNotNull(course.permissions)
         Assert.assertTrue(course.canCreateDiscussion())
-        Assert.assertTrue(course.permissions.canCreateDiscussionTopic)
-        Assert.assertFalse(course.permissions.canUpdateAvatar)
-        Assert.assertFalse(course.permissions.canUpdateName)
+        Assert.assertTrue(course.permissions!!.canCreateDiscussionTopic)
+        Assert.assertFalse(course.permissions!!.canUpdateAvatar)
+        Assert.assertFalse(course.permissions!!.canUpdateName)
     }
 
     @Test
@@ -44,11 +44,11 @@ class CanvasContextPermissionUnitTest : Assert() {
 
         Assert.assertNotNull(user)
         Assert.assertNotNull(user.permissions)
-        Assert.assertFalse(user.permissions.canCreateDiscussionTopic)
+        Assert.assertFalse(user.permissions!!.canCreateDiscussionTopic)
         Assert.assertTrue(user.canUpdateAvatar())
         Assert.assertTrue(user.canUpdateName())
-        Assert.assertTrue(user.permissions.canUpdateAvatar)
-        Assert.assertTrue(user.permissions.canUpdateName)
+        Assert.assertTrue(user.permissions!!.canUpdateAvatar)
+        Assert.assertTrue(user.permissions!!.canUpdateName)
     }
 
     @Language("JSON")

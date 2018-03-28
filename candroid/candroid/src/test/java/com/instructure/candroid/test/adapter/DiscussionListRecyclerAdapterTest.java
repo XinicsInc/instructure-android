@@ -22,6 +22,7 @@ import android.test.InstrumentationTestCase;
 
 import com.instructure.candroid.adapter.DiscussionListRecyclerAdapter;
 import com.instructure.canvasapi2.models.DiscussionTopicHeader;
+import com.instructure.canvasapi2.utils.APIHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +36,7 @@ import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class DiscussionListRecyclerAdapterTest extends InstrumentationTestCase {
     private DiscussionListRecyclerAdapter mAdapter;
@@ -86,7 +87,7 @@ public class DiscussionListRecyclerAdapterTest extends InstrumentationTestCase {
         d1.setTitle("discussion1");
         DateTime dateTime2 = new DateTime("2014-12-29");
         Date date = new Date(dateTime2.getMilliseconds(TimeZone.getDefault()));
-        d1.setLastReply(date);
+        d1.setLastReplyAt(APIHelper.dateToString(date));
 
         DiscussionTopicHeader d2 = new DiscussionTopicHeader();
         d2.setTitle("discussion2");
@@ -102,7 +103,7 @@ public class DiscussionListRecyclerAdapterTest extends InstrumentationTestCase {
         d1.setTitle("discussion1");
         DateTime dateTime2 = new DateTime("2014-12-29");
         Date date = new Date(dateTime2.getMilliseconds(TimeZone.getDefault()));
-        d1.setPostedAt(date);
+        d1.setPostedAt(APIHelper.dateToString(date));
 
         DiscussionTopicHeader d2 = new DiscussionTopicHeader();
         d2.setTitle("discussion2");
@@ -118,11 +119,11 @@ public class DiscussionListRecyclerAdapterTest extends InstrumentationTestCase {
         d1.setTitle("discussion1");
         DateTime dateTime1 = new DateTime("2014-12-27");
         Date date1 = new Date(dateTime1.getMilliseconds(TimeZone.getDefault()));
-        d1.setLastReply(date1);
+        d1.setLastReplyAt(APIHelper.dateToString(date1));
         DiscussionTopicHeader d2 = new DiscussionTopicHeader();
         DateTime dateTime2 = new DateTime("2014-12-29");
         Date date2 = new Date(dateTime2.getMilliseconds(TimeZone.getDefault()));
-        d2.setLastReply(date2);
+        d2.setLastReplyAt(APIHelper.dateToString(date2));
         d2.setTitle("discussion2");
 
         // callback sorts most recent date first

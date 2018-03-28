@@ -40,23 +40,21 @@ class ProfileEditFragmentPresenter : FragmentPresenter<ProfileEditFragmentView>(
 
     override fun loadData(forceNetwork: Boolean) {
         UserManager.getSelfWithPermissions(forceNetwork, object: StatusCallback<User>() {
-            override fun onResponse(response: Response<User>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-                if(response != null && response.body() != null) {
+            override fun onResponse(response: Response<User>, linkHeaders: LinkHeaders, type: ApiType) {
+                response.body()?.let {
                     var permissions = ApiPrefs.user?.permissions
                     if(permissions == null) {
                         permissions = CanvasContextPermission()
                     }
-
-                    permissions.canUpdateAvatar = response.body().canUpdateAvatar()
-                    permissions.canUpdateName = response.body().canUpdateName()
+                    permissions.canUpdateAvatar = it.canUpdateAvatar()
+                    permissions.canUpdateName = it.canUpdateName()
 
                     ApiPrefs.user?.permissions = permissions
                 }
                 viewCallback?.readyToLoadUI(ApiPrefs.user)
             }
 
-            override fun onFail(response: Call<User>?, error: Throwable?) {
-                super.onFail(response, error)
+            override fun onFail(call: Call<User>?, error: Throwable, response: Response<*>?) {
                 viewCallback?.readyToLoadUI(null)
             }
         })
@@ -77,21 +75,23 @@ class ProfileEditFragmentPresenter : FragmentPresenter<ProfileEditFragmentView>(
         if(user != null) {
             if (user.canUpdateName()) {
                 UserManager.updateUserShortName(name, object : StatusCallback<User>() {
-                    override fun onResponse(response: Response<User>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-                        if (response != null && response.body() != null) {
-                            val updatedUser = ApiPrefs.user
-                            updatedUser?.shortName = response.body().shortName
-                            //For some crazy reason the api returns the changed email as email, which actually makes sense....
-                            //But for some other crazy reason when a user is fetched from canvas the email is now primary email.
-                            updatedUser?.primaryEmail = response.body().email
-                            ApiPrefs.user = updatedUser
-                            viewCallback?.successSavingProfile()
+                    override fun onResponse(response: Response<User>, linkHeaders: LinkHeaders, type: ApiType) {
+                        if (response.body() != null) {
+                            response.body()?.let {
+                                val updatedUser = ApiPrefs.user
+                                updatedUser?.shortName = it.shortName
+                                //For some crazy reason the api returns the changed email as email, which actually makes sense....
+                                //But for some other crazy reason when a user is fetched from canvas the email is now primary email.
+                                updatedUser?.primaryEmail = it.email
+                                ApiPrefs.user = updatedUser
+                                viewCallback?.successSavingProfile()
+                            }
                         } else {
                             viewCallback?.errorSavingProfile()
                         }
                     }
 
-                    override fun onFail(response: Call<User>?, error: Throwable?) {
+                    override fun onFail(call: Call<User>?, error: Throwable, response: Response<*>?) {
                         viewCallback?.errorSavingProfile()
                     }
                 })

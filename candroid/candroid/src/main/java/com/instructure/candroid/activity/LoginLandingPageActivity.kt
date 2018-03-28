@@ -21,24 +21,24 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.webkit.CookieManager
+import com.instructure.candroid.BuildConfig
 import com.instructure.candroid.R
-import com.instructure.candroid.service.PushRegistrationService
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
 import com.instructure.loginapi.login.snicker.SnickerDoodle
+import com.instructure.pandautils.services.PushNotificationRegistrationService
 
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        if (!PushRegistrationService.hasTokenBeenSentToServer(this)) {
-            startService(Intent(this, PushRegistrationService::class.java))//Register Push Notifications
-        }
+        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading, BuildConfig.PUSH_SERVICE_PROJECT_ID)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().flush()
         }
 
-        val intent = Intent(this, NavigationActivity.getStartActivityClass())
+        val intent = Intent(this, NavigationActivity.startActivityClass)
         if (getIntent() != null && getIntent().extras != null) {
             intent.putExtras(getIntent().extras)
         }
@@ -54,7 +54,7 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
     }
 
     override fun appTypeName(): Int {
-        return R.string.appTypeStudent
+        return R.string.appUserTypeStudent
     }
 
     override fun themeColor(): Int {

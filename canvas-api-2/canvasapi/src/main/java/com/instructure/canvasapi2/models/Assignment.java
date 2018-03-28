@@ -110,6 +110,8 @@ public class Assignment extends CanvasModel<Assignment> {
     private boolean isOnlyVisibleToOverrides;
     @SerializedName("anonymous_peer_reviews")
     private boolean anonymousPeerReviews;
+    @SerializedName("moderated_grading")
+    private boolean isModeratedGrading;
 
     @Override
     public long getId() {
@@ -402,20 +404,21 @@ public class Assignment extends CanvasModel<Assignment> {
             return null;
         }
     }
-    public static GRADING_TYPE getGradingTypeFromAPIString(String gradingType){
-        if(gradingType.equals("pass_fail")){
+
+    public static GRADING_TYPE getGradingTypeFromAPIString(String gradingType) {
+        if ("pass_fail".equals(gradingType)) {
             return GRADING_TYPE.PASS_FAIL;
-        } else if(gradingType.equals("percent")){
+        } else if ("percent".equals(gradingType)) {
             return GRADING_TYPE.PERCENT;
-        } else if(gradingType.equals("letter_grade")){
+        } else if ("letter_grade".equals(gradingType)) {
             return GRADING_TYPE.LETTER_GRADE;
-        } else if (gradingType.equals("points")){
+        } else if ("points".equals(gradingType)) {
             return GRADING_TYPE.POINTS;
-        } else if (gradingType.equals("gpa_scale")){
+        } else if ("gpa_scale".equals(gradingType)) {
             return GRADING_TYPE.GPA_SCALE;
-        } else if(gradingType.equals("not_graded")){
+        } else if ("not_graded".equals(gradingType)) {
             return GRADING_TYPE.NOT_GRADED;
-        }else{
+        } else {
             return null;
         }
     }
@@ -645,6 +648,10 @@ public class Assignment extends CanvasModel<Assignment> {
         return anonymousPeerReviews;
     }
 
+    public boolean isModeratedGrading() {
+        return isModeratedGrading;
+    }
+
     //endregion
 
     //region Setters
@@ -815,6 +822,10 @@ public class Assignment extends CanvasModel<Assignment> {
         this.anonymousPeerReviews = anonymousPeerReviews;
     }
 
+    public void setModeratedGrading(boolean moderatedGrading) {
+        isModeratedGrading = moderatedGrading;
+    }
+
     //endregion
 
     //region Parcelable
@@ -867,6 +878,7 @@ public class Assignment extends CanvasModel<Assignment> {
         dest.writeTypedList(this.overrides);
         dest.writeByte(this.isOnlyVisibleToOverrides ? (byte) 1 : (byte) 0);
         dest.writeByte(this.anonymousPeerReviews ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isModeratedGrading ? (byte) 1 : (byte) 0);
     }
 
     protected Assignment(Parcel in) {
@@ -908,6 +920,7 @@ public class Assignment extends CanvasModel<Assignment> {
         this.overrides = in.createTypedArrayList(AssignmentOverride.CREATOR);
         this.isOnlyVisibleToOverrides = in.readByte() != 0;
         this.anonymousPeerReviews = in.readByte() != 0;
+        this.isModeratedGrading = in.readByte() != 0;
     }
 
     public static final Creator<Assignment> CREATOR = new Creator<Assignment>() {

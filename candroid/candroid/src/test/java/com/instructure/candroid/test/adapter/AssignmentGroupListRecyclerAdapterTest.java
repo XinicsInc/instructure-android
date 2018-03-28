@@ -22,6 +22,7 @@ import android.test.InstrumentationTestCase;
 
 import com.instructure.candroid.adapter.AssignmentGroupListRecyclerAdapter;
 import com.instructure.canvasapi2.models.Assignment;
+import com.instructure.canvasapi2.utils.APIHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ import org.robolectric.annotation.Config;
 import java.util.Date;
 
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class AssignmentGroupListRecyclerAdapterTest extends InstrumentationTestCase  {
     private AssignmentGroupListRecyclerAdapter mAdapter;
@@ -72,7 +73,7 @@ public class AssignmentGroupListRecyclerAdapterTest extends InstrumentationTestC
     public void testAreContentsTheSame_oneNullDueDate() {
         Assignment assignmentDueDate  = new Assignment();
         assignmentDueDate.setName("Assign1");
-        assignmentDueDate.setDueDate(new Date());
+        assignmentDueDate.setDueAt(APIHelper.dateToString(new Date()));
         Assignment assignment1  = new Assignment();
         assignment1.setName("Assign1");
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(assignmentDueDate, assignment1));

@@ -1,167 +1,193 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="chooseMedia">Media kiezen</string>
-  <string name="takeVideo">Video maken</string>
-  <string name="noCameraOnDevice">Geen camera</string>
-  <!--NotoriousPicker/uploadService-->
-  <string name="notificationTitle">Uploaden naar Canvas</string>
-  <string name="preparingUpload">Upload aan het voorbereiden</string>
-  <string name="loadingFilesIndeterminate">Bestanden aan het laden...</string>
-  <string name="fileUploadSuccess">Uploaden gelukt</string>
-  <string name="noNetwork">Netwerk niet beschikbaar - probeer het later nogmaals!</string>
-  <string name="uploadMessage">\"Bezig met uploaden. Bekijk meldingen voor status upload.</string>
-  <string name="mediaUpload">Media Upload</string>
-  <string name="uploadingFile">Bestanden aan het uploaden...</string>
-  <string name="errorUploadingFile">Er heeft zich een fout voorgedaan bij het uploaden van je bestand. Probeer het nogmaals.</string>
-  <string name="fileSubmission">Bestand(en) indienen</string>
-  <string name="uploadFiles">Bestand(en) uploaden</string>
-  <string name="upload">Uploaden</string>
-  <string name="errorSendingMessage">Er heeft zich een fout voorgedaan bij het verzenden van je bericht. Probeer het nogmaals.</string>
-  <!--Turn in Files-->
-  <string name="chooseFileSource">Kies bestandsformulier uit...</string>
-  <string name="addFile">Bestand toevoegen</string>
-  <string name="choose_a_file">Een bestand kiezen</string>
-  <string name="fromCamera">Camera</string>
-  <string name="fromGallery">Galerij</string>
-  <string name="fromDevice">Apparaat</string>
-  <string name="fromOtherApplication">Overig</string>
-  <string name="Domain">Domein</string>
-  <string name="files">Bestanden</string>
-  <string name="file">Bestand</string>
-  <string name="addItem">Item toevoegen</string>
-  <string name="assignment">Opdracht</string>
-  <string name="attachedFiles">Bijgevoegde bestanden</string>
-  <string name="turnIn">Inleveren</string>
-  <string name="course">Cursus</string>
-  <string name="sending">Aan het zenden...</string>
-  <!--rating dialog-->
-  <string name="star1">Ster Beoordeling Een</string>
-  <string name="star2">Ster Beoordeling Twee</string>
-  <string name="star3">Ster Beoordeling Drie</string>
-  <string name="star4">Ster Beoordeling Vier</string>
-  <string name="star5">Ster Beoordeling Vijf</string>
-  <!--Submitting files-->
-  <string name="fileQuotaExceeded">Je hebt nu je quota voor het opslaan van bestanden overschreden</string>
-  <string name="errorSubmittingFiles">Er heeft zich een fout voorgedaan bij het inleveren van je bestanden. Probeer het nogmaals.</string>
-  <string name="errorLoadingFiles">Er heeft zich een fout voorgedaan bij het uploaden van je bestand. Probeer het nogmaals.</string>
-  <string name="filesUploadedSuccessfully">Bestanden succesvol geüpload</string>
-  <string name="filesSubmittedSuccessfully">Bestanden succesvol ingediend.</string>
-  <string name="messageSentSuccessfully">Bericht succesvol verzonden.</string>
-  <string name="shareWithCanvas">Andere apps kunnen bestanden delen met Canvas! Zoek de icoon hieronder in de apps en tik op Canvas.</string>
-  <string name="shareWithCanvas2">Dat zal deze app openen. Selecteer daarna gewoon voor welke cursus en opdracht je het bestand wilt inleveren.</string>
-  <string name="contentDescriptionSocialShare">Icoon delen</string>
-  <string name="submitAssignment">Opdracht indienen</string>
-  <string name="assignmentHeader">Opdracht:</string>
-  <string name="submittingAssignment">Opdracht aan het indienen...</string>
-  <string name="conversations">Gesprekken</string>
-  <string name="inbox">Postbus</string>
-  <string name="divider">Verdeler</string>
-  <string name="legal">Juridisch</string>
-  <string name="completeHomework">Je huiswerk AFMAKEN</string>
-  <string name="takeExam">Een examen doen</string>
-  <string name="fileIcon">Bestand icoon</string>
-  <string name="uploadingFileNum" formatted="false">Aan het uploaden %d van %d</string>
-  <string name="fileLocked" formatted="false">%s is vergrendeld.</string>
-  <string name="filePermissionGranted">Bestand is nu klaar om te downloaden, probeer het nogmaals.</string>
-  <string name="filePermissionDenied">Het bestand kan niet gedownload worden zonder verleende toestemming.</string>
-  <string name="pleaseTryAgain">Toestemming verleend, probeer het opnieuw.</string>
-  <string name="pickVideo">Selecteer een video</string>
-  <!--Errors-->
-  <string name="errorOccurred">Er heeft zich een onverwachte fout voorgedaan.</string>
-  <string name="serverError">Er heeft zich een serverfout voorgedaan.</string>
-  <string name="unauthorized">Je bent niet bevoegd om toegang hiertoe te verkrijgen.  Of je hebt geen vergunningen, of je hebt nog geen toegang (je cursus is bijvoorbeeld nog niet begonnen).</string>
-  <string name="fileNoLongerExists">Dat bestand bestaat niet meer.</string>
-  <string name="invalidAccessToken">Je sessie is verlopen. Log opnieuw in om een nieuwe sessie te beginnen.</string>
-  <string name="uploadingFromSourceFailed">Het uploaden van een bestand van deze bron kon niet voltooid worden.</string>
-  <string name="errorGettingPhoto">Er heeft zich een fout voorgedaan om deze foto te verkrijgen. Probeer het nogmaals.</string>
-  <string name="errorTextMissing">Voeg wat tekst toe om een bericht te verzenden</string>
-  <string name="fileUploadNotSupported">Je kunt geen bestanden uploaden naar de geselecteerde opdracht.</string>
-  <string name="noCourseSelected">Selecteer een cursus</string>
-  <string name="selectCourse">Selecteer een cursus</string>
-  <string name="selectAssignment">Selecteer een opdracht</string>
-  <string name="loadingAssignments">Opdrachten aan het laden...</string>
-  <string name="noAssignmentSelected">Selecteer een opdracht</string>
-  <string name="noAssignmentsWithFileUpload">Deze cursus heeft geen opdrachten die het uploaden van bestanden toestaat.</string>
-  <string name="teacherNotAllowedFileSubmission">Als leraar in deze cursus kan je geen bestanden indienen</string>
-  <string name="noFilesUploaded">Je hebt geen bestanden geselecteerd.</string>
-  <string name="oneOrMoreExtensionNotAllowed">Een of meer bestanden hebben een bestandsextentie die niet is toegestaan.</string>
-  <string name="extensionNotAllowed">Het geselecteerde bestandssoort is niet toegestaan.</string>
-  <string name="allowedExtensions">Toegestane extensies:</string>
-  <!--Media Task Loader-->
-  <string name="noDataConnection">Controleer je dataverbinding en probeer het nogmaals.</string>
-  <string name="noApps">Je apparaat heeft geen applicaties geïnstalleerd die dit bestand aankunnen.</string>
-  <string name="noAppsShort">Kan niet openen</string>
-  <string name="unexpectedErrorOpeningFile">Er heeft zich een onverwachte fout voorgedaan bij het openen van het bestand.</string>
-  <string name="unexpectedErrorDownloadingFile">Er heeft zich een onverwachte fout voorgedaan bij het downloaden van het bestand.</string>
-  <string name="done">Klaar</string>
-  <!--Tutorial Messages-->
-  <string name="tutorial_tipColorPickerTitle">Kies een cursuskleur</string>
-  <string name="tutorial_tipColorPickerMessage">Je kunt uit een verscheidenheid aan kleuren kiezen om je cursussen aan te passen.</string>
-  <string name="tutorial_tipCourseGradesTitle">Snel cijfers bekijken</string>
-  <string name="tutorial_tipCourseGradesMessage">Ga naar cijfers door op het cijfer van de cursus te klikken.</string>
-  <string name="tutorial_tipLandingPageTitle">Kies een landingspagina</string>
-  <string name="tutorial_tipLandingPageMessage">Door een landingspagina te selecteren, zal Canvas automatisch naar die pagina laden als de app start.</string>
-  <string name="tutorial_tipLockSlideTitle">Scherm vergrendelen of ontgrendelen</string>
-  <string name="tutorial_tipLockSlideMessage">Door het scherm te vergrendelen, kun je in het scherm scrollen zonder het navigatiemenu te openen.</string>
-  <string name="tutorial_tipHideStudentNames">Namen verbergen tijdens instelling cijfers</string>
-  <string name="tutorial_tipHideStudentNamesMessage">Partijdigheid voorkomen door cursistennamen te verbergen.</string>
-  <string name="tutorial_tipMyCoursesTitle">Mijn cursussen</string>
-  <string name="tutorial_tipMyCoursesMessage">In een oogwenk schakelen tussen \"Mijn cursussen\" en \"Alle Cursussen\"!</string>
-  <string name="tutorial_tipSwitchUsers">Wissel van gebruikers</string>
-  <string name="tutorial_tipSwitchUsersMessage">Gemakkelijk wisselen en toevoegen van gebruikers</string>
-  <string name="tutorial_tipViewProfile">Je pofiel</string>
-  <string name="tutorial_tipViewProfileMessage">Bekijk en wijzig je profiel avatar of achtergrond. Je kunt ook je persoonlijke bestanden bekijken.</string>
-  <string name="tutorial_tipNotificationPreferences">Voorkeuren voor berichtgeving</string>
-  <string name="tutorial_tipNotificationPreferencesMessage">Filter je voorkeuren en schakel de vakjes in om een bepaalde meldingssoort in of uit te schakelen.</string>
-  <string name="tutorial_tipNavigationShortcuts">Snel tussen cursussen wisselen</string>
-  <string name="tutorial_tipNavigationShortcutsMessage">Schakelen tussen je favoriete cursussen.</string>
-  <!--Permissions-->
-  <string name="permissionDenied">Om deze functie te gebruiken, moet je eerst toestemming hebben gekregen.</string>
-  <string name="noConnection">Geen verbinding</string>
-  <!--General-->
-  <string name="yes">Ja</string>
-  <string name="no">Nee</string>
-  <string name="inbox_all">Inbox</string>
-  <string name="inbox_unread">Ongelezen</string>
-  <string name="inbox_starred">Met ster</string>
-  <string name="inbox_sent">Verzonden</string>
-  <string name="inbox_archived">Gearchiveerd</string>
-  <string name="forbidden">Antwoorden zijn alleen zichtbaar voor degenen die minimaal één antwoord hebben geplaatst.</string>
-  <string name="like">Like</string>
-  <string name="likes">Likes</string>
-  <string name="lockedAssignmentNotModule">Deze opdracht is vergrendeld.</string>
-  <string name="deletedEntryNoChildren">Dit verwijderde discussieonderwerp heeft geen reacties.</string>
-  <string name="deleted">[Deleted]</string>
-  <string name="deleted_by">[Verwijderd door %1$s]</string>
-  <string name="lockedDiscussionDesc">Deze discussie  is onderdeel van de module %s en is nog niet ontgrendeld.</string>
-  <string name="gradedDiscussion">Beoordeelde discussie</string>
-  <string name="pointsPossible">Aantal punten mogelijk</string>
-  <string name="sideCommentEntry">In dit soort discussie kun je bij geen enkel onderwerp op dit niveau opmerkingen plaatsen.</string>
-  <string name="accessibility_overflow">Surplus</string>
-  <string name="discussion_response">Opmerking</string>
-  <string name="discussion_responses">Opmerkingen</string>
-  <string name="discussion_unread">Ongelezen</string>
-  <string name="discussion_reply">Antwoorden</string>
-  <string name="close">Sluiten</string>
-  <!--App Names-->
-  <string name="utils_canvas">Canvas</string>
-  <string name="utils_canvasTeacher">Canvas-docent</string>
-  <string name="utils_canvasParent">Canvas-ouder</string>
-  <string name="utils_polls">Canvas-polls</string>
-  <string name="utils_speedgrader">Speedgrader</string>
-  <!--Rating Dialog-->
-  <string name="utils_howAreWeDoing">Hoe gaat het?</string>
-  <string name="utils_rateUs">Hoe zou je ons beoordelen?</string>
-  <string name="utils_doBetter">Wat kunnen we beter doen?</string>
-  <string name="utils_sendFeedback">Feedback versturen</string>
-  <string name="utils_suggestions">Suggesties voor Android</string>
-  <string name="utils_domain">Domein</string>
-  <string name="utils_versionNum">Versie:</string>
-  <string name="utils_userId">Gebruikers-ID:</string>
-  <string name="utils_email">E-mail</string>
-  <string name="utils_dontShowAgain">Niet nogmaals tonen</string>
-  <string name="utils_installDate">Installatiedatum:</string>
-  <string name="utils_device">Apparaat</string>
-  <string name="utils_osVersion">OS Versie</string>
-  <string name="loading">Bezig met laden...</string>
+    <string name="chooseMedia">Media kiezen</string>
+    <string name="takeVideo">Video maken</string>
+    <string name="noCameraOnDevice">Geen camera</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Uploaden naar Canvas</string>
+    <string name="preparingUpload">Upload aan het voorbereiden</string>
+    <string name="loadingFilesIndeterminate">Bestanden aan het laden&#8230;</string>
+    <string name="fileUploadSuccess">Uploaden gelukt</string>
+    <string name="noNetwork">Netwerk niet beschikbaar - probeer het later nogmaals.</string>
+    <string name="uploadMessage">"Bezig met uploaden Bekijk meldingen voor uploadstatus.</string>
+    <string name="mediaUpload">Media Upload</string>
+    <string name="uploadingFile">Bestanden aan het uploaden&#8230;</string>
+    <string name="errorUploadingFile">Er is een fout opgetreden bij het uploaden van je bestand. Probeer het opnieuw.</string>
+    <string name="fileSubmission">Bestand(en) inleveren</string>
+    <string name="uploadFiles">Bestand(en) uploaden</string>
+    <string name="upload">Uploaden</string>
+    <string name="errorSendingMessage">Er is een fout opgetreden bij het verzenden van je bericht. Probeer het opnieuw.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Meldingen voor uploaden van bestanden</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-meldingen voor actieve uploads van bestanden.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Kies bestandsformulier uit&#8230;</string>
+    <string name="addFile">Een bestand toevoegen</string>
+    <string name="choose_a_file">Een bestand kiezen</string>
+
+    <string name="fromCamera">Camera</string>
+    <string name="fromGallery">Galerij</string>
+    <string name="fromDevice">Apparaat</string>
+    <string name="fromOtherApplication">Overige</string>
+    <string name="Domain">Domein</string>
+    <string name="files">Bestanden</string>
+    <string name="file">Bestand</string>
+    <string name="addItem">Item toevoegen</string>
+    <string name="assignment">Opdracht</string>
+    <string name="attachedFiles">Bijgevoegde bestanden</string>
+    <string name="turnIn">Inleveren</string>
+    <string name="course">Cursus</string>
+    <string name="sending">Aan het zenden&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Ster Beoordeling Een</string>
+    <string name="star2">Ster Beoordeling Twee</string>
+    <string name="star3">Ster Beoordeling Drie</string>
+    <string name="star4">Ster Beoordeling Vier</string>
+    <string name="star5">Ster Beoordeling Vijf</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Je hebt nu je quota voor het opslaan van bestanden overschreden</string>
+    <string name="errorSubmittingFiles">Er is een fout opgetreden bij het inleveren van je bestanden. Probeer het opnieuw.</string>
+    <string name="errorLoadingFiles">Er is een fout opgetreden bij het laden van je bestand. Controleer je internetverbinding en probeer het nogmaals.</string>
+    <string name="filesUploadedSuccessfully">Bestanden zijn geüpload.</string>
+    <string name="filesSubmittedSuccessfully">Bestanden zijn ingediend.</string>
+    <string name="messageSentSuccessfully">Bericht is verzonden.</string>
+    <string name="shareWithCanvas">Andere apps kunnen bestanden delen met Canvas! Zoek naar het onderstaande pictogram in apps en tik op Canvas.</string>
+    <string name="shareWithCanvas2">Daarmee wordt deze app geopend. Selecteer vervolgens voor welke cursus en opdracht je het bestand wilt inleveren.</string>
+    <string name="contentDescriptionSocialShare">Icoon delen</string>
+    <string name="submitAssignment">Opdracht inleveren</string>
+    <string name="assignmentHeader">Opdracht:</string>
+    <string name="submittingAssignment">Opdracht aan het inleveren&#8230;</string>
+    <string name="conversations">Gesprekken </string>
+    <string name="inbox">Inbox </string>
+    <string name="divider">Verdeler</string>
+    <string name="legal">Juridisch</string>
+    <string name="completeHomework">Je huiswerk AFMAKEN</string>
+    <string name="takeExam">Een examen doen</string>
+    <string name="fileIcon">Bestandspictogram</string>
+    <string name="uploadingFileNum" formatted="false">%d van %d wordt geüpload</string>
+    <string name="fileLocked" formatted="false">%s is vergrendeld.</string>
+    <string name="filePermissionGranted">Bestand is nu klaar om te downloaden, probeer het nogmaals.</string>
+    <string name="filePermissionDenied">Het bestand kan niet gedownload worden zonder verleende toestemming.</string>
+    <string name="pleaseTryAgain">Toestemming verleend, probeer het opnieuw.</string>
+    <string name="pickVideo">Selecteer een video</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Er is een onverwachte fout opgetreden.</string>
+    <string name="serverError">Er is een serverfout opgetreden.</string>
+    <string name="unauthorized">Je hebt geen toestemming voor toegang tot dit item. Of je hebt geen machtiging, of je hebt nog geen toegang (je cursus is bijvoorbeeld nog niet begonnen)</string>
+    <string name="fileNoLongerExists">Dat bestand bestaat niet meer.</string>
+    <string name="invalidAccessToken">Je sessie is verlopen. Log opnieuw in om een nieuwe sessie te beginnen.</string>
+    <string name="uploadingFromSourceFailed">Het uploaden van een bestand van deze bron kon niet voltooid worden.</string>
+    <string name="errorGettingPhoto">Er is een fout opgetreden bij het ophalen van de foto. Probeer het opnieuw.</string>
+    <string name="errorTextMissing">Voeg wat tekst toe om een bericht te verzenden</string>
+
+    <string name="fileUploadNotSupported">Je kunt geen bestanden uploaden naar de geselecteerde opdracht.</string>
+    <string name="noCourseSelected">Selecteer een cursus</string>
+    <string name="selectCourse">Een cursus selecteren</string>
+    <string name="selectAssignment">Een opdracht selecteren</string>
+    <string name="loadingAssignments">Opdrachten aan het laden&#8230;</string>
+    <string name="noAssignmentSelected">Selecteer een opdracht</string>
+    <string name="noAssignmentsWithFileUpload">Deze cursus heeft geen opdrachten die het uploaden van bestanden toestaat.</string>
+    <string name="teacherNotAllowedFileSubmission">Als leraar in deze cursus kun je geen bestanden indienen</string>
+    <string name="noFilesUploaded">Je hebt geen bestanden geselecteerd.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Een of meer bestanden hebben een bestandsextensie die niet is toegestaan.</string>
+    <string name="extensionNotAllowed">Het geselecteerde bestandstype is niet toegestaan.</string>
+    <string name="allowedExtensions">Toegestane extensies: </string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Controleer je dataverbinding en probeer het nogmaals. </string>
+    <string name="noApps">Er zijn op je apparaat geen applicaties geïnstalleerd die dit bestand kunnen verwerken.</string>
+    <string name="noAppsShort">Kan niet openen</string>
+    <string name="unexpectedErrorOpeningFile">Er heeft zich een onverwachte fout voorgedaan bij het openen van het bestand.</string>
+    <string name="unexpectedErrorDownloadingFile">Er heeft zich een onverwachte fout voorgedaan bij het downloaden van het bestand.</string>
+
+    <string name="done">Gereed</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Om deze functie te gebruiken, moet je eerst toestemming hebben gekregen.</string>
+    <string name="noConnection">Geen verbinding</string>
+
+    <!--General-->
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+
+    <string name="inbox_all">Inbox</string>
+    <string name="inbox_unread">Ongelezen</string>
+    <string name="inbox_starred">Met ster</string>
+    <string name="inbox_sent">Verzonden</string>
+    <string name="inbox_archived">Gearchiveerd</string>
+
+    <string name="forbidden">Antwoorden zijn alleen zichtbaar voor degenen die minimaal één antwoord hebben geplaatst.</string>
+
+    <string name="like">Like</string>
+    <string name="likes">Likes</string>
+    <string name="lockedAssignmentNotModule">Deze opdracht is vergrendeld.</string>
+    <string name="deletedEntryNoChildren">Dit verwijderde discussieonderwerp heeft geen reacties.</string>
+    <string name="deleted">[Deleted]</string>
+    <string name="deleted_by">[Verwijderd door %1$s]</string>
+    <string name="lockedDiscussionDesc">Deze discussie  is onderdeel van de module %s en is nog niet ontgrendeld.</string>
+    <string name="gradedDiscussion">Beoordeelde discussie</string>
+    <string name="pointsPossible">Aantal punten mogelijk</string>
+    <string name="sideCommentEntry">In dit soort discussie kun je bij geen enkel onderwerp op dit niveau opmerkingen plaatsen.</string>
+
+    <string name="accessibility_overflow">Surplus</string>
+
+    <string name="discussion_response">Opmerking</string>
+    <string name="discussion_responses">Opmerkingen</string>
+    <string name="discussion_unread">Ongelezen</string>
+    <string name="discussion_reply">Antwoord</string>
+    <string name="close">Afronding</string>
+
+    <string name="noInternetConnectionTitle">Geen internetverbinding</string>
+    <string name="noInternetConnectionMessage">Voor deze actie is een internetverbinding vereist.</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="formattedAvatarAction">Gebruikersdetails weergeven voor %s</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas-docent</string>
+    <string name="utils_canvasParent">Canvas-ouder</string>
+    <string name="utils_polls">Canvas-polls</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Hoe gaat het?</string>
+    <string name="utils_rateUs">Hoe zou je ons beoordelen?</string>
+    <string name="utils_doBetter">Wat kunnen we beter doen?</string>
+    <string name="utils_sendFeedback">Feedback versturen</string>
+    <string name="utils_suggestions">Suggesties voor Android</string>
+    <string name="utils_domain">Domein</string>
+    <string name="utils_versionNum">Versie:</string>
+    <string name="utils_userId">Gebruikers-ID:</string>
+    <string name="utils_email">E-mail</string>
+    <string name="utils_dontShowAgain">Niet opnieuw tonen</string>
+    <string name="utils_installDate">Installatiedatum:</string>
+    <string name="utils_device">Apparaat</string>
+    <string name="utils_osVersion">OS Versie</string>
+    <string name="loading">Bezig met laden&#8230;</string>
+    <string name="save">Opslaan</string>
+    <string name="cropInstructions">Knijp en sleep om de afbeelding aan te passen.</string>
+
 </resources>

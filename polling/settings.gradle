@@ -13,4 +13,4 @@ project(':pandautils').projectDir = new File(rootProject.projectDir, '/../pandau
 project(':login-api-2').projectDir = new File(rootProject.projectDir, '/../login-api-2')
 project(':recyclerview').projectDir = new File(rootProject.projectDir, '/../recyclerview')
 project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../canvas-api-2/canvasapi')
-project(':espresso').projectDir = new File(rootProject.projectDir, '/../espresso')
+project(':espresso').projectDir = new File(rootProject.projectDir, '/../automation/espresso')

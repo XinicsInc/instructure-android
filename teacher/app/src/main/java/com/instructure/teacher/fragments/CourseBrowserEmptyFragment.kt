@@ -23,7 +23,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.factory.CourseBrowserEmptyViewFactory
 import com.instructure.teacher.presenters.CourseBrowserEmptyPresenter
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.teacher.utils.color
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.viewinterface.CourseBrowserEmptyView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_course_browser_empty.*

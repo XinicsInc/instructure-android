@@ -78,7 +78,7 @@ internal object FileUploadAPI {
                     ).execute().body()
             /* At least one API endpoint (quizzes) returns a list instead of a single object, so we
             attempt to return the first item in the list or else fall back to the object itself */
-            return uploadParams.list?.firstOrNull() ?: uploadParams
+            return uploadParams?.list?.firstOrNull() ?: uploadParams
         } catch (ignore: Exception) {
             return null
         }

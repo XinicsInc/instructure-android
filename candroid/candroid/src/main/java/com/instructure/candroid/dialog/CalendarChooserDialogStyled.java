@@ -25,7 +25,10 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,12 +41,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.instructure.candroid.R;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.ThemePrefs;
+import com.instructure.pandautils.utils.ViewStyler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,12 +60,12 @@ public class CalendarChooserDialogStyled extends DialogFragment {
     private static final String TAG = "CalendarChooserDialogStyled";
 
     private boolean mIsFirstShow;
-    private LinkedHashMap<String, String> mAllContextIDs; // <id , name>
+    private HashMap<String, String> mAllContextIDs; // <id , name>
     private List<String> mAllContextCourseCodes; // <id, course_code>
-    private ArrayList<String> mSelectedIds; // list of context ids previously selected by the user
+    private ArrayList<String> mSelectedIds; // List of context ids previously selected by the user
 
     private boolean[] mCurrentCheckedPositions;
-    private boolean[] mOriginalCheckedPositions; // easy check for changed selection
+    private boolean[] mOriginalCheckedPositions; // Easy check for changed selection
     private static CalendarChooserCallback mCallback;
 
     public interface CalendarChooserCallback {
@@ -76,7 +80,13 @@ public class CalendarChooserDialogStyled extends DialogFragment {
      * @param contextIDs        List of all canvas contexts user can subscribe to
      * @param callback
      */
-    public static void show(FragmentActivity activity, ArrayList<String> cachedContextList, @NonNull HashMap<String, String> contextIDs, @NonNull ArrayList<String> contextCourseCodeIDs, boolean firstShow, CalendarChooserCallback callback)  {
+    public static void show (
+            FragmentActivity activity,
+            ArrayList<String> cachedContextList,
+            @NonNull HashMap<String, String> contextIDs,
+            @NonNull ArrayList<String> contextCourseCodeIDs,
+            boolean firstShow,
+            CalendarChooserCallback callback)  {
         CalendarChooserDialogStyled frag = new CalendarChooserDialogStyled();
         mCallback = callback;
 
@@ -87,7 +97,14 @@ public class CalendarChooserDialogStyled extends DialogFragment {
         args.putBoolean(Const.IS_FIRST_SHOW, firstShow);
         frag.setArguments(args);
 
-        frag.show(activity.getSupportFragmentManager(), TAG);
+        if(activity != null && !activity.getSupportFragmentManager().isStateSaved()) {
+            Fragment previous = activity.getSupportFragmentManager().findFragmentByTag(TAG);
+            if(previous != null) {
+                DialogFragment dialogFragment = (DialogFragment) previous;
+                dialogFragment.dismissAllowingStateLoss();
+            }
+            frag.show(activity.getSupportFragmentManager(), TAG);
+        }
     }
 
     @Override
@@ -96,13 +113,13 @@ public class CalendarChooserDialogStyled extends DialogFragment {
         User mUser = ApiPrefs.getUser();
 
         Bundle args = getArguments();
-        if(args != null) {
+        if (args != null) {
             mSelectedIds = args.getStringArrayList(Const.CALENDAR_DIALOG_FILTER_PREFS);
-            mAllContextIDs = (LinkedHashMap<String, String>) args.getSerializable(Const.CALENDAR_DIALOG_CONTEXT_IDS);
+            mAllContextIDs = (HashMap<String, String>) args.getSerializable(Const.CALENDAR_DIALOG_CONTEXT_IDS);
             mAllContextCourseCodes = (List<String>) args.getSerializable(Const.CALENDAR_DIALOG_CONTEXT_COURSE_IDS);
             mIsFirstShow = args.getBoolean(Const.IS_FIRST_SHOW);
 
-            if(mAllContextIDs == null){
+            if (mAllContextIDs == null) {
                 mAllContextIDs = new LinkedHashMap<>();
             }
 
@@ -110,9 +127,10 @@ public class CalendarChooserDialogStyled extends DialogFragment {
                 mAllContextCourseCodes = new ArrayList<>();
             }
 
-            if(mSelectedIds.size() == 0){
+            if (mSelectedIds.size() == 0) {
                 mSelectedIds.add(mUser.getContextId());
             }
+
             initCheckedItemsArray();
         }
     }
@@ -123,41 +141,64 @@ public class CalendarChooserDialogStyled extends DialogFragment {
         final FragmentActivity activity = getActivity();
 
         final CalendarChooserAdapter listAdapter = new CalendarChooserAdapter(activity, android.R.layout.select_dialog_multichoice);
-        final ListView listView;
+        final ListView listView = new ListView(activity);
+        listView.setAdapter(listAdapter);
 
-        MaterialDialog dialog = new MaterialDialog.Builder(activity)
-                .title(R.string.selectCanvasCalendars)
-                .adapter(listAdapter, null)
-                .positiveText(R.string.done)
-                .negativeText(R.string.cancel)
-                .autoDismiss(false)
-                .cancelable(false)
-                .callback(new MaterialDialog.ButtonCallback() {
+        // Override onItemCLick to implement "checking" behavior and handle contextsForReturn
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CheckBox checkBox = view.findViewById(R.id.checkBox);
+                String contextId = "";
+                if (view.getTag() instanceof ViewHolder) {
+                    contextId = ((ViewHolder) view.getTag()).contextId;
+                }
+
+                if (checkBox.isChecked()) {
+                    checkBox.setChecked(false);
+                    removeSelection(position, contextId);
+                } else {
+                    if (mSelectedIds.size() >= 10) {
+                        Toast.makeText(activity, getResources().getString(R.string.calendarDialog10Warning), Toast.LENGTH_SHORT).show();
+                    } else {
+                        checkBox.setChecked(true);
+                        addSelection(position, contextId);
+                    }
+                }
+            }
+        });
+
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setTitle(R.string.selectCanvasCalendars)
+                .setView(listView)
+                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onPositive(MaterialDialog dialog) {
+                    public void onClick(DialogInterface dialog, int which) {
                         if (mSelectedIds.size() > 0) {
                             if (mCallback != null) {
                                 if (selectionChanged()) {
-                                    //We only want to refresh if a change was made
+                                    // We only want to refresh if a change was made
                                     mCallback.onCalendarsSelected(getSelectedContexts());
                                 }
                             } else {
                                 Toast.makeText(activity, R.string.errorOccurred, Toast.LENGTH_SHORT).show();
                             }
+
                             dialog.dismiss();
                         } else {
                             Toast.makeText(activity, getResources().getString(R.string.calendarDialogNoneWarning), Toast.LENGTH_SHORT).show();
                         }
                     }
-
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onNegative(MaterialDialog dialog) {
+                    public void onClick(DialogInterface dialog, int which) {
                         if (mSelectedIds.size() < 1) {
                             Toast.makeText(activity, getResources().getString(R.string.calendarDialogNoneWarning), Toast.LENGTH_SHORT).show();
                         } else {
                             if (mCallback != null) {
                                 if (mIsFirstShow) {
-                                    //We only want to make a call here if its their first time (on negative)
+                                    // We only want to make a call here if it's their first time (on negative)
                                     mCallback.onCalendarsSelected(getSelectedContexts());
                                 }
                             }
@@ -165,13 +206,14 @@ public class CalendarChooserDialogStyled extends DialogFragment {
                         }
                     }
                 })
-                .dismissListener(new DialogInterface.OnDismissListener() {
+                .setCancelable(false)
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         if (mSelectedIds.size() > 0) {
                             if (mCallback != null) {
                                 if (mIsFirstShow) {
-                                    //We only want to make a call here if its their first time (on negative)
+                                    // We only want to make a call here if it's their first time (on negative)
                                     mCallback.onCalendarsSelected(getSelectedContexts());
                                 }
                             }
@@ -179,14 +221,14 @@ public class CalendarChooserDialogStyled extends DialogFragment {
                         dialog.dismiss();
                     }
                 })
-                .keyListener(new DialogInterface.OnKeyListener() {
+                .setOnKeyListener(new DialogInterface.OnKeyListener() {
                     @Override
                     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
                             if (mSelectedIds.size() > 0) {
                                 if (mCallback != null) {
                                     if (mIsFirstShow) {
-                                        //We only want to make a call here if its their first time (on negative)
+                                        // We only want to make a call here if it's their first time (on negative)
                                         mCallback.onCalendarsSelected(getSelectedContexts());
                                     }
                                 }
@@ -197,46 +239,25 @@ public class CalendarChooserDialogStyled extends DialogFragment {
                         return false;
                     }
                 })
-                .build();
+                .create();
 
-        listView = dialog.getListView();
-
-        //Override onItemCLick to implement "checking" behavior and handle contextsForReturn
-        if (listView != null) {
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    CheckBox checkBox = (CheckBox) view.findViewById(R.id.check_box);
-                    String contextId = "";
-                    if (view.getTag() instanceof ViewHolder) {
-                        contextId = ((ViewHolder) view.getTag()).contextId;
-                    }
-
-                    if (checkBox.isChecked()) {
-                        checkBox.setChecked(false);
-                        removeSelection(position, contextId);
-                    }
-                    else {
-                        if (mSelectedIds.size() >= 10) {
-                            Toast.makeText(activity, getResources().getString(R.string.calendarDialog10Warning), Toast.LENGTH_SHORT).show();
-                        } else {
-                            checkBox.setChecked(true);
-                            addSelection(position, contextId);
-                        }
-                    }
-                }
-            });
-        }
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface useless) {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.getBrandColor());
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.getBrandColor());
+            }
+        });
 
         return dialog;
     }
 
-    private void addSelection(int position, String contextId){
+    private void addSelection(int position, String contextId) {
         mSelectedIds.add(contextId);
         mCurrentCheckedPositions[position] = true;
     }
 
-    private void removeSelection(int position, String contextId){
+    private void removeSelection(int position, String contextId) {
         mSelectedIds.remove(contextId);
         mCurrentCheckedPositions[position] = false;
     }
@@ -250,16 +271,16 @@ public class CalendarChooserDialogStyled extends DialogFragment {
     //endregion
 
     //region Helpers
-    private void initCheckedItemsArray(){
-        // create bool array of checked items length of mAllContextIds
+    private void initCheckedItemsArray() {
+        // Create bool array of checked items length of mAllContextIds
         mCurrentCheckedPositions = new boolean[mAllContextIDs.size()];
 
         List<String> allContextIds = new ArrayList<>(mAllContextIDs.keySet());
-        // generate a bool array of selected positions from our ordered list
+        // Generate a bool array of selected positions from our ordered list
         for(int i = 0; i < mAllContextIDs.size(); i++ ){
             mCurrentCheckedPositions[i] = mSelectedIds.contains(allContextIds.get(i));
         }
-        // copy of checked items used to check if selection changed
+        // Copy of checked items used to check if selection changed
         mOriginalCheckedPositions = Arrays.copyOf(mCurrentCheckedPositions, mCurrentCheckedPositions.length);
     }
 
@@ -297,10 +318,10 @@ public class CalendarChooserDialogStyled extends DialogFragment {
 
                 convertView = li.inflate(R.layout.calendar_dialog_list_item, parent, false);
                 holder = new ViewHolder();
-                holder.courseName = (TextView) convertView.findViewById(R.id.course_name);
-                holder.courseCode = (TextView) convertView.findViewById(R.id.course_code);
-                holder.checkBox = (CheckBox) convertView.findViewById(R.id.check_box);
-                holder.indicator = (ImageView) convertView.findViewById(R.id.indicator);
+                holder.courseName = convertView.findViewById(R.id.courseName);
+                holder.courseCode = convertView.findViewById(R.id.courseCode);
+                holder.checkBox = convertView.findViewById(R.id.checkBox);
+                holder.indicator = convertView.findViewById(R.id.indicator);
                 holder.parent = convertView.findViewById(R.id.parent);
 
                 convertView.setTag(holder);
@@ -311,6 +332,7 @@ public class CalendarChooserDialogStyled extends DialogFragment {
             // Get the name for a calendar
             final String courseName = getItem(position);
             final String courseCode = mAllContextCourseCodes.get(position);
+
             // The name for the calendar
             holder.courseName.setText(courseName);
             holder.courseCode.setVisibility(courseCode.isEmpty() ? View.GONE : View.VISIBLE);
@@ -318,10 +340,13 @@ public class CalendarChooserDialogStyled extends DialogFragment {
             holder.contextId = keySet.get(position);
             holder.checkBox.setChecked(mCurrentCheckedPositions[position]);
 
-            //get Context color
+            // Style checkbox
+            ViewStyler.themeCheckBox(getContext(), (AppCompatCheckBox) holder.checkBox, ThemePrefs.getBrandColor());
+
+            // Get Context color
             ShapeDrawable circle = new ShapeDrawable(new OvalShape());
-            circle.getPaint().setColor(CanvasContextColor.getCachedColor(getContext(), keySet.get(position)));
-            holder.indicator.setBackgroundDrawable(circle);
+            circle.getPaint().setColor(ColorKeeper.getOrGenerateColor(keySet.get(position)));
+            holder.indicator.setBackground(circle);
 
             return convertView;
         }

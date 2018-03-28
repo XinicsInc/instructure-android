@@ -44,3 +44,4 @@ var Activity.statusBarColor: Int
 
 val Activity.isTablet: Boolean
     get() = resources.getBoolean(R.bool.is_device_tablet)
+

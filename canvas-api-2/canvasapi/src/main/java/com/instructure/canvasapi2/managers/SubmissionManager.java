@@ -32,7 +32,6 @@ import com.instructure.canvasapi2.models.SubmissionSummary;
 import com.instructure.canvasapi2.tests.SubmissionManager_Test;
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -87,13 +86,13 @@ public class SubmissionManager extends BaseManager {
         }
     }
 
-    public static void postSubmissionComment(long courseId, long assignmentId, long userId, String commentText, boolean isGroupMessage, @NonNull StatusCallback<Submission> callback) {
+    public static void postSubmissionComment(long courseId, long assignmentId, long userId, String commentText, boolean isGroupMessage, List<Long> attachments, @NonNull StatusCallback<Submission> callback) {
         if (isTesting() || mTesting) {
             SubmissionManager_Test.postSubmissionComment(courseId, assignmentId, userId, commentText, isGroupMessage, callback);
         } else {
             RestBuilder adapter = new RestBuilder(callback);
             RestParams params = new RestParams.Builder().build();
-            SubmissionAPI.postSubmissionComment(courseId, assignmentId, userId, commentText, isGroupMessage, adapter, callback, params);
+            SubmissionAPI.postSubmissionComment(courseId, assignmentId, userId, commentText, isGroupMessage, attachments, adapter, callback, params);
         }
     }
 

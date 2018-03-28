@@ -26,6 +26,9 @@ import android.widget.FrameLayout;
 
 import com.instructure.candroid.R;
 
+/**
+ * Used for when a fragment has mutiple layouts (portrait and landscape) Deals with configuration change events.
+ */
 public abstract class OrientationChangeFragment extends ParentFragment {
 
     private FrameLayout mRootView;

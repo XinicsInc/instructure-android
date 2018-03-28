@@ -97,7 +97,7 @@
                 app:rce_controls_margin_start="12dp"
                 app:rce_editor_padding="16dp"/>
 
-            <com.instructure.teacher.view.AttachmentLayout
+            <com.instructure.pandautils.views.AttachmentLayout
                 android:id="@+id/attachmentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.ui.pages
 
-import android.support.test.espresso.action.ViewActions.click
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.WaitForViewWithId
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert

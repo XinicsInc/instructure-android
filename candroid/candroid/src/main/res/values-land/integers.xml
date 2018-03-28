@@ -17,5 +17,6 @@
   -->
 
 <resources>
-    <integer name="num_columns_course_grid">2</integer>
+    <integer name="course_card_columns">3</integer>
+    <integer name="group_card_columns">2</integer>
 </resources>

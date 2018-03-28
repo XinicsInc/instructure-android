@@ -20,6 +20,8 @@ package com.instructure.androidpolling.app.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -198,7 +200,7 @@ public class AddQuestionFragment extends ParentFragment {
                     } else {
                         PollsManager.createPoll(editQuestion.getText().toString(), new StatusCallback<PollResponse>() {
                             @Override
-                            public void onResponse(retrofit2.Response<PollResponse> response, LinkHeaders linkHeaders, ApiType type) {
+                            public void onResponse(@NonNull retrofit2.Response<PollResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
 
                             }
                         }, true);
@@ -415,7 +417,7 @@ public class AddQuestionFragment extends ParentFragment {
 
         pollCallback = new StatusCallback<PollResponse>() {
             @Override
-            public void onResponse(Response<PollResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<Poll> pollList = response.body().getPolls();
@@ -443,7 +445,7 @@ public class AddQuestionFragment extends ParentFragment {
             }
 
             @Override
-            public void onFail(Call<PollResponse> response, Throwable error) {
+            public void onFail(@Nullable Call<PollResponse> call, @NonNull Throwable error, @Nullable Response response) {
                 submittingPoll = false;
                 getActivity().invalidateOptionsMenu();
             }
@@ -451,7 +453,7 @@ public class AddQuestionFragment extends ParentFragment {
 
         pollChoiceCallback = new StatusCallback<PollChoiceResponse>() {
             @Override
-            public void onResponse(Response<PollChoiceResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollChoiceResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 pollChoicesCreated++;
@@ -479,7 +481,7 @@ public class AddQuestionFragment extends ParentFragment {
             }
 
             @Override
-            public void onFail(Call<PollChoiceResponse> response, Throwable error) {
+            public void onFail(@Nullable Call<PollChoiceResponse> call, @NonNull Throwable error, @Nullable Response response) {
                 submittingPoll = false;
                 getActivity().invalidateOptionsMenu();
             }

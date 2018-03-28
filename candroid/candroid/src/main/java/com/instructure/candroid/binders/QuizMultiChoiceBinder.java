@@ -29,13 +29,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.dialog.AccountNotificationDialog;
 import com.instructure.candroid.holders.QuizMultiChoiceViewHolder;
 import com.instructure.candroid.interfaces.QuizPostMultiChoice;
 import com.instructure.candroid.interfaces.QuizToggleFlagState;
+import com.instructure.candroid.util.StringUtilities;
 import com.instructure.canvasapi2.models.QuizSubmissionAnswer;
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.views.CanvasWebView;
 
 public class QuizMultiChoiceBinder {
@@ -71,31 +71,31 @@ public class QuizMultiChoiceBinder {
 
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        //sometimes when we recycle views it keeps the old views in there, so clear them out if there
-        //are any in there
+        // Sometimes when we recycle views it keeps the old views in there, so clear them out if there
+        // are any in there
         if(holder.answerContainer.getChildCount() > 0) {
             holder.answerContainer.removeAllViews();
         }
-        //add answers to the answer container
+        // Add answers to the answer container
         int index = 0;
         for(final QuizSubmissionAnswer answer : quizSubmissionQuestion.getAnswers()) {
 
             final LinearLayout answerWrapper = (LinearLayout)inflater.inflate(R.layout.quiz_multi_choice_answer, null, false);
-            final CanvasWebView webView = (CanvasWebView) answerWrapper.findViewById(R.id.html_answer);
+            final CanvasWebView webView = answerWrapper.findViewById(R.id.html_answer);
             webView.setClickable(false);
             webView.setFocusableInTouchMode(false);
-            final TextView textView = (TextView) answerWrapper.findViewById(R.id.text_answer);
-            final CheckBox checkBox = (CheckBox) answerWrapper.findViewById(R.id.answer_checkbox);
+            final TextView textView = answerWrapper.findViewById(R.id.text_answer);
+            final CheckBox checkBox = answerWrapper.findViewById(R.id.answer_checkbox);
 
             if(!TextUtils.isEmpty(answer.getHtml())) {
                 textView.setVisibility(View.GONE);
 
-                final String html = AccountNotificationDialog.trimTrailingWhitespace(answer.getHtml()).toString();
+                final String html = StringUtilities.trimTrailingWhitespace(answer.getHtml()).toString();
 
                 webView.formatHTML(html, "");
 
                 webView.setBackgroundColor(Color.TRANSPARENT);
-                //we only care about marking the answers if they can actually answer
+                // We only care about marking the answers if they can actually answer
                 if(shouldLetAnswer) {
                     webView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
@@ -114,10 +114,9 @@ public class QuizMultiChoiceBinder {
 
                 if(quizSubmissionQuestion.getAnswer() != null) {
                     if(Long.parseLong((String)quizSubmissionQuestion.getAnswer()) == answer.getId()) {
-                        //webView.setBackgroundColor(context.getResources().getColor(R.color.canvasBackgroundMedium));
                         answerWrapper.setBackgroundColor(context.getResources().getColor(R.color.canvasBackgroundMedium));
 
-                        //mark this one as selected
+                        // Mark this one as selected
                         checkBox.setChecked(true);
                     }
                 }
@@ -125,7 +124,6 @@ public class QuizMultiChoiceBinder {
             } else if(!TextUtils.isEmpty(answer.getText())) {
                 webView.setVisibility(View.GONE);
                 textView.setText(answer.getText());
-
 
                 if(quizSubmissionQuestion.getAnswer() != null) {
                     if(!TextUtils.isEmpty((String)quizSubmissionQuestion.getAnswer()) && Long.parseLong((String)quizSubmissionQuestion.getAnswer()) == answer.getId()) {
@@ -150,21 +148,22 @@ public class QuizMultiChoiceBinder {
 
                         answerWrapper.setBackgroundColor(context.getResources().getColor(R.color.canvasBackgroundMedium));
 
-                        //post the answer to the api
+                        // Post the answer to the api
                         callback.postAnswer(holder.questionId, answer.getId());
 
-                        //set the answer on the quizSubmissionQuestion so we'll remember which question was answered during row recycling
+                        // Set the answer on the quizSubmissionQuestion so we'll remember which question was answered during row recycling
                         quizSubmissionQuestion.setAnswer(Long.toString(answer.getId()));
 
                     }
                 });
             }
 
-            final Drawable courseColorFlag = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_bookmark_fill_grey, courseColor);
+            final Drawable courseColorFlag = ColorKeeper.getColoredDrawable(context, R.drawable.vd_bookmark_filled, courseColor);
+
             if(quizSubmissionQuestion.isFlagged()) {
                 holder.flag.setImageDrawable(courseColorFlag);
             } else {
-                holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+                holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
             }
 
             if(shouldLetAnswer) {
@@ -173,13 +172,12 @@ public class QuizMultiChoiceBinder {
                     @Override
                     public void onClick(View view) {
                         if (quizSubmissionQuestion.isFlagged()) {
-                            //unflag it
-
-                            holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+                            // Unflag it
+                            holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
                             flagStateCallback.toggleFlagged(false, quizSubmissionQuestion.getId());
                             quizSubmissionQuestion.setFlagged(false);
                         } else {
-                            //flag it
+                            // Flag it
                             holder.flag.setImageDrawable(courseColorFlag);
                             flagStateCallback.toggleFlagged(true, quizSubmissionQuestion.getId());
                             quizSubmissionQuestion.setFlagged(true);
@@ -193,7 +191,7 @@ public class QuizMultiChoiceBinder {
             holder.answerContainer.addView(answerWrapper);
 
             if(index == quizSubmissionQuestion.getAnswers().length - 1) {
-                //if we're on the last answer remove the bottom divider
+                // If we're on the last answer remove the bottom divider
                 answerWrapper.findViewById(R.id.divider).setVisibility(View.GONE);
             } else {
                 answerWrapper.findViewById(R.id.divider).setVisibility(View.VISIBLE);
@@ -203,7 +201,7 @@ public class QuizMultiChoiceBinder {
     }
 
     private static void resetViews(int i, QuizMultiChoiceViewHolder holder, Context context) {
-        //make all the layouts the normal color
+        // Make all the layouts the normal color
         LinearLayout layout = (LinearLayout) holder.answerContainer.getChildAt(i);
 
         layout.setBackgroundColor(context.getResources().getColor(R.color.canvasBackgroundLight));

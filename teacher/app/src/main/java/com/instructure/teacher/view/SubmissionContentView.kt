@@ -38,6 +38,12 @@ import android.view.*
 import android.webkit.MimeTypeMap
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
+import com.instructure.annotations.*
+import com.instructure.annotations.AnnotationDialogs.AnnotationCommentDialog
+import com.instructure.annotations.AnnotationDialogs.AnnotationErrorDialog
+import com.instructure.annotations.AnnotationDialogs.FreeTextDialog
+import com.instructure.annotations.FileCaching.DocumentListenerSimpleDelegate
+import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
@@ -45,8 +51,8 @@ import com.instructure.canvasapi2.models.CanvaDocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.CanvaDocs.CanvaDocAnnotationResponse
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.PSPDFKit.*
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
@@ -57,10 +63,11 @@ import com.instructure.teacher.events.RationedBusEvent
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.interfaces.ShareableFile
 import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
-import com.instructure.teacher.utils.ProfileUtils
+import com.instructure.pandautils.utils.ProfileUtils
 import com.pspdfkit.annotations.Annotation
 import com.pspdfkit.annotations.AnnotationFlags
 import com.pspdfkit.annotations.AnnotationProvider
@@ -120,6 +127,8 @@ class SubmissionContentView(
             .setAnnotationInspectorEnabled(true)
             .textSharingEnabled(false)
             .layoutMode(PageLayoutMode.SINGLE)
+            .textSelectionEnabled(false)
+            .disableCopyPaste()
             .build()
     private val mAnnotationCreationToolbar = AnnotationCreationToolbar(context)
     private val mAnnotationEditingToolbar = AnnotationEditingToolbar(context)
@@ -130,6 +139,7 @@ class SubmissionContentView(
     private var mCreateAnnotationJob: Job? = null
     private var mUpdateAnnotationJob: Job? = null
     private var mDeleteAnnotationJob: Job? = null
+    private var sendCommentJob: Job? = null
     private var mPdfContentJob: Job? = null
     private var mAnnotationsJob: Job? = null
     private var mSessionId: String? = null
@@ -240,20 +250,40 @@ class SubmissionContentView(
         val sessionId = mSessionId ?: return
         val canvaDocsDomain = mCanvaDocsDomain ?: return
 
+        commentsButton.isEnabled = false
+
         mCreateAnnotationJob = tryWeave {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(canvaDocId)
             if (canvaDocAnnotation != null) {
+
+                // If this is a note annotation (map pin thing) we need to nuke its contents, and create a separate comment reply annotation.
+                var commentReply = ""
+                if(canvaDocAnnotation.annotationType == CanvaDocAnnotation.AnnotationType.TEXT) {
+                    commentReply = canvaDocAnnotation.contents ?: ""
+                    canvaDocAnnotation.contents = null
+                }
+
                 //store the response
-                val newAnnotation = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.createAnnotation(sessionId, canvaDocAnnotation, canvaDocsDomain, it) }
+                val newAnnotation = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(sessionId, generateAnnotationId(), canvaDocAnnotation, canvaDocsDomain, it) }
+
+                if(commentReply.isValid()) {
+                    // Now to create a new commentReply annotation for this..
+                    createCommentAnnotation(newAnnotation.annotationId, newAnnotation.page, commentReply)
+                    commentsButton.setVisible()
+                }
 
                 // Edit the annotation with the appropriate id
-                annotation.name = newAnnotation.id
+                annotation.name = newAnnotation.annotationId
+                mPdfFragment?.document?.annotationProvider?.removeOnAnnotationUpdatedListener(mAnnotationUpdateListener)
                 mPdfFragment?.notifyAnnotationHasChanged(annotation)
+                mPdfFragment?.document?.annotationProvider?.addOnAnnotationUpdatedListener(mAnnotationUpdateListener)
+                commentsButton.isEnabled = true
             }
         } catch {
             // Show general error, make more specific in the future?
             toast(R.string.errorOccurred)
             it.printStackTrace()
+            commentsButton.isEnabled = true
         }
     }
 
@@ -266,21 +296,38 @@ class SubmissionContentView(
 
         mUpdateAnnotationJob = tryWeave {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(canvaDocId)
-            if (canvaDocAnnotation != null && !annotation.name.isNullOrEmpty())
-                awaitApi<Void> { CanvaDocsManager.updateAnnotation(sessionId, annotation.name!!, canvaDocAnnotation, canvaDocsDomain, it) }
-        } catch {
-            if ((it as StatusCallbackError).response?.raw()?.code() == 404) {
-                // Not found; Annotation has been deleted and no longer exists.
-                AnnotationErrorDialog.show(supportFragmentManager) {
-                    // Delete annotation after user clicks OK on dialog
-                    mPdfFragment?.eventBus?.post(Commands.ClearSelectedAnnotations())
-                    mPdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
-                    mPdfFragment?.notifyAnnotationHasChanged(annotation)
+            if (canvaDocAnnotation != null && !annotation.name.isNullOrEmpty()) {
+                if (annotation.type == AnnotationType.NOTE) {
+                    // This is a rough edge case. We need to strip the note of its contents, update it, and also update the commentReply if its contents have changed...
+                    val noteContents = annotation.contents
+
+                    // If the head comment has been changed we need to update it
+                    mCommentRepliesHashMap[annotation.name]?.firstOrNull()?.let { headComment ->
+                        if (noteContents != headComment.contents) {
+                            val commentReply = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(sessionId, headComment.annotationId, headComment, canvaDocsDomain, it) }
+                            mCommentRepliesHashMap[annotation.name]?.firstOrNull()?.contents = commentReply.contents
+                        }
+                    }
                 }
-            } else {
-                // Show general error, make more specific in the future?
-                toast(R.string.errorOccurred)
+
+                awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(sessionId, annotation.name!!, canvaDocAnnotation, canvaDocsDomain, it) }
             }
+        } catch {
+            if(it is StatusCallbackError) {
+                if (it.response?.raw()?.code() == 404) {
+                    // Not found; Annotation has been deleted and no longer exists.
+                    val dialog = AnnotationErrorDialog.getInstance(supportFragmentManager, {
+                        // Delete annotation after user clicks OK on dialog
+                        mPdfFragment?.eventBus?.post(Commands.ClearSelectedAnnotations())
+                        mPdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
+                        mPdfFragment?.notifyAnnotationHasChanged(annotation)
+                    })
+                    dialog.show(supportFragmentManager, AnnotationErrorDialog::class.java.simpleName)
+                }
+            }
+
+            // Show general error, make more specific in the future?
+            toast(R.string.errorOccurred)
 
             it.printStackTrace()
         }
@@ -300,6 +347,32 @@ class SubmissionContentView(
             // Show general error, make more specific in the future?
             toast(R.string.errorOccurred)
             it.printStackTrace()
+        }
+    }
+
+    @Suppress("EXPERIMENTAL_FEATURE_WARNING")
+    private fun createCommentAnnotation(inReplyToId: String, page: Int, comment: String?) {
+        // Annotation modified; Update it
+        val canvaDocId = mCanvaDocId ?: return
+        val sessionId = mSessionId ?: return
+        val canvaDocsDomain = mCanvaDocsDomain ?: return
+
+        commentsButton.isEnabled = false
+
+        sendCommentJob = tryWeave {
+            val newCommentReply = awaitApi<CanvaDocAnnotation> {
+                CanvaDocsManager.putAnnotation(sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment ?: "", inReplyToId, canvaDocId, ApiPrefs.user?.id.toString(), page), canvaDocsDomain, it)
+            }
+
+            // The put request doesn't return this property, so we need to set it to true
+            newCommentReply.isEditable = true
+            mCommentRepliesHashMap[inReplyToId] = arrayListOf(newCommentReply)
+            commentsButton.isEnabled = true
+        } catch {
+            // Show general error, make more specific in the future?
+            toast(R.string.errorOccurred)
+            it.printStackTrace()
+            commentsButton.isEnabled = true
         }
     }
 
@@ -392,36 +465,31 @@ class SubmissionContentView(
             //assuming neither is null, continue
             if(currentPdfAnnotation != null && currentAnnotation != null) {
                 //if the contents of the current annotation are empty we want to prompt them to add a comment
-                if(currentAnnotation.contents.isNullOrEmpty()) {
+                if(mCommentRepliesHashMap[currentAnnotation.annotationId] == null || mCommentRepliesHashMap[currentAnnotation.annotationId]?.isEmpty() == true) {
                     // No comments for this annotation, show a dialog for the user to add some if they want
-                    activity.mIsCurrentlyAnnotating = true //don't want the sliding panel getting in the way
-                    AnnotationCommentDialog.getInstance(supportFragmentManager, "", context.getString(R.string.add_comment)) { _, text ->
-                        currentPdfAnnotation.contents = text
-                        updateAnnotation(currentPdfAnnotation)
+                    AnnotationCommentDialog.getInstance(supportFragmentManager, "", context.getString(R.string.addAnnotationComment)) { _, text ->
+                        activity.isCurrentlyAnnotating = true //don't want the sliding panel getting in the way
+                        // Create new comment reply for this annotation.
+                        if(text.isValid()) {
+                            createCommentAnnotation(currentAnnotation.annotationId, currentAnnotation.page, text)
+                        }
                     }.show(supportFragmentManager, AnnotationCommentDialog::class.java.simpleName)
                 } else {
-                    val annotationList = configureCommentList(mCommentRepliesHashMap[currentAnnotation.id], currentAnnotation)
-                    if(!annotationList.isEmpty()) {
-                        //otherwise, show the comment list fragment
-                        val bundle = AnnotationCommentListFragment.makeBundle(annotationList, canvaDocId, sessionId, canvaDocsDomain, mAssignee.id)
-                        //if isTablet, we need to prevent the sliding panel from moving opening all the way with the keyboard
-                        if(context.isTablet) {
-                            activity.mIsCurrentlyAnnotating = true
+                    //otherwise, show the comment list fragment
+                    mCommentRepliesHashMap[currentAnnotation.annotationId]?.let {
+                        if(!it.isEmpty()) {
+                            //otherwise, show the comment list fragment
+                            val bundle = AnnotationCommentListFragment.makeBundle(it, canvaDocId, sessionId, canvaDocsDomain, mAssignee.id)
+                            //if isTablet, we need to prevent the sliding panel from moving opening all the way with the keyboard
+                            if(context.isTablet) {
+                                activity.isCurrentlyAnnotating = true
+                            }
+                            RouteMatcher.route(context, Route(AnnotationCommentListFragment::class.java, null, bundle))
                         }
-                        RouteMatcher.route(context, Route(AnnotationCommentListFragment::class.java, null, bundle))
                     }
                 }
             }
         }
-    }
-
-    fun configureCommentList(commentReplies: List<CanvaDocAnnotation>?, currentAnnotation: CanvaDocAnnotation): ArrayList<CanvaDocAnnotation> {
-        val newList = ArrayList<CanvaDocAnnotation>()
-        newList.add(currentAnnotation)
-        if (commentReplies != null && commentReplies.isNotEmpty()) {
-            newList.addAll(commentReplies)
-        }
-        return newList
     }
 
     fun configureCreationMenuItemGrouping(toolbarMenuItems: MutableList<ContextualToolbarMenuItem>, capacity: Int) : MutableList<ContextualToolbarMenuItem> {
@@ -547,7 +615,7 @@ class SubmissionContentView(
 
         // Resize sliding panel and content, don't if keyboard based annotations are active
         // we only do this if the oldw == w so we won't be resizing on rotation
-        if (oldh > 0 && oldh != h && oldw == w && !activity.mIsCurrentlyAnnotating) {
+        if (oldh > 0 && oldh != h && oldw == w && !activity.isCurrentlyAnnotating) {
             val newState = if (h < oldh) SlidingUpPanelLayout.PanelState.EXPANDED else SlidingUpPanelLayout.PanelState.ANCHORED
             slidingUpPanelLayout?.panelState = newState
 
@@ -728,7 +796,7 @@ class SubmissionContentView(
             TeacherPrefs.shouldGradeAnonymously(mCourse.id, mAssignment.id) -> userImageView.setAnonymousAvatar()
             assignee is GroupAssignee -> userImageView.setImageResource(assignee.iconRes)
             assignee is StudentAssignee -> {
-                ProfileUtils.loadAvatarForUser(context, userImageView, assignee.student.name, assignee.student.avatarUrl)
+                ProfileUtils.loadAvatarForUser(userImageView, assignee.student.name, assignee.student.avatarUrl)
                 userImageView.setupAvatarA11y(assignee.name)
                 userImageView.onClick {
                     val bundle = StudentContextFragment.makeBundle(assignee.id, mCourse.id)
@@ -762,7 +830,7 @@ class SubmissionContentView(
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
                     val user = getItem(position)
                     val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.adapter_speed_grader_group_member, parent, false)
-                    ProfileUtils.loadAvatarForUser(context, view.memberAvatarView, user.name, user.avatarUrl)
+                    ProfileUtils.loadAvatarForUser(view.memberAvatarView, user.name, user.avatarUrl)
                     view.memberNameView.text = user.name
                     return view
                 }
@@ -928,24 +996,35 @@ class SubmissionContentView(
                         val annotations = awaitApi<CanvaDocAnnotationResponse> { CanvaDocsManager.getAnnotations(mSessionId as String, mCanvaDocsDomain as String, it) }
                         // We don't want to trigger the annotation events here, so unregister and re-register after
                         mPdfFragment?.document?.annotationProvider?.removeOnAnnotationUpdatedListener(mAnnotationUpdateListener)
+
+                        // First we want to grab all of the comment replies
                         for (item in annotations.data) {
-                            if(item.annotationType == CanvaDocAnnotation.AnnotationType.COMMENT_REPLY) {
+                            if (item.annotationType == CanvaDocAnnotation.AnnotationType.COMMENT_REPLY) {
                                 //store it, to be displayed later when user selects annotation
-                                if(mCommentRepliesHashMap.containsKey(item.inReplyTo)) {
+                                if (mCommentRepliesHashMap.containsKey(item.inReplyTo)) {
                                     mCommentRepliesHashMap[item.inReplyTo]?.add(item)
                                 } else {
-                                    mCommentRepliesHashMap.put(item.inReplyTo!!, arrayListOf(item))
+                                    mCommentRepliesHashMap[item.inReplyTo!!] = arrayListOf(item)
                                 }
-                            } else {
-                                //otherwise, display it to the user
-                                val annotation = item.convertCanvaDocAnnotationToPDF(this@SubmissionContentView.context)
-                                if (annotation != null) {
-                                    if(item.isEditable == false) {
-                                        annotation.flags = EnumSet.of(AnnotationFlags.LOCKED, AnnotationFlags.LOCKEDCONTENTS, AnnotationFlags.NOZOOM)
-                                    }
-                                    mPdfFragment?.document?.annotationProvider?.addAnnotationToPage(annotation)
-                                    mPdfFragment?.notifyAnnotationHasChanged(annotation)
+                            }
+                        }
+
+                        // Next grab the regular annotations
+                        for (item in annotations.data) {
+                            //otherwise, display it to the user
+                            val annotation = item.convertCanvaDocAnnotationToPDF(this@SubmissionContentView.context)
+                            if (annotation != null && item.annotationType != CanvaDocAnnotation.AnnotationType.COMMENT_REPLY) {
+                                if(item.isEditable == false) {
+                                    annotation.flags = EnumSet.of(AnnotationFlags.LOCKED, AnnotationFlags.LOCKEDCONTENTS, AnnotationFlags.NOZOOM)
                                 }
+
+                                // If the annotation is a note we need to add its contents back in from the head comment reply
+                                if(item.annotationType == CanvaDocAnnotation.AnnotationType.TEXT) {
+                                    annotation.contents = mCommentRepliesHashMap[item.annotationId]?.firstOrNull()?.contents ?: ""
+                                }
+
+                                mPdfFragment?.document?.annotationProvider?.addAnnotationToPage(annotation)
+                                mPdfFragment?.notifyAnnotationHasChanged(annotation)
                             }
                         }
                         mPdfFragment?.document?.annotationProvider?.addOnAnnotationUpdatedListener(mAnnotationUpdateListener)
@@ -963,7 +1042,7 @@ class SubmissionContentView(
 
     @SuppressLint("CommitTransaction")
     private fun setFragment(fragment: Fragment) {
-        if(!mIsCleanedUp && isAttachedToWindow) supportFragmentManager.beginTransaction().replace(mContainerId, fragment).commitNow()
+        if(!mIsCleanedUp && isAttachedToWindow) supportFragmentManager.beginTransaction().replace(mContainerId, fragment).commitNowAllowingStateLoss()
 
         //if we can share the content with another app, show the share icon
         speedGraderToolbar.menu.findItem(R.id.menu_share)?.isVisible = fragment is ShareableFile || fragment is PdfFragment
@@ -1136,7 +1215,7 @@ class SubmissionContentView(
         }
         floatingRecordingView.replayCallback = {
             val bundle = ViewMediaActivity.makeBundle(it, "video", context.getString(R.string.videoCommentReplay), true)
-            RouteMatcher.route(context, Route(bundle, Route.RouteContext.MEDIA))
+            RouteMatcher.route(context, Route(bundle, RouteContext.MEDIA))
         }
     }
 
@@ -1265,7 +1344,7 @@ class SubmissionContentView(
         else (context as SpeedGraderActivity).enableViewPager()
 
         //we want to make sure that the keyboard doesn't mess up the view if they are using these annotations
-        activity.mIsCurrentlyAnnotating = controller.activeAnnotationTool != AnnotationTool.NONE
+        activity.isCurrentlyAnnotating = controller.activeAnnotationTool != AnnotationTool.NONE
 
         mCurrentAnnotationModeTool = controller.activeAnnotationTool!!
     }
@@ -1308,7 +1387,7 @@ class SubmissionContentView(
     fun onCommentTextFocused(event: CommentTextFocusedEvent) {
         if(event.assigneeId == mAssignee.id) {
             mPdfFragment?.exitCurrentlyActiveMode()
-            activity.mIsCurrentlyAnnotating = false
+            activity.isCurrentlyAnnotating = false
         }
     }
 
@@ -1323,15 +1402,9 @@ class SubmissionContentView(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAnnotationCommentEdited(event: AnnotationCommentEdited) {
         if(event.assigneeId == mAssignee.id) {
-            if(event.isHeadAnnotation) {
-                //we need to update this specific annotation, not one in the list
-                val annotation = mPdfFragment?.document?.findAnnotationById(event.annotation.id, event.annotation.page)
-                annotation?.contents = event.annotation.contents
-            } else {
-                //update the annotation in the hashmap
-                mCommentRepliesHashMap[event.annotation.inReplyTo]?.
-                        find { it.id == event.annotation.id }?.contents = event.annotation.contents
-            }
+            //update the annotation in the hashmap
+            mCommentRepliesHashMap[event.annotation.inReplyTo]?.
+                    find { it.annotationId == event.annotation.annotationId }?.contents = event.annotation.contents
         }
     }
 
@@ -1340,13 +1413,7 @@ class SubmissionContentView(
         if(event.assigneeId == mAssignee.id) {
             if(event.isHeadAnnotation) {
                 //we need to delete the entire list of comments from the hashmap
-                //and the annotation from the view
-                mCommentRepliesHashMap.remove(event.annotation.id)
-                val annotationToDelete = mPdfFragment?.document?.findAnnotationById(event.annotation.id, event.annotation.page)
-                if(annotationToDelete != null) {
-                    mPdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotationToDelete)
-                    mPdfFragment?.notifyAnnotationHasChanged(annotationToDelete)
-                }
+                mCommentRepliesHashMap.remove(event.annotation.inReplyTo)
             } else {
                 //otherwise just remove the comment
                 mCommentRepliesHashMap[event.annotation.inReplyTo]?.remove(event.annotation)
@@ -1410,7 +1477,12 @@ class SubmissionContentView(
             list.add(delete)
         } else {
             // If we don't have all items, just return the default that we have
-            list = toolbarMenuItems
+            list = if (mCurrentAnnotationModeType ?: AnnotationType.NONE == AnnotationType.NOTE) {
+                // Edge case for NOTE annotations, we don't want them editing the contents using the pspdfkit ui
+                toolbarMenuItems.filter { it.title != context.getString(R.string.pspdf__edit) }.toMutableList()
+            } else {
+                toolbarMenuItems
+            }
         }
 
         return list
@@ -1445,7 +1517,7 @@ class QuizSubmissionGradedEvent(submission: Submission) : RationedBusEvent<Submi
 class SlidingPanelAnchorEvent(val anchorPosition: SlidingUpPanelLayout.PanelState, val offset: Float)
 class CommentTextFocusedEvent(val assigneeId: Long)
 class AnnotationCommentAdded(val annotation: CanvaDocAnnotation, val assigneeId: Long)
-class AnnotationCommentEdited(val annotation: CanvaDocAnnotation, val isHeadAnnotation: Boolean, val assigneeId: Long)
+class AnnotationCommentEdited(val annotation: CanvaDocAnnotation, val assigneeId: Long)
 class AnnotationCommentDeleted(val annotation: CanvaDocAnnotation, val isHeadAnnotation: Boolean, val assigneeId: Long)
 class TabSelectedEvent(val selectedTabIdx: Int)
 class UploadMediaCommentEvent(val file: File, val assignmentId: Long, val courseId: Long, val assigneeId: Long)

@@ -81,7 +81,7 @@ class Teacher
     private
 
     def app_apk_path
-      join(repo_root_dir, 'teacher', 'app', 'build', 'outputs', 'apk', 'app-qa-debug.apk')
+      '/bitrise/deploy/app-qa-debug.apk'
     end
 
     def device_app_apk_path
@@ -89,7 +89,7 @@ class Teacher
     end
 
     def test_apk_path
-      join(repo_root_dir, 'teacher', 'app', 'build', 'outputs', 'apk', 'app-qa-debug-androidTest.apk')
+      '/bitrise/deploy/app-qa-debug-androidTest.apk'
     end
   end
 end

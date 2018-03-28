@@ -21,27 +21,30 @@
 
     <item
         android:id="@+id/calendarToday"
-        android:icon="@drawable/ic_today_white_24"
+        android:icon="@drawable/vd_today"
         app:showAsAction="always"
         android:title="@string/today"/>
 
-    <item
-        android:id="@+id/calendarDayView"
-        app:showAsAction="never"
-        android:title="@string/calendarDay"
-        android:checkable="true"/>
+    <group android:id="@+id/calendarViewMenu"
+        android:checkableBehavior="single">
 
-    <item
-        android:id="@+id/calendarWeekView"
-        app:showAsAction="never"
-        android:title="@string/calendarWeek"
-        android:checkable="true"/>
+        <item
+            android:id="@+id/calendarDayView"
+            app:showAsAction="never"
+            android:title="@string/calendarDay" />
 
-    <item
-        android:id="@+id/calendarMonthView"
-        app:showAsAction="never"
-        android:title="@string/calendarMonth"
-        android:checkable="true"/>
+        <item
+            android:id="@+id/calendarWeekView"
+            app:showAsAction="never"
+            android:title="@string/calendarWeek" />
+
+        <item
+            android:id="@+id/calendarMonthView"
+            app:showAsAction="never"
+            android:title="@string/calendarMonth" />
+
+    </group>
+
 
     <item
         android:id="@+id/selectCalendars"

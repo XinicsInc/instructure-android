@@ -40,14 +40,11 @@ public class CanvaDocsAPI {
         @GET
         Call<ResponseBody> getCanvaDoc(@Url String url);
 
-        @GET("/1/sessions/{sessionId}/annotations")
+        @GET("/2018-03-07/sessions/{sessionId}/annotations")
         Call<CanvaDocAnnotationResponse> getAnnotations(@Path("sessionId") String sessionId);
 
-        @POST("/1/sessions/{sessionId}/annotations")
-        Call<CanvaDocAnnotation> createAnnotation(@Path("sessionId") String sessionId, @Body CanvaDocAnnotation annotation);
-
-        @PUT("/1/sessions/{sessionId}/annotations/{annotationId}")
-        Call<Void> updateAnnotation(@Path("sessionId") String sessionId, @Path("annotationId") String annotationId, @Body CanvaDocAnnotation annotation);
+        @PUT("/2018-03-07/sessions/{sessionId}/annotations/{annotationId}")
+        Call<CanvaDocAnnotation> putAnnotation(@Path("sessionId") String sessionId, @Path("annotationId") String annotationId, @Body CanvaDocAnnotation annotation);
 
         @DELETE("/1/sessions/{sessionId}/annotations/{annotationId}")
         Call<ResponseBody> deleteAnnotation(@Path("sessionId") String sessionId, @Path("annotationId") String annotationId);
@@ -69,23 +66,14 @@ public class CanvaDocsAPI {
         callback.addCall(adapter.build(CanvaDocsInterFace.class, params).getAnnotations(sessionId)).enqueue(callback);
     }
 
-    public static void createAnnotation(
-            @NonNull String sessionId,
-            @NonNull CanvaDocAnnotation annotation,
-            @NonNull RestBuilder adapter,
-            @NonNull RestParams params,
-            @NonNull StatusCallback<CanvaDocAnnotation> callback) {
-        callback.addCall(adapter.build(CanvaDocsInterFace.class, params).createAnnotation(sessionId, annotation)).enqueue(callback);
-    }
-
-    public static void updateAnnotation(
+    public static void putAnnotation(
             @NonNull String sessionId,
             @NonNull String annotationId,
             @NonNull CanvaDocAnnotation annotation,
             @NonNull RestBuilder adapter,
             @NonNull RestParams params,
-            @NonNull StatusCallback<Void> callback) {
-        callback.addCall(adapter.build(CanvaDocsInterFace.class, params).updateAnnotation(sessionId, annotationId, annotation)).enqueue(callback);
+            @NonNull StatusCallback<CanvaDocAnnotation> callback) {
+        callback.addCall(adapter.build(CanvaDocsInterFace.class, params).putAnnotation(sessionId, annotationId, annotation)).enqueue(callback);
     }
 
     public static void deleteAnnotation(

@@ -20,6 +20,8 @@ package com.instructure.androidpolling.app.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -306,7 +308,7 @@ public class QuestionListFragment extends PaginatedExpandableListFragment<String
 
         pollCallback = new StatusCallback<PollResponse>() {
             @Override
-            public void onResponse(Response<PollResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 nextUrl = linkHeaders.nextUrl;
@@ -334,7 +336,7 @@ public class QuestionListFragment extends PaginatedExpandableListFragment<String
 
         responseCanvasCallback = new StatusCallback<ResponseBody>() {
             @Override
-            public void onResponse(Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(response.code() == 204) {
                     if(pollToDelete != null) {
                         //reset it so we don't try to remove it from the list again
@@ -344,7 +346,7 @@ public class QuestionListFragment extends PaginatedExpandableListFragment<String
             }
 
             @Override
-            public void onFail(Call<ResponseBody> response, Throwable error) {
+            public void onFail(@Nullable Call<ResponseBody> call, @NonNull Throwable error, @Nullable Response response) {
                 AppMsg.makeText(getActivity(), getString(R.string.errorDeletingPoll), AppMsg.STYLE_ERROR).show();
                 //we didn't actually delete anything, but we removed the item from the list to make the animation smoother, so now
                 //lets get the polls again
@@ -354,7 +356,7 @@ public class QuestionListFragment extends PaginatedExpandableListFragment<String
 
         pollSessionCallback = new StatusCallback<PollSessionResponse>() {
             @Override
-            public void onResponse(Response<PollSessionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollSessionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
                 List<PollSession> pollSessions = response.body().getPollSessions();
                 for(PollSession session : pollSessions) {
@@ -401,7 +403,7 @@ public class QuestionListFragment extends PaginatedExpandableListFragment<String
 
         pollChoiceCallback = new StatusCallback<PollChoiceResponse>() {
             @Override
-            public void onResponse(Response<PollChoiceResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollChoiceResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<PollChoice> pollChoices = response.body().getPollChoices();

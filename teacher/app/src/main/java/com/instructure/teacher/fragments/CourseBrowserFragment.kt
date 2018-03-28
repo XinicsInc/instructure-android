@@ -26,10 +26,7 @@ import android.view.View
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.requestAccessibilityFocus
-import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.CourseBrowserAdapter
@@ -37,7 +34,7 @@ import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CourseBrowserPresenterFactory
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import com.instructure.teacher.presenters.CourseBrowserPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.CourseBrowserHeaderView
@@ -113,8 +110,8 @@ class CourseBrowserFragment : BaseSyncFragment<
         EventBus.getDefault().register(this)
         courseImage.setCourseImage(presenter.course, presenter.course.color)
         courseBrowserTitle.text = presenter.course.name
-        courseBrowserSubtitle.text = presenter.course.term.name
-        mCourseBrowserHeader.setTitleAndSubtitle(presenter.course.name, presenter.course.term.name)
+        courseBrowserSubtitle.text = presenter.course.term?.name ?: ""
+        mCourseBrowserHeader.setTitleAndSubtitle(presenter.course.name, presenter.course.term?.name ?: "")
         setupToolbar()
     }
 
@@ -176,6 +173,11 @@ class CourseBrowserFragment : BaseSyncFragment<
                     Tab.PAGES_ID -> RouteMatcher.route(context, Route(PageListFragment::class.java, presenter.course))
                     else -> {
                         if(tab.type == Tab.TYPE_EXTERNAL) {
+                            // if the user is a designer we don't want to let them look at LTI tools (like attendance)
+                            if (presenter.course.isDesigner) {
+                                toast(R.string.errorIsDesigner)
+                                return@CourseBrowserAdapter
+                            }
                             val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
                             if(attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
                                 val args = AttendanceListFragment.makeBundle(tab)

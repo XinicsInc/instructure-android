@@ -137,4 +137,17 @@
         <attr name="sInsetForeground" format="reference|color" />
     </declare-styleable>
 
+    <declare-styleable name="AspectRatioRelativeLayout">
+        <attr name="aspectRatio" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="AttachmentLayout">
+        <attr name="al_spacing" format="dimension" />
+        <attr name="al_previewChildCount" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="AttachmentDogEarLayout">
+        <attr name="adl_dogear_size" format="dimension" />
+    </declare-styleable>
+
 </resources>

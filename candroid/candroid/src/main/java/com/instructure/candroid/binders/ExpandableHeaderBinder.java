@@ -17,6 +17,8 @@
 
 package com.instructure.candroid.binders;
 
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.View;
 
@@ -24,9 +26,6 @@ import com.instructure.candroid.R;
 import com.instructure.candroid.holders.ExpandableViewHolder;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked;
-import com.nineoldandroids.animation.AnimatorInflater;
-import com.nineoldandroids.animation.ObjectAnimator;
-
 public class ExpandableHeaderBinder extends BaseBinder {
     public static <MODEL> void bind(
             final Context context,
@@ -45,10 +44,7 @@ public class ExpandableHeaderBinder extends BaseBinder {
             holder.expandCollapse.setRotation(180);
         }
 
-        final int color = context.getResources().getColor(R.color.canvasTextMedium);
-        holder.expandCollapse.setBackgroundDrawable(createIndicatorBackground(color));
-
-        holder.rootView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewHolderHeaderClicked.viewClicked(v, genericHeader);

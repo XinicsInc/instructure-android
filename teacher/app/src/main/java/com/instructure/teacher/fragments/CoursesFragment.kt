@@ -16,7 +16,6 @@
 package com.instructure.teacher.fragments
 
 import android.content.Context
-import android.net.Uri
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
@@ -25,8 +24,11 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.Utils
+import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.teacher.R
+import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.CoursesAdapter
 import com.instructure.teacher.decorations.VerticalGridSpacingDecoration
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
@@ -34,8 +36,8 @@ import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CoursesPresenterFactory
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.CoursesPresenter
-import com.instructure.teacher.utils.*
-import com.instructure.teacher.utils.AppType
+import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.CoursesView
 import kotlinx.android.synthetic.main.fragment_courses.*
 import org.greenrobot.eventbus.EventBus
@@ -44,11 +46,8 @@ import org.greenrobot.eventbus.ThreadMode
 
 class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
 
-    // The user type, used when filtering the course list
-    private var mAppType: AppType by SerializableArg(default = AppType.TEACHER)
-
-    lateinit private var mGridLayoutManager: GridLayoutManager
-    lateinit private var mDecorator: VerticalGridSpacingDecoration
+    private lateinit var mGridLayoutManager: GridLayoutManager
+    private lateinit var mDecorator: VerticalGridSpacingDecoration
 
     // Activity callbacks
     private var mCourseListCallback: CourseListCallback? = null
@@ -61,13 +60,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun withPagination() = false
 
-    override fun getPresenterFactory() = CoursesPresenterFactory {
-        when (mAppType) {
-            AppType.TEACHER -> it.isTeacher || it.isTA || it.isDesigner
-            AppType.STUDENT -> it.isStudent
-            AppType.PARENT -> it.isObserver
-        }
-    }
+    override fun getPresenterFactory() = CoursesPresenterFactory()
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -146,10 +139,8 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     private fun setupToolbar() {
-        titleTextView.adoptToolbarStyle(toolbar)
-        logoImageView.loadUri(Uri.parse(ThemePrefs.logoUrl), R.mipmap.canvas_logo_white)
         toolbar.setupMenu(R.menu.courses_fragment, menuItemCallback)
-        ViewStyler.themeToolbar(activity, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        (activity as? InitActivity)?.attachNavigationDrawer(toolbar)
         toolbar.requestAccessibilityFocus()
     }
 
@@ -189,7 +180,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
 
     companion object {
         @JvmStatic
-        fun getInstance(type: AppType) = CoursesFragment().apply { mAppType = type }
+        fun getInstance() = CoursesFragment()
     }
 
     @Suppress("unused")

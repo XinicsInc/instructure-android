@@ -20,6 +20,7 @@ package com.instructure.candroid.binders;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import com.instructure.candroid.R;
@@ -29,7 +30,7 @@ import com.instructure.candroid.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.ToDo;
 import com.instructure.canvasapi2.utils.DateHelper;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 public class TodoBinder extends BaseBinder {
 
@@ -64,8 +65,10 @@ public class TodoBinder extends BaseBinder {
 
         if(item.getCanvasContext() != null && item.getCanvasContext().getName() != null) {
             holder.course.setText(item.getCanvasContext().getName());
+            holder.course.setTextColor(ColorKeeper.getOrGenerateColor(item.getCanvasContext()));
         } else if (item.getScheduleItem() != null && item.getScheduleItem().getContextType() == CanvasContext.Type.USER) {
             holder.course.setText(context.getString(R.string.PersonalCalendar));
+            holder.course.setTextColor(ColorKeeper.getOrGenerateColor(item.getCanvasContext()));
         } else {
             holder.course.setText("");
         }
@@ -74,13 +77,13 @@ public class TodoBinder extends BaseBinder {
         int courseColor = context.getResources().getColor(R.color.defaultPrimary);
 
         if(item.getCanvasContext() != null && item.getCanvasContext().getType() != CanvasContext.Type.USER) {
-            courseColor = CanvasContextColor.getCachedColor(context, item.getCanvasContext());
+            courseColor = ColorKeeper.getOrGenerateColor(item.getCanvasContext());
         }
 
         if(item.isChecked()) {
-            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightgray));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.lightgray));
         } else {
-            holder.cardView.setCardBackgroundColor(Color.WHITE);
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.canvasBackgroundWhite));
         }
 
         String todoDetails = "";
@@ -119,16 +122,16 @@ public class TodoBinder extends BaseBinder {
         int drawableResId;
 
         if(item.getType() == ToDo.Type.UPCOMING_EVENT) {
-            drawableResId = R.drawable.ic_cv_calendar_fill;
+            drawableResId = R.drawable.vd_calendar;
         } else if (item.getAssignment().getQuizId() > 0) {
-            drawableResId = R.drawable.ic_cv_quizzes_fill;
+            drawableResId = R.drawable.vd_quiz;
         } else if (item.getAssignment().getDiscussionTopicHeader() != null) {
-            drawableResId = R.drawable.ic_cv_discussions_fill;
+            drawableResId = R.drawable.vd_discussion;
         } else {
-            drawableResId = R.drawable.ic_cv_assignments_fill;
+            drawableResId = R.drawable.vd_assignment;
         }
 
-        Drawable drawable = CanvasContextColor.getColoredDrawable(context, drawableResId, courseColor);
+        Drawable drawable = ColorKeeper.getColoredDrawable(context, drawableResId, courseColor);
         holder.icon.setImageDrawable(drawable);
 
     }

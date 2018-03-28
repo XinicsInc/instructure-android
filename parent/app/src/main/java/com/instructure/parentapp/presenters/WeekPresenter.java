@@ -154,7 +154,7 @@ public class WeekPresenter extends SyncExpandablePresenter<WeekHeaderItem, Sched
 
     private StatusCallback<List<ScheduleItem>> mCalendarEventsCallback = new StatusCallback<List<ScheduleItem>>(){
         @Override
-        public void onResponse(Response<List<ScheduleItem>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<ScheduleItem>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             publishScheduleItem(response.body());
         }
 
@@ -193,7 +193,7 @@ public class WeekPresenter extends SyncExpandablePresenter<WeekHeaderItem, Sched
 
     private StatusCallback<List<Course>> mCoursesCallback = new StatusCallback<List<Course>>(){
         @Override
-        public void onResponse(Response<List<Course>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<Course>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             addToMap(response.body());
             getCalendarEvents(false);
         }

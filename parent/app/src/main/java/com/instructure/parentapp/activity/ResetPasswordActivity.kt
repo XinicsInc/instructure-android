@@ -166,25 +166,27 @@ class ResetPasswordActivity : AppCompatActivity() {
     private val statusCallback = object : StatusCallback<ResetParent>() {
         override fun onResponse(response: Response<ResetParent>, linkHeaders: LinkHeaders, type: ApiType) {
             //success, now set the user's token to the one just created
-            ApiPrefs.token = response.body().token
+            response.body()?.let {
+                ApiPrefs.token = it.token
 
-            val prefs = Prefs(ContextKeeper.appContext, getString(R.string.app_name_parent))
-            prefs.save(Const.ID, response.body().parentId)
+                val prefs = Prefs(ContextKeeper.appContext, getString(R.string.app_name_parent))
+                prefs.save(Const.ID, it.parentId)
 
-            //try to get the students. when we start the main activity it will check the cached values,
-            //which at this point there won't be any
-            UserManager.getStudentsForParentAirwolf(ApiPrefs.airwolfDomain, response.body().parentId, object : StatusCallback<List<Student>>() {
-                override fun onResponse(response: Response<List<Student>>, linkHeaders: LinkHeaders, type: ApiType) {
-                    Toast.makeText(this@ResetPasswordActivity, R.string.requestPasswordSuccess, Toast.LENGTH_SHORT).show()
-                    val intent = SplashActivity.createIntent(this@ResetPasswordActivity)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                    finish()
-                }
-            })
+                //try to get the students. when we start the main activity it will check the cached values,
+                //which at this point there won't be any
+                UserManager.getStudentsForParentAirwolf(ApiPrefs.airwolfDomain, it.parentId, object : StatusCallback<List<Student>>() {
+                    override fun onResponse(response: Response<List<Student>>, linkHeaders: LinkHeaders, type: ApiType) {
+                        Toast.makeText(this@ResetPasswordActivity, R.string.requestPasswordSuccess, Toast.LENGTH_SHORT).show()
+                        val intent = SplashActivity.createIntent(this@ResetPasswordActivity)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
+                    }
+                })
+            }
         }
 
-        override fun onFail(response: Call<ResetParent>, error: Throwable) {
+        override fun onFail(call: Call<ResetParent>?, error: Throwable, response: Response<*>?) {
             //reset the token to be nothing so when we open the app it won't try to use the token
             ApiPrefs.token = ""
             Toast.makeText(this@ResetPasswordActivity, R.string.passwordResetFailed, Toast.LENGTH_SHORT).show()

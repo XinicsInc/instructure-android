@@ -20,15 +20,15 @@ package com.instructure.candroid.binders;
 import android.content.Context;
 import android.view.View;
 
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.ColorUtils;
 import com.instructure.pandautils.views.RippleView;
-import com.instructure.candroid.R;
 import com.instructure.candroid.holders.BookmarkViewHolder;
 import com.instructure.candroid.interfaces.BookmarkAdapterToFragmentCallback;
 import com.instructure.candroid.util.RouterUtils;
 import com.instructure.canvasapi2.models.Bookmark;
-import com.instructure.pandautils.utils.CanvasContextColor;
 
+@Deprecated
 public class BookmarkBinder {
 
     public static void bind(
@@ -46,7 +46,7 @@ public class BookmarkBinder {
         }
 
         holder.title.setText(bookmark.getName());
-        final int color = CanvasContextColor.getCachedColorForUrl(context, RouterUtils.getContextIdFromURL(bookmark.getUrl()));
+        final int color = ColorKeeper.getOrGenerateColor(RouterUtils.getContextIdFromURL(bookmark.getUrl()));
         holder.icon.setImageDrawable(ColorUtils.colorIt(color, holder.icon.getDrawable()));
         holder.overflowRipple.setVisibility(isShortcutActivity ? View.INVISIBLE : View.VISIBLE);
 

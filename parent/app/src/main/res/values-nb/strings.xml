@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2016 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,41 +16,52 @@
   -->
 
 <resources>
+
     <string name="action_settings">Innstillinger</string>
     <string name="canvasLogo">Canvas-logo</string>
     <string name="email">E-post</string>
+    <string name="emailAddress">E-postadresse</string>
     <string name="parent_email">E-psot foreldre</string>
     <string name="confirmPassword">Bekreft passord</string>
     <string name="firstName">Fornavn</string>
     <string name="lastName">Etternavn</string>
     <string name="password">Passord</string>
-    <string name="log_in">Logg inn</string>
+    <string name="log_in">Logg på</string>
     <string name="createAccount">Opprett konto</string>
-    <string name="forgotPassword">Glemt passord</string>
+    <string name="create">Opprett</string>
+    <string name="forgotPassword">Glemt passord?</string>
+    <string name="forgotPasswordWithoutQuestion">Glemt passord</string>
+    <string name="enterAccountEmailHint">Kontoens e-post</string>
     <string name="requestPassword">Be om passord</string>
+    <string name="resetPassword">Nullstille passord</string>
+    <string name="requestPasswordHelpText">Vi vil sende deg en nullstillingsforespørsel per e-post.</string>
+    <string name="requestPasswordSuccess">Passordet ditt har blitt nullstilt.</string>
     <string name="fullName">Fullt navn</string>
-    <string name="invalidEmail">Ugyldig e-postadresse. Forsøk igjen.</string>
+    <string name="passwordsDoNotMatch">Passordene samsvarer ikke.</string>
+    <string name="passwordsCannotBeBlank">Passordet kan ikke være blankt</string>
+    <string name="passwordResetFailed">Vi kunne ikke nullstille passordet ditt akkurat nå.</string>
+    <string name="invalidEmail">Ugyldig e-postadresse Prøv igjen.</string>
     <string name="next">Neste</string>
     <string name="createAccountMessage">En e-post sendes til e-postadressen du oppga for å fullføre registreringen.</string>
-    <string name="accountCreationSuccess">Konto opprettet. Sjekk e-posten din for å fullføre registreringen.</string>
-    <string name="errorOccurred">Det oppsto en uventet feil. Forsøk igjen.</string>
+    <string name="accountCreationSuccess">Kontoopprettelse var vellykket. Sjekk e-post for å fullføre registreringen.</string>
+    <string name="errorOccurred">Det oppsto et uventet avvik. Vennligst prøv igjen.</string>
     <string name="unknownDevice">Ukjent enhet</string>
     <string name="addStudent">Legg til student</string>
-    <string name="school">Skole</string>
+    <string name="school">Institusjon</string>
     <string name="finish">Ferdig</string>
     <string name="close">Lukk</string>
-    <string name="noStudents">Ingen studenter tilgjengelig. For å legge til studenter, trykk på de tre prikkene i menyen ovenfor.</string>
-    <string name="noStudentsView">Det er ingen studenter tilknyttet din konto.</string>
-    <string name="noCourses">Denne studenten har ingen emne tilgjengelig</string>
+    <string name="noStudents">Ingen studenter tilgjengelig. For å legge til studenter klikk på de tre prikkene i menyen ovenfor.</string>
+    <string name="noStudentsView">Det er ingen studenter tilknyttet kontoen din.</string>
+    <string name="noCourses">Denne studenten har ingen emner tilgjengelig</string>
     <string name="noAlerts">Denne studenten har ingen varsler å vise.</string>
-    <string name="noItemsToDisplayShort">Ingen punkter</string>
+    <string name="noItemsToDisplayShort">Ingen elementer</string>
     <string name="emailsSentTo">E-post sendt til:</string>
     <string name="logged_in_as">Logget inn som:</string>
     <string name="notifyWhen">Varsle meg når</string>
     <string name="gradeAbove">Emnevurdering over</string>
     <string name="gradeBelow">Emnevurdering under</string>
     <string name="assignmentMissing">Oppgave mangler</string>
-    <string name="teacherAnnouncements">Kunngjøringer for emne</string>
+    <string name="teacherAnnouncements">Emnekunngjøringer</string>
     <string name="institutionAnnouncements">Institusjonskunngjøringer</string>
     <string name="assignmentGradeAbove">Oppgavevurdering over</string>
     <string name="assignmentGradeBelow">Oppgavevurdering under</string>
@@ -62,32 +73,32 @@
     <string name="removingStudent">Fjerner student</string>
     <string name="studentRemoved">Student fjernet</string>
     <string name="studentAdded">Student lagt til</string>
-    <string name="courses">Emne</string>
+    <string name="courses">Emner</string>
     <string name="week">Uke</string>
     <string name="alerts">Varsler</string>
     <string name="alert">Varsel</string>
     <string name="weekEmptyView">Ingen oppgaver eller arrangement denne uken!</string>
     <string name="toolbar_close">Lukk verktøylinje</string>
     <string name="syllabus">Emneoversikt</string>
-    <string name="emptySyllabus">Dette emnet har ikke oversikt.</string>
+    <string name="emptySyllabus">Dette emne har ikke oversikt.</string>
     <string name="noLocation">Ingen lokalisasjon spesifisert</string>
     <string name="previousAlerts">Tidligere varsler</string>
     <string name="currentAlerts">Gjeldende varsler</string>
-    <string name="badDomainError">Ugyldig domene. Forsøk igjen.</string>
+    <string name="badDomainError">Ugyldig domene. Prøv igjen.</string>
     <string name="unauthorized">Du er uautorisert for å få tilgang til denne informasjonen.</string>
-    <string name="revokedTokenErrorContent">Du er uautorisert for å få tilgang til informasjonen av %1$s. Du kan reautorisere studenten din fra innstillingsmenyen.</string>
+    <string name="revokedTokenErrorContent">Du er ikke autorisert for å få tilgang til informasjonen til %1$s. Du kan gjenautorisere studenten din fra innstillingsmenyen.</string>
     <string name="revokedTokenErrorTitle">Tilgangstoken tilbakevist</string>
-    <string name="featureFlagDisabledError">Denne institusjonen har ikke aktivert tilgang til mobil-appen Canvas forelder.</string>
+    <string name="featureFlagDisabledError">Denne institusjonen har ikke aktivert tilgang til Canvas Parent-mobilappen.</string>
 
     <!-- Help strings -->
     <string name="askInstructor">Spør instruktøren din et spørsmål</string>
-    <string name="askInstructorDetails">Spørsmål sendes inn til din instruktør</string>
-    <string name="searchGuides">Søk Canvas-guidene</string>
+    <string name="askInstructorDetails">Spørsmål leveres til din instruktør</string>
+    <string name="searchGuides">Søk i Canvas-guidene</string>
     <string name="canvasGuides">Canvas-guider</string>
-    <string name="searchGuidesDetails">Finn svar på vanlige spørsmål</string>
-    <string name="reportProblem">Rapportere et problem</string>
+    <string name="searchGuidesDetails">Finn svarene på vanlige spørsmål</string>
+    <string name="reportProblem">Rapporter et problem</string>
     <string name="reportProblemDetails">La oss få vite det dersom appen oppfører seg dårlig</string>
-    <string name="requestFeature">Forespørre en funksjon</string>
+    <string name="requestFeature">Be om en funksjon</string>
     <string name="requestFeatureDetails">Har du en idé for å forbedre appen?</string>
     <string name="shareYourLove">Del din kjærlighet for appen</string>
     <string name="shareYourLoveDetails">Fortell oss om dine favorittdeler av appen</string>
@@ -101,16 +112,16 @@
     <string name="installDate">Installasjonsdato:</string>
     <string name="icon">Ikon</string>
     <string name="due">Frist:</string>
-    <string name="no_due_date">Ingen innleveringsdato</string>
+    <string name="no_due_date">Ingen forfallsdato</string>
     <string name="tapToSet">Trykk for å sette</string>
-    <string name="alarmNotSet">Alarm kunne ikke settes. Forsøk igjen.</string>
+    <string name="alarmNotSet">Alarm kunne ikke bli satt. Prøv igjen.</string>
     <string name="could_not_route_course">Kunne ikke finne emnepåmeldingen.</string>
     <string name="could_not_route_assignment">Kunne ikke finne oppgaven</string>
     <string name="email_already_exists">En bruker med den e-postadressen eksisterer allerede.</string>
     <string name="password_reset_success">Du vil motta en e-post med instruksjoner for å nullstille passordet ditt.</string>
     <string name="password_reset_no_user">Ingen bruker med den e-postadressen ble funnet.</string>
     <string name="reset_password">Nullstille passord</string>
-    <string name="location">Plassering</string>
+    <string name="location">Lokasjon</string>
     <string name="time">Tid</string>
     <string name="student_avatar">Studentavatar</string>
     <string name="previous">Forrige</string>
@@ -118,29 +129,29 @@
     <string name="tab_icon">Ikon over arkfanen</string>
     <string name="add_student_icon">Ikon for å legge til en student</string>
     <string name="canvas_logo">Canvas-logo</string>
-    <string name="course_threshold_grade_above_invalid">Denne terskelen må være over den lave emneterskelen. </string>
+    <string name="course_threshold_grade_above_invalid">Denne terskelen må være over den lave emneterskelen.</string>
     <string name="course_threshold_grade_below_invalid">Denne terskelen må være under den øvre emneterskelen.</string>
     <string name="assignment_threshold_grade_above_invalid">Denne terskelen må være over den nedre oppgaveterskelen.</string>
     <string name="assignment_threshold_grade_below_invalid">Denne terskelen må være under den øvre oppgaveterskelen.</string>
     <string name="set_reminder">Sett påminnelse</string>
     <string name="enter_student_institution">Skriv inn studentens institusjon</string>
     <string name="enter_student_login">Skriv inn studentens logg in og passord.</string>
-    <string name="access_not_enabled">Denne institusjonen har ikke aktivert tilgang til mobil-appen Canvas forelder.</string>
-    <string name="dismiss">Avskjedige</string>
+    <string name="access_not_enabled">Denne institusjonen har ikke aktivert tilgang til Canvas Parent-mobilappen.</string>
+    <string name="dismiss">Avvise</string>
     <string name="invalid_username_password">Denne e-post og passordkombinasjonen var ugyldig.</string>
-    <string name="opening">Åpning&#8230;</string>
-    <string name="locked_assignment_desc">Denne oppgaven er del av modulen %s og har ikke blitt låst opp enda.</string>
+    <string name="opening">Åpner&#8230;</string>
+    <string name="locked_assignment_desc">Denne oppgaven er en del av %s-modulen og har ikke blitt låst opp ennå.</string>
     <string name="locked_assignment_desc_line2">Besøk siden for emnemoduler i en nettleser for informasjon om hvordan dette innholdet skal låses opp.</string>
     <string name="locked_assignment_not_module">Denne oppgaven er låst.</string>
     <string name="no_description">Der er ingen beskrivelse på denne oppgaven</string>
-    <string name="cannot_view_file">Kan ikke se denne filen i appen. Vennligst se den i en nettleser</string>
-    <string name="calendar_event">Kalenderoppføring</string>
+    <string name="cannot_view_file">Kan ikke vise denne filen i appen. Vis i en nettleser.</string>
+    <string name="calendar_event">Kalenderhendelse</string>
     <string name="set_reminder_toggle">Sett påminnelseveksler</string>
-    <string name="or">Eller</string>
+    <string name="or">eller</string>
     <string name="canvas_login_text">Logg inn med Canvas</string>
 
     <!-- Feature Request -->
-    <string name="featureSubject">Idé for appen Canvas forelder [Android]</string>
+    <string name="featureSubject">Idé for appen Canvas Parent [Android]</string>
     <string name="understandRequest">Følgende informasjon vil hjelpe oss bedre til å forstå din idé:</string>
 
     <!-- Distance Strings -->
@@ -149,16 +160,18 @@
     <string name="miles">miles</string>
     <string name="kilometers">km</string>
 
-    <string name="grade">Vurdering:</string>
-    <string name="notGraded">Ikke vurdert enda</string>
+    <string name="grade">Karakter:</string>
+    <string name="notGraded">Ikke karakter enda</string>
     <string name="missing">Mangler</string>
-    <string name="submitted">Sendt</string>
+    <string name="submitted">Sendt inn</string>
     <string name="in_class">I klassen</string>
-    <string name="excused">Unnskyldt</string>
+    <string name="excused">Fritatt</string>
     <string name="late">Sent</string>
     <string name="greaterThan9">9+</string>
 
-    <string name="onlyCanvasObservers">Kun Canvas-observatører kan autentifisere i Canvas Parent.</string>
+    <string name="onlyCanvasObservers">Kun Canvas-observatører kan autentisere i Canvas Parent.</string>
+    <string name="unableToAddStudentError">Vi kan ikke legge til denne studenten akkurat nå.</string>
+
     <string name="open_source">Åpen kilde</string>
     <string name="open_source_details">Vis lisenser for åpen kilde</string>
 
@@ -181,4 +194,12 @@
     <string name="selectRegion">Regionvelger</string>
     <string name="unauthorizedRegion">Uautorisert region</string>
     <string name="mismatchedRegionMessage">Denne institusjonen ligger utenfor din valgte region. For å legge til en student ved denne institusjonen, bruk alternativet "Regionvalg" på påloggingssiden for å opprette en konto i regionen %1$s.</string>
+
+    <string name="notification_channel_name">Generelle varsler</string>
+    <string name="notification_channel_description">Varsler for påminnelser og annen viktig informasjon om studenten din.</string>
+
+    <string name="whatsYourStudentsSchoolName">Skriv inn studentens skolenavn.</string>
+    <string name="findYourStudentsSchoolHint">Finn din students skole eller distrikt</string>
+    <string name="noGradeText">N/A</string>
+    <string name="locked">Låst</string>
 </resources>

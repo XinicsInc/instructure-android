@@ -27,7 +27,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.teacher.R
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.StringArg
-import com.instructure.teacher.utils.color
+import com.instructure.pandautils.utils.color
 import kotlinx.android.synthetic.main.fragment_empty.*
 
 class EmptyFragment: Fragment() {

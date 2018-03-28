@@ -16,7 +16,6 @@
 
 package com.instructure.teacher.fragments;
 
-import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -42,6 +41,7 @@ import android.widget.Toast;
 
 import com.android.ex.chips.RecipientEditTextView;
 import com.android.ex.chips.RecipientEntry;
+import com.instructure.canvasapi2.models.Attachment;
 import com.instructure.canvasapi2.models.BasicUser;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Conversation;
@@ -52,26 +52,30 @@ import com.instructure.canvasapi2.models.Recipient;
 import com.instructure.canvasapi2.models.RemoteFile;
 import com.instructure.canvasapi2.utils.APIHelper;
 import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog;
+import com.instructure.pandautils.dialogs.UploadFilesDialog;
 import com.instructure.pandautils.fragments.BasePresenterFragment;
+import com.instructure.pandautils.models.FileSubmitObject;
 import com.instructure.pandautils.utils.ColorUtils;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.FileUploadEvent;
+import com.instructure.pandautils.utils.FileUploadNotification;
+import com.instructure.pandautils.utils.FilesSelected;
 import com.instructure.pandautils.utils.ThemePrefs;
 import com.instructure.pandautils.utils.ViewStyler;
+import com.instructure.pandautils.views.AttachmentLayout;
+import com.instructure.pandautils.views.AttachmentView;
 import com.instructure.teacher.R;
 import com.instructure.teacher.adapters.CanvasContextSpinnerAdapter;
 import com.instructure.teacher.adapters.NothingSelectedSpinnerAdapter;
 import com.instructure.teacher.adapters.RecipientAdapter;
-import com.instructure.teacher.dialog.FileUploadDialog;
-import com.instructure.teacher.dialog.UnsavedChangesExitDialog;
 import com.instructure.teacher.events.ChooseMessageEvent;
 import com.instructure.teacher.events.MessageAddedEvent;
 import com.instructure.teacher.factory.AddMessagePresenterFactory;
 import com.instructure.teacher.presenters.AddMessagePresenter;
-import com.instructure.teacher.router.Route;
+import com.instructure.interactions.router.Route;
 import com.instructure.teacher.router.RouteMatcher;
 import com.instructure.teacher.utils.ViewUtils;
-import com.instructure.teacher.view.AttachmentLayout;
-import com.instructure.teacher.view.AttachmentView;
 import com.instructure.teacher.viewinterface.AddMessageView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -87,6 +91,7 @@ import instructure.androidblueprint.PresenterFactory;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function2;
 
 import static com.instructure.teacher.R.id.recipient;
 
@@ -147,10 +152,6 @@ public class AddMessageFragment extends BasePresenterFragment<AddMessagePresente
         mIsMessageStudentsWho = getArguments().getBoolean(MESSAGE_STUDENTS_WHO);
 
         if (savedInstanceState != null && !isNewMessage) {
-            FileUploadDialog fud = (FileUploadDialog) getActivity().getSupportFragmentManager().findFragmentByTag(FileUploadDialog.class.getSimpleName());
-            if (fud != null) {
-                fud.setDialogLifecycleCallback(mFileUploadDialogCallback);
-            }
 
         } else if(isNewMessage) {
             // composing a new message
@@ -360,10 +361,13 @@ public class AddMessageFragment extends BasePresenterFragment<AddMessagePresente
                     sendMessage();
                     return true;
                 } else if (item.getItemId() == R.id.menu_attachment) {
-                    Bundle bundle = FileUploadDialog.createAttachmentsBundle(ApiPrefs.getUser().getShortName(), null);
-                    FileUploadDialog mFileUploadDialog = FileUploadDialog.newInstance(getActivity().getSupportFragmentManager(), bundle);
-                    mFileUploadDialog.setDialogLifecycleCallback(mFileUploadDialogCallback);
-                    mFileUploadDialog.show(getActivity().getSupportFragmentManager(), FileUploadDialog.class.getSimpleName());
+                    Bundle bundle = UploadFilesDialog.createAttachmentsBundle(new ArrayList<FileSubmitObject>());
+                    UploadFilesDialog.show(getFragmentManager(), bundle, new Function1<Integer, Unit>() {
+                        @Override
+                        public Unit invoke(Integer integer) {
+                            return null;
+                        }
+                    });
                     return true;
                 } else {
                     return false;
@@ -416,18 +420,6 @@ public class AddMessageFragment extends BasePresenterFragment<AddMessagePresente
         return super.onHandleBackPressed();
     }
 
-    private FileUploadDialog.DialogLifecycleCallback mFileUploadDialogCallback = new FileUploadDialog.DialogLifecycleCallback() {
-        @Override
-        public void onCancel(Dialog dialog) {
-        }
-
-        @Override
-        public void onAllUploadsComplete(Dialog dialog, List<RemoteFile> uploadedFiles) {
-            getPresenter().addAttachments(uploadedFiles);
-        }
-    };
-
-
     @Override
     public void messageSuccess() {
         Toast.makeText(getContext(), R.string.message_sent_successfully, Toast.LENGTH_SHORT).show();
@@ -447,16 +439,16 @@ public class AddMessageFragment extends BasePresenterFragment<AddMessagePresente
 
     @Override
     public void refreshAttachments() {
-        mAttachmentLayout.setPendingAttachments(getPresenter().getAttachments(), true, new AttachmentView.AttachmentClickedCallback<RemoteFile>() {
+        mAttachmentLayout.setRemoteFileAttachments(getPresenter().getAttachments(), new Function2<AttachmentView.AttachmentAction, RemoteFile, Unit>() {
             @Override
-            public void onAttachmentClicked(AttachmentView.AttachmentAction action, RemoteFile attachment) {
-                if (action == AttachmentView.AttachmentAction.REMOVE) {
-                    getPresenter().removeAttachment(attachment);
+            public Unit invoke(AttachmentView.AttachmentAction attachmentAction, RemoteFile remoteFile) {
+                if (attachmentAction == AttachmentView.AttachmentAction.REMOVE) {
+                    getPresenter().removeAttachment(remoteFile);
                 }
+                return null;
             }
         });
     }
-
 
     private boolean isValidNewMessage() {
         if(isNewMessage) {
@@ -596,20 +588,16 @@ public class AddMessageFragment extends BasePresenterFragment<AddMessagePresente
             recipient.setStringId(entry.getDestination());
 
             recipients.add(recipient);
-
         }
-
 
         return recipients;
     }
 
     @Override
-    public void onRefreshFinished() {
-    }
+    public void onRefreshFinished() {}
 
     @Override
-    public void onRefreshStarted() {
-    }
+    public void onRefreshStarted() {}
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onRecipientsUpdated(ChooseMessageEvent event) {
@@ -625,6 +613,24 @@ public class AddMessageFragment extends BasePresenterFragment<AddMessagePresente
                     }
                 });
 
+                return null;
+            }
+        });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFileUploadStarted(final FilesSelected event) {
+        //update the adapter item
+        event.get(new Function1<List<? extends FileSubmitObject>, Unit>() {
+            @Override
+            public Unit invoke(List<? extends FileSubmitObject> fileSubmitObjects) {
+                EventBus.getDefault().removeStickyEvent(event);
+                ArrayList<Attachment> attachments = new ArrayList<>(fileSubmitObjects.size());
+                for (FileSubmitObject item : fileSubmitObjects) {
+                    attachments.add(item.toAttachment());
+                }
+                getPresenter().addAttachments(attachments);
+                refreshAttachments();
                 return null;
             }
         });

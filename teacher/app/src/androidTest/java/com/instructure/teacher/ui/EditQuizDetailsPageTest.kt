@@ -17,11 +17,10 @@
 package com.instructure.teacher.ui
 
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.CanvasUser
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.getNextCourse
-import com.instructure.teacher.ui.utils.getNextQuiz
-import com.instructure.teacher.ui.utils.logIn
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.seedQuizzes
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class EditQuizDetailsPageTest : TeacherTest() {
@@ -110,7 +109,7 @@ class EditQuizDetailsPageTest : TeacherTest() {
         editQuizDetailsPage.clickAddOverride()
         assigneeListPage.saveAndClose()
         editQuizDetailsPage.assertNewOverrideCreated()
-        editQuizDetailsPage.removeFirstOverride()
+        editQuizDetailsPage.removeSecondOverride()
         editQuizDetailsPage.assertOverrideRemoved()
     }
 
@@ -157,13 +156,21 @@ class EditQuizDetailsPageTest : TeacherTest() {
         editQuizDetailsPage.assertNoAssigneesErrorShown()
     }
 
-    private fun getToEditQuizDetailsPage(): CanvasUser {
-        val teacher = logIn()
-        val quiz = getNextQuiz()
-        coursesListPage.openCourse(getNextCourse())
+    private fun getToEditQuizDetailsPage() {
+        val data = seedData(teachers = 1, favoriteCourses = 1, students = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val quiz = seedQuizzes(
+                courseId = course.id,
+                quizzes = 1,
+                withDescription = false,
+                teacherToken = teacher.token).quizzesList[0]
+
+        tokenLogin(teacher)
+
+        coursesListPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
         quizListPage.clickQuiz(quiz)
         quizDetailsPage.openEditPage()
-        return teacher
     }
 }

@@ -25,6 +25,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -197,9 +198,9 @@ public class CanvasRecipientManager implements RecipientManager {
         recipientSuggestionsCallback = new StatusCallback<List<Recipient>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<Recipient>> response,
-                                   LinkHeaders linkHeaders,
-                                   ApiType type) {
+            public void onResponse(@NonNull retrofit2.Response<List<Recipient>> response,
+                                   @NonNull LinkHeaders linkHeaders,
+                                   @NonNull ApiType type) {
                 super.onResponse(response, linkHeaders, type);
                 for(Recipient recipient : response.body()){
                     // TODO : modify the recipient entry to display canvas course info. Currently displaying recipient course id instead of an "address"
@@ -316,10 +317,7 @@ public class CanvasRecipientManager implements RecipientManager {
             Resources resources = context.getResources();
             String initials = ProfileUtils.getUserInitials(recipient.getName());
             int imageSize = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, resources.getDisplayMetrics());
-            Bitmap image    = createAvatarBitmap(context, initials,
-                    ProfileUtils.getUserColor(recipient.getName(), context),
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 34, resources.getDisplayMetrics()),
-                    imageSize);
+            Bitmap image = ProfileUtils.getInitialsAvatarBitMap(context, recipient.getName());
             // Convert the generated bitmap to a bytearray
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 75, stream);
@@ -333,20 +331,20 @@ public class CanvasRecipientManager implements RecipientManager {
         }
     }
 
-    public static Bitmap createAvatarBitmap(Context context, String initials, int color, float textSize, int imageSize){
+    public static Bitmap createAvatarBitmap(Context context, String initials, float textSize, int imageSize){
         Bitmap image    = Bitmap.createBitmap(imageSize, imageSize, Bitmap.Config.RGB_565);
         Canvas canvas   = new Canvas(image);
         Paint paint     = new Paint();
 
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(color);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.WHITE);
         canvas.drawPaint(paint);
         canvas.save();
         canvas.translate(0, 0);
 
 //        paint.setTypeface(ProfileUtils.getLightTypeface());
         paint.setTextSize(textSize);
-        paint.setColor(Color.parseColor("#FFFFFF"));
+        paint.setColor(Color.parseColor("#888888"));
         paint.setTextAlign(Paint.Align.CENTER);
 
         float scale = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, context.getResources().getDisplayMetrics()) / 100;

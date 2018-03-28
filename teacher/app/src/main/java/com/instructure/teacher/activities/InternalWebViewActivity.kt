@@ -26,7 +26,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.factory.InternalWebViewPresenterFactory
 import com.instructure.teacher.fragments.InternalWebViewFragment
 import com.instructure.teacher.presenters.InternalWebViewPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.viewinterface.InternalWebView
 
 class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, InternalWebView>(), InternalWebView {
@@ -50,7 +50,7 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
     override fun getPresenterFactory() = InternalWebViewPresenterFactory()
 
     private fun setupViews() {
-        mInternalWebView = InternalWebViewFragment.newInstance(mUrl!!)
+        mInternalWebView = InternalWebViewFragment.newInstance(mUrl!!, mHtml!!, mActionbarTitle!!)
         supportFragmentManager
                 .beginTransaction()
                 .add(R.id.internalWebViewContainer, mInternalWebView, InternalWebViewFragment::class.java.simpleName)
@@ -64,9 +64,9 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
 
         with(extras) {
             mUrl = getString(Const.INTERNAL_URL)
-            mActionbarTitle = getString(Const.ACTION_BAR_TITLE)
+            mActionbarTitle = getString(Const.ACTION_BAR_TITLE, "")
             mAuthenticate = getBoolean(Const.AUTHENTICATE)
-            mHtml = getString(Const.HTML)
+            mHtml = getString(Const.HTML, "")
         }
     }
 
@@ -99,8 +99,19 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
         }
 
         @JvmStatic
+        fun createIntent(context: Context, url: String, html: String, title: String, authenticate: Boolean): Intent {
+            // Assumes no canvasContext
+            val extras = createBundle(null, url, title, authenticate)
+            extras.putString(Const.HTML, html)
+            val intent = Intent(context, InternalWebViewActivity::class.java).apply {
+                putExtra(Const.EXTRAS, extras)
+            }
+            return intent
+        }
+
+        @JvmStatic
         fun createIntent(context: Context, route: Route, title: String, authenticate: Boolean)
-                = createIntent(context, route.url, title, authenticate)
+                = createIntent(context, route.url ?: "", title, authenticate)
 
         fun createBundle(canvasContext: CanvasContext?, route: Route, title: String, authenticate: Boolean): Bundle {
             val extras = BasePresenterActivity.createBundle(canvasContext).apply {

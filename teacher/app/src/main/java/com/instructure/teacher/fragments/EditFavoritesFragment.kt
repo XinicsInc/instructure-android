@@ -28,13 +28,17 @@ import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.SerializableArg
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.EditFavoritesAdapter
 import com.instructure.teacher.factory.EditFavoritesPresenterFactory
 import com.instructure.teacher.holders.EditFavoritesViewHolder
 import com.instructure.teacher.interfaces.AdapterToEditFavoriteCoursesCallback
 import com.instructure.teacher.presenters.EditFavoritesPresenter
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.AppType
+import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.isTablet
+import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.CanvasContextView
 import kotlinx.android.synthetic.main.fragment_edit_favorites.*
 
@@ -81,7 +85,7 @@ class EditFavoritesFragment : BaseSyncFragment<
 
     override fun getPresenterFactory() = EditFavoritesPresenterFactory {
         when (mAppType) {
-            AppType.TEACHER -> it.isTeacher || it.isTA
+            AppType.TEACHER -> it.isTeacher || it.isTA || it.isDesigner
             AppType.STUDENT -> it.isStudent
             AppType.PARENT -> it.isObserver
         }

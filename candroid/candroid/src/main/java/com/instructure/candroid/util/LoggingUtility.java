@@ -33,8 +33,8 @@ import java.util.Set;
 
 public class LoggingUtility {
 
-    private static String TAG = "candroid";
-    private static String TAG_JSON = "candroid_json";
+    private static String TAG = "canvasLog";
+    private static String TAG_JSON = "canvasLog_json";
 
     /**
      * Logs JSON using the adb logcat tool using tag "candroid-json" {@link android.util.Log#d}

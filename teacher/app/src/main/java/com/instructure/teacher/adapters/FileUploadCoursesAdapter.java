@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.utils.Logger;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.teacher.R;
 import com.instructure.teacher.binders.BaseBinder;
 
@@ -83,7 +83,7 @@ public class FileUploadCoursesAdapter extends ArrayAdapter<Course> {
             viewHolder.title.setTypeface(null, Typeface.NORMAL);
             viewHolder.indicator.setVisibility(View.VISIBLE);
             viewHolder.indicator.setBackgroundDrawable(BaseBinder.createIndicatorBackground(
-                    CanvasContextColor.getCachedColor(getContext(), item)));
+                    ColorKeeper.getOrGenerateColor(item)));
         } else {
             viewHolder.indicator.setVisibility(View.GONE);
             viewHolder.title.setText("");
@@ -113,7 +113,7 @@ public class FileUploadCoursesAdapter extends ArrayAdapter<Course> {
             viewHolder.title.setText(item.getName());
             viewHolder.indicator.setVisibility(View.VISIBLE);
             viewHolder.indicator.setBackgroundDrawable(BaseBinder.createIndicatorBackground(
-                    CanvasContextColor.getCachedColor(getContext(), item)));
+                    ColorKeeper.getOrGenerateColor(item)));
         } else {
             viewHolder.indicator.setVisibility(View.GONE);
             viewHolder.title.setText("");

@@ -27,21 +27,21 @@ public class ErrorReportManager extends BaseManager {
 
     private static final Boolean mTesting = false;
 
-    public static void postErrorReport(String subject, String url, String email, String comments, String userPerceivedSeverity, StatusCallback<ErrorReportResult> callback) {
+    public static void postErrorReport(String subject, String url, String email, String comments, String userPerceivedSeverity, String name, String userRoles, String becomeUser, StatusCallback<ErrorReportResult> callback) {
         if (isTesting() || mTesting) {
             // TODO
         } else {
-            if(APIHelper.paramIsNull(callback, subject, url, email, comments, userPerceivedSeverity)) return;
-            ErrorReportAPI.postErrorReport(subject, url, email, comments, userPerceivedSeverity, callback);
+            if(APIHelper.paramIsNull(callback, subject, url, email, comments, userPerceivedSeverity, name, userRoles, becomeUser)) return;
+            ErrorReportAPI.postErrorReport(subject, url, email, comments, userPerceivedSeverity, name, userRoles, becomeUser, callback);
         }
     }
 
-    public static void postGenericErrorReport(String subject, String url, String email, String comments, String userPerceivedSeverity, StatusCallback<ErrorReportResult> callback) {
+    public static void postGenericErrorReport(String subject, String url, String email, String comments, String userPerceivedSeverity, String name, String userRoles, String becomeUser, StatusCallback<ErrorReportResult> callback) {
         if (isTesting() || mTesting) {
             // TODO
         } else {
-            if(APIHelper.paramIsNull(callback, subject, url, email, comments, userPerceivedSeverity)) return;
-            ErrorReportAPI.postGenericErrorReport(subject, url, email, comments, userPerceivedSeverity, callback);
+            if(APIHelper.paramIsNull(callback, subject, url, email, comments, userPerceivedSeverity, name, userRoles, becomeUser)) return;
+            ErrorReportAPI.postGenericErrorReport(subject, url, email, comments, userPerceivedSeverity, name, userRoles, becomeUser, callback);
         }
     }
 

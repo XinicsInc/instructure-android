@@ -1,0 +1,123 @@
+/*
+ * Copyright (C) 2017 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+def getProperty(key, defaultValue) {
+    rootProject.ext.hasProperty(key) ? rootProject.ext[key] : defaultValue
+}
+
+def _compileSdkVersion = getProperty('compileSdkVersion', 26)
+def _buildToolsVersion = getProperty('buildToolsVersion', '26.0.2')
+def _minSdkVersion = getProperty('minSdkVersion', '17')
+def _targetSdkVersion = getProperty('targetSdkVersion', 26)
+def _versionCode = getProperty('versionCode', 1)
+def _versionName = getProperty('versionName', '1.0d')
+
+android {
+    compileSdkVersion _compileSdkVersion
+    buildToolsVersion _buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion _minSdkVersion
+        targetSdkVersion _targetSdkVersion
+        versionCode _versionCode
+        versionName _versionName
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+        release {
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    packagingOptions {
+        // Required for Espresso.
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+    }
+
+    // Android Studio doesn't pick up kotlin folder automatically
+    // https://kotlinlang.org/docs/reference/using-gradle.html
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+dependencies {
+    // last update: Sept 30 2017
+    // old versions: $ANDROID_HOME/extras/android/m2repository/com/android/support/test/
+    // new versions: https://maven.google.com
+    //
+    // match versions from:
+    // https://developer.android.com/topic/libraries/testing-support-library/release-notes.html
+    //
+    // https://maven.google.com/com/android/support/test/espresso/espresso-core/3.0.0/espresso-core-3.0.0.pom
+
+    def runnerVersion = Versions.ATSL_ORCHESTRATOR
+    def rulesVersion = Versions.ATSL_ORCHESTRATOR
+    def espressoVersion = '3.0.2-alpha1'
+    def junitVersion = '4.12'
+
+    // Update exclusions based on ./gradlew :app:androidDependencies
+    implementation("com.android.support.test:runner:$runnerVersion") {
+        exclude module: 'support-annotations'
+    }
+
+    implementation("com.android.support.test.espresso.idling:idling-concurrent:$espressoVersion") {
+        exclude module: 'support-annotations'
+    }
+    implementation("com.android.support.test.espresso.idling:idling-net:$espressoVersion") {
+        exclude module: 'support-annotations'
+    }
+
+    androidTestImplementation "com.android.support.test.espresso:espresso-accessibility:$espressoVersion"
+
+    implementation("com.android.support.test:rules:$rulesVersion") {
+        exclude module: 'support-annotations'
+    }
+    api("com.android.support.test.espresso:espresso-core:$espressoVersion") {
+        exclude module: 'support-annotations'
+    }
+    // Fix IncompatibleClassChangeError https://code.google.com/p/android/issues/detail?id=183454
+    api("com.android.support.test.espresso:espresso-contrib:$espressoVersion") {
+        exclude module: 'design'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-annotations'
+        exclude module: 'support-core-utils'
+        exclude module: 'support-compat'
+    }
+    implementation("com.android.support.test.espresso:espresso-idling-resource:$espressoVersion")
+    implementation("com.android.support.test.espresso:espresso-intents:$espressoVersion") {
+        exclude module: 'support-annotations'
+    }
+    implementation("com.android.support.test.espresso:espresso-web:$espressoVersion") {
+        exclude module: 'support-annotations'
+    }
+    implementation("junit:junit:$junitVersion")
+    implementation Libs.KOTLIN_STD_LIB
+}

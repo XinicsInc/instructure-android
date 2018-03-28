@@ -27,14 +27,23 @@ public class MessageThreadPresenterFactory implements PresenterFactory<MessageTh
     private Conversation mConversation;
     private int mPosition;
 
+    private long conversationId;
+
     public MessageThreadPresenterFactory(Conversation conversation, int position) {
         mConversation = conversation;
         mPosition = position;
     }
 
+    public MessageThreadPresenterFactory(long id) {
+        conversationId = id;
+    }
+
     @Override
     public MessageThreadPresenter create() {
-        return new MessageThreadPresenter(mConversation, mPosition);
+        if (mConversation != null) {
+            return new MessageThreadPresenter(mConversation, mPosition);
+        }
+        return new MessageThreadPresenter(conversationId);
     }
 
 }

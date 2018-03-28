@@ -17,6 +17,9 @@
 
 package com.instructure.candroid.binders;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.View;
 
@@ -26,9 +29,8 @@ import com.instructure.candroid.util.ModuleUtility;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.ModuleObject;
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.ColorUtils;
-import com.nineoldandroids.animation.Animator;
 
 public class ModuleHeaderBinder extends BaseBinder {
 
@@ -56,7 +58,6 @@ public class ModuleHeaderBinder extends BaseBinder {
         }
 
         final int color = context.getResources().getColor(R.color.canvasTextMedium);
-        holder.expandCollapse.setImageDrawable(ColorUtils.colorIt(color, context.getResources().getDrawable(R.drawable.ic_cv_expand_black)));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +71,7 @@ public class ModuleHeaderBinder extends BaseBinder {
                     setInvisible(holder.divider);
                 }
                 holder.isExpanded = !holder.isExpanded;
-                final com.nineoldandroids.animation.ObjectAnimator flipAnimator = (com.nineoldandroids.animation.ObjectAnimator) com.nineoldandroids.animation.AnimatorInflater.loadAnimator(v.getContext(), animationType);
+                final ObjectAnimator flipAnimator = (ObjectAnimator) AnimatorInflater.loadAnimator(v.getContext(), animationType);
                 flipAnimator.setTarget(holder.expandCollapse);
                 flipAnimator.setDuration(200);
                 flipAnimator.start();
@@ -106,16 +107,16 @@ public class ModuleHeaderBinder extends BaseBinder {
         //reset the status text and drawable to default state
         if (moduleObject.getState() != null) {
             if (isLocked) {
-                holder.moduleStatus.setImageDrawable(ColorUtils.colorIt(color, context.getResources().getDrawable(R.drawable.ic_cv_locked_fill)));
+                holder.moduleStatus.setImageDrawable(ColorUtils.colorIt(color, context.getResources().getDrawable(R.drawable.vd_lock)));
             } else if (moduleObject.getState().equals(ModuleObject.STATE.completed.toString())) {
                 //if the instructor doesn't add any completion requirements, the module will already be complete
-                final int courseColor = CanvasContextColor.getCachedColor(context, canvasContext);
-                holder.moduleStatus.setImageDrawable(ColorUtils.colorIt(courseColor, context.getResources().getDrawable(R.drawable.ic_cv_check_fill)));
+                final int courseColor = ColorKeeper.getOrGenerateColor(canvasContext);
+                holder.moduleStatus.setImageDrawable(ColorUtils.colorIt(courseColor, context.getResources().getDrawable(R.drawable.vd_check_white_24dp)));
             } else {
-                holder.moduleStatus.setImageDrawable(ColorUtils.colorIt(color, context.getResources().getDrawable(R.drawable.ic_cv_circle)));
+                holder.moduleStatus.setImageDrawable(ColorUtils.colorIt(color, context.getResources().getDrawable(R.drawable.vd_module_circle)));
             }
         } else {
-            holder.moduleStatus.setImageDrawable(ColorUtils.colorIt(color, context.getResources().getDrawable(R.drawable.ic_cv_circle)));
+            holder.moduleStatus.setImageDrawable(ColorUtils.colorIt(color, context.getResources().getDrawable(R.drawable.vd_module_circle)));
         }
     }
 }

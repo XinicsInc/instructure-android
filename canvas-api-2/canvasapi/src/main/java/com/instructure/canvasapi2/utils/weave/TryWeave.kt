@@ -17,28 +17,31 @@
 
 package com.instructure.canvasapi2.utils.weave
 
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
-import kotlin.coroutines.experimental.startCoroutine
 
 /**
  * Holds the data necessary for [tryWeave] to work correctly
  */
-class TryWeave(val coroutine: WeaveCoroutine, val block: suspend WeaveCoroutine.() -> Unit)
+class TryWeave(val background: Boolean, val block: suspend WeaveCoroutine.() -> Unit)
 
 /**
  * A convenience alternative to [weave] that automatically propagates all exceptions to the [catch]
  * block. An invocation of this function *MUST* be immediately followed by a [catch] block, otherwise
  * the body of [tryWeave] will not be executed and you will be *so embarrassed.*
  */
-fun Any.tryWeave(block: suspend WeaveCoroutine.() -> Unit) = TryWeave(if (isUnitTesting) TestCoroutine() else AndroidCoroutine(), block)
+fun Any.tryWeave(background: Boolean = false, block: suspend WeaveCoroutine.() -> Unit) = TryWeave(background, block)
 
 /**
  * Calling this immediately after [tryWeave] is what separates us from the the animals.
  */
 infix fun TryWeave.catch(onException: (e: Throwable) -> Unit): WeaveCoroutine {
-    coroutine.onException = onException
-    coroutine.initParentJob(UI[Job])
-    block.startCoroutine(coroutine, coroutine)
+    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        if (throwable !is CancellationException) onException(throwable)
+    }
+    val context = if (isUnitTesting || background) CommonPool else UI
+    val coroutine = WeaveCoroutine(context + exceptionHandler)
+    coroutine.initParentJob(coroutine[Job])
+    CoroutineStart.DEFAULT(block, coroutine, coroutine)
     return coroutine
 }

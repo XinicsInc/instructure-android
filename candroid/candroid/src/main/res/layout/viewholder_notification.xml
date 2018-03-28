@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -15,82 +14,37 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AdapterItem"
+    android:orientation="horizontal">
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:clickable="true"
-    android:minHeight="?android:listPreferredItemHeight"
-    app:cardBackgroundColor="@color/white"
-    app:cardElevation="@dimen/card_elevation"
-    app:cardUseCompatPadding="true"
-    app:contentPadding="@dimen/card_inner_padding">
+    <ImageView
+        android:id="@+id/icon"
+        style="@style/AdapterItemIcon"
+        android:importantForAccessibility="no"
+        tools:srcCompat="@drawable/vd_copy" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/textContainer"
+        style="@style/AdapterItemTextContainer"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/titleContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/title"
+            style="@style/AdapterItemTitleText"
+            tools:text="Course Notification Title" />
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="@dimen/gridIconSize"
-                android:layout_height="@dimen/gridIconSize"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/icon"
-                android:scaleType="fitCenter" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/icon"
-                android:layout_toRightOf="@id/icon">
-
-                <TextView
-                    android:id="@+id/title"
-                    style="@style/TextStyle.Primary.CardView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginStart="12dp" />
-
-            </FrameLayout>
-
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/course"
+            style="@style/AdapterItemCourseNameText"
+            tools:text="Course Abc" />
 
         <TextView
             android:id="@+id/description"
-            style="@style/TextStyle.Secondary.CardView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/course"
-                style="@style/TextStyle.Tertiary.SingleLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|start" />
-
-        </FrameLayout>
+            style="@style/AdapterItemDescriptionText"
+            tools:text="Course Description" />
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</LinearLayout>

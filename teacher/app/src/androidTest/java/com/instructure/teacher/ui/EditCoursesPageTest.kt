@@ -33,16 +33,22 @@ class EditCoursesPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3109572")
     fun displaysCourseList() {
-        logIn()
+        val data = seedData(teachers = 1, courses = 1)
+        val courses = data.coursesList
+        val teacher = data.teachersList[0]
+        tokenLogin(teacher)
         coursesListPage.openEditFavorites()
-        editCoursesListPage.assertHasCourses(getAllCourses())
+        editCoursesListPage.assertHasCourses(courses)
     }
 
     @Test
     @TestRail(ID = "C3109574")
     fun favoriteCourse() {
-        logIn()
-        val courses = getAllCourses()
+        val data = seedData(teachers = 1, courses = 1)
+        val courses = data.coursesList
+        val teacher = data.teachersList[0]
+        tokenLogin(teacher)
+
         coursesListPage.openEditFavorites()
         editCoursesListPage.toggleFavoritingCourse(courses[0])
         editCoursesListPage.assertCourseFavorited(courses[0])
@@ -51,8 +57,11 @@ class EditCoursesPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3109575")
     fun unfavoriteCourse() {
-        logIn()
-        val courses = getAllCourses()
+        val data = seedData(teachers = 1, favoriteCourses = 1)
+        val courses = data.coursesList
+        val teacher = data.teachersList[0]
+        tokenLogin(teacher)
+
         coursesListPage.openEditFavorites()
         editCoursesListPage.toggleFavoritingCourse(courses[0])
         editCoursesListPage.assertCourseUnfavorited(courses[0])

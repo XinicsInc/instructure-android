@@ -71,7 +71,7 @@
             style="@style/NotATeacher.SubText"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@id/studentCanvasLogo"
-            android:text="@string/appTypeStudent"
+            android:text="@string/appUserTypeStudent"
             android:textColor="@color/remove_override_color"
             app:layout_marginStartPercent="4%" />
 
@@ -101,7 +101,7 @@
         <TextView
             style="@style/NotATeacher.SubText"
             android:layout_toEndOf="@id/parentCanvasLogo"
-            android:text="@string/appTypeParent"
+            android:text="@string/appUserTypeParent"
             android:layout_alignParentBottom="true"
             android:textColor="@color/canvas_default_button"
             app:layout_marginStartPercent="4%" />

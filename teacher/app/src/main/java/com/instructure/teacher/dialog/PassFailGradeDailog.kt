@@ -28,9 +28,9 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.Const
-import com.instructure.pandautils.utils.dismissExisting
 import kotlin.properties.Delegates
 
 class PassFailGradeDailog : AppCompatDialogFragment() {
@@ -74,10 +74,10 @@ class PassFailGradeDailog : AppCompatDialogFragment() {
             passFailSpinner.isEnabled = !isChecked
         }
 
-        //set the spinner selection to the user's current grade, default is complete
+        //set the spinner selection to the user's current grade, default is complete (also 'complete' comes back as the grade regardless of the language)
         when(grade?.toLowerCase()) {
-            resources.getString(R.string.complete_grade).toLowerCase() -> passFailSpinner.setSelection(0)
-            resources.getString(R.string.incomplete_grade).toLowerCase() -> passFailSpinner.setSelection(1)
+            "complete" -> passFailSpinner.setSelection(0)
+            "incomplete" -> passFailSpinner.setSelection(1)
             else -> passFailSpinner.setSelection(0)
         }
 
@@ -86,7 +86,10 @@ class PassFailGradeDailog : AppCompatDialogFragment() {
                 .setTitle(getString(R.string.customize_grade))
                 .setView(view)
                 .setPositiveButton(getString(android.R.string.ok).toUpperCase(), { dialog, which ->
-                    mPassFailGradeCallback(passFailSpinner.selectedItem.toString().toLowerCase(), excusedCheckBox.isChecked)
+                    // The api needs the string "complete" or "incomplete" in English, not whatever language is currently selected
+                    val complete = if (passFailSpinner.selectedItemPosition == 0) "complete" else "incomplete"
+
+                    mPassFailGradeCallback(complete, excusedCheckBox.isChecked)
                 })
                 .setNegativeButton(getString(android.R.string.cancel).toUpperCase(), null)
                 .create()

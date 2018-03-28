@@ -29,7 +29,10 @@ Module | Description
 BluePrint    | An MVP Architecture that depends on PandaRecyclerView. 
 Canvas-Api   | *Deprecated* - Canvas for Android Api used to talk to Canvas LMS. (deprecated)
 Canvas-Api-2 | Canvas for Android Api used to talk to the Canvas LMS and is testable.
+dataseedingapi| gRPC wrapper for Canvas that enables creating data to test the apps
 Espresso     | The UI testing library built on Espresso.
+SoSeedyCLI   | CLI for using data seeding API manually
+SoSeedyGRPC  | gRPC server for using data seeding with iOS from Xcode
 Foosball     | A Foosball Application created and used interally to boost fun by over 120%.
 Login-Api    | *Deprecated* - The Library used to making logging in and getting a token relatively easy. (deprecated)
 Login-Api-2  | The libarary used to make logging in and getting a token relative easy and is testable. 

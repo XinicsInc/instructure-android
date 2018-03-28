@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2016 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,31 +16,42 @@
   -->
 
 <resources>
+
     <string name="action_settings">Ustawienia</string>
     <string name="canvasLogo">Logo Canvas</string>
-    <string name="email">Adres e-mail</string>
+    <string name="email">E-mail</string>
+    <string name="emailAddress">Adres e-mail</string>
     <string name="parent_email">Email rodzica</string>
     <string name="confirmPassword">Potwierdź hasło</string>
     <string name="firstName">Imię</string>
     <string name="lastName">Nazwisko</string>
     <string name="password">Hasło</string>
-    <string name="log_in">Zaloguj się</string>
+    <string name="log_in">Zaloguj</string>
     <string name="createAccount">Utwórz konto</string>
-    <string name="forgotPassword">Zapomniałem hasła</string>
-    <string name="requestPassword">Prośba o hasło</string>
+    <string name="create">Utwórz</string>
+    <string name="forgotPassword">Nie pamiętasz hasła?</string>
+    <string name="forgotPasswordWithoutQuestion">Nie pamiętam hasła</string>
+    <string name="enterAccountEmailHint">Konto e-mail</string>
+    <string name="requestPassword">Poproś o hasło</string>
+    <string name="resetPassword">Resetuj hasło</string>
+    <string name="requestPasswordHelpText">Wyślemy Ci łącze do resetowania hasła.</string>
+    <string name="requestPasswordSuccess">Zresetowano Twoje hasło.</string>
     <string name="fullName">Imię i nazwisko</string>
-    <string name="invalidEmail">Nieprawidłowy adres email. Spróbuj ponownie.</string>
-    <string name="next">Dalej</string>
+    <string name="passwordsDoNotMatch">Hasła nie są zgodne.</string>
+    <string name="passwordsCannotBeBlank">Hasła nie mogą być puste.</string>
+    <string name="passwordResetFailed">Nie udało się zresetować hasła.</string>
+    <string name="invalidEmail">Nieprawidłowy adres e-mail. Spróbuj ponownie.</string>
+    <string name="next">Następny</string>
     <string name="createAccountMessage">Na podany adres email zostanie wysłana wiadomość w celu ukończenia rejestracji.</string>
-    <string name="accountCreationSuccess">Pomyślne utworzenie konta. Sprawdź adres email aby zakończyć proces rejestracji.</string>
+    <string name="accountCreationSuccess">Utworzono konto. Sprawdź skrzynkę e-mail, aby dokończyć rejestrację.</string>
     <string name="errorOccurred">Wystąpił nieoczekiwany błąd. Spróbuj ponownie.</string>
     <string name="unknownDevice">Nieznane urządzenie</string>
     <string name="addStudent">Dodaj ucznia</string>
     <string name="school">Szkoła</string>
     <string name="finish">Zakończ</string>
     <string name="close">Zamknij</string>
-    <string name="noStudents">Brak dostępnych uczniów. Aby dodać uczniów dotknij trzech kropek w powyższym menu.</string>
-    <string name="noStudentsView">Brak uczniów powiązanych z danym kontem.</string>
+    <string name="noStudents">Brak dostępnych uczestników. Aby dodać uczestników, stuknij trzy kropki w powyższym menu.</string>
+    <string name="noStudentsView">Brak uczestników powiązanych z Twoim kontem.</string>
     <string name="noCourses">Dany uczeń nie ma dostępnych kursów.</string>
     <string name="noAlerts">Dany uczeń nie ma alertów do odczytania.</string>
     <string name="noItemsToDisplayShort">Brak pozycji</string>
@@ -49,11 +60,11 @@
     <string name="notifyWhen">Powiadom mnie gdy</string>
     <string name="gradeAbove">Ocena z kursu powyżej</string>
     <string name="gradeBelow">Ocena z kursu poniżej</string>
-    <string name="assignmentMissing">Brakuje zadania</string>
-    <string name="teacherAnnouncements">Powiadomienia o zadaniach</string>
+    <string name="assignmentMissing">Brak zadania</string>
+    <string name="teacherAnnouncements">Ogłoszenia dotyczące kursu</string>
     <string name="institutionAnnouncements">Ogłoszenia instytucji</string>
-    <string name="assignmentGradeAbove">Ocena z zadania powyżej</string>
-    <string name="assignmentGradeBelow">Ocena z zadania poniżej</string>
+    <string name="assignmentGradeAbove">Ocena za zadanie powyżej</string>
+    <string name="assignmentGradeBelow">Ocena za zadanie poniżej</string>
     <string name="never">Nigdy</string>
     <string name="save">Zapisz</string>
     <string name="enterThreshold">Wpisz procent</string>
@@ -68,23 +79,23 @@
     <string name="alert">Alert</string>
     <string name="weekEmptyView">Brak zadań lub wydarzeń w tym tygodniu!</string>
     <string name="toolbar_close">Zamknij pasek narzędzi</string>
-    <string name="syllabus">Konspekt</string>
+    <string name="syllabus">Program</string>
     <string name="emptySyllabus">Dany kurs nie posiada konspektu.</string>
     <string name="noLocation">Brak określonej lokalizacji</string>
     <string name="previousAlerts">Poprzednie alerty</string>
     <string name="currentAlerts">Obecne alerty</string>
     <string name="badDomainError">Nieprawidłowa domena. Spróbuj ponownie.</string>
     <string name="unauthorized">Brak autoryzacji dostępu do danych informacji.</string>
-    <string name="revokedTokenErrorContent">Brak autoryzacji dostępu do informacji o %1$s. Możesz ponownie autoryzować danego ucznia z menu ustawień.</string>
+    <string name="revokedTokenErrorContent">Brak autoryzacji dostępu do danych informacji %1$s. Możesz udzielić autoryzacji uczestnikowi z menu ustawień.</string>
     <string name="revokedTokenErrorTitle">Token dostępu unieważniony</string>
-    <string name="featureFlagDisabledError">Instytucja nie udzieliła dostępu do mobilnej aplikacji Rodzic Canvas.</string>
+    <string name="featureFlagDisabledError">Ta instytucja nie udzieliła dostępu do aplikacji mobilnej Canvas Parent.</string>
 
     <!-- Help strings -->
-    <string name="askInstructor">Zadaj pytanie Instruktorowi</string>
-    <string name="askInstructorDetails">Pytania są wysyłane do twojego Instruktora</string>
-    <string name="searchGuides">Przeszukaj Przewodniki Canvas</string>
+    <string name="askInstructor">Zadaj pytanie instruktorowi</string>
+    <string name="askInstructorDetails">Pytania są przesyłane do instruktora</string>
+    <string name="searchGuides">Wyszukaj przewodniki Canvas</string>
     <string name="canvasGuides">Przewodniki Canvas</string>
-    <string name="searchGuidesDetails">Znajdź odpowiedzi na popularne pytania</string>
+    <string name="searchGuidesDetails">Znajdź odpowiedzi na często zadawane pytania</string>
     <string name="reportProblem">Zgłoś problem</string>
     <string name="reportProblemDetails">Jeśli aplikacja działa niepoprawnie, powiedz nam</string>
     <string name="requestFeature">Zażądaj funkcji</string>
@@ -101,7 +112,7 @@
     <string name="installDate">Data instalacji:</string>
     <string name="icon">Ikona</string>
     <string name="due">Termin:</string>
-    <string name="no_due_date">Brak terminu doręczenia</string>
+    <string name="no_due_date">Brak terminu</string>
     <string name="tapToSet">Dotknij aby ustawić</string>
     <string name="alarmNotSet">Nie udało się ustawić alarmu. Spróbuj ponownie.</string>
     <string name="could_not_route_course">Nie można znaleźć rejestracji kursu.</string>
@@ -109,11 +120,11 @@
     <string name="email_already_exists">Użytkownik z danym adresem email już istnieje.</string>
     <string name="password_reset_success">Zostanie wysłana wiadomość email ze wskazówkami dotyczącymi zresetowania hasła.</string>
     <string name="password_reset_no_user">Nie znaleziono użytkownika z danym adresem email.</string>
-    <string name="reset_password">Zresetuj hasło</string>
+    <string name="reset_password">Resetuj hasło</string>
     <string name="location">Lokalizacja</string>
-    <string name="time">Czas</string>
+    <string name="time">Godzina</string>
     <string name="student_avatar">Awatar ucznia</string>
-    <string name="previous">Poprzedni</string>
+    <string name="previous">Poprzednie</string>
     <string name="empty_view">Pokazany widok gdy nie znaleziono zawartości</string>
     <string name="tab_icon">Ikona powyżej zakładki</string>
     <string name="add_student_icon">Ikona dla dodawania ucznia</string>
@@ -125,22 +136,22 @@
     <string name="set_reminder">Ustaw przypomnienie</string>
     <string name="enter_student_institution">Wpisz nazwę instytucji ucznia</string>
     <string name="enter_student_login">Wpisz login i hasło ucznia</string>
-    <string name="access_not_enabled">Instytucja nie udzieliła dostępu do mobilnej aplikacji Rodzic Canvas.</string>
-    <string name="dismiss">Oddal</string>
+    <string name="access_not_enabled">Ta instytucja nie udzieliła dostępu do aplikacji mobilnej Canvas Parent.</string>
+    <string name="dismiss">Odrzuć</string>
     <string name="invalid_username_password">Kombinacja adresu email i hasła jest nieprawidłowa.</string>
     <string name="opening">Otwieranie&#8230;</string>
-    <string name="locked_assignment_desc">Niniejsze zadanie jest częścią modułu %s i nie zostało jeszcze odblokowane.</string>
+    <string name="locked_assignment_desc">To zadanie jest częścią modułu %s i nie zostało jeszcze odblokowane.</string>
     <string name="locked_assignment_desc_line2">Odwiedź stronę z modułami kursów w przeglądarce, aby uzyskać informację o odblokowaniu zawartości.</string>
     <string name="locked_assignment_not_module">Niniejsze zadanie jest zablokowane.</string>
     <string name="no_description">Nie ma opisu dla danego zadania</string>
-    <string name="cannot_view_file">Nie można przeglądać tego pliku w aplikacji. Otwórz plik w przeglądarce.</string>
+    <string name="cannot_view_file">Nie można wyświetlić tego pliku w aplikacji. Wyświetl ją w przeglądarce.</string>
     <string name="calendar_event">Wydarzenie w kalendarzu</string>
     <string name="set_reminder_toggle">Ustaw przypomnienie o przełączniku</string>
-    <string name="or">Lub</string>
+    <string name="or">lub</string>
     <string name="canvas_login_text">Zaloguj w Canvas</string>
 
     <!-- Feature Request -->
-    <string name="featureSubject">Pomysł na aplikację Rodzic Canvas  [Android]</string>
+    <string name="featureSubject">Pomysł na aplikację Canvas Parent [Android]</string>
     <string name="understandRequest">Poniższe informacje pozwolą nam lepiej zrozumieć twój pomysł:</string>
 
     <!-- Distance Strings -->
@@ -151,14 +162,16 @@
 
     <string name="grade">Ocena:</string>
     <string name="notGraded">Jeszcze nie oceniono</string>
-    <string name="missing">Brakuje</string>
-    <string name="submitted">Złożono</string>
+    <string name="missing">Brak</string>
+    <string name="submitted">Przesłano</string>
     <string name="in_class">W klasie</string>
     <string name="excused">Usprawiedliwiony</string>
-    <string name="late">Spóźnione</string>
+    <string name="late">Późno</string>
     <string name="greaterThan9">9+</string>
 
-    <string name="onlyCanvasObservers">Tylko obserwujący z Canvas mogą używać uwierzytelnienia w Canvas Parent.</string>
+    <string name="onlyCanvasObservers">Tylko obserwujący z Canvas mogą korzystać z uwierzytelnienia w Canvas Parent.</string>
+    <string name="unableToAddStudentError">Nie udało się dodać tego uczestnika.</string>
+
     <string name="open_source">Open source</string>
     <string name="open_source_details">Wyświetl licencje open source</string>
 
@@ -181,4 +194,12 @@
     <string name="selectRegion">Narzędzie wyboru regionu</string>
     <string name="unauthorizedRegion">Nieautoryzowany region</string>
     <string name="mismatchedRegionMessage">Ta instytucja znajduje się poza wybranym regionem. Aby dodać uczestnika do tej instytucji, użyj opcji „Narzędzie wyboru regionu” na stronie logowania w celu utworzenia konta w regionie %1$s.</string>
+
+    <string name="notification_channel_name">Ogólne powiadomienia</string>
+    <string name="notification_channel_description">Powiadomienia przypominające i ważne informacje o Twoim uczestniku.</string>
+
+    <string name="whatsYourStudentsSchoolName">Wpisz nazwę szkoły uczestnika</string>
+    <string name="findYourStudentsSchoolHint">Znajdź szkołę lub dzielnicę uczestnika</string>
+    <string name="noGradeText">Nd.</string>
+    <string name="locked">Zablokowany</string>
 </resources>

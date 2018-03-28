@@ -18,6 +18,7 @@
 package com.instructure.candroid.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 
@@ -139,7 +140,11 @@ public abstract class BaseListRecyclerAdapter<MODEL extends CanvasComparable, T 
                 notifyItemChanged(oldPosition);
             }
         }
-        mSelectedItemId = mItemCallback.getUniqueItemId(getItemAtPosition(position));
+
+        MODEL item = getItemAtPosition(position);
+        if(item == null) return; //Work around for a IndexOutOfBounds issue.
+
+        mSelectedItemId = mItemCallback.getUniqueItemId(item);
         notifyItemChanged(position);
         super.setSelectedPosition(position);
     }
@@ -185,7 +190,9 @@ public abstract class BaseListRecyclerAdapter<MODEL extends CanvasComparable, T 
      * @param position
      * @return
      */
+    @Nullable
     public MODEL getItemAtPosition(int position) {
+        if(position >= mList.size()) return null;
         return mList.get(position);
     }
 

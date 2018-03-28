@@ -24,10 +24,10 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import com.instructure.annotations.AnnotationDialogs.AnnotationCommentDialog
 import com.instructure.canvasapi2.models.CanvaDocs.CanvaDocAnnotation
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.PSPDFKit.AnnotationCommentDialog
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.*
 import kotlinx.android.synthetic.main.fragment_annotation_comment_list.*

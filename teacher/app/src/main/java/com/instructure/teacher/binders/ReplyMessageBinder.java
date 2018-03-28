@@ -36,7 +36,7 @@ public class ReplyMessageBinder extends BaseBinder {
         holder.attachmentContainer.setVisibility(View.GONE);
 
         // Set up remove button
-        holder.messageOptions.setImageResource(R.drawable.vd_close);
+        holder.messageOptions.setImageResource(R.drawable.vd_utils_close);
         holder.messageOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

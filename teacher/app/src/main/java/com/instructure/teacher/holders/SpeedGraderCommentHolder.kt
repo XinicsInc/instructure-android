@@ -32,7 +32,7 @@ import com.instructure.teacher.models.PendingCommentWrapper
 import com.instructure.teacher.models.SubmissionCommentWrapper
 import com.instructure.teacher.models.SubmissionWrapper
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.*

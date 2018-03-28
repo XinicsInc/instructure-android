@@ -16,9 +16,13 @@
 package com.instructure.teacher.ui.pages
 
 import android.support.test.espresso.Espresso
+import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.matcher.ViewMatchers
+import android.support.test.espresso.matcher.ViewMatchers.*
+import com.instructure.espresso.ViewCallOnClick.Companion.callOnClick
+import com.instructure.espresso.WaitForViewMatcher
+import com.instructure.soseedy.Attachment
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.Attachment
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
@@ -30,11 +34,12 @@ class SpeedGraderCommentsPage : BasePage(), PageAssert by SimplePageAssert() {
     private val sendCommentButton by WaitForViewWithId(R.id.sendCommentButton)
 
     fun assertDisplaysAuthorName(name: String) {
-        onViewWithId(R.id.userNameTextView).assertHasText(name)
+        onView(withText(name)).assertVisible()
     }
 
     fun assertDisplaysCommentText(comment: String) {
-        onViewWithId(R.id.commentTextView).assertHasText(comment)
+        WaitForViewMatcher.waitForView(Matchers.allOf(ViewMatchers.withId(R.id.commentTextView), ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+                .assertHasText(comment)
     }
 
     fun assertDisplaysCommentAttachment(attachment: Attachment) {
@@ -53,11 +58,10 @@ class SpeedGraderCommentsPage : BasePage(), PageAssert by SimplePageAssert() {
 
     fun addComment(comment: String) {
         commentEditText.replaceText(comment)
-        sendCommentButton.click()
+        callOnClick(withId(R.id.sendCommentButton))
     }
 
     fun assertDisplaysEmptyState() {
         onViewWithText(R.string.no_submission_comments).assertDisplayed()
     }
-
 }

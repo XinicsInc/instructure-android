@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -26,11 +26,12 @@
     <string name="tab_profile">ملف التعريف</string>
     <string name="tab_people">أشخاص</string>
     <string name="tab_quizzes">اختبارات موجزة</string>
-    <string name="tab_discussions">نقاشات</string>
+    <string name="tab_discussions">النقاشات</string>
     <string name="tab_announcements">إعلانات</string>
     <string name="tab_attendance">الحضور</string>
+    <string name="tab_pages">الصفحات</string>
+    <string name="tab_todo">قائمة مهام</string>
     <string name="content_description_school_logo">شعار المدرسة</string>
-    <string name="content_description_avatar">صورة مجسمة</string>
     <string name="search_guides">البحث في Canvas Guides</string>
     <string name="canvas_guides">Canvas Guides</string>
     <string name="search_guides_icon">أيقونة لـ Canvas Guides</string>
@@ -42,7 +43,7 @@
     <string name="request_feature_icon">أيقونة لطلب ميزة</string>
     <string name="request_feature_details">أخبرنا بأفكارك لتطوير التطبيق</string>
     <string name="share_your_love">شارك إعجابك بالتطبيق</string>
-    <string name="share_your_love_details">حدثنا عن الأشياء التي تفضلها في التطبيق</string>
+    <string name="share_your_love_details">أخبرنا بالأشياء التي تفضلها في التطبيق</string>
     <string name="masquerade">إخفاء الاسم</string>
     <string name="issue_with_teacher_app">مشكلة في تطبيق المعلم [Android]</string>
     <string name="no_items_to_display_short">لا توجد عناصر</string>
@@ -57,7 +58,7 @@
     <string name="course">المساق</string>
     <string name="profile">ملف التعريف</string>
     <string name="share">مشاركة</string>
-    <string name="share_with">مشاركة مع&#8230; </string>
+    <string name="share_with">المشاركة مع&#8230;</string>
 
     <!-- Compose Message -->
     <string name="no_subject">(لا يوجد أي موضوع)</string>
@@ -142,7 +143,7 @@
     <string name="uploading_files">جارٍ تحميل الملفات&#8230;</string>
     <string name="no_attachment">(لا توجد مرفقات)</string>
     <string name="remove_attachment">إزالة مرفق</string>
-    <string name="creating_announcement">جارٍ إنشاء الإعلان&#8230;</string>
+    <string name="creating_announcement">جارٍ إنشاء إعلان&#8230;</string>
 
     <string name="copy_email">نسخ عنوان البريد الإلكتروني</string>
     <string name="all_grading_periods">جميع فترات تقييم الدرجات</string>
@@ -150,12 +151,12 @@
     <string name="all_submissions_graded">تم تقييم درجات جميع الإرسالات</string>
     <string name="icon">أيقونة</string>
     <plurals name="grading_status_assignment">
-        <item quantity="zero">%d الإرسالات بحاجة إلى وضع درجات</item>
-        <item quantity="one">%d الإرسال بحاجة إلى وضع درجات</item>
-        <item quantity="two">%d الإرسالات بحاجة إلى وضع درجات</item>
-        <item quantity="few">%d الإرسالات بحاجة إلى وضع درجات</item>
-        <item quantity="many">%d الإرسالات بحاجة إلى وضع درجات</item>
-        <item quantity="other">%d الإرسالات بحاجة إلى وضع درجات</item>
+        <item quantity="zero">%d مهام مرسلة بحاجة إلى التقييم</item>
+        <item quantity="one">%d مهمة مرسلة بحاجة إلى التقييم</item>
+        <item quantity="two">%d مهام مرسلة بحاجة إلى التقييم</item>
+        <item quantity="few">%d مهام مرسلة بحاجة إلى التقييم</item>
+        <item quantity="many">%d مهام مرسلة بحاجة إلى التقييم</item>
+        <item quantity="other">%d مهام مرسلة بحاجة إلى التقييم</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
@@ -169,7 +170,7 @@
 
     <string name="inbox_empty_title">لا توجد رسائل</string>
     <string name="inbox_empty_starred_title">لا توجد رسائل معلّمة بنجمة</string>
-    <string name="inbox_empty_message">اضغط على \"+\" لإنشاء محادثة جديدة.</string>
+    <string name="inbox_empty_message">انقر فوق \"+\" لإنشاء محادثة جديدة</string>
     <string name="inbox_empty_starred_message">ضع علامة نجمة على الرسائل من خلال الضغط على النجمة الموجودة في الرسالة.</string>
 
     <string name="download_attachment">تنزيل مرفق</string>
@@ -222,12 +223,12 @@
         <item quantity="other">+ %d رسائل</item>
     </plurals>
     <plurals name="submissionNeedsGrading">
-        <item quantity="zero">%d الإرسالات بحاجة إلى وضع درجات</item>
-        <item quantity="one">%d الإرسال بحاجة إلى وضع درجات</item>
-        <item quantity="two">%d الإرسالات بحاجة إلى وضع درجات</item>
-        <item quantity="few">%d الإرسالات بحاجة إلى وضع درجات</item>
-        <item quantity="many">%d الإرسالات بحاجة إلى وضع درجات</item>
-        <item quantity="other">%d الإرسالات بحاجة إلى وضع درجات</item>
+        <item quantity="zero">%d مهام مرسلة بحاجة إلى التقييم</item>
+        <item quantity="one">%d مهمة مرسلة بحاجة إلى التقييم</item>
+        <item quantity="two">%d مهام مرسلة بحاجة إلى التقييم</item>
+        <item quantity="few">%d مهام مرسلة بحاجة إلى التقييم</item>
+        <item quantity="many">%d مهام مرسلة بحاجة إلى التقييم</item>
+        <item quantity="other">%d مهام مرسلة بحاجة إلى التقييم</item>
     </plurals>
 
     <string name="delete_assignment_message">هل ترغب بالتأكيد في حذف هذه المهمة؟</string>
@@ -283,7 +284,7 @@
     <string name="error_occurred">حدث خطأ غير متوقع.</string>
     <string name="no_assignments_with_file_upload">لا يحتوي هذا المساق على مهام تسمح بتحميل ملفات.</string>
     <string name="extension_not_allowed">نوع الملف المحدد غير مسموح به.</string>
-    <string name="allowed_extensions">الامتدادات المسموح بها:&#160;</string>
+    <string name="allowed_extensions">الامتدادات المسموح بها: </string>
     <string name="files_uploaded_successfully">تم تحميل الملفات بنجاح.</string>
     <string name="error_uploading_file">حدث خطأ أثناء تحميل ملفك. يرجى إعادة المحاولة.</string>
     <string name="uploading_file">جارٍ تحميل الملف&#8230;</string>
@@ -301,14 +302,14 @@
     <string name="inbox_sent">مرسَل</string>
     <string name="inbox_archived">مؤرشف</string>
     <string name="inbox_all_messages">جميع الرسائل</string>
-    <string name="uploading_file_num" formatted="false">جار تحميل %d من %d</string>
+    <string name="uploading_file_num" formatted="false">جارٍ تحميل %d من %d</string>
     <string name="page_not_found">لم يتم العثور على الصفحة.</string>
     <string name="no_connection">لا يوجد اتصال</string>
     <string name="unauthorized_access">غير مسموح لك بالوصول إلى هذا. إما أنك لا تملك أذونات أو لا يمكنك الوصول إليه حتى الآن (مثلاً عندما لم يبدأ مساقك بعد)</string>
     <string name="server_error">حدث خطأ بالخادم.</string>
     <string name="error_loading_files">حدث خطأ أثناء تحميل ملفك. يرجى التحقق من اتصالك بالإنترنت وإعادة المحاولة.</string>
     <string name="files_submitted_successfully">تم تسليم الملفات بنجاح.</string>
-    <string name="no_data_connection"> يرجى التأكد من الاتصال بالإنترنت والمحاولة من جديد. </string>
+    <string name="no_data_connection">يرجى التأكد من الاتصال بالإنترنت والمحاولة من جديد.</string>
     <string name="teacher_logout_warning">هل تريد بالتأكيد تسجيل الخروج؟</string>
     <string name="teacher_yes">نعم</string>
     <string name="teacher_no">لا</string>
@@ -324,14 +325,14 @@
     <!--Course Settings-->
     <string name="course_settings">إعدادات المساق</string>
     <string name="course_name">اسم المساق</string>
-    <string name="set_home_to">تعيين \"الصفحة الرئيسية\" لـ...</string>
+    <string name="set_home_to">تعيين \"الصفحة الرئيسية\" لـ&#8230;</string>
     <string name="course_activity_stream">تدفق نشاط المساق</string>
     <string name="pages_front_page">الصفحة الأمامية للصفحات</string>
+    <string name="frontPage">الصفحة الأمامية</string>
     <string name="course_modules">وحدات المساق النمطية</string>
     <string name="assignments_list">قائمة المهام</string>
     <string name="syllabus">المناهج</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">تواريخ استحقاق متعددة</string>
     <string name="everyone">الجميع</string>
@@ -339,8 +340,8 @@
     <string name="unknown_student">تلميذ غير معلوم</string>
     <string name="closed">مغلق</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">تاريخ الاستحقاق %s في %s</string>
-    <string name="last_post" formatted="false">آخر نشر %s</string>
+    <string name="due_date_at_time" formatted="false">تاريخ الاستحقاق %1s في %2s</string>
+    <string name="last_post" formatted="false">آخر منشور %s</string>
     <string name="submission_types">أنواع الإرسال</string>
     <string name="full_due_date_details">التفاصيل الكاملة لتاريخ الاستحقاق</string>
     <string name="availability_label">الإتاحة:</string>
@@ -366,7 +367,7 @@
     <string name="grade">الدرجة</string>
     <string name="calculated_by_rubric">تم الحساب من خلال تقييم روبرك</string>
     <string name="customize_grade">تخصيص الدرجة</string>
-    <string name="out_of_points">من إجمالي %1$s</string>
+    <string name="out_of_points">من أصل %1$s</string>
     <string name="gpa">المعدل التراكمي</string>
     <string name="letter_grade">الدرجة بالأحرف</string>
     <string name="excuse_student">السماح لطالب</string>
@@ -376,7 +377,7 @@
     <string name="not_graded">لم يتم التقييم</string>
     <string name="excused">غير إجباري</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
-    <string name="grade_value_format_talk_back">%1$s من إجمالي %2$s</string>
+    <string name="grade_value_format_talk_back">%1$s من أصل %2$s</string>
     <string name="publish">نشر</string>
     <string name="error_saving_assignment">حدث خطأ أثناء محاولة حفظ المهمة. حاول مرة أخرى.</string>
     <string name="error_saving_quiz">حدث خطأ أثناء محاولة حفظ الاختبار الموجز. حاول مرة أخرى.</string>
@@ -405,13 +406,13 @@
     <string name="content_description_submission_donut_graded" formatted="false">تم التقييم، %s من %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">بحاجة إلى تقييم، %s من %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">لم يتم الإرسال، %s من %s</string>
-    <string name="display_grade_as">عرض الدرجة في صورة&#8230;</string>
+    <string name="display_grade_as">عرض التقييم في صورة&#8230;</string>
     <string name="percentage">نسبة مئوية</string>
     <string name="complete_incomplete">مكتمل/غير مكتمل</string>
     <string name="points">نقاط</string>
     <string name="gpa_scale">مقياس المعدل التراكمي (GPA)</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -420,7 +421,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -440,8 +441,8 @@
     <string name="submitted_late">تم الإرسال متأخرًا</string>
     <string name="havent_submitted_yet">لم يتم إرسالها بعد</string>
     <string name="havent_been_graded">لم يتم تصحيحها</string>
-    <string name="scored_less_than">تم إحراز نقاط أقل من&#8230;</string>
-    <string name="scored_more_than">تم إحراز نقاط أكثر من&#8230;</string>
+    <string name="scored_less_than">تم إحراز درجات أقل من&#8230;</string>
+    <string name="scored_more_than">تم إحراز درجات أكثر من&#8230;</string>
     <string name="scored_less_than_value">تم إحراز درجات أقل من %s</string>
     <string name="scored_more_than_value">تم إحراز درجات أكثر من %s</string>
     <string name="add_comment">إضافة تعليق</string>
@@ -455,19 +456,19 @@
     <string name="enter_custom_value">أدخل قيمة مخصصة</string>
     <string name="success_saving_rubric_assessment">تم حفظ تقييم روبرك</string>
     <string name="error_saving_rubric_assessment">حدث خطأ أثناء حفظ تقييم روبرك. يرجى إعادة المحاولة.</string>
-    <string name="rubric_assessment_score_out_of_total">%1$s من إجمالي %2$s</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s من أصل %2$s</string>
     <string name="criterion_rating_customize_score">تخصيص نتيجة</string>
     <string name="edit_criterion_comment">تحرير تعليق المعيار</string>
-    <string name="sendMessageToHint">الرسالة %s</string>
+    <string name="sendMessageToHint">رسالة %s</string>
     <string name="save_comment">حفظ التعليق</string>
     <string name="cancel_editing_comment">إلغاء تحرير التعليق</string>
     <string name="skip">تخطي</string>
 
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
-    <string name="rating_button_content_description_custom">نتيجة مخصصة %1$s</string>
+    <string name="rating_button_content_description_custom">تخصيص الدرجات %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">"%1$s، %2$s</string>
+    <string name="rating_button_content_description">%1$s، %2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="zero">من إجمالي %s نقاط</item>
@@ -491,7 +492,9 @@
     <string name="grading_periods_filter">عامل تصفية فترات تقييم الدرجات</string>
     <string name="assignments">المهام</string>
     <string name="clear_filter">مسح عامل التصفية</string>
-    <string name="due">الاستحقاق %1$s</string>
+    <string name="due">تاريخ الاستحقاق %1$s</string>
+    <string name="updated">تم تحديث %1$s</string>
+
     <plurals name="needsGradingCount">
         <item quantity="zero">%s بحاجة إلى تقييم</item>
         <item quantity="one">%s بحاجة إلى تقييم</item>
@@ -542,7 +545,7 @@
         <item quantity="other">%d مجموعات</item>
     </plurals>
     <string name="cmp_closed">مغلق</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022  </string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">مفضلة</string>
     <string name="content_description_not_favorite">غير مفضلة</string>
@@ -574,10 +577,9 @@
     <string name="contentDescriptionFileIcon">أيقونة الملف</string>
     <string name="contentDescriptionExpandPage">توسيع الصفحة</string>
     <string name="contentDescriptionCollapsePage">طي الصفحة</string>
-
     <string name="noInternetConnectionTitle">لا يوجد اتصال بالإنترنت</string>
     <string name="noInternetConnectionMessage">يتطلب هذا الإجراء اتصالاً بالإنترنت.</string>
-  
+
     <string name="emptyDetailsMessage">اضغط على أي عنصر في القائمة لعرض التفاصيل</string>
 
     <string name="assignmentQuizzes">اختبارات المهمة</string>
@@ -597,7 +599,7 @@
     <string name="gradedSurvey">استطلاع تم تقييم درجاته</string>
     <string name="ungradedSurvey">استطلاع لم يتم تقييم درجاته</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -688,7 +690,7 @@
     <string name="discussions_replies_title">ردود</string>
     <string name="discussions_reply">رد</string>
     <string name="discussions_edit">تحرير</string>
-    <string name="discussions_deleted" formatted="false">حذف هذا الرد %s</string>
+    <string name="discussions_deleted" formatted="false">تم حذف هذا الرد %s</string>
     <string name="discussions_forbidden">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
     <string name="discussions_unknown_author">مؤلف غير معروف</string>
     <string name="discussions_delete">حذف النقاش</string>
@@ -702,14 +704,14 @@
     <string name="submissionIsMediaFile">هذا الإرسال عبارة عن ملف وسائط</string>
     <string name="tryAgain">حاول مرة أخرى</string>
     <string name="couldNotPlayFormat">تنسيق الوسائط هذا غير مدعوم</string>
-    <string name="openWithAnotherApp">فتح بواسطة...</string>
-    
+    <string name="openWithAnotherApp">فتح بواسطة&#8230;</string>
+
     <string name="speedgraderCommentAddedSubmission">تم إرسال المهمة. اضغط للعرض.</string>
     <string name="speedgraderCommentSubmittedFiles">الملفات المرسلة:</string>
     <string name="no_submission_comments">لا توجد تعليقات على الإرسال</string>
     <string name="mediaUploadAudio">تحميل وسائط - صوت</string>
     <string name="mediaUploadVideo">تحميل وسائط - فيديو</string>
-    <string name="speedgraderCommentQuizAttempt">المحاولة %d</string>
+    <string name="speedgraderCommentQuizAttempt">محاولة %d</string>
     <string name="speedGraderTextSubmission">إرسال النص</string>
     <string name="speedGraderExternalToolSubmission">إرسال الأداة الخارجية</string>
     <string name="speedGraderDiscussionSubmission">إرسال النقاش</string>
@@ -751,7 +753,7 @@
     <string name="viewQuizSubmission">عرض الإرسال</string>
     <string name="gradeQuizSubmission">تقييم درجة الإرسال</string>
     <string name="comment">تعليق</string>
-    <string name="messageStudentsWho">إرسال رسائل للطلاب الذين#8230;</string>
+    <string name="messageStudentsWho">إرسال رسائل للطلاب الذين&#8230;</string>
 
     <string name="on">على</string>
 
@@ -852,4 +854,100 @@
     <string name="markAllAsPresent">وضع علامة حاضر للجميع</string>
     <string name="calendar">التقويم</string>
     <string name="filterSections">تصفية الأقسام</string>
+    <string name="addVideoComment">إضافة تعليق فيديو</string>
+    <string name="addAudioComment">إضافة تعليق صوتي</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d ساعات و%2$d دقائق و%3$d ثواني</string>
+    <string name="recordingTimerSpeechDivider">%1$s من أصل %2$s</string>
+    <string name="replay">الرد</string>
+    <string name="stop">إيقاف</string>
+    <string name="startRecordingAudio">بدء تسجيل الصوت</string>
+    <string name="stopRecordingAudio">إيقاف تسجيل الصوت</string>
+    <string name="startRecordingVideo">بدء تسجيل الفيديو</string>
+    <string name="stopRecordingVideo">إيقاف تسجيل الفيديو</string>
+    <string name="closeRecordingView">إغلاق عرض التسجيل</string>
+    <string name="deleteRecording">حذف التسجيل</string>
+    <string name="videoCommentReplay">رد تعليق الفيديو</string>
+    <string name="addMediaComment">إضافة تعليق وسائط</string>
+    <string name="copyrightHolder">حامل حقوق النشر</string>
+    <string name="access">الوصول</string>
+    <string name="usageRights">حقوق الاستخدام</string>
+    <string name="deleteFile">حذف ملف</string>
+    <string name="holdCopyright">أمتلك حقوق النشر</string>
+    <string name="havePermission">أملك إذنًا لاستخدام الملف</string>
+    <string name="publicDomain">ملف مجال عام</string>
+    <string name="fairUse">استثناء الاستخدام العادل</string>
+    <string name="creativeCommons">ملف مشاع إبداعي</string>
+    <string name="editFile">تحرير الملف</string>
+    <string name="deleteFolder">حذف المجلد</string>
+    <string name="editFolder">تحرير المجلد</string>
+    <string name="deleteFileMessage">هل تريد بالفعل حذف هذا الملف؟</string>
+    <string name="deleteFolderMessage">هل تريد بالفعل حذف هذا المجلد؟ سيتم أيضًا حذف كل محتويات هذا المجلد.</string>
+    <string name="newFolder">مجلد جديد</string>
+    <string name="createAFolder">إنشاء مجلد</string>
+    <string name="createFolder">إنشاء مجلد</string>
+    <string name="createAFile">إنشاء ملف</string>
+    <string name="createFileFolderFabContentDesc">إظهار زري إنشاء الملف وإنشاء المجلد</string>
+    <string name="unpublish">إلغاء النشر</string>
+    <string name="restrictedAccess">وصول مقيّد</string>
+    <string name="restricted">مقيد</string>
+    <string name="hidden">تم الإخفاء، تتوفر الملفات الداخلية مع ارتباط..</string>
+    <string name="studentsWithLink">متاح فقط للطلاب الذين لديهم رابط. غير متاح في ملفات الطالب.</string>
+    <string name="scheduleAvailability">جدولة توفر الطلاب</string>
+    <string name="folderCreationError">حدث خطأ أثناء إنشاء المجلد.</string>
+
+    <string name="setAsFrontPage">تعيين كصفحة أمامية</string>
+    <string name="canEdit">يمكن التحرير</string>
+    <string name="pageDetails">تفاصيل الصفحة</string>
+    <string name="pageSuccessfullyUpdated">تم تحديث الصفحة بنجاح.</string>
+    <string name="pageSuccessfullyCreated">تم إنشاء الصفحة بنجاح.</string>
+    <string name="editPageTitle">تحرير صفحة</string>
+    <string name="createPageTitle">إنشاء صفحة</string>
+    <string name="pageTitleMustBeSet">يجب تعيين عنوان الصفحة.</string>
+    <string name="pageDeleteTitle">هل تريد حذف الصفحة؟</string>
+    <string name="pageDelete">حذف الصفحة</string>
+    <string name="pageDeleteMessage">سيؤدي هذا إلى حذف الصفحة. لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="errorSavingPage">حدث خطأ أثناء محاولة حفظ هذه الصفحة. حاول مرة أخرى.</string>
+    <string name="frontPageUnpublishedError">لا يمكن أن تكون أية صفحة صفحةً أمامية وغير منشورة.</string>
+
+    <string name="onlyTeachers">المعلمون فقط</string>
+    <string name="teachersAndStudents">المعلمون والطلاب</string>
+    <string name="anyone">أي شخص</string>
+    <string name="groupMembers">الأعضاء فقط</string>
+    <string name="license">الترخيص</string>
+    <string name="availableFromAfterTo">يجب أن يكون تاريخ انتهاء التوفر بعد تاريخ البدء</string>
+    <string name="errorDeletingFile">حدث خطأ أثناء حذف هذا الملف</string>
+    <string name="errorDeletingFolder">حدث خطأ أثناء حذف هذا المجلد</string>
+    <string name="errorUpdatingFile">حدث خطأ أثناء تحديث هذا الملف</string>
+    <string name="errorUpdatingFolder">حدث خطأ أثناء تحديث هذا المجلد</string>
+
+    <string name="toDoEmpty">لا يوجد شيء آخر يمكن فعله!\n طاب يومك.</string>
+    <string name="toDoNoSubmissions">لا توجد مهام مرسلة لتقييمها لهذه المهمة.</string>
+    <string name="errorToDoRouteFailed">حدث خطأ أثناء محاولة عرض عنصر المهام هذا.</string>
+    <string name="errorIsDesigner">لا يمكن لتسجيل المصمم عرض هذا.</string>
+
+    <string name="sections">الأقسام</string>
+    <string name="filterBy">التصفية حسب&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">بالنسبة لـ %s</string>
+    <string name="filterBySection">التصفية حسب القسم</string>
+    <string name="filterSubmissionsLowercase">تصفية الإرسالات</string>
+
+    <string name="latePenalty">عقوبة التأخير</string>
+    <string name="finalGrade">الدرجة النهائية</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="zero">-%s نقاط</item>
+        <item quantity="one">-%s نقطة</item>
+        <item quantity="two">-%s نقاط</item>
+        <item quantity="few">-%s نقاط</item>
+        <item quantity="many">-%s نقاط</item>
+        <item quantity="other">-%s نقاط</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="zero">-%s نقطة</item>
+        <item quantity="one">-%s نقطة</item>
+        <item quantity="two">-%s نقطة</item>
+        <item quantity="few">-%s نقطة</item>
+        <item quantity="many">-%s نقطة</item>
+        <item quantity="other">-%s نقاط</item>
+    </plurals>
 </resources>

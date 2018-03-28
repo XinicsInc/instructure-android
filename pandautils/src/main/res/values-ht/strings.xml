@@ -1,167 +1,193 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="chooseMedia">Chwazi Medya</string>
-  <string name="takeVideo">Anrejistre Videyo</string>
-  <string name="noCameraOnDevice">Pa gen Kamera</string>
-  <!--NotoriousPicker/uploadService-->
-  <string name="notificationTitle">Transfere nan Canvas</string>
-  <string name="preparingUpload">Preparasyon Transfè</string>
-  <string name="loadingFilesIndeterminate">Chajman fichye...</string>
-  <string name="fileUploadSuccess">Transfè Reyisi</string>
-  <string name="noNetwork">Pa gen koneksyon entènèt - tanpri eseye ankò pita</string>
-  <string name="uploadMessage">\"Transfè a ap fèt. Tcheke notifikasyon yo pou wè ki kote transfè a ye.</string>
-  <string name="mediaUpload">Transfè Mesya</string>
-  <string name="uploadingFile">Transfè fichye...</string>
-  <string name="errorUploadingFile">Gen yon erè ki fèt pandan transfè fichye ou a. Tanpri eseye ankò.</string>
-  <string name="fileSubmission">Soumèt Fichye (yo)</string>
-  <string name="uploadFiles">Transfere Fichye (yo)</string>
-  <string name="upload">Transfere</string>
-  <string name="errorSendingMessage">Gen yon erè ki fèt pandan w ap voye mesaj ou a. Tanpri eseye ankò.</string>
-  <!--Turn in Files-->
-  <string name="chooseFileSource">Chwazi Fichye Nan...</string>
-  <string name="addFile">Ajoute Fichye</string>
-  <string name="choose_a_file">Chwazi yon Fichye</string>
-  <string name="fromCamera">Kamera</string>
-  <string name="fromGallery">Galeri</string>
-  <string name="fromDevice">Aparèy</string>
-  <string name="fromOtherApplication">Lòt</string>
-  <string name="Domain">Domèn</string>
-  <string name="files">Fichye</string>
-  <string name="file">Fichye</string>
-  <string name="addItem">Ajoute Atik</string>
-  <string name="assignment">Sesyon</string>
-  <string name="attachedFiles">Fichye Ajoute</string>
-  <string name="turnIn">Aktive</string>
-  <string name="course">Kou</string>
-  <string name="sending">Voye...</string>
-  <!--rating dialog-->
-  <string name="star1">Etwal Evalyasyon En</string>
-  <string name="star2">Etwal Evalyasyon De</string>
-  <string name="star3">Etwal Evalyasyon Twa</string>
-  <string name="star4">Etwal Evalyasyon Kat</string>
-  <string name="star5">Etwal Evalyasyon Senk</string>
-  <!--Submitting files-->
-  <string name="fileQuotaExceeded">Kounye a ou depase kapasite estokaj fichye ou genyen an.</string>
-  <string name="errorSubmittingFiles">Gen yon erè ki fèt pandan soumisyon fichye ou yo. Tanpri eseye ankò.</string>
-  <string name="errorLoadingFiles">Gen yon erè ki fèt pandan chajman fichye ou a. Tanpri verifye koneksyon entènèt ou a epi eseye ankò.</string>
-  <string name="filesUploadedSuccessfully">Transfè Fichye yo fèt kòrèkteman.</string>
-  <string name="filesSubmittedSuccessfully">Fichye yo soumèt kòrèkteman.</string>
-  <string name="messageSentSuccessfully">Mesaj la ale kòrèkteman.</string>
-  <string name="shareWithCanvas">Lòt app ka pataje fichye avèk Canvas! Chèche ikòn ki pi ba a nan app yo epi tape sou Canvas.</string>
-  <string name="shareWithCanvas2">Aksyon sa a ap ouvri app sa a. Aprè sa sèlman chwazi a ki kou e sesyon ou vle soumèt fichye a.</string>
-  <string name="contentDescriptionSocialShare">Ikòn pataj</string>
-  <string name="submitAssignment">Soumèt Sesyon</string>
-  <string name="assignmentHeader">Sesyon:</string>
-  <string name="submittingAssignment">Soumisyon Sesyon...</string>
-  <string name="conversations">Konvèsasyon </string>
-  <string name="inbox">Bwat resepsyon </string>
-  <string name="divider">Divizè</string>
-  <string name="legal">Legal</string>
-  <string name="completeHomework">FÈ devwa ou</string>
-  <string name="takeExam">Pran yon Egzamen</string>
-  <string name="fileIcon">Ikòn Fichye</string>
-  <string name="uploadingFileNum" formatted="false">Transfè %d sou %d</string>
-  <string name="fileLocked" formatted="false">%s bloke.</string>
-  <string name="filePermissionGranted">Fichye yo prè pou telechaje, tanpri eseye ankò.</string>
-  <string name="filePermissionDenied">Fichye a pa kapab telechaje san ou pa akòde li pèmisyon.</string>
-  <string name="pleaseTryAgain">Pèmisyon Akòde, tanpri eseye ankò.</string>
-  <string name="pickVideo">Seleksyone yon Videyo</string>
-  <!--Errors-->
-  <string name="errorOccurred">Yon erè fèt sanzatann.</string>
-  <string name="serverError">Gen yon erè sèvè ki fèt.</string>
-  <string name="unauthorized">Ou pa gen otorizasyon pou ale nan fichye sa a. Swa ou pa gen otorizasyon oswa ou poko gen aksè ( kòm kou ou a poko kòmanse)</string>
-  <string name="fileNoLongerExists">Fichye sa a pa egziste ankò</string>
-  <string name="invalidAccessToken">Sesyon ou a ekspire. Tanpri rekonekte pou kòmanse yon nouvo sesyon.</string>
-  <string name="uploadingFromSourceFailed">Transfè yon fichye apati de sous sa a pa kapab fini.</string>
-  <string name="errorGettingPhoto">Gen yon erè ki fèt nan resepsyon foto a. Tanpri eseye ankò.</string>
-  <string name="errorTextMissing">ajoute kèk tèks pou kas voye yon mesaj</string>
-  <string name="fileUploadNotSupported">Ou pa kapab transfere fichye a sesyon ou chwazi a..</string>
-  <string name="noCourseSelected">Tanpri chwazi yon kou</string>
-  <string name="selectCourse">Tanpri chwazi yon kou</string>
-  <string name="selectAssignment">Chwazi yon sesyon</string>
-  <string name="loadingAssignments">Chajman Sesyon...</string>
-  <string name="noAssignmentSelected">Tanpri chwazi yon sesyon</string>
-  <string name="noAssignmentsWithFileUpload">Kou sa a pa gen sesyon ki pèmèt transfè fichye.</string>
-  <string name="teacherNotAllowedFileSubmission">Kòm pwoofesè nan kou sa a, ou pa kapab soumèt fichye.</string>
-  <string name="noFilesUploaded">Ou pa seleksyone okenn fichye.</string>
-  <string name="oneOrMoreExtensionNotAllowed">Yonn oswa plizyè fichye gen yon ekstansyon fichye ki pa otorize</string>
-  <string name="extensionNotAllowed">Tip fichye ou seleksyone a pa otorize.</string>
-  <string name="allowedExtensions">Ekstansyon ki otorize: </string>
-  <!--Media Task Loader-->
-  <string name="noDataConnection"> Tanpri verifye koneksyon entènèt ou a epi eseye ankò. </string>
-  <string name="noApps">Aparèy ou a pa gen okenn apliasyon sou li ki ouvri fichye sa a.</string>
-  <string name="noAppsShort">Pa kapab ouvri</string>
-  <string name="unexpectedErrorOpeningFile">Yon erè fèt sanzatann pandan w ap eseye ouvri fichye a.</string>
-  <string name="unexpectedErrorDownloadingFile">Yon erè fèt sanzatann pandan w ap eseye telechaje fichye a.</string>
-  <string name="done">Fini</string>
-  <!--Tutorial Messages-->
-  <string name="tutorial_tipColorPickerTitle">Chwazi yon Koulè Kou</string>
-  <string name="tutorial_tipColorPickerMessage">Ou ka chwazi pami yon pakèt koulè pou pèsonalize kou ou yo.</string>
-  <string name="tutorial_tipCourseGradesTitle">Gade Kategori yo Rapidman</string>
-  <string name="tutorial_tipCourseGradesMessage">Klike sou nòt kou a pou ale nan nòt yo.</string>
-  <string name="tutorial_tipLandingPageTitle">Chwazi yon Paj Dakèy</string>
-  <string name="tutorial_tipLandingPageMessage">Seleksyon yon paj dakèy Canvas ap chaje paj sa a otomatikman lè app la demare.</string>
-  <string name="tutorial_tipLockSlideTitle">Bloke oswa debloke ekran an</string>
-  <string name="tutorial_tipLockSlideMessage">Blokaj ekran an ap pèmèt ou defile nan ekran an san ou pa ouvri meni navigasyon an.</string>
-  <string name="tutorial_tipHideStudentNames">Kache non pandan reglaj klasman an</string>
-  <string name="tutorial_tipHideStudentNamesMessage">Kache non elèv yo pou elimine patipri.</string>
-  <string name="tutorial_tipMyCoursesTitle">Kou Mwen</string>
-  <string name="tutorial_tipMyCoursesMessage">Chanje ant \"Kou Mwen\" e \"Tout Kou yo\" anvan je bat!</string>
-  <string name="tutorial_tipSwitchUsers">Chanje Itilizatè</string>
-  <string name="tutorial_tipSwitchUsersMessage">Chanje fasilman epi ajoute itilizatè.</string>
-  <string name="tutorial_tipViewProfile">Pwofil Ou</string>
-  <string name="tutorial_tipViewProfileMessage">Afiche epi chanje avata oswa twal de fon pwofil ou. Ou ka wè fichye pèsonèl ou tou.</string>
-  <string name="tutorial_tipNotificationPreferences">Preferans Notifikasyon</string>
-  <string name="tutorial_tipNotificationPreferencesMessage">Filtre preferans ou epi koche kasye yo pou aktive oswa dezaktive yon tip de notifikasyon espesyal.</string>
-  <string name="tutorial_tipNavigationShortcuts">Chanje Kou Rapidman</string>
-  <string name="tutorial_tipNavigationShortcutsMessage">Chanje de yon kou a yon lòt nan sa ou prefere yo.</string>
-  <!--Permissions-->
-  <string name="permissionDenied">Pou itilize fonksyon sa a, ou dwe bay pèmisyon dabò.</string>
-  <string name="noConnection">Pa gen Koneksyon</string>
-  <!--General-->
-  <string name="yes">Wi</string>
-  <string name="no">Non</string>
-  <string name="inbox_all">Bwat resepsyon</string>
-  <string name="inbox_unread">Poko li</string>
-  <string name="inbox_starred">Favori</string>
-  <string name="inbox_sent">Voye</string>
-  <string name="inbox_archived">Achive</string>
-  <string name="forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
-  <string name="like">Jèm</string>
-  <string name="likes">Jèm</string>
-  <string name="lockedAssignmentNotModule">Sesyon sa a bloke.</string>
-  <string name="deletedEntryNoChildren">Tèks diskisyon efase sa a pa gen repons.</string>
-  <string name="deleted">[Deleted]</string>
-  <string name="deleted_by">[Deleted by %1$s]</string>
-  <string name="lockedDiscussionDesc">Dikisyons a a fè pati modil %s e li poko debloke.</string>
-  <string name="gradedDiscussion">Diskisyon Klase</string>
-  <string name="pointsPossible">Pwen Posib</string>
-  <string name="sideCommentEntry">Nan tip diskisyon sa a, ou paka fè kòmantè nan tout tèks nan nivo sa a.</string>
-  <string name="accessibility_overflow">Debòdman</string>
-  <string name="discussion_response">Kòmantè</string>
-  <string name="discussion_responses">Kòmantè</string>
-  <string name="discussion_unread">Poko li</string>
-  <string name="discussion_reply">Reponn</string>
-  <string name="close">Fèmen</string>
-  <!--App Names-->
-  <string name="utils_canvas">Canvas</string>
-  <string name="utils_canvasTeacher">Pwofesè Canvas</string>
-  <string name="utils_canvasParent">Canvas Parent</string>
-  <string name="utils_polls">Gwoup Canvas</string>
-  <string name="utils_speedgrader">SpeedGrader</string>
-  <!--Rating Dialog-->
-  <string name="utils_howAreWeDoing">Kisa w ap fè la a?</string>
-  <string name="utils_rateUs">Kisa ou ka di de nou?</string>
-  <string name="utils_doBetter">Kisa nou ka amelyore?</string>
-  <string name="utils_sendFeedback">Voye Kòmantè</string>
-  <string name="utils_suggestions">Sijesyon pou Android</string>
-  <string name="utils_domain">Domèn</string>
-  <string name="utils_versionNum">Vèsyon:</string>
-  <string name="utils_userId">ID Itilizatè</string>
-  <string name="utils_email">Imèl</string>
-  <string name="utils_dontShowAgain">Pa afiche ankò</string>
-  <string name="utils_installDate">Dat Enstalasyon:</string>
-  <string name="utils_device">Aparèy</string>
-  <string name="utils_osVersion">Vèsyon OS</string>
-  <string name="loading">Chajman</string>
+    <string name="chooseMedia">Chwazi Medya</string>
+    <string name="takeVideo">Anrejistre Videyo</string>
+    <string name="noCameraOnDevice">Pa gen Kamera</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Transfere nan Canvas</string>
+    <string name="preparingUpload">Preparasyon Transfè</string>
+    <string name="loadingFilesIndeterminate">Chajman fichye&#8230;</string>
+    <string name="fileUploadSuccess">Transfè Reyisi</string>
+    <string name="noNetwork">Rezo pa disponib - tanpri eseye pita.</string>
+    <string name="uploadMessage">Transfè an pwosesis. Verifye avètisman an pou estati transfè a.</string>
+    <string name="mediaUpload">Transfè Mesya</string>
+    <string name="uploadingFile">Transfè fichye&#8230;</string>
+    <string name="errorUploadingFile">Yon erè fèt pandan chajman fichye ou a. Tanpri eseye ankò.</string>
+    <string name="fileSubmission">Soumèt Fichye (yo)</string>
+    <string name="uploadFiles">Transfere Fichye (yo)</string>
+    <string name="upload">Chajman</string>
+    <string name="errorSendingMessage">Yon erè fèt pandan w ap voye mesaj ou a. Tanpri eseye ankò.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Avètisman Transfè Fichye</string>
+    <string name="notificationChannelNameFileUploadsDescription">Avètisman Canvas pou transfè fichye ki an pwosesis yo.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Chwazi Fichye Nan&#8230;</string>
+    <string name="addFile">Ajoute Fichye</string>
+    <string name="choose_a_file">Chwazi yon Fichye</string>
+
+    <string name="fromCamera">Kamera</string>
+    <string name="fromGallery">Galeri</string>
+    <string name="fromDevice">Aparèy</string>
+    <string name="fromOtherApplication">Lòt</string>
+    <string name="Domain">Domèn</string>
+    <string name="files">Fichye</string>
+    <string name="file">Fichye</string>
+    <string name="addItem">Ajoute Eleman</string>
+    <string name="assignment">Sesyon</string>
+    <string name="attachedFiles">Fichye Ajoute</string>
+    <string name="turnIn">Aktive</string>
+    <string name="course">Kou</string>
+    <string name="sending">Voye&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Etwal Evalyasyon En</string>
+    <string name="star2">Etwal Evalyasyon De</string>
+    <string name="star3">Etwal Evalyasyon Twa</string>
+    <string name="star4">Etwal Evalyasyon Kat</string>
+    <string name="star5">Etwal Evalyasyon Senk</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Kounye a ou depase kapasite estokaj fichye ou genyen an.</string>
+    <string name="errorSubmittingFiles">Yon erè fèt pandan wotasyon fichye ou yo. Tanpri eseye ankò.</string>
+    <string name="errorLoadingFiles">Yon erè fèt pandan chajman fichye ou a. Tanpri verifye koneksyon entènèt ou a epi eseye ankò.</string>
+    <string name="filesUploadedSuccessfully">Transfè Fichye yo fèt kòrèkteman.</string>
+    <string name="filesSubmittedSuccessfully">Fichye yo soumèt kòrèkteman.</string>
+    <string name="messageSentSuccessfully">Mesaj la ale kòrèkteman.</string>
+    <string name="shareWithCanvas">Lòt app ka pataje fichye ak Canvas! Chèche ikòn nan pi ba a epi klike sou Canvas.</string>
+    <string name="shareWithCanvas2">Sa ap ouvri app la. Epi seleksyone ki kou ak sesyon ou vle aktive nan fichye a.</string>
+    <string name="contentDescriptionSocialShare">Ikòn pataj</string>
+    <string name="submitAssignment">Soumèt Sesyon</string>
+    <string name="assignmentHeader">Sesyon:</string>
+    <string name="submittingAssignment">Soumisyon Sesyon&#8230;</string>
+    <string name="conversations">Konvèsasyon </string>
+    <string name="inbox">Bwat resepsyon </string>
+    <string name="divider">Divizè</string>
+    <string name="legal">Legal</string>
+    <string name="completeHomework">FÈ devwa ou</string>
+    <string name="takeExam">Pran yon Egzamen</string>
+    <string name="fileIcon">Ikòn Fichye</string>
+    <string name="uploadingFileNum" formatted="false">Chajman %d sou %d</string>
+    <string name="fileLocked" formatted="false">%s bloke.</string>
+    <string name="filePermissionGranted">Fichye yo prè pou telechaje, tanpri eseye ankò.</string>
+    <string name="filePermissionDenied">Fichye a pa kapab telechaje san ou pa akòde li pèmisyon.</string>
+    <string name="pleaseTryAgain">Pèmisyon Akòde, tanpri eseye ankò.</string>
+    <string name="pickVideo">Seleksyone yon Videyo</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Yon erè fèt sanzatann.</string>
+    <string name="serverError">Gen yon erè sèvè ki fèt.</string>
+    <string name="unauthorized">Ou pa gen otorizasyon pou ale la. Swa ou pa gen otorizasyon oswa ou poko gen aksè (ta sanble kou ou a poko kòmanse)</string>
+    <string name="fileNoLongerExists">Fichye sa a pa egziste ankò</string>
+    <string name="invalidAccessToken">Sesyon ou an ekspire. Tanpri konekte pou kòmanse yon nouvo sesyon.</string>
+    <string name="uploadingFromSourceFailed">Transfè yon fichye apati de sous sa a pa kapab fini.</string>
+    <string name="errorGettingPhoto">Gen yon erè ki fèt pandan w ap eseye jwenn foto a. Tanpri eseye ankò.</string>
+    <string name="errorTextMissing">ajoute kèk tèks pou kas voye yon mesaj</string>
+
+    <string name="fileUploadNotSupported">Ou paka transfere fichye nan sesyon ou seleksyone a.</string>
+    <string name="noCourseSelected">Tanpri chwazi yon kou</string>
+    <string name="selectCourse">Seleksyone yon kou</string>
+    <string name="selectAssignment">Seleksyone yon sesyon</string>
+    <string name="loadingAssignments">Chajman Sesyon&#8230;</string>
+    <string name="noAssignmentSelected">Tanpri chwazi yon sesyon</string>
+    <string name="noAssignmentsWithFileUpload">Kou sa a pa gen sesyon ki pèmèt transfè fichye.</string>
+    <string name="teacherNotAllowedFileSubmission">Kòm pwofesè nan kou sa a, ou paka soumèt fichye</string>
+    <string name="noFilesUploaded">Ou pa seleksyone okenn fichye.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Gen yonn oswa plizyè lòit fichye ki gen ekstansyon ki pa otorize</string>
+    <string name="extensionNotAllowed">Tip fichye ou seleksyone a pa otorize.</string>
+    <string name="allowedExtensions">Ekstansyon ki otorize: </string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Tanpri verifye koneksyon entènèt ou a epi eseye ankò. </string>
+    <string name="noApps">Aparèy ou a pa gen okenn aplikasyon ki enstale ki ka jere fichye sa a.</string>
+    <string name="noAppsShort">Pa kapab ouvri</string>
+    <string name="unexpectedErrorOpeningFile">Yon erè fèt sanzatann pandan w ap eseye ouvri fichye a.</string>
+    <string name="unexpectedErrorDownloadingFile">Yon erè fèt sanzatann pandan w ap eseye telechaje fichye a.</string>
+
+    <string name="done">Fini</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Pou itilize fonksyon sa a, ou dwe bay pèmisyon dabò.</string>
+    <string name="noConnection">Pa gen Koneksyon</string>
+
+    <!--General-->
+    <string name="yes">Wi</string>
+    <string name="no">Non</string>
+
+    <string name="inbox_all">Bwat resepsyon</string>
+    <string name="inbox_unread">Poko li</string>
+    <string name="inbox_starred">Favori</string>
+    <string name="inbox_sent">Voye</string>
+    <string name="inbox_archived">Achive</string>
+
+    <string name="forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
+
+    <string name="like">Jèm</string>
+    <string name="likes">Jèm</string>
+    <string name="lockedAssignmentNotModule">Sesyon sa a bloke.</string>
+    <string name="deletedEntryNoChildren">Tèks diskisyon efase sa a pa gen repons.</string>
+    <string name="deleted">[Deleted]</string>
+    <string name="deleted_by">[Deleted by %1$s]</string>
+    <string name="lockedDiscussionDesc">Dikisyons a a fè pati modil %s e li poko debloke.</string>
+    <string name="gradedDiscussion">Diskisyon Klase</string>
+    <string name="pointsPossible">Pwen Posib</string>
+    <string name="sideCommentEntry">Nan tip diskisyon sa a, ou paka fè kòmantè nan tout tèks nan nivo sa a.</string>
+
+    <string name="accessibility_overflow">Debòdman</string>
+
+    <string name="discussion_response">Kòmantè</string>
+    <string name="discussion_responses">Kòmantè</string>
+    <string name="discussion_unread">Poko li</string>
+    <string name="discussion_reply">Reponn</string>
+    <string name="close">Fèmen</string>
+
+    <string name="noInternetConnectionTitle">Pa gen Koneksyon Internet</string>
+    <string name="noInternetConnectionMessage">Pou aksyon sa a ou bezwen konekte sou entènèt.</string>
+    <string name="content_description_avatar">Avata</string>
+    <string name="formattedAvatarAction">Afiche detay itilizatè pou %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Pwofesè Canvas</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Gwoup Canvas</string>
+    <string name="utils_speedgrader">SpeedGrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Kisa w ap fè la a?</string>
+    <string name="utils_rateUs">Kisa ou ka di de nou?</string>
+    <string name="utils_doBetter">Kisa nou ka amelyore?</string>
+    <string name="utils_sendFeedback">Voye Kòmantè</string>
+    <string name="utils_suggestions">Sijesyon pou Android</string>
+    <string name="utils_domain">Domèn</string>
+    <string name="utils_versionNum">Vèsyon:</string>
+    <string name="utils_userId">ID Itilizatè</string>
+    <string name="utils_email">Imèl</string>
+    <string name="utils_dontShowAgain">Pa afiche ankò</string>
+    <string name="utils_installDate">Dat Enstalasyon:</string>
+    <string name="utils_device">Aparèy</string>
+    <string name="utils_osVersion">Vèsyon OS</string>
+    <string name="loading">Chajman</string>
+    <string name="save">Anrejistre</string>
+    <string name="cropInstructions">Pense epi deplase pou ajiste imaj la.</string>
+
 </resources>

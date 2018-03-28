@@ -19,6 +19,7 @@ package com.instructure.androidpolling.app.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -167,7 +168,7 @@ public class ClosedPollListFragment extends PaginatedListFragment<PollSession> {
 
         pollCallback = new StatusCallback<PollResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<PollResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull retrofit2.Response<PollResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<Poll> polls = response.body().getPolls();
@@ -190,7 +191,7 @@ public class ClosedPollListFragment extends PaginatedListFragment<PollSession> {
 
         pollSessionCallback = new StatusCallback<PollSessionResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<PollSessionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull retrofit2.Response<PollSessionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<PollSession> pollSessions = response.body().getPollSessions();

@@ -16,11 +16,11 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.data.Data
+import com.instructure.soseedy.SeededData
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.getNextCourse
-import com.instructure.teacher.ui.utils.logIn
-import com.instructure.teacher.ui.models.CanvasUser
+import com.instructure.teacher.ui.utils.announcements
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class AnnouncementsListPageTest : TeacherTest() {
@@ -33,23 +33,26 @@ class AnnouncementsListPageTest : TeacherTest() {
 
     @Test
     fun assertHasAnnouncement() {
-        getToAnnouncementsListPage()
-        val discussion = Data.getNextDiscussion()
-        announcementsListPage.assertHasAnnouncement(discussion)
+        val announcement = getToAnnouncementsListPage().announcements[0]
+        announcementsListPage.assertHasAnnouncement(announcement)
     }
 
+    // FIXME: This should probably just be part of the page objects
     @Test
     fun assertDisplaysFloatingActionButton() {
         getToAnnouncementsListPage()
-        val discussion = Data.getNextDiscussion()
-        announcementsListPage.assertHasAnnouncement(discussion)
+//        val discussion = Data.getNextDiscussion()
+//        announcementsListPage.assertHasAnnouncement(discussion)
     }
 
-    private fun getToAnnouncementsListPage(): CanvasUser {
-        val teacher = logIn()
-        val course = getNextCourse()
+    private fun getToAnnouncementsListPage(): SeededData {
+        val data = seedData(teachers = 1, favoriteCourses = 1, announcements = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        tokenLogin(teacher)
+
         coursesListPage.openCourse(course)
         courseBrowserPage.openAnnouncementsTab()
-        return teacher
+        return data
     }
 }

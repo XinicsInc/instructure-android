@@ -42,10 +42,11 @@ inline fun <reified T> weavePaginated(crossinline configure: PaginationConfig<T>
  * subsequent pages. See [PaginationConfig] for additional configuration options.
  */
 suspend inline fun <reified T> WeaveCoroutine.awaitPaginated(crossinline configure: PaginationConfig<T>.() -> Unit) {
+    val originStackTrace = Thread.currentThread().stackTrace
     return suspendAtomicCancellableCoroutine { continuation ->
         val config = PaginationConfig<T>()
         config.configure()
-        addAndStartStitcher(WeavePager(config, PaginationCallback(), continuation))
+        addAndStartStitcher(WeavePager(config, PaginationCallback(), continuation, originStackTrace))
     }
 }
 
@@ -86,7 +87,8 @@ enum class PagerType { SPLIT, UNIFIED }
 class WeavePager<T>(
         private val config: PaginationConfig<T>,
         private val pageCallback: PaginationCallback<T>,
-        override var continuation: CancellableContinuation<Unit>
+        override var continuation: CancellableContinuation<Unit>,
+        private val originStackTrace: Array<StackTraceElement>
 ) : Stitcher {
 
     override var onRelease: () -> Unit = {}
@@ -108,13 +110,15 @@ class WeavePager<T>(
         /* Set up response logic */
         pageCallback.responseCallback = { response, linkHeaders ->
             if (!isCanceled) {
-                isFirstPage = false
-                nextUrl = config.extractNextUrlBlock(response.body()) ?: linkHeaders?.nextUrl
-                config.responseBlock(response.body())
-                if (nextUrl.isNullOrBlank()) {
-                    config.completeBlock()
-                    onRelease()
-                    continuation.resumeSafely(Unit)
+                response.body()?.let {
+                    isFirstPage = false
+                    nextUrl = config.extractNextUrlBlock(it) ?: linkHeaders?.nextUrl
+                    config.responseBlock(it)
+                    if (nextUrl.isNullOrBlank()) {
+                        config.completeBlock()
+                        onRelease()
+                        continuation.resumeSafely(Unit)
+                    }
                 }
             }
         }
@@ -128,7 +132,7 @@ class WeavePager<T>(
                     continuation.resumeSafely(Unit)
                 } else {
                     onRelease()
-                    continuation.resumeSafelyWithException(error)
+                    continuation.resumeSafelyWithException(error, originStackTrace)
                 }
             }
         }
@@ -161,11 +165,11 @@ class PaginationCallback<T> : StatusCallback<T>() {
     lateinit var responseCallback: (Response<T>, LinkHeaders?) -> Unit
     lateinit var errorCallback: ErrorCall
 
-    override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders?, type: ApiType?) {
+    override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
         responseCallback(response, linkHeaders)
     }
 
-    override fun onFail(callResponse: Call<T>?, error: Throwable?, response: Response<*>?) {
-        errorCallback(StatusCallbackError(callResponse, error, response))
+    override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
+        errorCallback(StatusCallbackError(call, error, response))
     }
 }

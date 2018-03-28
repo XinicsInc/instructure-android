@@ -111,9 +111,6 @@ dependencies {
     compile 'com.amazonaws:aws-android-sdk-s3:2.1.4'
     compile 'com.amazonaws:aws-android-sdk-core:2.1.4'
     compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile('com.github.afollestad.material-dialogs:core:0.8.5.6@aar') {
-        transitive = true
-    }
 
     compile rootProject.ext.supportDependencies.appCompat
     compile rootProject.ext.supportDependencies.cardView

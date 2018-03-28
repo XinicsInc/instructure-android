@@ -31,15 +31,12 @@ import com.instructure.canvasapi2.models.StreamItem;
 public class NotificationWidgetRouter extends ParentActivity {
 
     private StreamItem streamItem;
-    DialogFragment dialog;
-
+    private DialogFragment dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handleIntent();
-
-        showProgress();
 
         if(streamItem != null){
             dialog =  NotificationListFragment.addFragmentForStreamItem(streamItem, (ParentActivity) getContext(), true);
@@ -51,18 +48,15 @@ public class NotificationWidgetRouter extends ParentActivity {
     }
 
     protected void handleIntent() {
-
         Intent intent = getIntent();
         if (intent.hasExtra(Const.STREAM_ITEM)) {
-            streamItem = (StreamItem) intent.getParcelableExtra(Const.STREAM_ITEM);
+            streamItem = intent.getParcelableExtra(Const.STREAM_ITEM);
         }
     }
 
     public static Intent createIntent(Context context, StreamItem streamItem) {
-        Intent intent = createIntent(context, NotificationWidgetRouter.class, R.layout.notification_widget_router_empty);
+        Intent intent = Companion.createIntent(context, NotificationWidgetRouter.class, R.layout.notification_widget_router_empty);
         intent.putExtra(Const.STREAM_ITEM,  (Parcelable)streamItem);
-
-
         return intent;
     }
 
@@ -82,7 +76,5 @@ public class NotificationWidgetRouter extends ParentActivity {
     }
 
     @Override
-    public void onUpPressed() {
-
-    }
+    public void onUpPressed() {}
 }

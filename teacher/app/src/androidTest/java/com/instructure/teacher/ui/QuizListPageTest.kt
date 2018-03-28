@@ -16,11 +16,14 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.models.CanvasUser
+import com.instructure.dataseeding.util.ago
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.iso8601
+import com.instructure.soseedy.Quiz
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.getNextCourse
-import com.instructure.teacher.ui.utils.getNextQuiz
-import com.instructure.teacher.ui.utils.logIn
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.seedQuizzes
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class QuizListPageTest : TeacherTest() {
@@ -33,20 +36,38 @@ class QuizListPageTest : TeacherTest() {
 
     @Test
     fun displaysNoQuizzesView() {
-        getToQuizzesPage()
+        getToQuizzesPage(makeQuiz = false)
         quizListPage.assertDisplaysNoQuizzesView()
     }
 
     @Test
     fun displaysQuiz() {
-        getToQuizzesPage()
-        quizListPage.assertHasQuiz(getNextQuiz())
+        val quiz = getToQuizzesPage()
+        if (quiz != null) {
+            quizListPage.assertHasQuiz(quiz)
+        }
     }
 
-    private fun getToQuizzesPage(): CanvasUser {
-        val teacher = logIn()
-        coursesListPage.openCourse(getNextCourse())
+    private fun getToQuizzesPage(makeQuiz: Boolean = true): Quiz? {
+        val data = seedData(teachers = 1, favoriteCourses = 1, students = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        var quiz: Quiz? = null
+
+        if (makeQuiz) {
+            quiz = seedQuizzes(
+                    courseId = course.id,
+                    quizzes = 1,
+                    withDescription = false,
+                    lockAt = 1.days.ago.iso8601,
+                    unlockAt = 2.days.ago.iso8601,
+                    teacherToken = teacher.token).quizzesList[0]
+        }
+
+        tokenLogin(teacher)
+        coursesListPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
-        return teacher
+
+        return quiz
     }
 }

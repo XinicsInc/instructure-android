@@ -33,10 +33,14 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.post_models.AssignmentPostBody
 import com.instructure.canvasapi2.models.post_models.DiscussionTopicPostBody
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.dialogs.DatePickerDialogFragment
+import com.instructure.pandautils.dialogs.TimePickerDialogFragment
+import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
+import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.*
 import com.instructure.teacher.events.AssigneesUpdatedEvent
@@ -44,14 +48,13 @@ import com.instructure.teacher.events.DiscussionCreatedEvent
 import com.instructure.teacher.events.DiscussionUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.CreateDiscussionPresenterFactory
-import com.instructure.teacher.interfaces.Identity
+import com.instructure.interactions.Identity
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.presenters.CreateDiscussionPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
-import com.instructure.teacher.view.AttachmentView
 import com.instructure.teacher.viewinterface.CreateDiscussionView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_create_discussion.*
@@ -60,13 +63,11 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CreateDiscussionFragment : BasePresenterFragment<
         CreateDiscussionPresenter,
         CreateDiscussionView>(), CreateDiscussionView, Identity {
-
-    private val EDIT_DATE_GROUPS = "editDateGroups"
-    private val RCE_HAS_FOCUS = "rceHasFocus"
 
     private var mCanvasContext: CanvasContext by ParcelableArg(Course())
     private var mAssignment: Assignment? = null
@@ -479,7 +480,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         // Show existing attachment (if any)
         mDiscussionTopicHeader?.attachments?.firstOrNull()?.let {
             val attachmentView = AttachmentView(context)
-            attachmentView.setPendingAttachment(it, true) { action, attachment ->
+            attachmentView.setPendingRemoteFile(it, true) { action, attachment ->
                 if (action == AttachmentView.AttachmentAction.REMOVE) {
                     presenter.attachmentRemoved = true
                     mDiscussionTopicHeader?.attachments?.remove(attachment)
@@ -495,12 +496,16 @@ class CreateDiscussionFragment : BasePresenterFragment<
     }
 
     private fun addAttachment() {
-        val bundle = FileUploadDialog.createDiscussionsBundle(ApiPrefs.user?.shortName, null)
-        val fileUploadDialog = FileUploadDialog.newInstanceSingleSelect(fragmentManager, bundle) {
-            presenter.attachment = it
-            updateAttachmentUI()
-        }
-        fileUploadDialog.show(fragmentManager, FileUploadDialog::class.java.simpleName)
+        // set the description here. When we ask for permission to use the camera the app can call readySetGo and reset the description
+        mDescription = descriptionRCEView.html
+
+        val bundle = UploadFilesDialog.createDiscussionsBundle(ArrayList())
+        UploadFilesDialog.show(fragmentManager, bundle, { event, attachment ->
+            if(event == UploadFilesDialog.EVENT_ON_FILE_SELECTED) {
+                presenter.attachment = attachment
+                updateAttachmentUI()
+            }
+        })
     }
 
     override fun startSavingDiscussion() {
@@ -603,6 +608,9 @@ class CreateDiscussionFragment : BasePresenterFragment<
     }
 
     companion object {
+        private val EDIT_DATE_GROUPS = "editDateGroups"
+        private val RCE_HAS_FOCUS = "rceHasFocus"
+
         @JvmStatic private val CANVAS_CONTEXT = "canvas_context"
         @JvmStatic private val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
         @JvmStatic private val SHOULD_SCROLL_TO_DATES = "shouldScrollToDates"

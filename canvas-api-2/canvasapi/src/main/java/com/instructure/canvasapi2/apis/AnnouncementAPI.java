@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.builders.RestBuilder;
 import com.instructure.canvasapi2.builders.RestParams;
+import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.DiscussionTopicHeader;
 
 import java.util.List;
@@ -36,8 +37,8 @@ import retrofit2.http.Url;
 public class AnnouncementAPI {
 
     interface AnnouncementInterface {
-        @GET("courses/{context_id}/discussion_topics?only_announcements=1")
-        Call<List<DiscussionTopicHeader>> getFirstPageAnnouncementsList(@Path("context_id") long contextId);
+        @GET("{contextType}/{contextId}/discussion_topics?only_announcements=1")
+        Call<List<DiscussionTopicHeader>> getFirstPageAnnouncementsList(@Path("contextType") String contextType, @Path("contextId") long contextId);
 
         @GET
         Call<List<DiscussionTopicHeader>>  getNextPageAnnouncementsList(@Url String nextUrl);
@@ -46,9 +47,10 @@ public class AnnouncementAPI {
         Call<List<DiscussionTopicHeader>> getAnnouncements(@Query("context_codes[]") List<String> contextCodes, @Query("start_date") String startDate, @Query("end_date") String endDate);
     }
 
-    public static void getAnnouncements(long contextId, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {
+    public static void getAnnouncements(@NonNull CanvasContext canvasContext, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {
+        final String contextType = CanvasContext.getApiContext(canvasContext);
         if (StatusCallback.isFirstPage(callback.getLinkHeaders())) {
-            callback.addCall(adapter.build(AnnouncementInterface.class, params).getFirstPageAnnouncementsList(contextId)).enqueue(callback);
+            callback.addCall(adapter.build(AnnouncementInterface.class, params).getFirstPageAnnouncementsList(contextType, canvasContext.getId())).enqueue(callback);
         } else if (StatusCallback.moreCallsExist(callback.getLinkHeaders()) && callback.getLinkHeaders() != null) {
             callback.addCall(adapter.build(AnnouncementInterface.class, params).getNextPageAnnouncementsList(callback.getLinkHeaders().nextUrl)).enqueue(callback);
         }
@@ -62,8 +64,9 @@ public class AnnouncementAPI {
         }
     }
 
-    public static void getFirstPageAnnouncements(long contextId, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {
-        callback.addCall(adapter.build(AnnouncementInterface.class, params).getFirstPageAnnouncementsList(contextId)).enqueue(callback);
+    public static void getFirstPageAnnouncements(@NonNull CanvasContext canvasContext, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {
+        final String contextType = CanvasContext.getApiContext(canvasContext);
+        callback.addCall(adapter.build(AnnouncementInterface.class, params).getFirstPageAnnouncementsList(contextType, canvasContext.getId())).enqueue(callback);
     }
 
     public static void getNextPage(String nextUrl, @NonNull RestBuilder adapter, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback, @NonNull RestParams params) {

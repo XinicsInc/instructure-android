@@ -23,7 +23,7 @@ import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
 class SpeedGraderGradePage : BasePage(), PageAssert by SimplePageAssert() {
 
     private val gradeContainer by OnViewWithId(R.id.gradeContainer)
-    private val gradeValueContainer by OnViewWithId(R.id.gradeValueContainer)
+    private val gradeTextContainer by OnViewWithId(R.id.gradeTextContainer)
     private val gradingField by OnViewWithText(R.string.grade)
 
     private val addGradeIcon by WaitForViewWithId(R.id.addGradeIcon)
@@ -37,7 +37,7 @@ class SpeedGraderGradePage : BasePage(), PageAssert by SimplePageAssert() {
 
 
     fun openGradeDialog() {
-        gradeValueContainer.click()
+        gradeTextContainer.click()
     }
 
     fun enterNewGrade(grade: String) {

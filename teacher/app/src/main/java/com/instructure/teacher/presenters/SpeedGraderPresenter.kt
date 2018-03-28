@@ -17,9 +17,7 @@
 package com.instructure.teacher.presenters
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.teacher.events.SubmissionUpdatedEvent
@@ -32,16 +30,20 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class SpeedGraderPresenter(
-        var course: Course,
-        var assignment: Assignment,
-        var submissions: List<GradeableStudentSubmission>,
-        var discussion: DiscussionTopicHeader?
+        private var courseId: Long,
+        private var assignmentId: Long,
+        private var submissions: List<GradeableStudentSubmission>,
+        private var submissionId: Long,
+        private var discussion: DiscussionTopicHeader?
 ) : Presenter<SpeedGraderView> {
 
     private var mView: SpeedGraderView? = null
-    private var mApijob: Job? = null
+    private var mApiJob: Job? = null
 
     private var mHasAttemptedLoad = false
+
+    lateinit var assignment: Assignment
+    lateinit var course: Course
 
     fun setupData() {
         // Don't load again if we've already loaded
@@ -51,16 +53,16 @@ class SpeedGraderPresenter(
             discussion != null -> setupDiscussionData(discussion!!)
 
         // Assignment
-            else -> mView?.onDataSet(assignment, submissions)
+            else -> setupAssignmentData()
         }
         mHasAttemptedLoad = true
     }
 
-
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun setupDiscussionData(discussion: DiscussionTopicHeader) {
-        mApijob = weave {
+        mApiJob = weave {
             try {
+                course = awaitApi { CourseManager.getCourse(courseId, it, false) }
                 val (students, rawSubmissions, discussionAssignment) = awaitApis<List<Enrollment>, List<Submission>, Assignment>(
                         // Get all students in the course
                         { EnrollmentManager.getAllEnrollmentsForCourse(course.id, EnrollmentAPI.STUDENT_ENROLLMENT, false, it) },
@@ -71,7 +73,7 @@ class SpeedGraderPresenter(
                 )
                 // Map raw submissions to user id Map<UserId, Submission>
                 val userSubmissionMap = rawSubmissions.associateBy { it.userId }
-                // Create list of GradeableStudentSubmissions from List<Enrollment> (students)
+                // Create list of GradeableStudentSubmissions from List<EnrollmentApiModel> (students)
                 val allSubmissions = students.map { GradeableStudentSubmission(StudentAssignee(it.user), userSubmissionMap[it.user.id]) }
                 val discussionSubmissions = allSubmissions
                         .filter { it.submission?.discussionEntries?.isNotEmpty() ?: false }
@@ -86,6 +88,29 @@ class SpeedGraderPresenter(
         }
     }
 
+    private fun setupAssignmentData() {
+        mApiJob = tryWeave {
+            val data = awaitApis<Course, Assignment>(
+                { CourseManager.getCourse(courseId, it, false) },
+                { AssignmentManager.getAssignment(assignmentId, courseId, false, it) }
+            )
+            course = data.first
+            assignment = data.second
+
+            if (submissionId > 0 && submissions.isEmpty()) {
+                // We don't have all the data we need (we came from a push notification), get all the stuffs first
+                val submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(course.id, assignment.id, submissionId, it, false) }
+                val user = awaitApi<User> { UserManager.getUser(submissionId, it, false) }
+                submissions = listOf(GradeableStudentSubmission(StudentAssignee(user), submission))
+            }
+
+            mView?.onDataSet(assignment, submissions)
+        } catch {
+            mView?.onErrorSettingData()
+        }
+    }
+
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = false)
     fun updateSubmission(event: SubmissionUpdatedEvent) {
         event.once("SpeedGrader | Assignment ${assignment.id}") { staleSubmission ->
@@ -111,7 +136,7 @@ class SpeedGraderPresenter(
 
     override fun onDestroyed() {
         mView = null
-        mApijob?.cancel()
+        mApiJob?.cancel()
     }
 
 }

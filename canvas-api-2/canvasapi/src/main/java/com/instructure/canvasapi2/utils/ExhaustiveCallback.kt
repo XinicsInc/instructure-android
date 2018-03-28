@@ -37,19 +37,21 @@ abstract class ExhaustiveCallback<MODEL, out ITEM>(
 
     fun getNextUrl(response: Response<MODEL>, linkHeaders: LinkHeaders): String = linkHeaders.nextUrl
 
-    override fun onResponse(response: Response<MODEL>, linkHeaders: LinkHeaders, type: ApiType, code: Int) {
+    override fun onResponse(response: Response<MODEL>, linkHeaders: LinkHeaders, type: ApiType) {
         if (callback.isCanceled) { cancel(); return }
-        val items = extractItems(response.body())
-        extractedItems.addAll(items)
-        if (items.isNotEmpty() && moreCallsExist(response, linkHeaders)) {
-            getNextPage(this, getNextUrl(response, linkHeaders), type.isCache)
-        } else {
-            finished = true
-            callback.onResponse(Response.success<List<ITEM>>(extractedItems, response.raw()), linkHeaders, type, code)
+        response.body()?.let {
+            val items = extractItems(it)
+            extractedItems.addAll(items)
+            if (items.isNotEmpty() && moreCallsExist(response, linkHeaders)) {
+                getNextPage(this, getNextUrl(response, linkHeaders), type.isCache)
+            } else {
+                finished = true
+                callback.onResponse(Response.success<List<ITEM>>(extractedItems, response.raw()), linkHeaders, type)
+            }
         }
     }
 
-    override fun onFail(callResponse: Call<MODEL>, error: Throwable, response: Response<*>?) {
+    override fun onFail(call: Call<MODEL>?, error: Throwable, response: Response<*>?) {
         finished = true
         callback.onFail(null, error, response)
     }

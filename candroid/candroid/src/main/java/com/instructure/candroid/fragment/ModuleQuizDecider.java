@@ -17,8 +17,8 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +27,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.RouterUtils;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.QuizManager;
-import com.instructure.canvasapi2.utils.ApiType;
-import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Quiz;
 import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.canvasapi2.utils.ApiType;
+import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.pandautils.views.CanvasWebView;
@@ -69,6 +70,11 @@ public class ModuleQuizDecider extends ParentFragment {
         return rootView;
     }
 
+    @Override
+    public void applyTheme() {
+
+    }
+
     private void setupViews(View rootView) {
         quizTitle = (TextView) rootView.findViewById(R.id.quiz_title);
         quizDetails = (CanvasWebView) rootView.findViewById(R.id.quiz_details);
@@ -82,7 +88,7 @@ public class ModuleQuizDecider extends ParentFragment {
                     if(!QuizListFragment.isNativeQuiz(getCanvasContext(), mQuiz)) {
                         Navigation navigation = getNavigation();
                         if (navigation != null) {
-                            Bundle bundle = BasicQuizViewFragment.createBundle(getCanvasContext(), baseURL, mQuiz);
+                            Bundle bundle = BasicQuizViewFragment.Companion.createBundle(getCanvasContext(), baseURL, mQuiz);
                             navigation.addFragment(FragUtils.getFrag(BasicQuizViewFragment.class, bundle), true);
                         }
                     } else {
@@ -131,7 +137,7 @@ public class ModuleQuizDecider extends ParentFragment {
             @Override
             public void launchInternalWebViewFragment(String url) {
 
-                InternalWebviewFragment.loadInternalWebView(getActivity(), getNavigation(), InternalWebviewFragment.createBundle(getCanvasContext(), url, false));
+                InternalWebviewFragment.Companion.loadInternalWebView(getActivity(), getNavigation(), InternalWebviewFragment.Companion.createBundle(getCanvasContext(), url, false));
             }
 
             @Override
@@ -142,7 +148,7 @@ public class ModuleQuizDecider extends ParentFragment {
 
         quizCanvasCallback = new StatusCallback<Quiz>() {
             @Override
-            public void onResponse(Response<Quiz> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Quiz> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(!apiCheck()) { return; }
 
                 mQuiz = response.body();
@@ -170,13 +176,15 @@ public class ModuleQuizDecider extends ParentFragment {
     }
 
     @Override
-    public String getFragmentTitle() {
-        return null;
+    @NonNull
+    public String title() {
+        return "";
     }
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {
-        return FRAGMENT_PLACEMENT.DETAIL;
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {
+        return FragmentInteractions.Placement.DETAIL;
     }
 
     @Override

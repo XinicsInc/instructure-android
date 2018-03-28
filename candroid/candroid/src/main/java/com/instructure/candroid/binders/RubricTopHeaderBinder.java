@@ -18,20 +18,33 @@
 package com.instructure.candroid.binders;
 
 import android.content.Context;
+import android.view.View;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.holders.RubricTopHeaderViewHolder;
+import com.instructure.canvasapi2.models.CanvasContext;
+import com.instructure.pandautils.utils.ThemePrefs;
 
 public class RubricTopHeaderBinder extends BaseBinder {
-    public static void bind(Context context, RubricTopHeaderViewHolder holder, String points, String grade, boolean isMuted) {
+    public static void bind(Context context, CanvasContext canvasContext, RubricTopHeaderViewHolder holder, String points, String grade, String latePenalty, String finalGrade, boolean isMuted) {
         if(isMuted){
             holder.mutedText.setText(context.getString(R.string.mutedText));
         } else {
             holder.gradeText.setText(grade);
             holder.pointsText.setText(points);
+
+            if(latePenalty == null || finalGrade == null) {
+                holder.latePolicy.setVisibility(View.GONE);
+            } else {
+                holder.latePolicy.setVisibility(View.VISIBLE);
+                holder.latePenalty.setText(latePenalty);
+                holder.latePenalty.setTextColor(ThemePrefs.getBrandColor());
+                holder.finalGrade.setText(finalGrade);
+            }
         }
         ifHasTextSetVisibleElseGone(holder.gradeText);
         ifHasTextSetVisibleElseGone(holder.pointsText);
         ifHasTextSetVisibleElseGone(holder.mutedText);
+
     }
 }

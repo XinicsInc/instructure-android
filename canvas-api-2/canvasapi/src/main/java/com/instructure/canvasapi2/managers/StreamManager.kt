@@ -15,6 +15,7 @@
  */
 package com.instructure.canvasapi2.managers
 
+import android.support.annotation.NonNull
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.builders.RestBuilder
@@ -22,6 +23,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.HiddenStreamItem
 import com.instructure.canvasapi2.models.StreamItem
+import java.util.ArrayList
 
 object StreamManager : BaseManager() {
 
@@ -30,7 +32,7 @@ object StreamManager : BaseManager() {
     @JvmStatic
     fun getUserStream(callback: StatusCallback<List<StreamItem>>, forceNetwork: Boolean) {
         if (isTesting() || mTesting) {
-            // TODO
+
         } else {
             val adapter = RestBuilder(callback)
             val params = RestParams.Builder()
@@ -44,7 +46,7 @@ object StreamManager : BaseManager() {
     @JvmStatic
     fun getCourseStream(canvasContext: CanvasContext, callback: StatusCallback<List<StreamItem>>, forceNetwork: Boolean) {
         if (isTesting() || mTesting) {
-            // TODO
+
         } else {
             val adapter = RestBuilder(callback)
             val params = RestParams.Builder()
@@ -59,7 +61,7 @@ object StreamManager : BaseManager() {
     @JvmStatic
     fun hideStreamItem(streamId: Long, callback: StatusCallback<HiddenStreamItem>) {
         if (isTesting() || mTesting) {
-            // TODO
+
         } else {
             val adapter = RestBuilder(callback)
             val params = RestParams.Builder().build()
@@ -68,17 +70,18 @@ object StreamManager : BaseManager() {
     }
 
     @JvmStatic
-    fun getUserStreamSynchronous(numberToReturn: Int, forceNetwork: Boolean): List<StreamItem>? {
+    @NonNull
+    fun getUserStreamSynchronous(numberToReturn: Int, forceNetwork: Boolean): List<StreamItem> {
         if (isTesting() || mTesting) {
-            // TODO
+
         } else {
             val adapter = RestBuilder()
             val params = RestParams.Builder()
                     .withForceReadFromNetwork(forceNetwork)
                     .build()
-            StreamAPI.getUserStreamSynchronous(numberToReturn, adapter, params)
+            return StreamAPI.getUserStreamSynchronous(numberToReturn, adapter, params) ?: ArrayList()
         }
-        return null
+        return ArrayList()
     }
 
 }

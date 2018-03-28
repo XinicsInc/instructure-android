@@ -19,12 +19,11 @@ package com.instructure.teacher.ui.pages
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.soseedy.Course
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.Course
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
-import java.util.*
 
 @Suppress("unused")
 class AllCoursesListPage : BasePage(), PageAssert by SimplePageAssert() {
@@ -37,11 +36,9 @@ class AllCoursesListPage : BasePage(), PageAssert by SimplePageAssert() {
 
     private val inboxTab by OnViewWithId(R.id.tab_inbox)
 
-    private val profileTab by OnViewWithId(R.id.tab_profile)
-
     private val coursesRecyclerView by WaitForViewWithId(R.id.recyclerView)
 
-    fun assertHasCourses(mCourses: ArrayList<Course>) {
+    fun assertHasCourses(mCourses: List<Course>) {
         coursesRecyclerView.check(RecyclerViewItemCountAssertion(mCourses.size))
         for (course in mCourses) onView(withText(course.name)).assertDisplayed()
     }

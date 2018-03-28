@@ -19,8 +19,12 @@ package com.instructure.candroid.test.adapter;
 
 import android.content.Context;
 import android.test.InstrumentationTestCase;
+
 import com.instructure.candroid.adapter.RubricRecyclerAdapter;
+import com.instructure.candroid.model.RubricCommentItem;
+import com.instructure.candroid.model.RubricRatingItem;
 import com.instructure.canvasapi2.models.RubricCriterionRating;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +32,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class RubricRecyclerAdapterTest extends InstrumentationTestCase {
     private RubricRecyclerAdapter mAdapter;
@@ -49,28 +53,30 @@ public class RubricRecyclerAdapterTest extends InstrumentationTestCase {
 
     @Test
     public void testAreContentsTheSame_SameNotComment(){
-        RubricCriterionRating item = new RubricCriterionRating();
-        item.setRatingDescription("item");
+        RubricCriterionRating rating = new RubricCriterionRating();
+        rating.setDescription("item");
+        RubricRatingItem item = new RubricRatingItem(rating);
+
 
         assertTrue(mAdapter.createItemCallback().areContentsTheSame(item, item));
     }
 
     @Test
     public void testAreContentsTheSame_DifferentNotComment(){
-        RubricCriterionRating item = new RubricCriterionRating();
-        item.setRatingDescription("item");
+        RubricCriterionRating rating = new RubricCriterionRating();
+        rating.setDescription("item");
+        RubricRatingItem item = new RubricRatingItem(rating);
 
-        RubricCriterionRating item1 = new RubricCriterionRating();
-        item1.setRatingDescription("item1");
+        RubricCriterionRating rating1 = new RubricCriterionRating();
+        rating1.setDescription("item1");
+        RubricRatingItem item1 = new RubricRatingItem(rating1);
 
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(item, item1));
     }
 
     @Test
     public void testAreContentsTheSame_SameComment(){
-        RubricCriterionRating item = new RubricCriterionRating();
-        item.setRatingDescription("item");
-        item.setComments("hodor");
+        RubricCommentItem item = new RubricCommentItem("hodor", 0d);
 
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(item, item));
     }

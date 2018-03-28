@@ -39,11 +39,11 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.HttpHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AttendanceListRecyclerAdapter
 import com.instructure.teacher.adapters.StudentContextFragment
@@ -51,9 +51,12 @@ import com.instructure.teacher.factory.AttendanceListPresenterFactory
 import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
 import com.instructure.teacher.presenters.AttendanceListPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.isTablet
+import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AttendanceListView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_attendance_list.*
@@ -68,14 +71,21 @@ class AttendanceListFragment : BaseSyncFragment<
     private var mCanvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyCourseContext())
     private var mTab: Tab by ParcelableArg(default = Tab.newInstance("", ""))
 
-    lateinit private var mRecyclerView: RecyclerView
+    private lateinit var mRecyclerView: RecyclerView
     override fun getList() = presenter.data
+
+    private var ltiJob: WeaveJob? = null
 
     override fun layoutResId(): Int {
         return R.layout.fragment_attendance_list
     }
 
     override fun onCreateView(view: View) {}
+
+    override fun onStop() {
+        super.onStop()
+        ltiJob?.cancel()
+    }
 
     override fun onReadySetGo(presenter: AttendanceListPresenter) {
         mRecyclerView.adapter = adapter
@@ -196,8 +206,8 @@ class AttendanceListFragment : BaseSyncFragment<
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
-        webView.setWebChromeClient(WebChromeClient())
-        webView.setWebViewClient(object: WebViewClient(){
+        webView.webChromeClient = WebChromeClient()
+        webView.webViewClient = object: WebViewClient(){
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 if(url != null) {
@@ -219,12 +229,12 @@ class AttendanceListFragment : BaseSyncFragment<
                     }
                 }
             }
-        })
+        }
         webView.loadUrl(url)
     }
 
     override fun launchLTI(tab: Tab) {
-        tryWeave {
+        ltiJob = tryWeave {
             onRefreshStarted()
             var ltiUrl: String? = null
 

@@ -26,10 +26,11 @@ import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
-import com.instructure.teacher.dialog.UnsavedChangesExitDialog
 import com.instructure.teacher.events.DiscussionEntryUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.DiscussionsUpdatePresenterFactory
@@ -37,8 +38,9 @@ import com.instructure.teacher.presenters.DiscussionsUpdatePresenter
 import com.instructure.teacher.presenters.DiscussionsUpdatePresenter.Companion.REASON_MESSAGE_EMPTY
 import com.instructure.teacher.presenters.DiscussionsUpdatePresenter.Companion.REASON_MESSAGE_FAILED_TO_SEND
 import com.instructure.teacher.presenters.DiscussionsUpdatePresenter.Companion.REASON_MESSAGE_IN_PROGRESS
-import com.instructure.teacher.utils.*
-import com.instructure.teacher.view.AttachmentView
+import com.instructure.teacher.utils.isTablet
+import com.instructure.teacher.utils.setupCloseButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DiscussionsUpdateView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_discussions_edit.*
@@ -74,7 +76,7 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
 
         presenter?.discussionEntry?.attachments?.firstOrNull()?.let {
             val attachmentView = AttachmentView(context)
-            attachmentView.setPendingAttachment(it, true) { action, attachment ->
+            attachmentView.setPendingRemoteFile(it, true) { action, attachment ->
                 if (action == AttachmentView.AttachmentAction.REMOVE) {
                     presenter.attachmentRemoved = true
                     presenter.discussionEntry.attachments.remove(attachment)
@@ -127,7 +129,7 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
-            R.id.menu_send -> {
+            R.id.menu_save -> {
                 if(APIHelper.hasNetworkConnection()) {
                     presenter.editMessage(rceTextEditor.html)
                 } else {

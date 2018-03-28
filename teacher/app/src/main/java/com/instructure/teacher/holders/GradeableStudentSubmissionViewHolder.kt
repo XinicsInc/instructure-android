@@ -30,10 +30,12 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.StudentContextFragment
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
-import com.instructure.teacher.utils.ProfileUtils
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.teacher.utils.getResForSubmission
+import com.instructure.teacher.utils.iconRes
+import com.instructure.teacher.utils.setAnonymousAvatar
 import kotlinx.android.synthetic.main.adapter_gradeable_student_submission.view.*
 import java.util.*
 
@@ -59,7 +61,7 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                 studentName.text = context.getString(R.string.anonymousStudentLabel)
             }
             assignee is StudentAssignee -> {
-                ProfileUtils.loadAvatarForUser(context, studentAvatar, assignee.student.name, assignee.student.avatarUrl)
+                ProfileUtils.loadAvatarForUser(studentAvatar, assignee.student.name, assignee.student.avatarUrl)
                 studentName.text = assignee.student.name
                 studentAvatar.setupAvatarA11y(assignee.name)
                 studentAvatar.onClick {
@@ -89,10 +91,10 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                 //This is not ideal... the api returns us the string with lower case first letter.
                 //Hopefully the fact that we localize our strings will make this consistent...
                 when(submission.grade) {
-                    context.getString(R.string.complete_grade).toLowerCase(Locale.getDefault()) -> {
+                    "complete" -> {
                         submissionGrade.text = context.getString(R.string.complete_grade)
                     }
-                    context.getString(R.string.incomplete_grade).toLowerCase(Locale.getDefault()) -> {
+                    "incomplete" -> {
                         submissionGrade.text = context.getString(R.string.incomplete_grade)
                     }
                     else -> {

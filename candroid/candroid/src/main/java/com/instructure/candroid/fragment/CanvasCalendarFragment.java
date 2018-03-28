@@ -17,12 +17,10 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.util.ApplicationManager;
-import com.instructure.pandautils.utils.Const;
+import com.instructure.candroid.util.StudentPrefs;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
@@ -41,7 +39,7 @@ public class CanvasCalendarFragment extends CaldroidFragment {
         return R.layout.canvas_calendar_gridview;
     }
 
-    public static Bundle createBundle(Context context, Calendar calendar, int month, int year){
+    public static Bundle createBundle(Calendar calendar, int month, int year){
         Bundle args = new Bundle();
         if(month != -1 && year != -1){
             args.putInt(CaldroidFragment.MONTH, month);
@@ -50,7 +48,7 @@ public class CanvasCalendarFragment extends CaldroidFragment {
             args.putInt(CaldroidFragment.MONTH, calendar.get(Calendar.MONTH) + 1);
             args.putInt(CaldroidFragment.YEAR, calendar.get(Calendar.YEAR));
         }
-        boolean startDayMonday = ApplicationManager.getPrefs(context).load(Const.CALENDAR_START_DAY_PREFS, false);
+        boolean startDayMonday = StudentPrefs.getWeekStartsOnMonday();
         if (startDayMonday) {
             args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
         } else {

@@ -32,8 +32,7 @@ import com.instructure.canvasapi2.models.ModuleContentDetails;
 import com.instructure.canvasapi2.models.ModuleItem;
 import com.instructure.canvasapi2.models.ModuleObject;
 import com.instructure.canvasapi2.utils.DateHelper;
-import com.instructure.canvasapi2.utils.NumberHelper;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 public class ModuleBinder extends BaseBinder {
 
@@ -50,7 +49,7 @@ public class ModuleBinder extends BaseBinder {
 
         boolean isLocked = ModuleUtility.isGroupLocked(moduleObject);
 
-        holder.clickContainer.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 adapterToFragmentCallback.onRowClicked(moduleObject, moduleItem, holder.getAdapterPosition(), true);
@@ -112,13 +111,13 @@ public class ModuleBinder extends BaseBinder {
         //Indicator
         setGone(holder.indicator);
         if (moduleItem.getCompletionRequirement() != null && moduleItem.getCompletionRequirement().isCompleted()) {
-            Drawable drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_save_white_thin, courseColor);
+            Drawable drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_check_white_24dp, courseColor);
             holder.indicator.setImageDrawable(drawable);
             setVisible(holder.indicator);
         }
 
         if(isLocked) {
-            Drawable drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_locked_fill, courseColor);
+            Drawable drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_lock, courseColor);
             holder.indicator.setImageDrawable(drawable);
             setVisible(holder.indicator);
         }
@@ -126,52 +125,61 @@ public class ModuleBinder extends BaseBinder {
         //Icon
         int drawableResource = -1;
         if (moduleItem.getType().equals(ModuleItem.TYPE.Assignment.toString())) {
-            drawableResource = R.drawable.ic_cv_assignments_fill;
+            drawableResource = R.drawable.vd_assignment;
         } else if (moduleItem.getType().equals(ModuleItem.TYPE.Discussion.toString())) {
-            drawableResource = R.drawable.ic_cv_discussions_fill;
+            drawableResource = R.drawable.vd_discussion;
         } else if (moduleItem.getType().equals(ModuleItem.TYPE.File.toString())) {
-            drawableResource = R.drawable.ic_cv_download_dark;
+            drawableResource = R.drawable.vd_download;
         } else if (moduleItem.getType().equals(ModuleItem.TYPE.Page.toString())) {
-            drawableResource = R.drawable.ic_cv_page;
+            drawableResource = R.drawable.vd_pages;
         } else if (moduleItem.getType().equals(ModuleItem.TYPE.SubHeader.toString())) {
             setGone(holder.icon);
         } else if (moduleItem.getType().equals(ModuleItem.TYPE.Quiz.toString())) {
-            drawableResource = R.drawable.ic_cv_quizzes_fill;
+            drawableResource = R.drawable.vd_quiz;
         } else if (moduleItem.getType().equals(ModuleItem.TYPE.ExternalUrl.toString())) {
-            drawableResource = R.drawable.ic_cv_link_fill;
+            drawableResource = R.drawable.vd_link;
         } else if (moduleItem.getType().equals(ModuleItem.TYPE.ExternalTool.toString())) {
-            drawableResource = R.drawable.ic_cv_tools_fill;
+            drawableResource = R.drawable.vd_lti;
         } else if (moduleItem.getType().equals(ModuleItem.TYPE.Locked.toString())) {
-            drawableResource = R.drawable.ic_cv_locked_fill;
+            drawableResource = R.drawable.vd_lock;
         } else if (moduleItem.getType().equals(ModuleItem.TYPE.ChooseAssignmentGroup.toString())) {
-            drawableResource = R.drawable.ic_cv_page;
+            drawableResource = R.drawable.vd_pages;
         }
 
         if(drawableResource == -1) {
             setGone(holder.icon);
         } else {
-            Drawable drawable = CanvasContextColor.getColoredDrawable(context, drawableResource, courseColor);
+            Drawable drawable = ColorKeeper.getColoredDrawable(context, drawableResource, courseColor);
             holder.icon.setImageDrawable(drawable);
         }
 
         //Details
         ModuleContentDetails details = moduleItem.getModuleDetails();
         if(details != null) {
+            boolean hasDate, hasPoints;
             if (details.getDueDate() != null) {
                 holder.date.setText(DateHelper.createPrefixedDateTimeString(context, R.string.toDoDue, details.getDueDate()));
-                setVisible(holder.date);
+                hasDate = true;
             } else {
                 holder.date.setText("");
-                setGone(holder.date);
+                hasDate = false;
             }
 
             String points = details.getPointsPossible();
             if(!TextUtils.isEmpty(points)) {
                 holder.points.setText(context.getString(R.string.totalPoints, com.instructure.canvasapi2.utils.NumberHelper.formatDecimal(Double.parseDouble(points), 2, true)));
-                setVisible(holder.points);
+                hasPoints = true;
             } else {
                 holder.points.setText("");
+                hasPoints = false;
+            }
+
+            if(!hasDate && !hasPoints) {
+                setGone(holder.date);
                 setGone(holder.points);
+            } else {
+                if(hasDate) setVisible(holder.date); else setInvisible(holder.date);
+                if(hasPoints) setVisible(holder.points); else setInvisible(holder.points);
             }
         } else {
             holder.points.setText("");

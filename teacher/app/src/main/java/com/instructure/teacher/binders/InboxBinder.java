@@ -17,23 +17,31 @@
 package com.instructure.teacher.binders;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.instructure.canvasapi2.models.BasicUser;
+import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Conversation;
 import com.instructure.canvasapi2.utils.APIHelper;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.pandautils.utils.ColorUtils;
+import com.instructure.pandautils.utils.ProfileUtils;
 import com.instructure.pandautils.utils.ThemePrefs;
 import com.instructure.teacher.R;
+import com.instructure.teacher.adapters.StudentContextFragment;
 import com.instructure.teacher.holders.InboxViewHolder;
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback;
-import com.instructure.teacher.utils.ProfileUtils;
+import com.instructure.interactions.router.Route;
+import com.instructure.teacher.router.RouteMatcher;
 
 import java.util.Date;
 import java.util.List;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 
 public class InboxBinder extends BaseBinder {
 
@@ -44,7 +52,14 @@ public class InboxBinder extends BaseBinder {
 
         String messageTitle = getConversationTitle(context, myUserId, conversation);
 
-        ProfileUtils.configureAvatarViewConversations(context, holder.avatar1, holder.avatar2, conversation);
+        ProfileUtils.loadAvatarsForConversation(holder.avatar1, conversation, new Function2<BasicUser, CanvasContext, Unit>() {
+            @Override
+            public Unit invoke(BasicUser user, CanvasContext canvasContext) {
+                Bundle bundle = StudentContextFragment.makeBundle(user.getId(), canvasContext.getId(), false);
+                RouteMatcher.route(context, new Route(StudentContextFragment.class, null, bundle));
+                return null;
+            }
+        });
 
         holder.userName.setText(messageTitle);
         holder.message.setText(conversation.getLastMessagePreview());

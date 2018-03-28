@@ -18,13 +18,16 @@ package com.instructure.canvasapi2.models.CanvaDocs
 
 import android.graphics.Color
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.models.CanvasModel
 import paperparcel.PaperParcel
 import paperparcel.PaperParcelable
+import java.util.*
 
 @JvmSuppressWildcards
 @PaperParcel
 data class CanvaDocAnnotation(
-        var id: String,
+        @SerializedName("id")
+        var annotationId: String,
         @SerializedName("ctx_and_id")
         var ctxId: String? = null,
         @SerializedName("user_id")
@@ -55,7 +58,12 @@ data class CanvaDocAnnotation(
         @SerializedName("inreplyto")
         var inReplyTo: String? = null,
         var isEditable: Boolean
-) : PaperParcelable {
+) : PaperParcelable, CanvasModel<CanvaDocAnnotation>() {
+
+    override fun getId() = annotationId.hashCode().toLong()
+    override fun getComparisonDate() = null
+    override fun getComparisonString() = contents
+    override fun describeContents() = 0
 
     enum class AnnotationType {
         @SerializedName("ink")

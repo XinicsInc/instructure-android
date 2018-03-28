@@ -20,7 +20,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.oss.licenses.plugin'
-apply plugin: 'kotlin-kapt'
 
 def coverageEnabled = project.hasProperty('coverage')
 
@@ -29,58 +28,19 @@ if (coverageEnabled) {
     apply from: 'jacoco.gradle'
 }
 
-repositories {
-    jcenter()
-    maven { url 'https://jitpack.io' }
-    maven { url "https://maven.google.com" }
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
-    maven {
-        credentials {
-            username pspdfMavenUser
-            password pspdfMavenPass
-        }
-        url 'https://customers.pspdfkit.com/maven/'
-    }
-    flatDir {
-        dirs "../../espresso/aars"
-    }
-}
-
-buildscript {
-
-    repositories {
-        jcenter()
-        maven { url 'https://jitpack.io' }
-        maven { url "https://maven.google.com" }
-        maven { url 'https://maven.fabric.io/public' }
-        maven { url 'https://maven.google.com' }
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
-        classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.0.4'
-        if (project.hasProperty('coverage')) {
-            // https://github.com/arturdm/jacoco-android-gradle-plugin
-            // note: if there are issues with the unit tests, try rm -rf .gradle
-            classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
-        }
-    }
-}
-
 android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
+        versionCode = 13
+        versionName = '1.4.0'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.teacher.ui.utils.TeacherInstructureRunner'
@@ -110,6 +70,7 @@ android {
         ])
 
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
+        buildConfigField "String", "PUSH_SERVICE_PROJECT_ID", "\"$pushServiceProjectId\""
     }
 
     flavorDimensions "icecream"
@@ -117,6 +78,7 @@ android {
 
         dev {
             dimension "icecream"
+            matchingFallbacks = ['debug']
         }
 
         prod {
@@ -163,12 +125,22 @@ android {
         }
     }
 
+    configurations.all {
+        resolutionStrategy {
+            force 'android.arch.lifecycle:runtime:1.0.3'
+        }
+    }
+
     lintOptions {
         abortOnError false
     }
 
     dexOptions {
         javaMaxHeapSize "2g"
+    }
+
+    lintOptions {
+        disable 'MissingTranslation'
     }
 
     packagingOptions {
@@ -186,98 +158,104 @@ android {
         exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
         exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
     }
+
+    testOptions {
+        animationsDisabled = true
+        execution 'ANDROID_TEST_ORCHESTRATOR'
+    }
+
+    def transform = new MasqueradeUIInjector(android, 'com.instructure.teacher.activities.InitLoginActivity.class')
+    registerTransform(transform)
 }
 
+repositories {
+    jcenter()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
+}
 
 dependencies {
     /* Modules */
-    compile project(path: ':login-api-2', configuration: 'default')
-    compile project(path: ':blueprint', configuration: 'default')
-    compile project(path: ':recyclerview', configuration: 'default')
-    compile project(path: ':libraries:chips', configuration: 'default')
-    compile project(path: ':canvas-api-2', configuration: 'default')
-    compile project(path: ':rceditor', configuration: 'default')
-    compile project(path: ':pandautils', configuration: 'default')
-    compile project(path: ':camerakit', configuration: 'default')
-    androidTestCompile project(':dataseedingapi')
-
-    /* Support libs */
-    compile rootProject.ext.supportDependencies.appCompat
-    compile rootProject.ext.supportDependencies.supportLibV13
-    compile rootProject.ext.supportDependencies.cardView
-    compile rootProject.ext.supportDependencies.design
-    compile rootProject.ext.supportDependencies.percentLayout
-    compile rootProject.ext.supportDependencies.vector
-    compile rootProject.ext.supportDependencies.supportAnnotation
-    compile rootProject.ext.supportDependencies.percent
-    compile rootProject.ext.supportDependencies.palette
+    implementation project(path: ':login-api-2')
+    implementation project(path: ':libraries:chips')
+    implementation project(path: ':rceditor')
+    implementation project(path: ':camerakit')
+    implementation project(path: ':annotations')
+    implementation project(path: ':interactions')
 
     /* Kotlin */
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$GLOBAL_KOTLIN_VERSION"
-
-    /* Material Design */
-    compile 'com.github.rey5137:material:1.2.2'
+    implementation Libs.KOTLIN_STD_LIB
 
     /* Butter Knife */
-    compile 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    /* EventBus */
-    compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.google.code.gson:gson:2.8.0'
-
-    /* Networking */
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile('com.squareup.retrofit2:retrofit:2.2.0') {
-        exclude module: 'okhttp'
-    }
-
     /* Crashlytics */
-    compile("com.crashlytics.sdk.android:crashlytics:$GLOBAL_CRASHLYTICS_VERSION") {
+    implementation(Libs.CRASHLYTICS) {
+        transitive = true
+    }
+    implementation('com.crashlytics.sdk.android:answers:1.3.12@aar') {
         transitive = true
     }
 
     /* OkHttp Idling Resource */
-    compile('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
+    implementation('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
         exclude module: 'espresso-idling-resource'
     }
 
     /* Test Dependencies */
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.3.2'
-    testCompile 'org.robolectric:shadows-multidex:3.3.2'
-    testCompile 'org.mockito:mockito-core:2.7.22'
+    testImplementation Libs.JUNIT
+    testImplementation 'org.robolectric:robolectric:3.3.2'
+    testImplementation 'org.mockito:mockito-core:2.7.22'
 
     /* AndroidTest Dependencies */
-    androidTestCompile project(path: ':espresso')
-    androidTestCompile 'junit:junit:4.12'
-    compile('com.crashlytics.sdk.android:answers:1.3.12@aar') {
-        transitive = true
+    androidTestImplementation project(':espresso')
+    androidTestImplementation project(':dataseedingapi')
+    androidTestImplementation Libs.JUNIT
+
+    androidTestUtil("com.android.support.test:orchestrator:$Versions.ATSL_ORCHESTRATOR") {
+        exclude module: 'support-annotations'
     }
 
     /* Sliding Panel */
-    compile 'com.sothree.slidinguppanel:library:3.3.1'
+    implementation 'com.sothree.slidinguppanel:library:3.3.1'
 
     /* Media handling */
-    compile 'com.google.android.exoplayer:exoplayer:r2.4.4'
-    compile 'com.github.chrisbanes:PhotoView:2.0.0'
-
-    /* PSPDFKit Dependencies */
-    compile "com.pspdfkit:pspdfkit-demo:4.0.2"
-    compile 'com.jakewharton:disklrucache:2.0.2'
+    implementation 'com.github.bumptech.glide:glide:4.1.1'
+    implementation "com.github.bumptech.glide:okhttp3-integration:4.1.1"
+    kapt 'com.github.bumptech.glide:compiler:4.1.1'
+    implementation 'com.caverock:androidsvg:1.2.1'
+    implementation 'com.google.android.exoplayer:exoplayer:r2.4.4'
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 
     /* Flexbox Layout */
-    compile 'com.google.android:flexbox:0.2.6'
-    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
+    implementation 'com.google.android:flexbox:0.2.6'
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
 
-    compile "com.google.android.gms:play-services-oss-licenses:$GLOBAL_PLAY_SERVICES_VERSION"
+    /* Open Source Licensing Tool */
+    implementation Libs.PLAY_SERVICES_OSS_LICENSES
 
-    /* PaperParce l */
-    compile 'nz.bradcampbell:paperparcel:2.0.2'
-    compile 'nz.bradcampbell:paperparcel-kotlin:2.0.2'
+    /* PaperParcel */
+    implementation 'nz.bradcampbell:paperparcel:2.0.2'
+    implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.2'
     kapt 'nz.bradcampbell:paperparcel-compiler:2.0.2'
+
+    /* Support libs */
+    implementation Libs.SUPPORT_APPCOMPAT
+    implementation Libs.SUPPORT_CARDVIEW
+    implementation Libs.SUPPORT_DESIGN
+    implementation Libs.SUPPORT_PALETTE
+    implementation Libs.SUPPORT_PERCENT
+    implementation Libs.SUPPORT_ANNOTATION
+    implementation Libs.SUPPORT_V13
+    implementation Libs.SUPPORT_VECTOR
+    implementation Libs.PLAY_SERVICES
+
+    /* Job Scheduler */
+    compile 'com.firebase:firebase-jobdispatcher:0.8.5'
 }
+
+apply plugin: 'com.google.gms.google-services'
 
 kotlin {
     experimental {

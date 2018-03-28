@@ -149,20 +149,8 @@ public class QuizAPI {
                 @Query("quiz_questions[][id]") long questionId,
                 @Query("quiz_questions[][answer]") String answer);
 
-        @POST("quiz_submissions/{quizSubmissionId}/questions{queryParams}")
-        Call<QuizSubmissionQuestionResponse> postQuizQuestionMultiAnswers(
-                @Path("quizSubmissionId") long quizSubmissionId,
-                @Path("queryParams") String queryParams);
-
-        @POST("quiz_submissions/{quizSubmissionId}/questions{queryParams}")
-        Call<QuizSubmissionQuestionResponse> postQuizQuestionMatching(
-                @Path("quizSubmissionId") long quizSubmissionId,
-                @Path("queryParams") String queryParams);
-
-        @POST("quiz_submissions/{quizSubmissionId}/questions{queryParams}")
-        Call<QuizSubmissionQuestionResponse> postQuizQuestionMultipleDropdown(
-                @Path("quizSubmissionId") long quizSubmissionId,
-                @Path("queryParams") String queryParams);
+        @POST
+        Call<QuizSubmissionQuestionResponse> postQuizQuestionUrl(@Url String url);
 
         @POST("quiz_submissions/{quizSubmissionId}/questions")
         Call<QuizSubmissionQuestionResponse> postQuizQuestionEssay(
@@ -376,9 +364,8 @@ public class QuizAPI {
             @NonNull RestParams params,
             @NonNull StatusCallback<QuizSubmissionQuestionResponse> callback) {
 
-        callback.addCall(adapter.build(QuizInterface.class, params).postQuizQuestionMatching(
-                quizSubmission.getId(),
-                buildMatchingList(quizSubmission.getAttempt(), quizSubmission.getValidationToken(), questionId, answers))).enqueue(callback);
+        callback.addCall(adapter.build(QuizInterface.class, params).postQuizQuestionUrl(
+                buildMatchingUrl(quizSubmission.getId(), quizSubmission.getAttempt(), quizSubmission.getValidationToken(), questionId, answers))).enqueue(callback);
     }
 
     public static void postQuizQuestionMultipleDropdown(
@@ -389,9 +376,8 @@ public class QuizAPI {
             @NonNull RestParams params,
             @NonNull StatusCallback<QuizSubmissionQuestionResponse> callback) {
 
-        callback.addCall(adapter.build(QuizInterface.class, params).postQuizQuestionMultipleDropdown(
-                quizSubmission.getId(),
-                buildMultipleDropdownList(quizSubmission.getAttempt(), quizSubmission.getValidationToken(), questionId, answers))).enqueue(callback);
+        callback.addCall(adapter.build(QuizInterface.class, params).postQuizQuestionUrl(
+                buildMultipleDropdownUrl(quizSubmission.getId(), quizSubmission.getAttempt(), quizSubmission.getValidationToken(), questionId, answers))).enqueue(callback);
     }
 
     public static void postQuizQuestionMultiAnswers(
@@ -402,9 +388,8 @@ public class QuizAPI {
             @NonNull RestParams params,
             @NonNull StatusCallback<QuizSubmissionQuestionResponse> callback) {
 
-        callback.addCall(adapter.build(QuizInterface.class, params).postQuizQuestionMultiAnswers(
-                quizSubmission.getId(),
-                buildMultiAnswerList(quizSubmission.getAttempt(), quizSubmission.getValidationToken(), questionId, answers))).enqueue(callback);
+        callback.addCall(adapter.build(QuizInterface.class, params).postQuizQuestionUrl(
+                buildMultiAnswerUrl(quizSubmission.getId(), quizSubmission.getAttempt(), quizSubmission.getValidationToken(), questionId, answers))).enqueue(callback);
     }
 
     public static void postQuizQuestionEssay(
@@ -457,15 +442,13 @@ public class QuizAPI {
                 quizSubmission.getValidationToken())).enqueue(callback);
     }
 
-
-
-
-
-
-    private static String buildMultiAnswerList(int attempt, String validationToken, long questionId, ArrayList<Long> answers) {
-        // build the query params because we'll have an unknown amount of answers. It will end up looking like:
-        // ?attempt={attempt}&validation_token={validation_token}&quiz_questions[][id]={question_id}&quiz_questions[][answer][]={answer_id}...
+    private static String buildMultiAnswerUrl(long quizSubmissionId, int attempt, String validationToken, long questionId, ArrayList<Long> answers) {
+        // Build the entire relative URL because Retrofit 2 forcfeully escapes @Path params. It will end up looking like:
+        // quiz_submissions/{submission_id}/questions?attempt={attempt}&validation_token={validation_token}&quiz_questions[][id]={question_id}&quiz_questions[][answer][]={answer_id}...
         StringBuilder builder = new StringBuilder();
+        builder.append("quiz_submissions/");
+        builder.append(Long.toString(quizSubmissionId));
+        builder.append("/questions");
         builder.append("?");
         builder.append("attempt=");
         builder.append(Integer.toString(attempt));
@@ -478,7 +461,6 @@ public class QuizAPI {
         builder.append("&");
         for(Long answer : answers) {
             builder.append("quiz_questions[][answer][]");
-
             builder.append("=");
             builder.append(Long.toString(answer));
             builder.append("&");
@@ -491,10 +473,13 @@ public class QuizAPI {
         return answerString;
     }
 
-    private static String buildMatchingList(int attempt, String validationToken, long questionId, HashMap<Long, Integer> answers) {
-        // build the query params. It will end up looking like:
-        // ?attempt={attempt}&validation_token={validation_token}&quiz_questions[][id]={question_id}&quiz_questions[][answer][][answer_id]={answer_id}&quiz_questions[][answer][][match_id]={match_id}...
+    private static String buildMatchingUrl(long quizSubmissionId, int attempt, String validationToken, long questionId, HashMap<Long, Integer> answers) {
+        // Build the entire relative URL because Retrofit 2 forcfeully escapes @Path params. It will end up looking like:
+        // quiz_submissions/{submission_id}/questions?attempt={attempt}&validation_token={validation_token}&quiz_questions[][id]={question_id}&quiz_questions[][answer][][answer_id]={answer_id}&quiz_questions[][answer][][match_id]={match_id}...
         StringBuilder builder = new StringBuilder();
+        builder.append("quiz_submissions/");
+        builder.append(Long.toString(quizSubmissionId));
+        builder.append("/questions");
         builder.append("?");
         builder.append("attempt=");
         builder.append(Integer.toString(attempt));
@@ -508,7 +493,6 @@ public class QuizAPI {
         //loop through the HashMap that contains the list of answers and their matches that the user selected
         for(Map.Entry<Long, Integer> answer : answers.entrySet()) {
             builder.append("quiz_questions[][answer][][answer_id]");
-
             builder.append("=");
             builder.append(Long.toString(answer.getKey()));
             builder.append("&");
@@ -526,10 +510,13 @@ public class QuizAPI {
         return answerString;
     }
 
-    private static String buildMultipleDropdownList(int attempt, String validationToken, long questionId, HashMap<String, Long> answers) {
-        // build the query params. It will end up looking like:
-        // ?attempt={attempt}&validation_token={validation_token}&quiz_questions[][id]={question_id}&quiz_questions[][answer][{answerKey}]={answerValue}...
+    private static String buildMultipleDropdownUrl(long quizSubmissionId, int attempt, String validationToken, long questionId, HashMap<String, Long> answers) {
+        // Build the entire relative URL because Retrofit 2 forcfeully escapes @Path params. It will end up looking like:
+        // quiz_submissions/{submission_id}/questions?attempt={attempt}&validation_token={validation_token}&quiz_questions[][id]={question_id}&quiz_questions[][answer][{answerKey}]={answerValue}...
         StringBuilder builder = new StringBuilder();
+        builder.append("quiz_submissions/");
+        builder.append(Long.toString(quizSubmissionId));
+        builder.append("/questions");
         builder.append("?");
         builder.append("attempt=");
         builder.append(Integer.toString(attempt));
@@ -543,15 +530,11 @@ public class QuizAPI {
         //loop through the HashMap that contains the list of answers and their matches that the user selected
         for(Map.Entry<String, Long> answer : answers.entrySet()) {
             builder.append("quiz_questions[][answer][");
-
-
             builder.append(answer.getKey());
             builder.append("]");
-
             builder.append("=");
             builder.append(Long.toString(answer.getValue()));
             builder.append("&");
-
         }
 
         String answerString = builder.toString();

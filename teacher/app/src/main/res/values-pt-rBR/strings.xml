@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -26,23 +26,24 @@
     <string name="tab_profile">Perfil</string>
     <string name="tab_people">Pessoas</string>
     <string name="tab_quizzes">Questionários</string>
-    <string name="tab_discussions">Discussões</string>
+    <string name="tab_discussions">Discussions (Discussões)</string>
     <string name="tab_announcements">Anúncios</string>
     <string name="tab_attendance">Frequência</string>
+    <string name="tab_pages">Páginas</string>
+    <string name="tab_todo">Lista de Tarefas</string>
     <string name="content_description_school_logo">Logo da Escola</string>
-    <string name="content_description_avatar">Avatar</string>
     <string name="search_guides">Pesquisar no Canvas Guides</string>
-    <string name="canvas_guides">Canvas Guides</string>
+    <string name="canvas_guides">Guias do Canvas</string>
     <string name="search_guides_icon">Ícone para Canvas Guides</string>
     <string name="search_guides_details">Respostas para perguntas frequentes</string>
     <string name="report_problem">Relatar um problema</string>
     <string name="report_problem_icon"> Ícone para Relatar um problema</string>
-    <string name="report_problem_details">Avise-nos se o aplicativo se portar mal</string>
+    <string name="report_problem_details">Caso o aplicativo porte-se mal, deixe-nos saber</string>
     <string name="request_feature">Solicitar uma funcionalidade</string>
     <string name="request_feature_icon">Ícone para Solicitar uma funcionalidade</string>
     <string name="request_feature_details">Conte-nos a sua ideia para melhorar o aplicativo</string>
     <string name="share_your_love">Divulgar o seu amor pelo aplicativo</string>
-    <string name="share_your_love_details">Conte-nos sobre as suas partes favoritas do aplicativo</string>
+    <string name="share_your_love_details">Conte-nos as suas partes favoritas do aplicativo</string>
     <string name="masquerade">Mascarar-se</string>
     <string name="issue_with_teacher_app">Problema com o aplicativo Teacher [Android]</string>
     <string name="no_items_to_display_short">Sem itens</string>
@@ -142,7 +143,7 @@
     <string name="uploading_files">Carregando arquivos&#8230;</string>
     <string name="no_attachment">(Sem anexo)</string>
     <string name="remove_attachment">Remover anexo</string>
-    <string name="creating_announcement">Criar anúncio&#8230;</string>
+    <string name="creating_announcement">Criando anúncios&#8230;</string>
 
     <string name="copy_email">Copiar endereço de e-mail</string>
     <string name="all_grading_periods">Todos os períodos de classificação</string>
@@ -161,7 +162,7 @@
 
     <string name="inbox_empty_title">Sem mensagens</string>
     <string name="inbox_empty_starred_title">Sem mensagens marcadas como favoritas</string>
-    <string name="inbox_empty_message">Toque em \“+\” para criar uma nova conversa.</string>
+    <string name="inbox_empty_message">Toque em \"+\" para criar uma nova conversa.</string>
     <string name="inbox_empty_starred_message">Marque mensagens como favoritas ao tocar na estrela na mensagem.</string>
 
     <string name="download_attachment">Baixar anexo</string>
@@ -191,7 +192,7 @@
     <string name="published_content_description">Marca de seleção publicada</string>
     <string name="points_with_value">pontos</string>
     <string name="point_with_value">ponto</string>
-    <string name="no_due_date">Sem data de vencimento</string>
+    <string name="no_due_date">Sem Prazo</string>
     <string name="due_date">Data de vencimento</string>
 
     <string name="view_replies">Visualizar respostas</string>
@@ -267,14 +268,14 @@
     <string name="error_occurred">Ocorreu um erro inesperado.</string>
     <string name="no_assignments_with_file_upload">Este curso não tem nenhuma tarefa que permite upload de arquivos.</string>
     <string name="extension_not_allowed">O tipo de arquivo selecionado não é permitido.</string>
-    <string name="allowed_extensions">Extensões permitidas:&#160;</string>
+    <string name="allowed_extensions">Extensões permitidas:q </string>
     <string name="files_uploaded_successfully">Arquivos carregados com sucesso.</string>
     <string name="error_uploading_file">Ocorreu um erro ao carregar seu arquivo. Por favor, tente novamente.</string>
-    <string name="uploading_file">Carregando arquivo&#8230;</string>
+    <string name="uploading_file">Fazendo upload de arquivo&#8230;</string>
     <string name="no_apps">O seu dispositivo não tem nenhum aplicativo instalado que pode lidar com esse arquivo.</string>
     <string name="turn_in">Entregar</string>
     <string name="error_getting_photo">Houve um erro ao carregar a foto. Por favor, tente novamente.</string>
-    <string name="loading_files_indeterminate">Carregando arquivos&#8230;</string>
+    <string name="loading_files_indeterminate">Carregando Arquivos&#8230;</string>
     <string name="no_files_uploaded">Você ainda não selecionou nenhum arquivo.</string>
     <string name="file_upload_not_supported">Você não pode carregar arquivos para a tarefa selecionada.</string>
     <string name="one_or_more_extension_not_allowed">Um ou mais arquivos tem uma extensão de arquivo que não é permitida</string>
@@ -292,7 +293,7 @@
     <string name="server_error">Ocorreu um erro no servidor.</string>
     <string name="error_loading_files">Ocorreu um erro ao carregar seu arquivo. Verifique sua conexão à Internet e tente novamente.</string>
     <string name="files_submitted_successfully">Arquivos enviados com sucesso</string>
-    <string name="no_data_connection"> Por favor, verifique sua conexão de dados e tente novamente. </string>
+    <string name="no_data_connection">Por favor, verifique sua conexão de dados e tente novamente.</string>
     <string name="teacher_logout_warning">Tem certeza de que deseja sair?</string>
     <string name="teacher_yes">Sim</string>
     <string name="teacher_no">Não</string>
@@ -308,14 +309,14 @@
     <!--Course Settings-->
     <string name="course_settings">Configurações do curso</string>
     <string name="course_name">Nome do curso</string>
-    <string name="set_home_to">Definir \’Página Inicial\’para...</string>
+    <string name="set_home_to">Definir ’Página Inicial’ para&#8230;</string>
     <string name="course_activity_stream">Fluxo de atividades do curso</string>
     <string name="pages_front_page">Página principal das páginas</string>
+    <string name="frontPage">Página frontal</string>
     <string name="course_modules">Módulos do curso</string>
     <string name="assignments_list">Lista de tarefas</string>
-    <string name="syllabus">Programa</string>
+    <string name="syllabus">Programa de estudos</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Várias datas de entrega</string>
     <string name="everyone">Todo mundo</string>
@@ -323,8 +324,8 @@
     <string name="unknown_student">Aluno desconhecido</string>
     <string name="closed">Fechado</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">Prazo %s até %s</string>
-    <string name="last_post" formatted="false">Último post %s</string>
+    <string name="due_date_at_time" formatted="false">Para ser entregue em %1s às %2s</string>
+    <string name="last_post" formatted="false">Última postagem %s</string>
     <string name="submission_types">Tipos de envio</string>
     <string name="full_due_date_details">Detalhes completos da data de vencimento</string>
     <string name="availability_label">Disponibilidade:</string>
@@ -350,7 +351,7 @@
     <string name="grade">Nota</string>
     <string name="calculated_by_rubric">Calculado por rubrica</string>
     <string name="customize_grade">Personalizar nota</string>
-    <string name="out_of_points">Em %1$s</string>
+    <string name="out_of_points">De %1$s</string>
     <string name="gpa">GPA</string>
     <string name="letter_grade">Nota em letra</string>
     <string name="excuse_student">Dispensar aluno</string>
@@ -395,7 +396,7 @@
     <string name="points">Pontos</string>
     <string name="gpa_scale">Escala GPA</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -404,7 +405,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -424,8 +425,8 @@
     <string name="submitted_late">Enviado atrasado</string>
     <string name="havent_submitted_yet">Ainda não enviou</string>
     <string name="havent_been_graded">Não foi avaliado</string>
-    <string name="scored_less_than">Pontuou menos que&#8230;</string>
-    <string name="scored_more_than">Pontuou mais que&#8230;</string>
+    <string name="scored_less_than">Pontuou menos do que&#8230;</string>
+    <string name="scored_more_than">Pontuou mais do que&#8230;</string>
     <string name="scored_less_than_value">Pontuou menos do que %s</string>
     <string name="scored_more_than_value">Pontuou mais do que %s</string>
     <string name="add_comment">Adicionar comentário</string>
@@ -451,7 +452,7 @@
     <string name="rating_button_content_description_custom">Pontuação personalizada %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">“%1$s, %2$s</string>
+    <string name="rating_button_content_description">%1$s, %2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="one">de %s pt</item>
@@ -464,7 +465,7 @@
     <string name="feedback_form">Formulário de feedback</string>
     <string name="see_all">Ver Todos</string>
     <string name="all_courses">Todos os cursos</string>
-    <string name="welcome">Bem-vindo(a)</string>
+    <string name="welcome">Bem-vindo(a)!</string>
     <string name="empty_course_list_message">Adicione alguns dos seus cursos para tornar este lugar a sua casa.</string>
     <string name="add_courses">Adicionar Cursos</string>
     <string name="unable_to_add_course_to_favorites">Este curso não pode ser adicionado aos menus dos cursos nesse momento.</string>
@@ -472,13 +473,15 @@
     <string name="assignments">Tarefas</string>
     <string name="clear_filter">Limpar Filtro</string>
     <string name="due">Vencimento %1$s</string>
+    <string name="updated">Atualizado %1$s</string>
+
     <plurals name="needsGradingCount">
-        <item quantity="one">%s precisa de avaliação</item>
-        <item quantity="other">%s precisam de avaliação</item>
+        <item quantity="one">%s precisa de classificação</item>
+        <item quantity="other">%s precisam de classificação</item>
     </plurals>
     <plurals name="needsGradingNoQuantity">
         <item quantity="one">Precisa de classificação</item>
-        <item quantity="other">Precisam de avaliação</item>
+        <item quantity="other">Precisam de classificação</item>
     </plurals>
     <string name="at">às</string>
     <plurals name="quantityPointsAbbreviated">
@@ -498,7 +501,7 @@
         <item quantity="other">%d grupos</item>
     </plurals>
     <string name="cmp_closed">Fechado</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022  </string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">favorito</string>
     <string name="content_description_not_favorite">não favorito</string>
@@ -530,10 +533,9 @@
     <string name="contentDescriptionFileIcon">Ícone de Arquivo</string>
     <string name="contentDescriptionExpandPage">Expandir página</string>
     <string name="contentDescriptionCollapsePage">Recolher página</string>
-
     <string name="noInternetConnectionTitle">Sem conexão à internet</string>
     <string name="noInternetConnectionMessage">Esta ação exige conexão à internet.</string>
-  
+
     <string name="emptyDetailsMessage">Toque em um item na lista para visualizar os detalhes.</string>
 
     <string name="assignmentQuizzes">Questionários da tarefa</string>
@@ -548,12 +550,12 @@
     <string name="successfullyUpdatedQuiz">Questionário atualizado com sucesso.</string>
     <string name="quizType">Tipo de questionário</string>
 
-    <string name="practiceQuiz">Praticar teste</string>
+    <string name="practiceQuiz">Questionário de prática</string>
     <string name="gradedQuiz">Questionário avaliado</string>
     <string name="gradedSurvey">Pesquisa avaliada</string>
     <string name="ungradedSurvey">Pesquisa sem avaliação</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -564,7 +566,7 @@
     <string name="quizStatusComplete">Concluído</string>
     <string name="quizStatusPendingReview">Revisão pendente</string>
     <string name="quizStatusInProgress">Em progresso</string>
-    <string name="quizStatusNotStarted">Não começou</string>
+    <string name="quizStatusNotStarted">Não Começou</string>
 
 
     <string name="quiz_settings_label_quiz_type">Tipo de questionário:</string>
@@ -600,7 +602,7 @@
     <string name="quiz_details_no_points_assigned">Sem pontos atribuídos</string>
 
     <string name="quiz_details_from_to">De %1$s a %2$s</string>
-    <string name="quiz_details_after">Depois %1$s</string>
+    <string name="quiz_details_after">Após %1$s</string>
     <string name="quiz_details_until">Até %1$s</string>
     <string name="continueWithoutSavingTitle">Continuar sem salvar?</string>
     <string name="continueWithoutSavingMessage">Tem certeza de que deseja continuar sem salvar?</string>
@@ -622,15 +624,15 @@
 
     <string name="discussion_details">Detalhes da discussão</string>
     <string name="discussions_pinned">Fixado</string>
-    <string name="discussions_unpinned">Discussões</string>
+    <string name="discussions_unpinned">Discussions (Discussões)</string>
     <string name="discussions_closed">Fechado para comentários</string>
     <string name="discussions_open">Reabrir para comentários</string>
     <string name="discussions_pin">Fixar</string>
     <string name="discussions_unpin">Desafixar</string>
     <string name="contentDescriptionDiscussionsOverflow">Mais opções</string>
     <string name="discussions_options">Opções</string>
-    <string name="discussions_replies" formatted="false">%s Respostas</string>
-    <string name="discussions_unread" formatted="false">%s Não lido</string>
+    <string name="discussions_replies" formatted="false">%s respostas</string>
+    <string name="discussions_unread" formatted="false">%s Não lido(s)</string>
     <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
     <string name="discussions_delete_warning">Tem certeza de que deseja excluir esta resposta?</string>
     <string name="discussions_replies_title">Respostas</string>
@@ -650,8 +652,8 @@
     <string name="submissionIsMediaFile">Esse envio é um arquivo de mídia</string>
     <string name="tryAgain">Tente novamente</string>
     <string name="couldNotPlayFormat">Este formato de mídia não é suportado</string>
-    <string name="openWithAnotherApp">Abrir com...</string>
-    
+    <string name="openWithAnotherApp">Abrir com&#8230;</string>
+
     <string name="speedgraderCommentAddedSubmission">Tarefa enviada. Toque para visualizar.</string>
     <string name="speedgraderCommentSubmittedFiles">Arquivos enviados:</string>
     <string name="no_submission_comments">Não há comentários sobre o envio</string>
@@ -800,4 +802,92 @@
     <string name="markAllAsPresent">Marcar todos como presentes</string>
     <string name="calendar">Calendário</string>
     <string name="filterSections">Filtrar seções</string>
+    <string name="addVideoComment">Adicionar um comentário de vídeo</string>
+    <string name="addAudioComment">Adicionar um comentário de áudio</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d horas, %2$d minutos e %3$d segundos</string>
+    <string name="recordingTimerSpeechDivider">%1$s de %2$s</string>
+    <string name="replay">Replay</string>
+    <string name="stop">Parar</string>
+    <string name="startRecordingAudio">Começar gravação de áudio</string>
+    <string name="stopRecordingAudio">Parar gravação de áudio</string>
+    <string name="startRecordingVideo">Começar gravação de vídeo</string>
+    <string name="stopRecordingVideo">Parar gravação de vídeo</string>
+    <string name="closeRecordingView">Fechar visualização de gravação</string>
+    <string name="deleteRecording">Excluir gravação</string>
+    <string name="videoCommentReplay">Replay do comentário de vídeo</string>
+    <string name="addMediaComment">Adicionar comentário de mídia</string>
+    <string name="copyrightHolder">Titular do Copyright</string>
+    <string name="access">Acesso</string>
+    <string name="usageRights">Direitos de uso</string>
+    <string name="deleteFile">Excluir arquivo</string>
+    <string name="holdCopyright">Eu posso o copyright</string>
+    <string name="havePermission">Tenho permissão para usar o arquivo</string>
+    <string name="publicDomain">Arquivo de domínio público</string>
+    <string name="fairUse">Exceção de uso justo</string>
+    <string name="creativeCommons">Arquivo do Creative Commons</string>
+    <string name="editFile">Editar arquivo</string>
+    <string name="deleteFolder">Excluir pasta</string>
+    <string name="editFolder">Editar pasta</string>
+    <string name="deleteFileMessage">Tem certeza de que deseja excluir esse arquivo?</string>
+    <string name="deleteFolderMessage">Tem certeza de que deseja excluir essa pasta? Todo conteúdo dessa pasta também será excluído.</string>
+    <string name="newFolder">Nova pasta</string>
+    <string name="createAFolder">Criar uma pasta</string>
+    <string name="createFolder">Criar Pasta</string>
+    <string name="createAFile">Criar um arquivo</string>
+    <string name="createFileFolderFabContentDesc">Mostrar botões Criar arquivo e Criar pasta</string>
+    <string name="unpublish">Cancelar publicação</string>
+    <string name="restrictedAccess">Acesso Restrito</string>
+    <string name="restricted">Restrito</string>
+    <string name="hidden">Ocultos, os arquivos internos ficarão disponíveis com links.</string>
+    <string name="studentsWithLink">Disponível apenas para alunos com link. Indisponível nos arquivos de alunos.</string>
+    <string name="scheduleAvailability">Agendar disponibilidade do aluno</string>
+    <string name="folderCreationError">Um erro ocorreu durante a criação da pasta.</string>
+
+    <string name="setAsFrontPage">Definir como primeira página</string>
+    <string name="canEdit">Pode editar</string>
+    <string name="pageDetails">Detalhes da página</string>
+    <string name="pageSuccessfullyUpdated">Página atualizada com sucesso.</string>
+    <string name="pageSuccessfullyCreated">Página criada com sucesso.</string>
+    <string name="editPageTitle">Editar página</string>
+    <string name="createPageTitle">Criar página</string>
+    <string name="pageTitleMustBeSet">O título da página deve ser definido.</string>
+    <string name="pageDeleteTitle">Excluir página?</string>
+    <string name="pageDelete">Excluir página</string>
+    <string name="pageDeleteMessage">Isso excluirá a página. Essa ação não pode ser desfeita.</string>
+    <string name="errorSavingPage">Ocorreu um erro ao tentar salvar essa página. Tente novamente.</string>
+    <string name="frontPageUnpublishedError">Uma página não pode ser a primeira página e não ser publicada.</string>
+
+    <string name="onlyTeachers">Apenas professores</string>
+    <string name="teachersAndStudents">Professores e alunos</string>
+    <string name="anyone">Qualquer pessoa</string>
+    <string name="groupMembers">Apenas membros</string>
+    <string name="license">Licença</string>
+    <string name="availableFromAfterTo">A data final de disponibilidade não pode ser depois da data inicial</string>
+    <string name="errorDeletingFile">Ocorreu um erro ao excluir esse arquivo</string>
+    <string name="errorDeletingFolder">Ocorreu um erro ao excluir essa pasta</string>
+    <string name="errorUpdatingFile">Ocorreu um erro ao atualizar esse arquivo</string>
+    <string name="errorUpdatingFolder">Ocorreu um erro ao atualizar essa pasta</string>
+
+    <string name="toDoEmpty">Nada mais para fazer!\n Aproveite o seu dia.</string>
+    <string name="toDoNoSubmissions">Não há envios para avaliar para essa tarefa.</string>
+    <string name="errorToDoRouteFailed">Ocorreu um erro ao tentar visualizar o item da lista de tarefas.</string>
+    <string name="errorIsDesigner">Matrícula do designer não pode visualizar isso.</string>
+
+    <string name="sections">Seções</string>
+    <string name="filterBy">Filtrar por&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">para %s</string>
+    <string name="filterBySection">Filtrar por seção</string>
+    <string name="filterSubmissionsLowercase">Filtrar envios</string>
+
+    <string name="latePenalty">Penalidade por atraso</string>
+    <string name="finalGrade">Nota final</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s pt</item>
+        <item quantity="other">-%s pts</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s ponto</item>
+        <item quantity="other">-%s pontos</item>
+    </plurals>
 </resources>

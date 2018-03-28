@@ -17,10 +17,8 @@
 
 package com.instructure.canvasapi2.utils.weave
 
-import android.os.AsyncTask
 import com.instructure.canvasapi2.StatusCallback
 import kotlinx.coroutines.experimental.*
-import kotlinx.coroutines.experimental.android.HandlerContext
 import kotlinx.coroutines.experimental.android.UI
 import retrofit2.Call
 import retrofit2.Response
@@ -39,7 +37,12 @@ internal typealias SuccessCall<T> = (payload: T) -> Unit
 internal typealias ErrorCall = (error: StatusCallbackError) -> Unit
 
 /** Convenience class to hold the information returned in [StatusCallback.onFailure] */
-class StatusCallbackError(val call: Call<*>? = null, val error: Throwable? = null, val response: Response<*>? = null) : Throwable()
+class StatusCallbackError(val call: Call<*>? = null, val error: Throwable? = null, val response: Response<*>? = null) : Throwable(error)
+
+abstract class Blockable<T> {
+    open fun complete(result: T){}
+    open fun cancel(){}
+}
 
 /**
  * A partial generator interface usable by code designed to suspend coroutine execution indefinitely
@@ -61,10 +64,22 @@ interface Stitcher {
  * WeaveCoroutine - A Coroutine class customized to meet the specific needs of our applications. This
  * includes a modular exception handler, Stitcher support, [onUI] and [inBackground] functions.
  */
-abstract class WeaveCoroutine(coroutineContext: CoroutineContext) : AbstractCoroutine<Unit>(coroutineContext, true) {
-    var onException: ((e: Throwable) -> Unit)? = null
-    abstract fun onUI(block: () -> Unit)
-    abstract suspend fun <T> inBackground(block: () -> T): T
+class WeaveCoroutine(private val parentContext: CoroutineContext) : AbstractCoroutine<Unit>(parentContext, true) {
+    fun onUI(block: () -> Unit) {
+        if (isUnitTesting) block() else UI.dispatch(parentContext, Runnable(block))
+    }
+
+    suspend fun <T> inBackground(block: suspend CoroutineScope.() -> T): T {
+        return async(context = CommonPool, block = block).await()
+    }
+
+    override fun afterCompletion(state: Any?, mode: Int) {
+        if (state is CompletedExceptionally) {
+            if (state.exception is CancellationException) return
+            if (context[Job]?.cancel(state.exception) == true) return
+            handleCoroutineException(parentContext, state.exception)
+        }
+    }
 
     // region Stitcher
     private var stitcher: Stitcher? = null
@@ -80,66 +95,26 @@ abstract class WeaveCoroutine(coroutineContext: CoroutineContext) : AbstractCoro
 }
 
 /**
- * An Android-UI-thread-aware implementation of [WeaveCoroutine].
- */
-class AndroidCoroutine(private val handlerContext: HandlerContext = UI) : WeaveCoroutine(handlerContext) {
-    override fun afterCompletion(state: Any?, mode: Int) {
-        if (state is CompletedExceptionally) {
-            if (onException != null) {
-                if (state.exception is CancellationException) return
-                if (context[Job]?.cancel(state.exception) == true) return
-                state.exception.printStackTrace()
-                onException?.invoke(state.exception)
-            } else {
-                handleCoroutineException(handlerContext, state.exception)
-            }
-        }
-    }
-
-    override fun onUI(block: () -> Unit) {
-        handlerContext.dispatch(handlerContext, Runnable { block() })
-    }
-
-    override suspend fun <T> inBackground(block: () -> T): T = suspendCancellableCoroutine { continuation ->
-        val task = object : AsyncTask<Void, Void, T>() {
-            override fun doInBackground(vararg params: Void?) = block()
-            override fun onPostExecute(result: T) = continuation.resumeSafely(result)
-        }
-        continuation.invokeOnCompletion({ if (continuation.isCancelled) task.cancel(true) }, true)
-        task.execute()
-    }
-}
-
-
-/**
- * A [WeaveCoroutine] implementation which uses a common thread pool instead of Android's UI thread.
- * This will be used in place of [AndroidCoroutine] if we're running on the JVM (à la unit tests)
- * to avoid invoking Android-specific APIs.
- */
-class TestCoroutine : WeaveCoroutine(CommonPool) {
-    override fun onUI(block: () -> Unit) = block()
-    suspend override fun <T> inBackground(block: () -> T) = block()
-}
-
-/**
  * Begins a [WeaveCoroutine]
  */
-fun weave(block: suspend WeaveCoroutine.() -> Unit): WeaveCoroutine {
-    val coroutine: WeaveCoroutine
-    if (isUnitTesting) {
-        coroutine = TestCoroutine()
-        coroutine.initParentJob(CommonPool[Job])
-    } else {
-        coroutine = AndroidCoroutine()
-        coroutine.initParentJob(UI[Job])
-    }
+fun weave(background: Boolean = false, block: suspend WeaveCoroutine.() -> Unit): WeaveCoroutine {
+    val context = if (isUnitTesting || background) CommonPool else UI
+    val coroutine = WeaveCoroutine(context)
+    coroutine.initParentJob(coroutine[Job])
     CoroutineStart.DEFAULT(block, coroutine, coroutine)
     return coroutine
 }
 
 /** Resumes the continuation (with the provided exception) if allowed by the current state. */
-fun <T> CancellableContinuation<T>.resumeSafelyWithException(e: Throwable) {
-    if (isActive && !isCancelled && !isCompleted) resumeWithException(e)
+fun <T> CancellableContinuation<T>.resumeSafelyWithException(
+    e: Throwable,
+    stackTrace: Array<out StackTraceElement>? = null
+) {
+    if (isActive && !isCancelled && !isCompleted) {
+        stackTrace?.let { e.stackTrace = it }
+        e.printStackTrace()
+        resumeWithException(e)
+    }
 }
 
 /** Resumes the continuation if allowed by the current state. */
@@ -147,15 +122,46 @@ fun <T> CancellableContinuation<T>.resumeSafely(payload: T) {
     if (isActive && !isCancelled && !isCompleted) resume(payload)
 }
 
+suspend fun <T> awaitBlockable(managerCall: (Blockable<T>) -> Unit): T {
+    return suspendCancellableCoroutine { continuation ->
+        val callback = object : Blockable<T>() {
+            override fun complete(result: T) {
+                continuation.resume(result)
+            }
+        }
+        continuation.invokeOnCompletion({ if(continuation.isCancelled) callback.cancel() }, onCancelling = true)
+        managerCall(callback)
+    }
+}
+
 /**
- * A lazy check to see if we're running unit tests, based on the assumption that [AndroidCoroutine]
- * will fail to initialize on the JVM.
+ * A lazy check to see if we're running unit tests, based on the assumption that [WeaveCoroutine]
+ * will fail to initialize on the JVM if it tries to use HandlerContext.
  */
 internal val isUnitTesting: Boolean by lazy {
     try {
-        AndroidCoroutine()
+        WeaveCoroutine(UI)
         false
     } catch (ignore: Throwable) {
         true
+    }
+}
+
+/**
+ * DO NOT CALL THIS ON THE UI THREAD.
+ *
+ * Sleeps the current thread until this coroutine is complete or canceled and throws a [TimeoutException] if execution
+ * time exceeds the specified [timeout] (milliseconds). Default timeout is 60 seconds. Specifying a [timeout] of 0
+ * will cause the timeout to be ignored.
+ *
+ * @throws TimeoutException
+ */
+fun WeaveCoroutine.runBlocking(timeout: Long = 60_000) {
+    val startTime = System.currentTimeMillis()
+    while (!isCompleted && !isCancelled) {
+        if (timeout > 0 && System.currentTimeMillis() - startTime > timeout) {
+            throw TimeoutException("Weave execution exceeded timeout of $timeout milliseconds")
+        }
+        Thread.sleep(50)
     }
 }

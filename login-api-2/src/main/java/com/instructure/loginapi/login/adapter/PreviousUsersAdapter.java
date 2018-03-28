@@ -16,7 +16,6 @@
  */
 package com.instructure.loginapi.login.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -40,7 +39,6 @@ public class PreviousUsersAdapter extends RecyclerView.Adapter<PreviousUsersAdap
         void onNowEmpty();
     }
 
-    private Context mContext;
     private PreviousUsersEvents mCallback;
     private ArrayList<SignedInUser> mPreviousUsers = new ArrayList<>();
 
@@ -51,14 +49,13 @@ public class PreviousUsersAdapter extends RecyclerView.Adapter<PreviousUsersAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mContext = parent.getContext();
         return new PreviousUsersAdapter.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_previous_users, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         SignedInUser user = mPreviousUsers.get(position);
-        ProfileUtils.configureAvatarView(mContext, user.user, holder.userAvatar);
+        ProfileUtils.loadAvatarForUser(holder.userAvatar, user.user.getName(), user.user.getAvatarUrl());
         holder.userName.setText(user.user.getName());
         holder.schoolDomain.setText(user.domain);
 
@@ -103,9 +100,9 @@ public class PreviousUsersAdapter extends RecyclerView.Adapter<PreviousUsersAdap
 
         public ViewHolder(View itemView) {
             super(itemView);
-            userAvatar = (CircleImageView) itemView.findViewById(R.id.usersAvatar);
-            userName = (TextView) itemView.findViewById(R.id.userName);
-            schoolDomain = (TextView) itemView.findViewById(R.id.schoolDomain);
+            userAvatar = itemView.findViewById(R.id.usersAvatar);
+            userName = itemView.findViewById(R.id.userName);
+            schoolDomain = itemView.findViewById(R.id.schoolDomain);
             removeUser = itemView.findViewById(R.id.removePreviousUser);
         }
     }

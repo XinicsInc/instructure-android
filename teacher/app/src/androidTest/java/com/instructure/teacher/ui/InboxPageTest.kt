@@ -17,22 +17,26 @@
 
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.clickInboxTab
-import com.instructure.teacher.ui.utils.logIn
+import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
 class InboxPageTest: TeacherTest() {
     @Test
     override fun displaysPageObjects() {
-        logIn()
+        val teacher = seedData(teachers = 1, courses = 1).teachersList[0]
+        tokenLogin(teacher)
         coursesListPage.clickInboxTab()
         inboxPage.assertPageObjects()
     }
 
     @Test
     fun displaysConversation() {
-        logIn()
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val teacher = data.teachersList[0]
+        val student = data.studentsList[0]
+        seedConversation(student, listOf(teacher))
+
+        tokenLogin(teacher)
         coursesListPage.clickInboxTab()
         inboxPage.assertHasConversation()
     }

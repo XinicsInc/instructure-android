@@ -17,12 +17,13 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +34,11 @@ import android.widget.Toast;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.AssignmentDateListRecyclerAdapter;
-import com.instructure.candroid.adapter.AssignmentGroupListRecyclerAdapter;
 import com.instructure.candroid.adapter.ExpandableRecyclerAdapter;
 import com.instructure.candroid.adapter.TermSpinnerAdapter;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
 import com.instructure.candroid.interfaces.AdapterToAssignmentsCallback;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.interfaces.GradingPeriodsCallback;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.Param;
@@ -47,18 +48,23 @@ import com.instructure.canvasapi2.models.AssignmentGroup;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.GradingPeriod;
 import com.instructure.canvasapi2.models.GradingPeriodResponse;
-import com.instructure.canvasapi2.models.Tab;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 
 import java.util.ArrayList;
 
+import retrofit2.Response;
+
+@PageView(url = "{canvasContext}/assignments")
 public class AssignmentListFragment extends ParentFragment {
 
     private View mRootView;
     private AdapterToAssignmentsCallback mAdapterToAssignmentsCallback;
     private ExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder> mRecyclerAdapter;
-
+    private Toolbar mToolbar;
     private Spinner mTermSpinner;
     private RelativeLayout mTermSpinnerLayout;
     private TermSpinnerAdapter mTermAdapter;
@@ -67,21 +73,18 @@ public class AssignmentListFragment extends ParentFragment {
     private StatusCallback<GradingPeriodResponse> mGradingPeriodsCallback;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.MASTER; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.MASTER; }
 
     @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.assignments);
     }
 
     @Override
     protected String getSelectedParamName() {
         return Param.ASSIGNMENT_ID;
-    }
-
-    @Override
-    public String getTabId() {
-        return Tab.ASSIGNMENTS_ID;
     }
 
     @Override
@@ -97,6 +100,7 @@ public class AssignmentListFragment extends ParentFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.assignment_list_layout, container, false);
+        mToolbar = mRootView.findViewById(R.id.toolbar);
         setUpCallbacks();
         mAdapterToAssignmentsCallback = new AdapterToAssignmentsCallback() {
             @Override
@@ -116,7 +120,7 @@ public class AssignmentListFragment extends ParentFragment {
             public void onRowClicked(Assignment assignment, int position, boolean isOpenDetail) {
                 Navigation navigation = getNavigation();
                 if(navigation != null){
-                    Bundle bundle = AssignmentFragment.createBundle((Course) getCanvasContext(), assignment);
+                    Bundle bundle = AssignmentFragment.Companion.createBundle((Course) getCanvasContext(), assignment);
                     navigation.addFragment(
                             FragUtils.getFrag(AssignmentFragment.class, bundle));
                 }
@@ -130,12 +134,11 @@ public class AssignmentListFragment extends ParentFragment {
 
         // Just load the AssignmentGroup list in the case that its a Group
         mRecyclerAdapter = new AssignmentDateListRecyclerAdapter(getContext(), getCanvasContext(), mGradingPeriodsCallback, mAdapterToAssignmentsCallback);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
 
-        configureRecyclerViewAsGrid(mRootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
-
-        mTermSpinner = (Spinner) mRootView.findViewById(R.id.termSpinner);
-        mTermSpinnerLayout = (RelativeLayout)mRootView.findViewById(R.id.termSpinnerLayout);
-        AppBarLayout appBarLayout = (AppBarLayout) mRootView.findViewById(R.id.appbar);
+        mTermSpinner = mRootView.findViewById(R.id.termSpinner);
+        mTermSpinnerLayout = mRootView.findViewById(R.id.termSpinnerLayout);
+        AppBarLayout appBarLayout = mRootView.findViewById(R.id.appbar);
         View shadow = mRootView.findViewById(R.id.shadow);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             shadow.setVisibility(View.GONE);
@@ -158,6 +161,14 @@ public class AssignmentListFragment extends ParentFragment {
         return mRootView;
     }
 
+    @Override
+    public void applyTheme() {
+        setupToolbarMenu(mToolbar);
+        mToolbar.setTitle(title());
+        PandaViewUtils.setupToolbarBackButton(mToolbar, this);
+        ViewStyler.themeToolbar(getActivity(), mToolbar, getCanvasContext());
+    }
+
     private void setUpCallbacks(){
         /*
          *This code is similar to code in the GradeListFragment.
@@ -165,7 +176,7 @@ public class AssignmentListFragment extends ParentFragment {
          */
         mGradingPeriodsCallback = new StatusCallback<GradingPeriodResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<GradingPeriodResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<GradingPeriodResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 mGradingPeriodsList = new ArrayList<>();
                 mGradingPeriodsList.addAll(response.body().getGradingPeriodList());
                 //add "select all" option
@@ -209,12 +220,8 @@ public class AssignmentListFragment extends ParentFragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        configureRecyclerViewAsGrid(mRootView,  mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void handleIntentExtras(Bundle extras) {
@@ -230,5 +237,11 @@ public class AssignmentListFragment extends ParentFragment {
         if (mRecyclerAdapter != null) {
             mRecyclerAdapter.addOrUpdateItem(mRecyclerAdapter.getGroup(assignment.getAssignmentGroupId()), assignment);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGradingPeriodsCallback.cancel();
     }
 }

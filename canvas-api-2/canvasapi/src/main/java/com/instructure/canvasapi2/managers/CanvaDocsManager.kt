@@ -60,7 +60,7 @@ object CanvaDocsManager : BaseManager() {
         }
     }
 
-    fun createAnnotation(sessionId: String, annotation: CanvaDocAnnotation, canvaDocDomain: String, callback: StatusCallback<CanvaDocAnnotation>) {
+    fun putAnnotation(sessionId: String, annotationId: String, annotation: CanvaDocAnnotation, canvaDocDomain: String, callback: StatusCallback<CanvaDocAnnotation>) {
         if (BaseManager.isTesting() || mTesting) {
             //todo
         } else {
@@ -72,23 +72,7 @@ object CanvaDocsManager : BaseManager() {
                     .withShouldIgnoreToken(false)
                     .build()
 
-            CanvaDocsAPI.createAnnotation(sessionId, annotation, adapter, params, callback)
-        }
-    }
-
-    fun updateAnnotation(sessionId: String, annotationId: String, annotation: CanvaDocAnnotation, canvaDocDomain: String, callback: StatusCallback<Void>) {
-        if (BaseManager.isTesting() || mTesting) {
-            //todo
-        } else {
-            val adapter = RestBuilder(callback)
-            val params = RestParams.Builder()
-                    .withDomain(canvaDocDomain)
-                    .withAPIVersion("")
-                    .withPerPageQueryParam(false)
-                    .withShouldIgnoreToken(false)
-                    .build()
-
-            CanvaDocsAPI.updateAnnotation(sessionId, annotationId, annotation, adapter, params, callback)
+            CanvaDocsAPI.putAnnotation(sessionId, annotationId, annotation, adapter, params, callback)
         }
     }
 

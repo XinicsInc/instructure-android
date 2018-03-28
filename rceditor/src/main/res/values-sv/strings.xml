@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -15,11 +15,12 @@
   ~     limitations under the License.
   ~
   -->
+
 <resources>
     <string name="rce_contentDescription_undo">Ångra</string>
     <string name="rce_contentDescription_redo">Göra om</string>
     <string name="rce_contentDescription_bold">Formatera fet</string>
-    <string name="rce_contentDescription_italic">Format Italic</string>
+    <string name="rce_contentDescription_italic">Formatera kursiv</string>
     <string name="rce_contentDescription_strikethrough">Struken igenom</string>
     <string name="rce_contentDescription_underline">Understruken</string>
     <string name="rce_contentDescription_format_text_color">Formatera textfärg</string>
@@ -59,7 +60,7 @@
     <string name="rce_cancel">Avbryt</string>
     <string name="rce_exit">Gå ur</string>
     <string name="rce_dialog_exit_title">Avsluta uppdragsredigering?</string>
-    <string name="rce_dialog_exit_message">Är du säger på att du vill avsluta? Icke sparad data kommer att förloras.</string>
+    <string name="rce_dialog_exit_message">Är du säger på att du vill avsluta?Icke sparad data kommer att förloras.</string>
     <string name="rce_empty_message">Meddelande</string>
     <string name="rce_empty_description">Lägg till beskrivning</string>
     <string name="rce_scrollInstructions">Skrolla för alla redigeringsverktyg</string>

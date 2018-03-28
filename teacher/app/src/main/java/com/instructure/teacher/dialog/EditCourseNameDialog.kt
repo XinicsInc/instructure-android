@@ -85,11 +85,7 @@ class EditCourseNameDialog : AppCompatDialogFragment() {
         params.gravity = Gravity.CENTER or Gravity.TOP
         params.y = 120
         nameDialog.window.attributes = params
-        nameDialog.window.setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN or
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-
+        nameDialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 
         nameDialog.setOnShowListener {
             nameDialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)

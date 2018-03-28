@@ -18,15 +18,16 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import com.instructure.annotations.FileCaching.FileCache
+import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.PSPDFKit.FileCache
 import com.instructure.teacher.R
 import com.instructure.teacher.events.FileFolderDeletedEvent
 import com.instructure.teacher.events.FileFolderUpdatedEvent
 import com.instructure.teacher.models.EditableFile
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import kotlinx.android.synthetic.main.fragment_internal_webview.*

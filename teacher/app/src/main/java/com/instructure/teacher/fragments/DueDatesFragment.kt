@@ -25,9 +25,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.bind
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.DueDatesAdapter
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
@@ -35,7 +33,7 @@ import com.instructure.teacher.factory.DueDatesPresenterFactory
 import com.instructure.teacher.holders.DueDateViewHolder
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.presenters.DueDatesPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.EmptyPandaView

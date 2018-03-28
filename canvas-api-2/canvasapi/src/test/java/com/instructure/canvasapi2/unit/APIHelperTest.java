@@ -61,12 +61,14 @@ public class APIHelperTest {
     public void isCachedResponse() throws Exception {
         Response cacheResponse = new okhttp3.Response.Builder() //
                 .code(200)
+                .message("")
                 .protocol(Protocol.HTTP_1_1)
                 .request(new Request.Builder().url("http://localhost/").build())
                 .build();
 
         Response response = new okhttp3.Response.Builder() //
                 .code(200)
+                .message("")
                 .protocol(Protocol.HTTP_1_1)
                 .request(new Request.Builder().url("http://localhost/").build())
                 .cacheResponse(cacheResponse)

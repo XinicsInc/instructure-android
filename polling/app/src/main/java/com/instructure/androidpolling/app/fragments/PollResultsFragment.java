@@ -20,6 +20,7 @@ package com.instructure.androidpolling.app.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -322,7 +323,7 @@ public class PollResultsFragment extends PaginatedListFragment<PollChoice>  {
     public void setupCallbacks() {
         pollChoiceCallback = new StatusCallback<PollChoiceResponse>() {
             @Override
-            public void onResponse(Response<PollChoiceResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollChoiceResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<PollChoice> pollChoices = response.body().getPollChoices();
@@ -347,7 +348,7 @@ public class PollResultsFragment extends PaginatedListFragment<PollChoice>  {
 
         closePollCallback = new StatusCallback<ResponseBody>() {
             @Override
-            public void onResponse(Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 if(response.code() == 200) {
@@ -367,7 +368,7 @@ public class PollResultsFragment extends PaginatedListFragment<PollChoice>  {
 
         updatePollSessionCallback = new StatusCallback<PollSessionResponse>() {
             @Override
-            public void onResponse(Response<PollSessionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollSessionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<PollSession> pollSessions = response.body().getPollSessions();
@@ -380,7 +381,7 @@ public class PollResultsFragment extends PaginatedListFragment<PollChoice>  {
 
         pollSessionCallback = new StatusCallback<PollSessionResponse>() {
             @Override
-            public void onResponse(Response<PollSessionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollSessionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<PollSession> pollSessions = response.body().getPollSessions();

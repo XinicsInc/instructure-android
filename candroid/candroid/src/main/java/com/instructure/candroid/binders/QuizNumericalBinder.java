@@ -30,7 +30,7 @@ import com.instructure.candroid.holders.QuizNumericalViewHolder;
 import com.instructure.candroid.interfaces.QuizPostNumerical;
 import com.instructure.candroid.interfaces.QuizToggleFlagState;
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.views.CanvasWebView;
 
 
@@ -79,26 +79,27 @@ public class QuizNumericalBinder {
             @Override
             public void afterTextChanged(Editable editable) {
                 //save data after they're done typing
-                if(holder.answer.getText() != null && holder.answer.getText().toString() != null) {
+                if(holder.answer.getText() != null) {
                     numericalCallback.postNumerical(holder.questionId, editable.toString());
                 }
             }
         });
 
-        final Drawable courseColorFlag = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_bookmark_fill_grey, courseColor);
+        final Drawable courseColorFlag = ColorKeeper.getColoredDrawable(context, R.drawable.vd_bookmark_filled, courseColor);
 
         if(quizSubmissionQuestion.isFlagged()) {
             holder.flag.setImageDrawable(courseColorFlag);
         } else {
-            holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+            holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
         }
+
         if(shouldLetAnswer) {
             holder.flag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (quizSubmissionQuestion.isFlagged()) {
                         //unflag it
-                        holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+                        holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
                         flagStateCallback.toggleFlagged(false, quizSubmissionQuestion.getId());
                         quizSubmissionQuestion.setFlagged(false);
                     } else {

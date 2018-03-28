@@ -19,6 +19,7 @@ package com.instructure.candroid.holders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
@@ -27,12 +28,18 @@ public class RubricTopHeaderViewHolder extends RecyclerView.ViewHolder {
     public TextView pointsText;
     public TextView gradeText;
     public TextView mutedText;
+    public TextView finalGrade;
+    public TextView latePenalty;
+    public RelativeLayout latePolicy;
 
     public RubricTopHeaderViewHolder(View itemView) {
         super(itemView);
-        pointsText = (TextView) itemView.findViewById(R.id.currentPoints);
-        gradeText = (TextView) itemView.findViewById(R.id.currentGrade);
-        mutedText = (TextView) itemView.findViewById(R.id.mutedText);
+        pointsText = itemView.findViewById(R.id.currentPoints);
+        gradeText = itemView.findViewById(R.id.currentGrade);
+        mutedText = itemView.findViewById(R.id.mutedText);
+        finalGrade = itemView.findViewById(R.id.finalGrade);
+        latePenalty = itemView.findViewById(R.id.latePenalty);
+        latePolicy = itemView.findViewById(R.id.latePolicy);
     }
 
     public static int holderResId() {

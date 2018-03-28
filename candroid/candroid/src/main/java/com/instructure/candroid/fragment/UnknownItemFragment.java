@@ -17,9 +17,8 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,11 +26,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.StreamItem;
 import com.instructure.canvasapi2.utils.DateHelper;
+import com.instructure.pandautils.utils.ViewStyler;
 
 import java.util.Date;
 
@@ -48,13 +49,15 @@ public class UnknownItemFragment extends ParentFragment {
     private StreamItem streamItem;
 
     @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return "";
     }
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {
-        return FRAGMENT_PLACEMENT.DETAIL;
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {
+        return FragmentInteractions.Placement.DETAIL;
     }
 
     @Override
@@ -104,6 +107,12 @@ public class UnknownItemFragment extends ParentFragment {
             updatedDateTime.setVisibility(View.GONE);
         }
     }
+
+    @Override
+    public void applyTheme() {
+
+    }
+
 
     @Override
     public void handleIntentExtras(Bundle extras) {

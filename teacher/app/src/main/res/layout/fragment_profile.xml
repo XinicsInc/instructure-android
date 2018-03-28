@@ -34,23 +34,12 @@
         app:theme="@style/ToolBarStyle"
         tools:ignore="UnusedAttribute">
 
-        <com.instructure.teacher.view.CustomToolbarIconView
-            android:id="@+id/logoImageView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/toolbarIconPadding"
-            android:layout_marginTop="@dimen/toolbarIconPadding"
-            android:importantForAccessibility="no"
-            android:scaleType="centerCrop" />
-
         <TextView
             android:id="@+id/titleTextView"
             style="@style/ToolBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:paddingStart="24dp"
             android:singleLine="true"
             android:text="@string/tab_profile"
             tools:ignore="Deprecated,RtlSymmetry" />
@@ -129,22 +118,6 @@
                 android:layout_below="@+id/usersEmail"
                 android:paddingBottom="24dp"
                 tools:text="I changed my password everywhere to ‘incorrect.’ That way, when I forget, it reminds me, ‘Your password is incorrect.’" />
-
-
-            <TextView
-                android:id="@+id/masquerade"
-                style="@style/TextFont.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginStart="24dp"
-                android:gravity="center"
-                android:minWidth="130dp"
-                android:padding="12dp"
-                android:text="@string/masquerade"
-                android:textColor="@color/defaultTextGray"
-                android:textSize="16sp"
-                android:visibility="gone" />
 
         </RelativeLayout>
 

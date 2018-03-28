@@ -16,6 +16,7 @@
 
 package com.instructure.teacher.presenters;
 
+import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 
 import com.instructure.canvasapi2.StatusCallback;
@@ -87,7 +88,7 @@ public class ChooseRecipientsPresenter extends SyncPresenter<Recipient, ChooseRe
 
     private StatusCallback<List<Recipient>> mRecipientCallback = new StatusCallback<List<Recipient>>() {
         @Override
-        public void onResponse(Response<List<Recipient>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<Recipient>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             int idx;
             getData().beginBatchedUpdates();
             for (Recipient recipient : response.body()) {

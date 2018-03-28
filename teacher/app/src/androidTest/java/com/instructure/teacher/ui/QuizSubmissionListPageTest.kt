@@ -16,15 +16,15 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.dataseeding.util.ago
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.iso8601
+import com.instructure.soseedy.SeededData
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.CanvasUser
-import com.instructure.teacher.ui.models.Course
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
 class QuizSubmissionListPageTest : TeacherTest() {
-
-    var mCourse: Course? = null
 
     @Test
     override fun displaysPageObjects() {
@@ -34,15 +34,22 @@ class QuizSubmissionListPageTest : TeacherTest() {
 
     @Test
     fun displaysNoSubmissionsView() {
-        goToQuizSubmissionListPage()
+        goToQuizSubmissionListPage(
+                students = 0,
+                submissions = 0
+        )
         quizSubmissionListPage.assertDisplaysNoSubmissionsView()
     }
 
     @Test
     fun filterLateSubmissions() {
-        goToQuizSubmissionListPage()
+        goToQuizSubmissionListPage(
+                dueAt = 7.days.ago.iso8601
+        )
         quizSubmissionListPage.clickFilterButton()
+        quizSubmissionListPage.clickFilterSubmissions()
         quizSubmissionListPage.filterSubmittedLate()
+        quizSubmissionListPage.clickDialogPositive()
         quizSubmissionListPage.assertDisplaysClearFilter()
         quizSubmissionListPage.assertFilterLabelText(R.string.submitted_late)
         quizSubmissionListPage.assertHasSubmission()
@@ -50,41 +57,81 @@ class QuizSubmissionListPageTest : TeacherTest() {
 
     @Test
     fun filterPendingReviewSubmissions() {
-        goToQuizSubmissionListPage()
+        goToQuizSubmissionListPage(addQuestion = true)
         quizSubmissionListPage.clickFilterButton()
-        quizSubmissionListPage.filterPendingReview()
+        quizSubmissionListPage.clickFilterSubmissions()
+        quizSubmissionListPage.filterNotGraded()
+        quizSubmissionListPage.clickDialogPositive()
         quizSubmissionListPage.assertDisplaysClearFilter()
-        quizSubmissionListPage.assertFilterLabelText(R.string.quizStatusPendingReview)
+        quizSubmissionListPage.assertFilterLabelText(R.string.havent_been_graded)
         quizSubmissionListPage.assertHasSubmission()
     }
 
     @Test
     fun displaysQuizStatusComplete() {
-        goToQuizSubmissionListPage()
+        goToQuizSubmissionListPage(complete = true)
         quizSubmissionListPage.assertSubmissionStatusSubmitted()
     }
 
     @Test
     fun displaysQuizStatusMissing() {
-        goToQuizSubmissionListPage()
+        goToQuizSubmissionListPage(
+                students = 1,
+                submissions = 0,
+                dueAt = 1.days.ago.iso8601
+        )
         quizSubmissionListPage.assertSubmissionStatusMissing()
     }
 
     @Test
     fun messageStudentsWho() {
-        goToQuizSubmissionListPage()
+        val data = goToQuizSubmissionListPage()
+        val student = data.studentsList[0]
         quizSubmissionListPage.clickAddMessage()
         addMessagePage.assertPageObjects()
-        addMessagePage.assertHasStudentRecipient(getNextStudent(mCourse as Course))
+        addMessagePage.assertHasStudentRecipient(student)
     }
 
-    private fun goToQuizSubmissionListPage(): CanvasUser {
-        val teacher = logIn()
-        mCourse = getNextCourse()
-        coursesListPage.openCourse(mCourse as Course)
+    private fun goToQuizSubmissionListPage(
+            students: Int = 1,
+            submissions: Int = 1,
+            dueAt: String = "",
+            complete: Boolean = true,
+            addQuestion: Boolean = false): SeededData {
+        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
+        val course = data.coursesList[0]
+        val teacher = data.teachersList[0]
+        val quiz = seedQuizzes(
+                courseId = course.id,
+                quizzes = 1,
+                dueAt = dueAt,
+                published = !addQuestion,
+                teacherToken = teacher.token).quizzesList[0]
+
+        if (addQuestion) {
+            seedQuizQuestion(
+                    courseId = course.id,
+                    quizId = quiz.id,
+                    teacherToken = teacher.token
+            )
+
+            publishQuiz(
+                    courseId = course.id,
+                    quizId = quiz.id,
+                    teacherToken = teacher.token
+            )
+        }
+
+        for (s in 0 until submissions) {
+            seedQuizSubmission(course.id, quiz.id, data.studentsList[s].token, complete)
+        }
+
+        tokenLogin(teacher)
+        coursesListPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
-        quizListPage.clickQuiz(getNextQuiz())
+        quizListPage.clickQuiz(quiz)
         quizDetailsPage.openSubmissionsPage()
-        return teacher
+
+        return data
     }
 }

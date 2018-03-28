@@ -1,10 +1,13 @@
 package com.instructure.teacher.ui.pages
 
+import com.instructure.soseedy.Discussion
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.Discussion
-import com.instructure.teacher.ui.utils.*
+import com.instructure.teacher.ui.utils.OnViewWithId
+import com.instructure.teacher.ui.utils.assertDisplayed
+import com.instructure.teacher.ui.utils.click
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
+import com.instructure.teacher.ui.utils.waitForViewWithText
 
 class DiscussionsListPage : BasePage(), PageAssert by SimplePageAssert() {
 

@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:gravity="center"
-        style="@style/TextStyle.Primary.SingleLine"
+        style="@style/AdapterItemTitleText"
         android:layout_centerVertical="true"/>
 
     <View

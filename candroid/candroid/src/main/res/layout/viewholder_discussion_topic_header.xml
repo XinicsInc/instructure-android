@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,114 +15,57 @@
   ~
   -->
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:minHeight="?android:listPreferredItemHeight"
-    app:cardBackgroundColor="@color/white"
-    app:cardElevation="@dimen/card_elevation"
-    app:cardUseCompatPadding="true"
-    app:contentPadding="@dimen/card_inner_padding">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AdapterItem"
+    android:orientation="horizontal">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/icon"
+        style="@style/AdapterItemIcon"
+        android:importantForAccessibility="no"
+        tools:srcCompat="@drawable/vd_assignment" />
 
-        <RelativeLayout
-            android:id="@+id/titleContainer"
+    <LinearLayout
+        android:id="@+id/textContainer"
+        style="@style/AdapterItemTextContainer"
+        android:orientation="vertical">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <FrameLayout
-                android:id="@+id/iconContainer"
-                android:layout_width="@dimen/gridIconSize"
-                android:layout_height="@dimen/gridIconSize"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true">
-
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="@dimen/gridIconSize"
-                    android:layout_height="@dimen/gridIconSize"
-                    android:contentDescription="@string/icon"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_cv_speech_fill" />
-
-                <TextView
-                    android:id="@+id/unreadCount"
-                    android:layout_width="@dimen/gridIconSize"
-                    android:layout_height="@dimen/gridIconSize"
-                    android:gravity="center"
-                    android:paddingBottom="3dp"
-                    android:textColor="@color/white"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/title"
+                style="@style/AdapterItemTitleText"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/iconContainer"
-                android:layout_toLeftOf="@+id/pin"
-                android:layout_toRightOf="@id/iconContainer"
-                android:layout_toStartOf="@+id/pin">
-
-                <TextView
-                    android:id="@+id/title"
-                    style="@style/TextStyle.Primary.CardView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginStart="12dp"/>
-
-            </FrameLayout>
+                android:layout_weight="1"
+                tools:text="Discussion Title" />
 
             <ImageView
                 android:id="@+id/pin"
                 android:layout_width="@dimen/gridIconSizeSmall"
                 android:layout_height="@dimen/gridIconSizeSmall"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/pinned_icon"
+                android:contentDescription="@string/utils_pinnedIcon"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_pin"
-                android:visibility="visible" />
+                app:srcCompat="@drawable/vd_pin"
+                android:layout_marginStart="12dp"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/description"
-            style="@style/TextStyle.Secondary.CardView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/titleContainer" />
+            style="@style/AdapterItemDescriptionText"
+            tools:text="An assignment description with some length so we can ensure it looks amazing on every device!" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/description"
-            android:layout_marginTop="8dp">
+        <TextView
+            android:id="@+id/lastPost"
+            style="@style/AdapterItemDescriptionText"
+            tools:text="Last post: July 18, 2017"/>
 
-            <TextView
-                android:id="@+id/lastPost"
-                style="@style/TextStyle.Tertiary.SingleLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|start"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp" />
+    </LinearLayout>
 
-        </FrameLayout>
-
-    </RelativeLayout>
-
-</android.support.v7.widget.CardView>
+</LinearLayout>

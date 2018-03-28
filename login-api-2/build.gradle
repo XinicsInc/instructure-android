@@ -1,3 +1,5 @@
+import java.security.MessageDigest
+
 /*
  * Copyright (C) 2017 - present Instructure, Inc.
  *
@@ -16,29 +18,10 @@
  */
 
 apply plugin: 'com.android.library'
-apply from: '../private-data/merge-private-data.gradle'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
-repositories {
-    jcenter()
-    maven { url "https://jitpack.io" }
-    maven { url 'https://maven.google.com' }
-    flatDir {
-        dirs "../espresso/aars"
-    }
-}
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
-    }
-}
-
-String isTesting() {
+static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
         "true"
     } else {
@@ -47,28 +30,21 @@ String isTesting() {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
 
         vectorDrawables.useSupportLibrary = true
 
         /* Add private data */
-        mergePrivateData "login-api"
+        PrivateData.merge(project, "login-api")
 
         /* BuildConfig Fields */
         buildConfigField "boolean", "IS_TESTING", isTesting()
-
-        def privateProps = new Properties()
-        privateProps.load(new FileInputStream("$projectDir/private.properties"))
-        buildConfigField "String", "ZENDESK_DOMAIN", "\"${privateProps.zendeskDomain}\""
-        buildConfigField "String", "ZENDESK_CREDENTIALS", "\"${privateProps.zendeskCredentials}\""
-        buildConfigField "String", "ANONYMOUS_SCHOOL_DOMAIN", "\"${privateProps.anonymousSchoolDomain}\""
+        buildConfigField "String", "ANONYMOUS_SCHOOL_DOMAIN", "\"$anonymousSchoolDomain\""
     }
 
     buildTypes {
@@ -110,30 +86,30 @@ configurations {
 
 dependencies {
     /* Modules */
-    compile project(path: ':canvas-api-2', configuration: 'default')
-    compile project(path: ':pandautils', configuration: 'default')
+    api project(path: ':pandautils')
 
     /* Test Dependencies */
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.3.2'
+    testImplementation Libs.JUNIT
+    testImplementation Libs.ROBOLECTRIC
 
     /* AndroidTest Dependencies */
-    androidTestCompile 'junit:junit:4.12'
-    androidTestCompile project(':espresso')
+    androidTestImplementation Libs.JUNIT
+    androidTestImplementation project(':espresso')
 
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.okhttp3:okhttp:3.7.0'
-    compile('com.squareup.retrofit2:retrofit:2.2.0') {
-        exclude module: 'okhttp'
-    }
-
-    compile rootProject.ext.supportDependencies.supportAnnotation
-    compile rootProject.ext.supportDependencies.appCompat
-    compile rootProject.ext.supportDependencies.supportLibV13
+    /* Support Dependencies */
+    implementation Libs.SUPPORT_ANNOTATION
+    implementation Libs.SUPPORT_APPCOMPAT
+    implementation Libs.SUPPORT_DESIGN
+    implementation Libs.SUPPORT_V13
+    implementation Libs.SUPPORT_RECYCLERVIEW
 }
 
 task copySnickerDoodles(type: Copy) {
     println("Copying Snicker Doodles")
+
+    def md5 = { File file ->
+        MessageDigest.getInstance("MD5").digest(file.bytes).encodeHex().toString()
+    }
 
     String baseDir = "$rootDir/../../"
     def snickerFileName = "snickers.json"
@@ -143,9 +119,9 @@ task copySnickerDoodles(type: Copy) {
     if(snickers.exists()) {
         String dest = "$rootDir/../login-api-2/src/main/res/raw"
 
-        File destDirFile = new File("$dest");
+        File destDirFile = new File("$dest")
         if(!destDirFile.exists()) {
-            destDirFile.mkdir();
+            destDirFile.mkdir()
         }
 
         File dst = new File("$dest/$snickerFileName")
@@ -153,7 +129,7 @@ task copySnickerDoodles(type: Copy) {
         if (!dst.exists()) {
             dst.createNewFile()
             dst << snickers.bytes
-        } else if (!md5(snickers).equals(md5(dst))) {
+        } else if (md5(snickers) != md5(dst)) {
             dst.delete()
             dst << snickers.bytes
         }

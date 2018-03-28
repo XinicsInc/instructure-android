@@ -15,7 +15,11 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.models.Quiz
+import com.instructure.dataseeding.util.ago
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
+import com.instructure.soseedy.Quiz
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
@@ -31,14 +35,14 @@ class QuizDetailsPageTest: TeacherTest() {
     @Test
     @TestRail(ID = "C3109579")
     fun displaysCorrectDetails() {
-        val assignment = getToQuizDetailsPage()
-        quizDetailsPage.assertQuizDetails(assignment)
+        val quiz = getToQuizDetailsPage()
+        quizDetailsPage.assertQuizDetails(quiz)
     }
 
     @Test
     @TestRail(ID = "C3109579")
     fun displaysInstructions() {
-        getToQuizDetailsPage()
+        getToQuizDetailsPage(withDescription = true)
         quizDetailsPage.assertDisplaysInstructions()
     }
 
@@ -52,42 +56,62 @@ class QuizDetailsPageTest: TeacherTest() {
     @Test
     @TestRail(ID = "C3134481")
     fun displaysClosedAvailability() {
-        getToQuizDetailsPage()
+        getToQuizDetailsPage(lockAt = 1.days.ago.iso8601)
         quizDetailsPage.assertQuizClosed()
     }
 
     @Test
     @TestRail(ID = "C3134482")
     fun displaysNoFromDate() {
-        getToQuizDetailsPage()
+        getToQuizDetailsPage(lockAt = 2.days.fromNow.iso8601)
         quizDetailsPage.assertToFilledAndFromEmpty()
     }
 
     @Test
     @TestRail(ID = "C3134483")
     fun displaysNoToDate() {
-        getToQuizDetailsPage()
+        getToQuizDetailsPage(unlockAt = 2.days.ago.iso8601)
         quizDetailsPage.assertFromFilledAndToEmpty()
     }
 
-//    @Test
-//    fun displaysSubmittedDonut() {
-//        getToQuizDetailsPage()
-//        quizDetailsPage.assertHasSubmitted()
-//    }
+    @Test
+    fun displaysSubmittedDonut() {
+        getToQuizDetailsPage(students = 1, submissions = 1)
+        quizDetailsPage.assertHasSubmitted()
+    }
 
-//    @Test
-//    fun displaysNotSubmittedDonut() {
-//        getToQuizDetailsPage()
-//        quizDetailsPage.assertNotSubmitted()
-//    }
+    @Test
+    fun displaysNotSubmittedDonut() {
+        getToQuizDetailsPage(students = 1, submissions = 0)
+        quizDetailsPage.assertNotSubmitted()
+    }
 
-    private fun getToQuizDetailsPage(): Quiz {
-        logIn()
-        val quiz = getNextQuiz()
-        coursesListPage.openCourse(getNextCourse())
+    private fun getToQuizDetailsPage(
+            withDescription: Boolean = false,
+            lockAt: String = "",
+            unlockAt: String = "",
+            students: Int = 0,
+            submissions: Int = 0): Quiz {
+        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val quiz = seedQuizzes(
+                courseId = course.id,
+                quizzes = 1,
+                withDescription = withDescription,
+                lockAt = lockAt,
+                unlockAt = unlockAt,
+                teacherToken = teacher.token).quizzesList[0]
+
+        for (s in 0 until submissions) {
+            seedQuizSubmission(course.id, quiz.id, data.studentsList[s].token, true)
+        }
+
+        tokenLogin(teacher)
+        coursesListPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
         quizListPage.clickQuiz(quiz)
+
         return quiz
     }
 }

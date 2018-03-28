@@ -20,7 +20,7 @@
     android:id="@+id/activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundOffWhite">
+    android:background="@color/canvasBackgroundWhite">
 
     <com.instructure.parentapp.view.CanvasWebView
         android:id="@+id/internal_webview"

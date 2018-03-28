@@ -17,10 +17,9 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -31,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.DownloadMedia;
 import com.instructure.candroid.util.StringUtilities;
 import com.instructure.candroid.view.ViewUtils;
@@ -42,21 +42,30 @@ import com.instructure.canvasapi2.models.FileFolder;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.canvasapi2.utils.pageview.BeforePageView;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.FragmentExtensionsKt;
 import com.instructure.pandautils.utils.PermissionUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 
+@PageView(url = "{canvasContext}/files/{fileId}")
 public class FileDetailsFragment extends ParentFragment {
-    // views
+
     private Button openButton;
     private Button downloadButton;
     private TextView fileNameTextView;
     private TextView fileTypeTextView;
     private ImageView icon;
+    private Toolbar toolbar;
 
     private long moduleId;
     private long itemId;
@@ -67,45 +76,46 @@ public class FileDetailsFragment extends ParentFragment {
     private StatusCallback<FileFolder> fileFolderCanvasCallback;
     private StatusCallback<ResponseBody> markReadCanvasCallback;
 
+    @PageViewUrlParam(name = "fileId")
+    private long getFileId() {
+        return file.getId();
+    }
+
+    @PageViewUrlQuery(name = "module_item_id")
+    private Long getModuleItemId() {
+        return FragmentExtensionsKt.getModuleItemId(this);
+    }
+
+    @BeforePageView
+    private void setPageViewReady() {}
+
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {
-        return FRAGMENT_PLACEMENT.DETAIL;
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {
+        return FragmentInteractions.Placement.DETAIL;
     }
 
     @Override
-    public String getFragmentTitle() {
-        return getString(R.string.file);
+    @NonNull
+    public String title() {
+        return file != null && file.getLockInfo() == null ? file.getDisplayName() : getString(R.string.file);
     }
-
-    @Nullable
-    @Override
-    protected String getActionbarTitle() {
-        // use display name if there isn't any lock info
-        return file != null && file.getLockInfo() == null ? file.getDisplayName() : getFragmentTitle();
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Lifecycle
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        View rootView = inflater.inflate(R.layout.file_details_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_file_details, container, false);
         setupViews(rootView);
-
         return rootView;
     }
 
     private void setupViews(View rootView) {
-        fileNameTextView = (TextView) rootView.findViewById(R.id.fileName);
-        fileTypeTextView = (TextView) rootView.findViewById(R.id.fileType);
+        fileNameTextView = rootView.findViewById(R.id.fileName);
+        fileTypeTextView = rootView.findViewById(R.id.fileType);
+        toolbar = rootView.findViewById(R.id.toolbar);
+        icon = rootView.findViewById(R.id.fileIcon);
 
-        icon = (ImageView) rootView.findViewById(R.id.fileIcon);
-
-        openButton = (Button) rootView.findViewById(R.id.openButton);
-        downloadButton = (Button) rootView.findViewById(R.id.downloadButton);
+        openButton = rootView.findViewById(R.id.openButton);
+        downloadButton = rootView.findViewById(R.id.downloadButton);
     }
 
     @Override
@@ -116,9 +126,11 @@ public class FileDetailsFragment extends ParentFragment {
         FileFolderManager.getFileFolderFromURL(fileUrl, fileFolderCanvasCallback);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // View setup
-    ///////////////////////////////////////////////////////////////////////////
+    @Override
+    public void applyTheme() {
+        setupToolbarMenu(toolbar);
+        ViewStyler.themeToolbar(getActivity(), toolbar, getCanvasContext());
+    }
 
     public void setupTextViews() {
         fileNameTextView.setText(file.getDisplayName());
@@ -157,14 +169,10 @@ public class FileDetailsFragment extends ParentFragment {
         ModuleManager.markModuleItemAsRead(getCanvasContext(), moduleId, itemId, markReadCanvasCallback);
     }
 
-    /////////////////////////////////////////////////////////////////////////// 
-    // Callback
-    ///////////////////////////////////////////////////////////////////////////
-
     public void setUpCallback() {
         fileFolderCanvasCallback = new StatusCallback<FileFolder>() {
             @Override
-            public void onResponse(retrofit2.Response<FileFolder> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<FileFolder> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (!apiCheck()) {
                     return;
                 }
@@ -175,7 +183,7 @@ public class FileDetailsFragment extends ParentFragment {
                 if (file != null) {
                     if (file.getLockInfo() != null) {
                         //file is locked
-                        icon.setImageResource(R.drawable.ic_cv_lock_dark);
+                        icon.setImageResource(R.drawable.vd_lock);
                         openButton.setVisibility(View.GONE);
                         downloadButton.setVisibility(View.GONE);
                         fileTypeTextView.setVisibility(View.INVISIBLE);
@@ -208,14 +216,15 @@ public class FileDetailsFragment extends ParentFragment {
                             Picasso.with(getActivity()).load(file.getThumbnailUrl()).resize(dp,dp).centerInside().into(icon);
                         }
                     }
+                    setPageViewReady();
                 }
-                setupTitle(getActionbarTitle());
+                toolbar.setTitle(title());
             }
         };
 
         markReadCanvasCallback = new StatusCallback<ResponseBody>() {
             @Override
-            public void onResponse(retrofit2.Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {}
+            public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {}
         };
     }
 
@@ -228,10 +237,6 @@ public class FileDetailsFragment extends ParentFragment {
             }
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void handleIntentExtras(Bundle extras) {

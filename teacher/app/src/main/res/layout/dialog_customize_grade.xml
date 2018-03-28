@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
     android:layout_marginStart="?dialogPreferredPadding"
-    android:layout_marginEnd="?dialogPreferredPadding">
+    android:layout_marginEnd="?dialogPreferredPadding"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,37 +15,38 @@
 
         <android.support.v7.widget.AppCompatEditText
             android:id="@+id/gradeEditText"
-            android:textSize="16sp"
-            android:layout_alignParentStart="true"
-            tools:text="5.5"
-            android:singleLine="true"
-            android:ellipsize="end"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:ellipsize="end"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:textSize="16sp"
+            tools:text="5.5" />
 
         <TextView
             android:id="@+id/textHint"
             style="@style/TextFont.Regular"
-            android:textSize="14sp"
-            android:textColor="@color/defaultTextGray"
-            android:paddingStart="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="4dp"
-            tools:text="out of 10"/>
+            android:paddingStart="16dp"
+            android:textColor="@color/defaultTextGray"
+            android:textSize="14sp"
+            tools:text="out of 10" />
 
     </RelativeLayout>
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/excuseStudentCheckbox"
         style="@style/TextFont.Regular"
-        android:textSize="16sp"
-        android:drawablePadding="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawablePadding="16dp"
         android:paddingStart="16dp"
-        android:text="@string/excuse_student"/>
+        android:text="@string/excuse_student"
+        android:textSize="16sp" />
 
 </LinearLayout>

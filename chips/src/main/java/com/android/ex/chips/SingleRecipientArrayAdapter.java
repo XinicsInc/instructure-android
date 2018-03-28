@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.android.ex.chips;
 
 import android.content.Context;
 import android.graphics.drawable.StateListDrawable;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -39,7 +39,7 @@ class SingleRecipientArrayAdapter extends ArrayAdapter<RecipientEntry> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         return mDropdownChipLayouter.bindView(convertView, parent, getItem(position), position,
                 AdapterType.SINGLE_RECIPIENT, null, mDeleteDrawable);
     }

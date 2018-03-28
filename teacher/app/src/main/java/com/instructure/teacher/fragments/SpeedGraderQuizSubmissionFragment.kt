@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.LongArg

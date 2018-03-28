@@ -15,35 +15,15 @@
  *
  */
 
-repositories {
-    jcenter()
-    maven { url 'https://jitpack.io' }
-    maven { url "https://maven.google.com" }
-}
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://jitpack.io' }
-        maven { url "https://maven.google.com" }
-    }
-    dependencies {
-        // https://bintray.com/android/android-tools/com.android.tools.build.gradle/view
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
-    }
-}
-
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
     }
 
     buildTypes {
@@ -55,7 +35,12 @@ android {
 }
 
 dependencies {
-    compile project(':canvas-api-2')
-    compile 'com.darwinsys:hirondelle-date4j:1.5.1'
-    compile rootProject.ext.supportDependencies.supportLibV13
+    /* Modules */
+    implementation project(':canvas-api-2')
+
+    /* Date/Time Utils */
+    api 'com.darwinsys:hirondelle-date4j:1.5.1'
+
+    /* Support Dependencies */
+    implementation Libs.SUPPORT_V13
 }

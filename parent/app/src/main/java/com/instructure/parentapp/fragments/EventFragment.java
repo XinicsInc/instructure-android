@@ -93,7 +93,7 @@ public class EventFragment extends ParentFragment implements
 
     @Override
     protected int getRootLayout() {
-        return R.layout.event_fragment_layout;
+        return R.layout.fragment_event;
     }
 
     @Override

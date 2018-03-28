@@ -46,8 +46,8 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.events.AssignmentDescriptionEvent
 import com.instructure.teacher.fragments.AddMessageFragment
-import com.instructure.teacher.interfaces.BottomSheetInteractions
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.BottomSheetInteractions
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import instructure.rceditor.RCEConst.HTML_RESULT
 import instructure.rceditor.RCEFragment
@@ -75,10 +75,11 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
             }
         } else {
 
-            mRoute = intent.extras.getParcelable<Route>(Const.ROUTE)
-
+            mRoute = intent.extras.getParcelable(Route.ROUTE)
+            
             if (mRoute == null) {
                 finish()
+                return
             }
 
             if (mRoute?.canvasContext != null && mRoute?.canvasContext is Course) {
@@ -90,8 +91,8 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
                     setupWithCanvasContext(null)
                 } else {
                     CourseManager.getCourse(contextId, object : StatusCallback<Course>() {
-                        override fun onResponse(response: Response<Course>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-                            setupWithCanvasContext(response?.body() as Course)
+                        override fun onResponse(response: Response<Course>, linkHeaders: LinkHeaders, type: ApiType) {
+                            setupWithCanvasContext(response.body() as Course)
                         }
                     }, false)
                 }
@@ -122,10 +123,8 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
         addFragment(RouteMatcher.getBottomSheetFragment(course, mRoute!!))
     }
 
-    override fun addFragment(route: Route?) {
-        if(route != null) {
-            addFragment(RouteMatcher.getBottomSheetFragment(route.canvasContext, route))
-        }
+    override fun addFragment(route: Route) {
+        addFragment(RouteMatcher.getBottomSheetFragment(route.canvasContext, route))
     }
 
     private fun addFragment(fragment: Fragment?) {
@@ -225,7 +224,7 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, BottomSheetActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            intent.putExtra(Const.ROUTE, route as Parcelable)
+            intent.putExtra(Route.ROUTE, route as Parcelable)
             return intent
         }
     }

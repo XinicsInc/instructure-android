@@ -28,8 +28,8 @@ import android.view.View;
 import android.widget.CompoundButton;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.util.ApplicationManager;
-import com.instructure.candroid.widget.CanvasWidgetProvider;
+import com.instructure.candroid.util.StudentPrefs;
+import com.instructure.candroid.widget.WidgetUpdater;
 
 public class WidgetSetupActivity extends AppCompatActivity {
 
@@ -49,14 +49,14 @@ public class WidgetSetupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //Sets the result canceled so if the user decides not to setup the widget it does not get added
         setResult(Activity.RESULT_CANCELED);
-        setContentView(R.layout.widget_setup_activity);
+        setContentView(R.layout.activity_widget_setup);
 
-        mCardDark = (CardView)findViewById(R.id.cardDark);
-        mCardLight = (CardView)findViewById(R.id.cardLight);
+        mCardDark = findViewById(R.id.cardDark);
+        mCardLight = findViewById(R.id.cardLight);
         mCardDark.setOnClickListener(mCardClickListener);
         mCardLight.setOnClickListener(mCardClickListener);
 
-        mCheckBox = (AppCompatCheckBox)findViewById(R.id.check_box);
+        mCheckBox = findViewById(R.id.check_box);
         mCheckBox.setOnCheckedChangeListener(mWidgetDetailsCheckChangeListener);
 
         Intent intent = getIntent();
@@ -81,26 +81,26 @@ public class WidgetSetupActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.cardDark: {
                     resultValue.putExtra(WIDGET_BACKGROUND_COLOR_KEY, WIDGET_BACKGROUND_COLOR_DARK);
-                    ApplicationManager.getPrefs(getApplicationContext()).save(WIDGET_BACKGROUND_PREFIX + appWidgetId, WIDGET_BACKGROUND_COLOR_DARK);
+                    StudentPrefs.INSTANCE.putString(WIDGET_BACKGROUND_PREFIX + appWidgetId, WIDGET_BACKGROUND_COLOR_DARK);
                     break;
                 }
                 case R.id.cardLight: {
                     resultValue.putExtra(WIDGET_BACKGROUND_COLOR_KEY, WIDGET_BACKGROUND_COLOR_LIGHT);
-                    ApplicationManager.getPrefs(getApplicationContext()).save(WIDGET_BACKGROUND_PREFIX + appWidgetId, WIDGET_BACKGROUND_COLOR_LIGHT);
+                    StudentPrefs.INSTANCE.putString(WIDGET_BACKGROUND_PREFIX + appWidgetId, WIDGET_BACKGROUND_COLOR_LIGHT);
                     break;
                 }
             }
             setResult(RESULT_OK, resultValue);
             finish();
 
-            sendBroadcast(new Intent(CanvasWidgetProvider.REFRESH_ALL));
+            WidgetUpdater.updateWidgets();
         }
     };
 
     private CompoundButton.OnCheckedChangeListener mWidgetDetailsCheckChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            ApplicationManager.getPrefs(getApplicationContext()).save(WIDGET_DETAILS_PREFIX + appWidgetId, isChecked);
+            StudentPrefs.INSTANCE.putBoolean(WIDGET_DETAILS_PREFIX + appWidgetId, isChecked);
         }
     };
 }

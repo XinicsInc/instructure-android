@@ -27,7 +27,7 @@ import com.instructure.candroid.holders.QuizViewHolder;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
 import com.instructure.canvasapi2.models.Quiz;
 import com.instructure.canvasapi2.utils.DateHelper;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.Date;
 
@@ -58,30 +58,24 @@ public class QuizBinder extends BaseBinder{
             setGone(holder.description);
         }
 
-        Drawable drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_quizzes_fill, courseColor);
+        Drawable drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_quiz, courseColor);
         holder.icon.setImageDrawable(drawable);
 
-        String points = item.getPointsPossible();
-        if (!TextUtils.isEmpty(points)) {
-            setGrade(null, Double.parseDouble(points), holder.points, context);
-            setVisible(holder.points);
-        } else {
-            holder.points.setText("");
-            setGone(holder.points);
-        }
+        setupStatusAndDate(context, holder, item, courseColor);
+        setupPointsAndQuestions(context, holder, item);
+    }
 
-        final int questionCount = item.getQuestionCount();
-        final String numberOfQuestions = context.getResources().getQuantityString(R.plurals.question_count, questionCount, questionCount);
-        holder.questions.setText(numberOfQuestions);
-
+    private static void setupStatusAndDate(final Context context, final QuizViewHolder holder, final Quiz item, final int courseColor) {
         Date dueDate = item.getDueAt();
+
+        boolean hasDate, hasStatus;
 
         if (dueDate != null) {
             holder.date.setText(DateHelper.createPrefixedDateTimeString(context, R.string.toDoDue, dueDate));
-            setVisible(holder.date);
+            hasDate = true;
         } else {
             holder.date.setText("");
-            setGone(holder.date);
+            hasDate = false;
         }
 
         Date lockDate = item.getLockAt();
@@ -89,8 +83,53 @@ public class QuizBinder extends BaseBinder{
         if((lockDate != null && today.after(lockDate)) || (item.isRequireLockdownBrowserForResults())) {
             holder.status.setText(R.string.closed);
             holder.status.setTextColor(courseColor);
+            hasStatus = true;
         } else {
             holder.status.setText("");
+            hasStatus = false;
+        }
+
+        if(hasDate && hasStatus) {
+            holder.dateContainer.setVisibility(View.VISIBLE);
+            holder.bulletStatusAndDate.setVisibility(View.VISIBLE);
+            holder.status.setVisibility(View.VISIBLE);
+            holder.date.setVisibility(View.VISIBLE);
+        } else {
+            holder.bulletStatusAndDate.setVisibility(View.GONE);
+            holder.status.setVisibility(hasStatus ? View.VISIBLE : View.GONE);
+            holder.date.setVisibility(hasDate ? View.VISIBLE : View.GONE);
+
+            if(!hasDate && !hasStatus) {
+                holder.dateContainer.setVisibility(View.GONE);
+            } else {
+                holder.dateContainer.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private static void setupPointsAndQuestions(final Context context, final QuizViewHolder holder, final Quiz item) {
+
+        boolean hasPoints;
+
+        String points = item.getPointsPossible();
+        if (!TextUtils.isEmpty(points)) {
+            setGrade(null, Double.parseDouble(points), holder.points, context);
+            hasPoints = true;
+        } else {
+            holder.points.setText("");
+            hasPoints = false;
+        }
+
+        final int questionCount = item.getQuestionCount();
+        final String numberOfQuestions = context.getResources().getQuantityString(R.plurals.question_count, questionCount, questionCount);
+        holder.questions.setText(numberOfQuestions);
+
+        if(hasPoints) {
+            holder.bulletPointsAndQuestions.setVisibility(View.VISIBLE);
+            holder.points.setVisibility(View.VISIBLE);
+        } else {
+            holder.bulletPointsAndQuestions.setVisibility(View.GONE);
+            holder.points.setVisibility(View.GONE);
         }
     }
 }

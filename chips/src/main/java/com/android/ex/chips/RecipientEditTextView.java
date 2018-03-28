@@ -46,6 +46,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
+import android.support.v7.widget.AppCompatMultiAutoCompleteTextView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Layout;
@@ -83,11 +84,9 @@ import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import com.android.ex.chips.recipientchip.DrawableRecipientChip;
-import com.android.ex.chips.recipientchip.InvisibleRecipientChip;
 import com.android.ex.chips.recipientchip.ReplacementDrawableSpan;
 import com.android.ex.chips.recipientchip.VisibleRecipientChip;
 import java.util.ArrayList;
@@ -102,7 +101,7 @@ import java.util.Set;
  * RecipientEditTextView is an auto complete text view for use with applications
  * that use the new Chips UI for addressing a message to recipients.
  */
-public class RecipientEditTextView extends MultiAutoCompleteTextView implements
+public class RecipientEditTextView extends AppCompatMultiAutoCompleteTextView implements
         OnItemClickListener, Callback, GestureDetector.OnGestureListener, OnDismissListener,
         OnClickListener,TextView.OnEditorActionListener, DropdownChipLayouter.ChipDeleteListener {
     private static final String TAG = "RecipientEditTextView";
@@ -1808,8 +1807,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         mWorkPaint.set(getPaint());
         mWorkPaint.setTextSize(mMoreItem.getTextSize());
         mWorkPaint.setColor(mMoreItem.getCurrentTextColor());
-        final int width = (int) mWorkPaint.measureText(moreText) + mMoreItem.getPaddingLeft()
-                + mMoreItem.getPaddingRight();
+        final int width = (int) mWorkPaint.measureText(moreText) + mMoreItem.getPaddingLeft() + mMoreItem.getPaddingRight();
         final int height = (int) mChipHeight;
         Bitmap drawable = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(drawable);

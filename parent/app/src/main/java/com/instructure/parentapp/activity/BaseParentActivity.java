@@ -24,8 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -55,7 +53,7 @@ public class BaseParentActivity extends BaseActivity {
     public void handleError(int code, String error) {
 
         if (code == 418) {
-            //parse the message from the response body
+            // Parse the message from the response body
             Gson gson = new Gson();
             JsonParser parser = new JsonParser();
             JsonElement mJson = parser.parse(error);
@@ -65,7 +63,7 @@ public class BaseParentActivity extends BaseActivity {
         }
 
         if (code == 403) {
-            //parse the message from the response body
+            // Parse the message from the response body
             Gson gson = new Gson();
             JsonParser parser = new JsonParser();
             JsonElement mJson = parser.parse(error);
@@ -74,18 +72,18 @@ public class BaseParentActivity extends BaseActivity {
             if (blockedStudentResponse.code.equals("studentBlocked")) {
                 Prefs prefs = new Prefs(this, getString(R.string.app_name_parent));
                 String parentId = prefs.load(Const.ID, "");
-                //We want to refresh cache so the main activity can load quickly with accurate information
+                // We want to refresh cache so the main activity can load quickly with accurate information
                 UserManager.getStudentsForParentAirwolf(ApiPrefs.getAirwolfDomain(), parentId, new StatusCallback<List<Student>>() {
                     @Override
-                    public void onResponse(Response<List<Student>> response, LinkHeaders linkHeaders, ApiType type) {
+                    public void onResponse(@NonNull Response<List<Student>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                         if (response.body() != null && !response.body().isEmpty()) {
-                            //they have students that they are observing, take them to that activity
+                            // They have students that they are observing, take them to that activity
                             startActivity(StudentViewActivity.createIntent(BaseParentActivity.this, response.body()));
                             overridePendingTransition(0, 0);
                             finish();
 
                         } else {
-                            //Take the parent to the add user page.
+                            // Take the parent to the add user page.
                             FindSchoolActivity.Companion.createIntent(BaseParentActivity.this, true);
                             finish();
                         }
@@ -106,18 +104,16 @@ public class BaseParentActivity extends BaseActivity {
     }
 
     private void showRevokedTokenDialog(final RevokedTokenResponse response, final Context context) {
-        new MaterialDialog.Builder(context)
-                .title(R.string.revokedTokenErrorTitle)
-                .content(R.string.revokedTokenErrorContent, response.shortName)
-                .positiveText(R.string.removeStudent)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.revokedTokenErrorTitle)
+                .setMessage(getString(R.string.revokedTokenErrorContent, response.shortName))
+                .setPositiveButton(R.string.removeStudent, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         removeStudent(ApiPrefs.getAirwolfDomain(), response.parentId, response.studentId, context);
                     }
                 })
-                .canceledOnTouchOutside(false)
-                .cancelable(false)
+                .setCancelable(false)
                 .show();
     }
 
@@ -132,7 +128,7 @@ public class BaseParentActivity extends BaseActivity {
                         String parentId = prefs.load(Const.ID, "");
                         UserManager.getStudentsForParentAirwolf(ApiPrefs.getAirwolfDomain(), parentId, new StatusCallback<List<Student>>() {
                             @Override
-                            public void onResponse(Response<List<Student>> response, LinkHeaders linkHeaders, ApiType type) {
+                            public void onResponse(@NonNull Response<List<Student>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                                 if (response.body() != null && !response.body().isEmpty()) {
                                     // They have students that they are observing, take them to that activity
                                     startActivity(StudentViewActivity.createIntent(BaseParentActivity.this, response.body()));
@@ -155,15 +151,14 @@ public class BaseParentActivity extends BaseActivity {
 
         UserManager.removeStudentAirwolf(airwolfDomain, parentId, studentId, new StatusCallback<ResponseBody>() {
             @Override
-            public void onResponse(retrofit2.Response<ResponseBody> response, com.instructure.canvasapi2.utils.LinkHeaders linkHeaders, ApiType type) {
-                super.onResponse(response, linkHeaders, type);
+            public void onResponse(@NonNull Response<ResponseBody> response, @NonNull com.instructure.canvasapi2.utils.LinkHeaders linkHeaders, @NonNull ApiType type) {
                 //Inform the user that the student has been removed
                 Toast.makeText(context, context.getResources().getString(R.string.studentRemoved), Toast.LENGTH_SHORT).show();
 
                 //We want to refresh cache so the main activity can load quickly with accurate information
                 UserManager.getStudentsForParentAirwolf(airwolfDomain, parentId, new StatusCallback<List<Student>>() {
                     @Override
-                    public void onResponse(Response<List<Student>> response, LinkHeaders linkHeaders, ApiType type) {
+                    public void onResponse(@NonNull Response<List<Student>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                         if (response.body() != null && !response.body().isEmpty()) {
                             //they have students that they are observing, take them to that activity
                             startActivity(StudentViewActivity.createIntent(BaseParentActivity.this, response.body()));

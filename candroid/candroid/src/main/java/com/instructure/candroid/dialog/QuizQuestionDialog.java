@@ -17,12 +17,15 @@
 
 package com.instructure.candroid.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +36,11 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.instructure.candroid.R;
+import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
 
 import java.util.ArrayList;
@@ -62,31 +65,43 @@ public class QuizQuestionDialog extends DialogFragment {
         args.putParcelableArrayList(Const.QUIZ_QUESTIONS, submissionQuestions);
         args.putParcelable(Const.COURSE, course);
         quizQuestionDialog.setArguments(args);
+
         return quizQuestionDialog;
     }
-
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final FragmentActivity activity = getActivity();
 
-        MaterialDialog.Builder builder =
-                new MaterialDialog.Builder(activity)
-                        .title(activity.getString(R.string.viewQuestions))
-                        .positiveText(activity.getString(R.string.okay));
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(activity)
+                        .setTitle(activity.getString(R.string.viewQuestions))
+                        .setPositiveButton(activity.getString(R.string.okay), null);
 
+        @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.quiz_question_dialog, null);
 
-        listView = (ExpandableListView)view.findViewById(R.id.listview);
+        listView = view.findViewById(R.id.listview);
 
-        builder.customView(view, false);
+        builder.setView(view);
 
-
-        final MaterialDialog dialog = builder.build();
+        final AlertDialog dialog = builder.create();
 
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface useless) {
+                CanvasContext course = getArguments().getParcelable(Const.COURSE);
+                if (course != null) {
+                    int courseColor = ColorKeeper.getOrGenerateColor(course);
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(courseColor);
+                }
+            }
+        });
+
         return dialog;
     }
 
@@ -167,6 +182,7 @@ public class QuizQuestionDialog extends DialogFragment {
             this.course = course;
             this.hasFlagged = hasFlagged;
         }
+
         @Override
         public int getGroupCount() {
             if(hasFlagged) {
@@ -225,7 +241,7 @@ public class QuizQuestionDialog extends DialogFragment {
 
                 holder = new GroupViewHolder();
 
-                holder.type = (TextView) convertView.findViewById(R.id.tvGroup);
+                holder.type = convertView.findViewById(R.id.tvGroup);
 
                 convertView.setTag(holder);
             } else {
@@ -244,8 +260,8 @@ public class QuizQuestionDialog extends DialogFragment {
                 LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
                 convertView = layoutInflater.inflate(R.layout.quiz_question_dialog_item, null);
                 holder = new QuizViewHolder();
-                holder.icon = (ImageView) convertView.findViewById(R.id.image);
-                holder.question = (TextView) convertView.findViewById(R.id.question_number);
+                holder.icon = convertView.findViewById(R.id.image);
+                holder.question = convertView.findViewById(R.id.question_number);
                 convertView.setTag(holder);
             } else {
                 holder = (QuizViewHolder) convertView.getTag();
@@ -257,12 +273,12 @@ public class QuizQuestionDialog extends DialogFragment {
 
             if(quizSubmissionQuestion.isFlagged() && groupPosition == 0 && hasFlagged) {
                 holder.icon.setVisibility(View.VISIBLE);
-                Drawable d = CanvasContextColor.getColoredDrawable(getActivity(), R.drawable.ic_bookmark_fill_grey, course.getId());
+                Drawable d = ColorKeeper.getColoredDrawable(getActivity(), R.drawable.vd_bookmark_filled, course);
                 holder.icon.setImageDrawable(d);
                 holder.question.setText(getString(R.string.question) + " " + (allQuestions.indexOf(quizSubmissionQuestion) + 1));
             } else if(questionIds.contains(quizSubmissionQuestion.getId())) {
                 holder.icon.setVisibility(View.VISIBLE);
-                Drawable d = CanvasContextColor.getColoredDrawable(getActivity(), R.drawable.ic_tutorial_action_done, course.getId());
+                Drawable d = ColorKeeper.getColoredDrawable(getActivity(), R.drawable.vd_check_white_24dp, course);
                 holder.icon.setImageDrawable(d);
                 holder.question.setText(getString(R.string.question) + " " + (childPosition + 1));
             } else {

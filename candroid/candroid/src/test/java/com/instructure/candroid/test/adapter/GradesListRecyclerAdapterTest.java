@@ -30,7 +30,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class GradesListRecyclerAdapterTest extends InstrumentationTestCase {
     private GradesListRecyclerAdapter mAdapter;
@@ -90,7 +90,7 @@ public class GradesListRecyclerAdapterTest extends InstrumentationTestCase {
         assignment.setPointsPossible(0.0);
         Submission submission = new Submission();
         submission.setGrade("A");
-        assignment.setLastSubmission(submission);
+        assignment.setSubmission(submission);
 
         assertTrue(mAdapter.createItemCallback().areContentsTheSame(assignment, assignment));
     }
@@ -102,12 +102,12 @@ public class GradesListRecyclerAdapterTest extends InstrumentationTestCase {
         assignment1.setPointsPossible(0.0);
         Submission submission1 = new Submission();
         submission1.setGrade("A");
-        assignment1.setLastSubmission(submission1);
+        assignment1.setSubmission(submission1);
 
         Assignment assignment2 = new Assignment();
         assignment2.setName("assignment1");
         assignment2.setPointsPossible(0.0);
-        assignment2.setLastSubmission(null);
+        assignment2.setSubmission(null);
 
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(assignment1, assignment2));
     }
@@ -119,14 +119,14 @@ public class GradesListRecyclerAdapterTest extends InstrumentationTestCase {
         assignment1.setPointsPossible(0.0);
         Submission submission1 = new Submission();
         submission1.setGrade("A");
-        assignment1.setLastSubmission(submission1);
+        assignment1.setSubmission(submission1);
 
         Assignment assignment2 = new Assignment();
         assignment2.setName("assignment1");
         assignment2.setPointsPossible(0.0);
         Submission submission2 = new Submission();
         submission1.setGrade(null);
-        assignment1.setLastSubmission(submission2);
+        assignment1.setSubmission(submission2);
 
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(assignment1, assignment2));
     }

@@ -21,8 +21,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.instructure.pandautils.views.AttachmentLayout;
 import com.instructure.teacher.R;
-import com.instructure.teacher.view.AttachmentLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

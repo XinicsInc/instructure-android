@@ -17,7 +17,6 @@
 
 package com.instructure.canvasapi2.utils;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -84,13 +83,6 @@ public class Logger {
         } else {
             d("Bundle was null.");
         }
-    }
-
-    public static <F extends Fragment> String getFragmentName(F fragment) {
-        if(fragment != null) {
-            return fragment.getClass().getName();
-        }
-        return "UNKNOWN";
     }
 
     public static <F extends android.support.v4.app.Fragment> String getFragmentName(F fragment) {

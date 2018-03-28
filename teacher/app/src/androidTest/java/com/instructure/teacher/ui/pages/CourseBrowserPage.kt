@@ -16,16 +16,29 @@
  */
 package com.instructure.teacher.ui.pages
 
+import android.support.test.espresso.Espresso
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.action.ViewActions
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.contrib.RecyclerViewActions.*
+import android.support.test.espresso.matcher.BoundedMatcher
+import android.support.test.espresso.matcher.ViewMatchers
+import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.v7.widget.RecyclerView
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.OnViewWithId
-import com.instructure.teacher.ui.utils.WaitForViewWithId
-import com.instructure.teacher.ui.utils.click
+import com.instructure.teacher.holders.AssigneeItemViewHolder
+import com.instructure.teacher.holders.CourseBrowserViewHolder
+import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
-import com.instructure.teacher.ui.utils.waitForViewWithText
+import com.instructure.teacher.viewinterface.CourseBrowserView
+import com.pspdfkit.framework.it
+import org.hamcrest.Description
+import org.hamcrest.Matcher
 
 class CourseBrowserPage : BasePage(), PageAssert by SimplePageAssert() {
 
+    // TODO: Add recycler view scrolling to support small screen size devices.
     private val courseBrowserRecyclerView by WaitForViewWithId(R.id.courseBrowserRecyclerView)
     private val courseImage by OnViewWithId(R.id.courseImage)
     private val courseTitle by OnViewWithId(R.id.courseBrowserTitle)
@@ -37,11 +50,16 @@ class CourseBrowserPage : BasePage(), PageAssert by SimplePageAssert() {
     }
 
     fun openQuizzesTab() {
-        waitForViewWithText("Quizzes").click()
+        /* The course browser RecyclerView is inside a CoordinatorLayout and is therefore only partially
+        visible, causing some clicks to fail. We need to perform a swipe up first to make it fully visible. */
+        Espresso.onView(ViewMatchers.withId(android.R.id.content)).perform(ViewActions.swipeUp())
+        Espresso.onView(ViewMatchers.withId(R.id.courseBrowserRecyclerView))
+                .perform(scrollToPosition<CourseBrowserViewHolder>(10))
+        waitForViewWithText(R.string.tab_quizzes).click()
     }
 
     fun openDiscussionsTab() {
-        waitForViewWithText("Discussions").click()
+        onView(withId(R.id.courseBrowserRecyclerView)).perform(actionOnItemAtPosition<CourseBrowserViewHolder>(2, click()))
     }
 
     fun openAnnouncementsTab() {
@@ -51,4 +69,22 @@ class CourseBrowserPage : BasePage(), PageAssert by SimplePageAssert() {
     fun clickSettingsButton() {
         courseSettingsMenuButton.click()
     }
+
+    /**
+     * Taken from https://stackoverflow.com/questions/37736616/espresso-how-to-find-a-specific-item-in-a-recycler-view-order-is-random
+     *
+     * This allows us to match a specific view with specific text in a specific RecyclerView.Holder
+     */
+    fun withTitle(title: String): Matcher<RecyclerView.ViewHolder> =
+            object: BoundedMatcher<RecyclerView.ViewHolder, CourseBrowserViewHolder>(CourseBrowserViewHolder::class.java) {
+                override fun matchesSafely(item: CourseBrowserViewHolder?): Boolean {
+                    return item?.let {
+                        it.labelText.text.toString().equals(title, true)
+                    } ?: false
+                }
+
+                override fun describeTo(description: Description?) {
+                    description?.appendText("view holder with title: " + title)
+                }
+            }
 }

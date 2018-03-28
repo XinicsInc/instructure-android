@@ -22,6 +22,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Date;
 
 public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
@@ -43,10 +45,12 @@ public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
     private Grades grades;
 
     // only included when we get the enrollment with a course object
+    @Nullable
     @SerializedName("computed_current_score")
-    private double computedCurrentScore;
+    private Double computedCurrentScore;
+    @Nullable
     @SerializedName("computed_final_score")
-    private double computedFinalScore;
+    private Double computedFinalScore;
     @SerializedName("computed_current_grade")
     private String computedCurrentGrade;
     @SerializedName("computed_final_grade")
@@ -55,10 +59,12 @@ public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
     private boolean multipleGradingPeriodsEnabled;
     @SerializedName("totals_for_all_grading_periods_option")
     private boolean totalsForAllGradingPeriodsOption;
+    @Nullable
     @SerializedName("current_period_computed_current_score")
     private Double currentPeriodComputedCurrentScore;
+    @Nullable
     @SerializedName("current_period_computed_final_score")
-    private double currentPeriodComputedFinalScore;
+    private Double currentPeriodComputedFinalScore;
     @SerializedName("current_period_computed_current_grade")
     private String currentPeriodComputedCurrentGrade;
     @SerializedName("current_period_computed_final_grade")
@@ -167,11 +173,11 @@ public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
         return grades;
     }
 
-    public double getComputedCurrentScore() {
+    public Double getComputedCurrentScore() {
         return computedCurrentScore;
     }
 
-    public double getComputedFinalScore() {
+    public Double getComputedFinalScore() {
         return computedFinalScore;
     }
 
@@ -192,18 +198,30 @@ public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
     }
 
     public Double getCurrentPeriodComputedCurrentScore() {
+        if (currentPeriodComputedCurrentScore == null && grades != null) {
+            return grades.getCurrentScore();
+        }
         return currentPeriodComputedCurrentScore;
     }
 
-    public double getCurrentPeriodComputedFinalScore() {
+    public Double getCurrentPeriodComputedFinalScore() {
+        if (currentPeriodComputedFinalScore == null && grades != null) {
+            return grades.getFinalScore();
+        }
         return currentPeriodComputedFinalScore;
     }
 
     public String getCurrentPeriodComputedCurrentGrade() {
+        if (currentPeriodComputedCurrentGrade == null && grades != null) {
+            return grades.getCurrentGrade();
+        }
         return currentPeriodComputedCurrentGrade;
     }
 
     public String getCurrentPeriodComputedFinalGrade() {
+        if (currentPeriodComputedFinalGrade == null && grades != null) {
+            return grades.getFinalGrade();
+        }
         return currentPeriodComputedFinalGrade;
     }
 
@@ -219,13 +237,13 @@ public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
         return associatedUserId;
     }
 
-    public double getCurrentScore() {
+    public Double getCurrentScore() {
         if (grades != null) {
             return grades.getCurrentScore();
         }
         return computedCurrentScore;
     }
-    public double getFinalScore() {
+    public Double getFinalScore() {
         if (grades != null) {
             return grades.getFinalScore();
         }
@@ -292,11 +310,11 @@ public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
         this.grades = grades;
     }
 
-    public void setComputedCurrentScore(double computedCurrentScore) {
+    public void setComputedCurrentScore(Double computedCurrentScore) {
         this.computedCurrentScore = computedCurrentScore;
     }
 
-    public void setComputedFinalScore(double computedFinalScore) {
+    public void setComputedFinalScore(Double computedFinalScore) {
         this.computedFinalScore = computedFinalScore;
     }
 
@@ -320,7 +338,7 @@ public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
         this.currentPeriodComputedCurrentScore = currentPeriodComputedCurrentScore;
     }
 
-    public void setCurrentPeriodComputedFinalScore(double currentPeriodComputedFinalScore) {
+    public void setCurrentPeriodComputedFinalScore(Double currentPeriodComputedFinalScore) {
         this.currentPeriodComputedFinalScore = currentPeriodComputedFinalScore;
     }
 
@@ -375,14 +393,14 @@ public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
         dest.writeString(this.enrollmentState);
         dest.writeLong(this.userId);
         dest.writeParcelable(this.grades, flags);
-        dest.writeDouble(this.computedCurrentScore);
-        dest.writeDouble(this.computedFinalScore);
+        dest.writeValue(this.computedCurrentScore);
+        dest.writeValue(this.computedFinalScore);
         dest.writeString(this.computedCurrentGrade);
         dest.writeString(this.computedFinalGrade);
         dest.writeByte(this.multipleGradingPeriodsEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.totalsForAllGradingPeriodsOption ? (byte) 1 : (byte) 0);
         dest.writeValue(this.currentPeriodComputedCurrentScore);
-        dest.writeDouble(this.currentPeriodComputedFinalScore);
+        dest.writeValue(this.currentPeriodComputedFinalScore);
         dest.writeString(this.currentPeriodComputedCurrentGrade);
         dest.writeString(this.currentPeriodComputedFinalGrade);
         dest.writeLong(this.currentGradingPeriodId);
@@ -402,14 +420,14 @@ public class Enrollment extends CanvasModel<Enrollment> implements Parcelable {
         this.enrollmentState = in.readString();
         this.userId = in.readLong();
         this.grades = in.readParcelable(Grades.class.getClassLoader());
-        this.computedCurrentScore = in.readDouble();
-        this.computedFinalScore = in.readDouble();
+        this.computedCurrentScore = (Double) in.readValue(Double.class.getClassLoader());
+        this.computedFinalScore = (Double) in.readValue(Double.class.getClassLoader());
         this.computedCurrentGrade = in.readString();
         this.computedFinalGrade = in.readString();
         this.multipleGradingPeriodsEnabled = in.readByte() != 0;
         this.totalsForAllGradingPeriodsOption = in.readByte() != 0;
-        this.currentPeriodComputedCurrentScore = (Double)in.readValue(Double.class.getClassLoader());
-        this.currentPeriodComputedFinalScore = in.readDouble();
+        this.currentPeriodComputedCurrentScore = (Double) in.readValue(Double.class.getClassLoader());
+        this.currentPeriodComputedFinalScore = (Double) in.readValue(Double.class.getClassLoader());
         this.currentPeriodComputedCurrentGrade = in.readString();
         this.currentPeriodComputedFinalGrade = in.readString();
         this.currentGradingPeriodId = in.readLong();

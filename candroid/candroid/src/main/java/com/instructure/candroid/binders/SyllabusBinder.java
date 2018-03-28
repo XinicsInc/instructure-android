@@ -19,6 +19,7 @@ package com.instructure.candroid.binders;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.instructure.candroid.R;
@@ -29,7 +30,7 @@ import com.instructure.canvasapi2.models.Assignment;
 import com.instructure.canvasapi2.models.ScheduleItem;
 import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.utils.Logger;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.Date;
 
@@ -61,7 +62,7 @@ public class SyllabusBinder extends BaseBinder {
 
                 if(assignment != null) {
                     int drawableResId = getAssignmentIcon(assignment);
-                    drawable = CanvasContextColor.getColoredDrawable(context, drawableResId, courseColor);
+                    drawable = ColorKeeper.getColoredDrawable(context, drawableResId, courseColor);
                     holder.icon.setImageDrawable(drawable);
 
                     Date dueDate = assignment.getDueAt();
@@ -73,18 +74,26 @@ public class SyllabusBinder extends BaseBinder {
                         holder.date.setText(context.getResources().getString(R.string.toDoNoDueDate));
                     }
 
-                    setCleanText(holder.description, getHtmlAsText(assignment.getDescription()));
+                    String description = getHtmlAsText(assignment.getDescription());
+                    setCleanText(holder.description, description);
+                    if(TextUtils.isEmpty(description)) holder.description.setVisibility(View.GONE);
+                    else holder.description.setVisibility(View.VISIBLE);
 
                     //currently submissions aren't returned for the syllabus fragment, so points will be null.
                     setGone(holder.points);
 
                 } else {
 
-                    drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_calendar_fill, courseColor);
+                    drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_calendar, courseColor);
                     holder.icon.setImageDrawable(drawable);
 
                     setCleanText(holder.date, item.getStartDateString(context));
-                    setCleanText(holder.description, getHtmlAsText(item.getDescription()));
+
+                    String description = getHtmlAsText(item.getDescription());
+                    setCleanText(holder.description, description);
+                    if(TextUtils.isEmpty(description)) holder.description.setVisibility(View.GONE);
+                    else holder.description.setVisibility(View.VISIBLE);
+
                     holder.points.setText("");
                 }
 
@@ -110,7 +119,7 @@ public class SyllabusBinder extends BaseBinder {
         });
 
         holder.title.setText(context.getString(R.string.syllabus));
-        Drawable drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_syllabus_fill, courseColor);
+        Drawable drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_syllabus, courseColor);
         holder.icon.setImageDrawable(drawable);
     }
 }

@@ -189,6 +189,7 @@
 -keep class sun.misc.Unsafe { *; }
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okhttp3.**
 
 #PSPDFKit
 -keep class com.pspdfkit.** { *; }
@@ -244,3 +245,6 @@
     **[] $VALUES;
     public *;
 }
+
+# afollestad material dialogs
+-dontwarn me.zhanghai.android.materialprogressbar.**

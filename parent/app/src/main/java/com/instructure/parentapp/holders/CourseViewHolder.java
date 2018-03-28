@@ -19,6 +19,8 @@ package com.instructure.parentapp.holders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.instructure.parentapp.R;
@@ -29,14 +31,18 @@ public class CourseViewHolder extends RecyclerView.ViewHolder {
     public TextView courseCode;
     public TextView gradeText;
     public TextView scoreText;
+    public ImageView lockedGradeImage;
+    public RelativeLayout gradeContainer;
 
     public CourseViewHolder(View itemView) {
         super(itemView);
 
-        courseTitle = (TextView) itemView.findViewById(R.id.courseTitle);
-        courseCode = (TextView) itemView.findViewById(R.id.courseCode);
-        gradeText = (TextView) itemView.findViewById(R.id.gradeText);
-        scoreText = (TextView) itemView.findViewById(R.id.scoreText);
+        courseTitle = itemView.findViewById(R.id.courseTitle);
+        courseCode = itemView.findViewById(R.id.courseCode);
+        gradeText = itemView.findViewById(R.id.gradeText);
+        scoreText = itemView.findViewById(R.id.scoreText);
+        gradeContainer = itemView.findViewById(R.id.gradeContainer);
+        lockedGradeImage = itemView.findViewById(R.id.lockedGradeImage);
     }
 
     public static int holderResId() {

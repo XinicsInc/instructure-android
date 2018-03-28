@@ -19,6 +19,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:minHeight="?android:listPreferredItemHeight">
 
@@ -36,37 +38,37 @@
             android:layout_height="@dimen/gridIconSizeSmall"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_cv_circle" />
+            app:srcCompat="@drawable/vd_module_circle"
+            android:importantForAccessibility="no"/>
 
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
             android:layout_gravity="center_vertical">
 
             <TextView
                 android:id="@+id/title"
-                style="@style/TextStyle.Secondary.Dark"
+                style="@style/AdapterItemTitleText"
+                android:textColor="@color/canvasTextDark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:text="@string/hello_world"/>
+                tools:text="Module Item Header"/>
 
         </FrameLayout>
 
         <ImageView
             android:id="@+id/expandCollapse"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_cv_expand_black" />
+            app:srcCompat="@drawable/vd_expand"
+            android:importantForAccessibility="no"/>
 
     </LinearLayout>
 

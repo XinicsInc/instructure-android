@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.apis.AnnouncementAPI;
 import com.instructure.canvasapi2.builders.RestBuilder;
 import com.instructure.canvasapi2.builders.RestParams;
+import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.DiscussionTopicHeader;
 import com.instructure.canvasapi2.tests.AnnouncementManager_Test;
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback;
@@ -35,9 +36,9 @@ public class AnnouncementManager extends DiscussionManager {
 
     private static final boolean mTesting = false;
 
-    public static void getAnnouncements(long courseId, boolean forceNetwork, StatusCallback<List<DiscussionTopicHeader>> callback) {
+    public static void getAnnouncements(@NonNull CanvasContext canvasContext, boolean forceNetwork, StatusCallback<List<DiscussionTopicHeader>> callback) {
         if(isTesting() || mTesting) {
-            AnnouncementManager_Test.getAnnouncements(courseId, callback);
+            AnnouncementManager_Test.getAnnouncements(canvasContext, callback);
         } else {
             RestBuilder adapter = new RestBuilder(callback);
             RestParams params = new RestParams.Builder()
@@ -46,11 +47,11 @@ public class AnnouncementManager extends DiscussionManager {
                     .withForceReadFromNetwork(forceNetwork)
                     .build();
 
-            AnnouncementAPI.getAnnouncements(courseId, adapter, callback, params);
+            AnnouncementAPI.getAnnouncements(canvasContext, adapter, callback, params);
         }
     }
 
-    public static void getAllAnnouncements(final long courseId, boolean forceNetwork, StatusCallback<List<DiscussionTopicHeader>> callback) {
+    public static void getAllAnnouncements(@NonNull CanvasContext canvasContext, boolean forceNetwork, StatusCallback<List<DiscussionTopicHeader>> callback) {
         if(isTesting() || mTesting) {
             //TODO:
         } else {
@@ -67,7 +68,7 @@ public class AnnouncementManager extends DiscussionManager {
                 }
             };
             adapter.setStatusCallback(depaginatedCallback);
-            AnnouncementAPI.getFirstPageAnnouncements(courseId, adapter, depaginatedCallback, params);
+            AnnouncementAPI.getFirstPageAnnouncements(canvasContext, adapter, depaginatedCallback, params);
         }
     }
 
@@ -84,10 +85,10 @@ public class AnnouncementManager extends DiscussionManager {
      *                defaults to 28 days from start_date. The value should be formatted as: yyyy-mm-dd
      *                or ISO 8601 YYYY-MM-DDTHH:MM:SSZ. Announcements scheduled for future posting
      *                will only be returned to course administrators.
-     * @param params RestParams
+     * @param forceNetwork Force network
      * @param callback StatusCallback
      */
-    public static void getAnnouncements(@NonNull List<String> contextCodes, String startDate, String endDate, @NonNull RestParams params, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback) {
+    public static void getAnnouncements(@NonNull List<String> contextCodes, String startDate, String endDate, boolean forceNetwork, @NonNull StatusCallback<List<DiscussionTopicHeader>> callback) {
         // Use only course context codes
         ArrayList<String> courseContextCodes = new ArrayList<>();
         for (String code : contextCodes) {
@@ -98,9 +99,12 @@ public class AnnouncementManager extends DiscussionManager {
 
         //noinspection PointlessBooleanExpression
         if(isTesting() || mTesting) {
-            AnnouncementManager_Test.getAnnouncements(courseContextCodes, startDate, endDate, callback, params);
+            AnnouncementManager_Test.getAnnouncements(courseContextCodes, startDate, endDate, callback);
         } else {
             RestBuilder adapter = new RestBuilder(callback);
+            RestParams params = new RestParams.Builder()
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build();
             AnnouncementAPI.getAnnouncements(courseContextCodes, startDate, endDate, adapter, callback, params);
         }
     }

@@ -26,7 +26,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CourseTest {
 
@@ -204,256 +206,6 @@ public class CourseTest {
         course.setEnrollments(null);
 
         assertEquals(false, course.isObserver());
-    }
-
-    @Test
-    public void getCurrentScore_withStudentEnrollment() {
-        Course course = new Course();
-
-        Grades grades = new Grades();
-        grades.setCurrentScore(95.0);
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setGrades(grades);
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals(95.0, course.getCurrentScore(), 0.0001);
-    }
-
-    @Test
-    public void getCurrentScore_withoutStudentEnrollment() {
-        Course course = new Course();
-
-        assertEquals(0, course.getCurrentScore(), 0.0001);
-    }
-
-    @Test
-    public void getCurrentScore_withStudentEnrollmentNoGrades() {
-        Course course = new Course();
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals(0, course.getCurrentScore(), 0.0001);
-    }
-
-    @Test
-    public void getCurrentScore_withStudentEnrollmentMultipleGradingPeriods() {
-        Course course = new Course();
-
-        Grades grades = new Grades();
-        grades.setCurrentScore(50.0);
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setGrades(grades);
-        enrollment.setMultipleGradingPeriodsEnabled(true);
-        enrollment.setCurrentPeriodComputedCurrentScore(95.0);
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals(95.0, course.getCurrentScore(), 0.0001);
-    }
-
-    @Test
-    public void getCurrentGrade_withStudentEnrollment() {
-        Course course = new Course();
-
-        Grades grades = new Grades();
-        grades.setCurrentGrade("A");
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setGrades(grades);
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals("A", course.getCurrentGrade());
-    }
-
-    @Test
-    public void getCurrentGrade_withoutStudentEnrollment() {
-        Course course = new Course();
-
-        assertEquals(null, course.getCurrentGrade());
-    }
-
-    @Test
-    public void getCurrentGrade_withStudentEnrollmentNoGrades() {
-        Course course = new Course();
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setComputedCurrentGrade("A");
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals("A", course.getCurrentGrade());
-    }
-
-    @Test
-    public void getCurrentGrade_withStudentEnrollmentMultipleGradingPeriods() {
-        Course course = new Course();
-
-        Grades grades = new Grades();
-        grades.setCurrentGrade("A");
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setGrades(grades);
-        enrollment.setMultipleGradingPeriodsEnabled(true);
-        enrollment.setCurrentPeriodComputedCurrentGrade("B+");
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals("B+", course.getCurrentGrade());
-    }
-
-    @Test
-    public void getFinalScore_withStudentEnrollment() {
-        Course course = new Course();
-
-        Grades grades = new Grades();
-        grades.setFinalScore(95.0);
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setGrades(grades);
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals(95.0, course.getFinalScore(), 0.0001);
-    }
-
-    @Test
-    public void getFinalScore_withoutStudentEnrollment() {
-        Course course = new Course();
-
-        assertEquals(0, course.getFinalScore(), 0.0001);
-    }
-
-    @Test
-    public void getFinalScore_withStudentEnrollmentNoGrades() {
-        Course course = new Course();
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals(0, course.getFinalScore(), 0.0001);
-    }
-
-    @Test
-    public void getFinalScore_withStudentEnrollmentMultipleGradingPeriods() {
-        Course course = new Course();
-
-        Grades grades = new Grades();
-        grades.setFinalScore(50.0);
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setGrades(grades);
-        enrollment.setMultipleGradingPeriodsEnabled(true);
-        enrollment.setCurrentPeriodComputedFinalScore(95.0);
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals(95.0, course.getFinalScore(), 0.0001);
-    }
-
-    @Test
-    public void getFinalGrade_withStudentEnrollment() {
-        Course course = new Course();
-
-        Grades grades = new Grades();
-        grades.setFinalGrade("A");
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setGrades(grades);
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals("A", course.getFinalGrade());
-    }
-
-    @Test
-    public void getFinalGrade_withoutStudentEnrollment() {
-        Course course = new Course();
-
-        assertEquals(null, course.getFinalGrade());
-    }
-
-    @Test
-    public void getFinalGrade_withStudentEnrollmentNoGrades() {
-        Course course = new Course();
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setComputedFinalGrade("A");
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals("A", course.getFinalGrade());
-    }
-
-    @Test
-    public void getFinalGrade_withStudentEnrollmentMultipleGradingPeriods() {
-        Course course = new Course();
-
-        Grades grades = new Grades();
-        grades.setFinalGrade("A");
-
-        Enrollment enrollment = new Enrollment();
-        enrollment.setType("student");
-        enrollment.setGrades(grades);
-        enrollment.setMultipleGradingPeriodsEnabled(true);
-        enrollment.setCurrentPeriodComputedFinalGrade("B+");
-
-        ArrayList<Enrollment> enrollments = new ArrayList<>();
-        enrollments.add(enrollment);
-
-        course.setEnrollments(enrollments);
-
-        assertEquals("B+", course.getFinalGrade());
     }
 
     @Test
@@ -636,6 +388,275 @@ public class CourseTest {
             course.setLicense(Course.licenseToAPIString(license));
             assertEquals(license, course.getLicense());
         }
+    }
+
+    @Test
+    public void isCourseGradeLocked_hideFinal() {
+        Course course = new Course();
+        course.setHideFinalGrades(true);
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+
+        assertTrue(course.getCourseGrade(false).isLocked());
+    }
+
+    @Test
+    public void isCourseGradeLocked_hideAllGradingPeriods() {
+        Course course = new Course();
+        course.setHasGradingPeriods(true);
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setCurrentGradingPeriodId(0);
+        enrollment.setMultipleGradingPeriodsEnabled(true);
+        enrollment.setTotalsForAllGradingPeriodsOption(false);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).isLocked());
+    }
+
+    @Test
+    public void courseHasNoCurrentGrade() {
+        Course course = new Course();
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setComputedCurrentGrade("");
+        enrollment.setComputedCurrentScore(null);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getNoCurrentGrade());
+    }
+
+    @Test
+    public void courseHasNoFinalGrade() {
+        Course course = new Course();
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setComputedFinalGrade("");
+        enrollment.setComputedFinalScore(null);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getNoFinalGrade());
+    }
+
+    @Test
+    public void courseHasCurrentGrade() {
+        Course course = new Course();
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setComputedCurrentGrade("A");
+        enrollment.setComputedCurrentScore(95.0);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertFalse(course.getCourseGrade(false).getNoCurrentGrade());
+    }
+
+    @Test
+    public void courseHasFinalGrade() {
+        Course course = new Course();
+
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setComputedFinalGrade("A");
+        enrollment.setComputedFinalScore(95.0);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertFalse(course.getCourseGrade(false).getNoFinalGrade());
+    }
+
+    @Test
+    public void courseGrade_currentGradeMGP() {
+        Course course = new Course();
+        course.setHasGradingPeriods(true);
+
+        String currentGrade = "A";
+        String finalGrade = "C";
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setCurrentGradingPeriodId(27);
+        enrollment.setMultipleGradingPeriodsEnabled(true);
+        enrollment.setCurrentPeriodComputedCurrentGrade(currentGrade);
+        enrollment.setCurrentPeriodComputedFinalGrade(finalGrade);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getCurrentGrade().equals(currentGrade));
+    }
+
+    @Test
+    public void courseGrade_currentScoreMGP() {
+        Course course = new Course();
+        course.setHasGradingPeriods(true);
+
+        double currentScore = 96.0;
+        double finalScore = 47.0;
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setCurrentGradingPeriodId(27);
+        enrollment.setMultipleGradingPeriodsEnabled(true);
+        enrollment.setCurrentPeriodComputedCurrentScore(currentScore);
+        enrollment.setCurrentPeriodComputedFinalScore(finalScore);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getCurrentScore() == currentScore);
+    }
+
+    @Test
+    public void courseGrade_currentGradeNonMGP() {
+        Course course = new Course();
+
+        String currentGrade = "A";
+        String finalGrade = "C";
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setCurrentGradingPeriodId(27);
+        enrollment.setComputedCurrentGrade(currentGrade);
+        enrollment.setComputedFinalGrade(finalGrade);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getCurrentGrade().equals(currentGrade));
+    }
+
+    @Test
+    public void courseGrade_currentScoreNonMGP() {
+        Course course = new Course();
+
+        double currentScore = 96.0;
+        double finalScore = 47.0;
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setCurrentGradingPeriodId(27);
+        enrollment.setComputedCurrentScore(currentScore);
+        enrollment.setComputedFinalScore(finalScore);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getCurrentScore() == currentScore);
+    }
+
+    @Test
+    public void courseGrade_finalGradeMGP() {
+        Course course = new Course();
+        course.setHasGradingPeriods(true);
+
+        String currentGrade = "A";
+        String finalGrade = "C";
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setCurrentGradingPeriodId(27);
+        enrollment.setMultipleGradingPeriodsEnabled(true);
+        enrollment.setCurrentPeriodComputedFinalGrade(finalGrade);
+        enrollment.setCurrentPeriodComputedCurrentGrade(currentGrade);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getFinalGrade().equals(finalGrade));
+    }
+
+    @Test
+    public void courseGrade_finalScoreMGP() {
+        Course course = new Course();
+        course.setHasGradingPeriods(true);
+
+        double currentScore = 96.0;
+        double finalScore = 47.0;
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setCurrentGradingPeriodId(27);
+        enrollment.setMultipleGradingPeriodsEnabled(true);
+        enrollment.setCurrentPeriodComputedFinalScore(finalScore);
+        enrollment.setCurrentPeriodComputedCurrentScore(currentScore);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getFinalScore() == finalScore);
+    }
+
+    @Test
+    public void courseGrade_finalGradeNonMGP() {
+        Course course = new Course();
+
+        String currentGrade = "A";
+        String finalGrade = "C";
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setComputedFinalGrade(finalGrade);
+        enrollment.setComputedCurrentGrade(currentGrade);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getFinalGrade().equals(finalGrade));
+    }
+
+    @Test
+    public void courseGrade_finalScoreNonMGP() {
+        Course course = new Course();
+
+        double currentScore = 96.0;
+        double finalScore = 47.0;
+        Enrollment enrollment = new Enrollment();
+        enrollment.setType("student");
+        enrollment.setComputedFinalScore(finalScore);
+        enrollment.setComputedCurrentScore(currentScore);
+
+        ArrayList<Enrollment> enrollments = new ArrayList<>();
+        enrollments.add(enrollment);
+
+        course.setEnrollments(enrollments);
+
+        assertTrue(course.getCourseGrade(false).getFinalScore() == finalScore);
     }
 
 }

@@ -31,9 +31,7 @@ import com.instructure.teacher.decorations.VerticalGridSpacingDecoration
 import com.instructure.teacher.factory.AllCoursesPresenterFactory
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.AllCoursesPresenter
-import com.instructure.teacher.utils.AppType
 import com.instructure.teacher.utils.RecyclerViewUtils
-import com.instructure.pandautils.utils.SerializableArg
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.AllCoursesView
 import kotlinx.android.synthetic.main.fragment_all_courses.*
@@ -41,7 +39,6 @@ import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
 
 class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCoursesView, CoursesViewHolder, AllCoursesAdapter>(), AllCoursesView {
 
-    private var mAppType: AppType by SerializableArg(default = AppType.TEACHER)
     private var mCourseBrowserCallback: CourseBrowserCallback? = null
 
     interface CourseBrowserCallback {
@@ -52,20 +49,14 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
 
     override fun layoutResId() = R.layout.fragment_all_courses
 
-    lateinit private var mRecyclerView: RecyclerView
+    private lateinit var mRecyclerView: RecyclerView
 
     override fun getList() = presenter.data
     override fun getRecyclerView() = mRecyclerView
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun withPagination() = false
 
-    override fun getPresenterFactory() = AllCoursesPresenterFactory {
-        when (mAppType) {
-            AppType.TEACHER -> it.isTeacher || it.isTA || it.isDesigner
-            AppType.STUDENT -> it.isStudent
-            AppType.PARENT -> it.isObserver
-        }
-    }
+    override fun getPresenterFactory() = AllCoursesPresenterFactory()
 
     override fun onCreateView(view: View) {}
 
@@ -132,6 +123,6 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
 
     companion object {
         @JvmStatic
-        fun getInstance(type: AppType) = AllCoursesFragment().apply { mAppType = type }
+        fun getInstance() = AllCoursesFragment()
     }
 }

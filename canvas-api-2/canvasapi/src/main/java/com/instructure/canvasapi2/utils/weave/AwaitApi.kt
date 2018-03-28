@@ -31,33 +31,63 @@ import retrofit2.Response
  * @throws StatusCallbackError if there was an API error
  */
 suspend fun <T> awaitApi(managerCall: ManagerCall<T>): T {
+    val originStackTrace = Thread.currentThread().stackTrace
     return suspendCancellableCoroutine { continuation ->
         val callback = object : StatusCallback<T>() {
 
             var succeededOrFailed = false
 
-            override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders?, type: ApiType?, code: Int) {
+            override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
                 succeededOrFailed = true
                 if (response.isSuccessful) {
-                    continuation.resumeSafely(response.body())
+                    @Suppress("UNCHECKED_CAST")
+                    continuation.resumeSafely(response.body() as T)
                 } else {
-                    continuation.resumeSafelyWithException(StatusCallbackError(response = response))
+                    continuation.resumeSafelyWithException(StatusCallbackError(response = response), originStackTrace)
                 }
-                super.onResponse(response, linkHeaders, type, code)
             }
 
             override fun onFinished(type: ApiType?) {
-                if (!succeededOrFailed && type != ApiType.CACHE) continuation.resumeSafelyWithException(StatusCallbackError(error = Throwable("StatusCallback: 504 Error")))
+                if (!succeededOrFailed && type != ApiType.CACHE) continuation.resumeSafelyWithException(StatusCallbackError(error = Throwable("StatusCallback: 504 Error")), originStackTrace)
             }
 
-            override fun onFail(response: Call<T>?, error: Throwable?) {
+            override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
                 succeededOrFailed = true
-                continuation.resumeSafelyWithException(StatusCallbackError(call = response, error = error))
+                continuation.resumeSafelyWithException(StatusCallbackError(call, error, response), originStackTrace)
+            }
+        }
+        continuation.invokeOnCompletion({ if (continuation.isCancelled) callback.cancel() }, true)
+        managerCall(callback)
+    }
+}
+
+/**
+ * Awaits a single API call and returns the resulting [Response]. Use this when you need to obtain response data in
+ * addition to the payload, such as the status code or response headers.
+ *
+ * @param managerCall Block in which the API call should be started using the provided [StatusCallback]
+ * @throws StatusCallbackError if there was an API error
+ */
+suspend fun <T> awaitApiResponse(managerCall: ManagerCall<T>): Response<T> {
+    return suspendCancellableCoroutine { continuation ->
+        val callback = object : StatusCallback<T>() {
+
+            var succeededOrFailed = false
+
+            override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
+                succeededOrFailed = true
+                continuation.resumeSafely(response)
             }
 
-            override fun onFail(callResponse: Call<T>?, error: Throwable?, response: Response<*>?) {
+            override fun onFinished(type: ApiType?) {
+                if (!succeededOrFailed && type != ApiType.CACHE) continuation.resumeSafelyWithException(
+                    StatusCallbackError(error = Throwable("StatusCallback: 504 Error"))
+                )
+            }
+
+            override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
                 succeededOrFailed = true
-                continuation.resumeSafelyWithException(StatusCallbackError(callResponse, error, response))
+                continuation.resumeSafelyWithException(StatusCallbackError(call, error, response))
             }
         }
         continuation.invokeOnCompletion({ if (continuation.isCancelled) callback.cancel() }, true)

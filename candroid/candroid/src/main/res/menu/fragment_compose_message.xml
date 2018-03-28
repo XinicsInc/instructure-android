@@ -32,7 +32,7 @@
         app:showAsAction="always"/>
     <item
         android:id="@+id/menu_send"
-        android:icon="@drawable/ic_action_send"
+        android:icon="@drawable/vd_send"
         android:title="@string/send"
         app:showAsAction="always" />
 </menu>

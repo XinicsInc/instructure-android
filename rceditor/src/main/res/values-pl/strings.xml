@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -15,6 +15,7 @@
   ~     limitations under the License.
   ~
   -->
+
 <resources>
     <string name="rce_contentDescription_undo">Cofnij</string>
     <string name="rce_contentDescription_redo">Cofnij</string>
@@ -32,7 +33,7 @@
     <string name="rce_contentDescription_insert_bullets">Wstaw listę z punktami</string>
     <string name="rce_contentDescription_insert_numbers">Wstaw listę numerowaną</string>
     <string name="rce_contentDescription_insert_photo">Wstaw zdjęcie</string>
-    <string name="rce_contentDescription_insert_link">Wstaw łącze</string>
+    <string name="rce_contentDescription_insert_link">Umieść Łącze</string>
     <string name="rce_contentDescription_block_quote">Cytat blokowy</string>
 
     <string name="rce_contentDescription_color_none">Brak koloru</string>

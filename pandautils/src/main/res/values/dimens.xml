@@ -30,4 +30,9 @@
 
     <dimen name="utils_toolbar_elevation_small">2dp</dimen>
     <dimen name="utils_toolbar_elevation">6dp</dimen>
+    <dimen name="utils_landscapeTabletDialogAdjustment">120dp</dimen>
+
+    <dimen name="utils_attachment_view_width">150dp</dimen>
+    <dimen name="utils_attachment_view_height">90dp</dimen>
+
 </resources>

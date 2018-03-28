@@ -21,6 +21,7 @@ import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.widget.TextView
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.TeacherPrefs
@@ -28,8 +29,11 @@ import kotlinx.android.synthetic.main.adapter_course_browser.view.*
 
 class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHolder(view) {
 
+    // For instrumentation testing
+    lateinit var labelText: TextView
+
     companion object {
-        val holderResId = R.layout.adapter_course_browser
+        const val holderResId = R.layout.adapter_course_browser
     }
 
     fun bind(tab: Tab, clickedCallback: (Tab) -> Unit) {
@@ -67,6 +71,7 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
      * @param callback What we do when the user clicks this tab
      */
     private fun setupTab(tab: Tab, drawable: Drawable, callback: (Tab) -> Unit) {
+        labelText = itemView.label
         itemView.label.text = tab.label
         itemView.icon.setImageDrawable(drawable)
         itemView.setOnClickListener {

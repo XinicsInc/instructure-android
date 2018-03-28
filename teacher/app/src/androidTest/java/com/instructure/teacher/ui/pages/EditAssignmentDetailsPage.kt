@@ -39,9 +39,9 @@ import java.util.*
 class EditAssignmentDetailsPage : BasePage(), PageAssert by SimplePageAssert() {
 
     private val assignmentNameEditText by OnViewWithId(R.id.editAssignmentName)
-    private val pointsPossibleEditText by OnViewWithId(R.id.editGradePoints)
+    private val pointsPossibleEditText by WaitForViewWithId(R.id.editGradePoints)
     private val publishSwitch by WaitForViewWithId(R.id.publishSwitch)
-    private val saveButton by OnViewWithId(R.id.menu_save)
+    private val saveButton by OnViewWithId(R.id.menuSave)
     private val descriptionWebView by OnViewWithId(R.id.descriptionWebView, autoAssert = false)
     private val noDescriptionTextView by OnViewWithId(R.id.noDescriptionTextView, autoAssert = false)
     private val overlayContainer by OnViewWithId(R.id.overrideContainer, autoAssert = false)
@@ -55,7 +55,7 @@ class EditAssignmentDetailsPage : BasePage(), PageAssert by SimplePageAssert() {
     }
 
     fun clickPointsPossibleEditText() {
-        pointsPossibleEditText.click()
+        pointsPossibleEditText.scrollTo().click()
     }
 
     fun editAssignmentName() : String {

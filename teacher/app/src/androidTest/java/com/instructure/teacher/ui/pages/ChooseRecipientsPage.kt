@@ -16,8 +16,8 @@
  */
 package com.instructure.teacher.ui.pages
 
+import com.instructure.soseedy.CanvasUser
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.CanvasUser
 import com.instructure.teacher.ui.utils.WaitForViewWithId
 import com.instructure.teacher.ui.utils.assertDisplayed
 import com.instructure.teacher.ui.utils.click

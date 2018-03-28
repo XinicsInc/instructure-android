@@ -71,26 +71,26 @@ class EditFileFolderPresenter(val currentFileOrFolder: FileFolder, val usageRigh
             is PublishStatus -> {
                 fileFolder.isLocked = false
                 fileFolder.isHidden = false
-                fileFolder.setLockAt("")
-                fileFolder.setUnlockAt("")
+                fileFolder.lockAt = null
+                fileFolder.unlockAt = null
             }
             is UnpublishStatus -> {
                 fileFolder.isLocked = true
                 fileFolder.isHidden = false
-                fileFolder.setLockAt("")
-                fileFolder.setUnlockAt("")
+                fileFolder.lockAt = null
+                fileFolder.unlockAt = null
             }
             is RestrictedStatus -> {
                 fileFolder.isLocked = false
                 fileFolder.isHidden = true
-                fileFolder.setLockAt("")
-                fileFolder.setUnlockAt("")
+                fileFolder.lockAt = null
+                fileFolder.unlockAt = null
             }
             is RestrictedScheduleStatus -> {
                 fileFolder.isLocked = false
                 fileFolder.isHidden = false
-                fileFolder.setLockAt(accessStatus.lockAt)
-                fileFolder.setUnlockAt(accessStatus.unlockAt)
+                fileFolder.lockAt = APIHelper.stringToDate(accessStatus.lockAt)
+                fileFolder.unlockAt = APIHelper.stringToDate(accessStatus.unlockAt)
             }
         }
 

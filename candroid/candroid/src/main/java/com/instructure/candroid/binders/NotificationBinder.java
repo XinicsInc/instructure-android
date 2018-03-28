@@ -18,9 +18,9 @@
 package com.instructure.candroid.binders;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -30,7 +30,7 @@ import com.instructure.candroid.holders.NotificationViewHolder;
 import com.instructure.candroid.interfaces.NotificationAdapterToFragmentCallback;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.StreamItem;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 public class NotificationBinder extends BaseBinder {
 
@@ -62,8 +62,6 @@ public class NotificationBinder extends BaseBinder {
 
         holder.title.setText(item.getTitle(context));
 
-        int courseColor = CanvasContextColor.getCachedColor(context, item.getCanvasContext());
-
         //Course Name
         String courseName = "";
         if (item.getContextType() == CanvasContext.Type.COURSE && item.getCanvasContext() != null) {
@@ -74,6 +72,7 @@ public class NotificationBinder extends BaseBinder {
             courseName = "";
         }
         holder.course.setText(courseName);
+        holder.course.setTextColor(ColorKeeper.getOrGenerateColor(item.getCanvasContext()));
 
         //Description
         if (!TextUtils.isEmpty(item.getMessage(context))) {
@@ -85,24 +84,24 @@ public class NotificationBinder extends BaseBinder {
         }
 
         if(item.isChecked()) {
-            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightgray));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.lightgray));
         } else {
-            holder.cardView.setCardBackgroundColor(Color.WHITE);
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.canvasBackgroundWhite));
         }
 
         //Icon
         int drawableResId = 0;
         switch (item.getType()) {
             case DISCUSSION_TOPIC:
-                drawableResId = R.drawable.ic_cv_discussions_fill;
+                drawableResId = R.drawable.vd_discussion;
                 holder.icon.setContentDescription(context.getString(R.string.discussionIcon));
                 break;
             case ANNOUNCEMENT:
-                drawableResId = R.drawable.ic_cv_announcements_fill;
+                drawableResId = R.drawable.vd_announcement;
                 holder.icon.setContentDescription(context.getString(R.string.announcementIcon));
                 break;
             case SUBMISSION:
-                drawableResId = R.drawable.ic_cv_assignments_fill;
+                drawableResId = R.drawable.vd_assignment;
                 holder.icon.setContentDescription(context.getString(R.string.assignmentIcon));
 
                 //need to prepend "Grade" in the message if there is a valid score
@@ -118,37 +117,40 @@ public class NotificationBinder extends BaseBinder {
                 }
                 break;
             case CONVERSATION:
-                drawableResId = R.drawable.ic_cv_messages_fill;
+                drawableResId = R.drawable.vd_inbox;
                 holder.icon.setContentDescription(context.getString(R.string.conversationIcon));
                 break;
             case MESSAGE:
                 if (item.getContextType() == CanvasContext.Type.COURSE) {
-                    drawableResId = R.drawable.ic_cv_assignments_fill;
+                    drawableResId = R.drawable.vd_assignment;
                     holder.icon.setContentDescription(context.getString(R.string.assignmentIcon));
                 } else if (item.getNotificationCategory().toLowerCase().contains("assignment graded")) {
-                    drawableResId = R.drawable.ic_cv_grades_fill;
+                    drawableResId = R.drawable.vd_grades;
                     holder.icon.setContentDescription(context.getString(R.string.gradesIcon));
                 } else {
-                    drawableResId = R.drawable.ic_cv_student_fill;
+                    drawableResId = R.drawable.vd_profile;
                     holder.icon.setContentDescription(context.getString(R.string.defaultIcon));
                 }
                 break;
             case CONFERENCE:
-                drawableResId = R.drawable.ic_cv_conference_fill;
+                drawableResId = R.drawable.vd_conferences;
                 holder.icon.setContentDescription(context.getString(R.string.icon));
                 break;
             case COLLABORATION:
-                drawableResId = R.drawable.ic_cv_collaboration_fill;
+                drawableResId = R.drawable.vd_collaborations;
                 holder.icon.setContentDescription(context.getString(R.string.icon));
                 break;
             case COLLECTION_ITEM:
             default:
-                drawableResId = R.drawable.ic_cv_peer_review_fill;
+                drawableResId = R.drawable.vd_peer_review;
                 break;
         }
 
-        Drawable drawable = CanvasContextColor.getColoredDrawable(context, drawableResId, courseColor);
-        holder.icon.setImageDrawable(drawable);
+        if (item.getCanvasContext() != null) {
+            int courseColor = ColorKeeper.getOrGenerateColor(item.getCanvasContext());
+            Drawable drawable = ColorKeeper.getColoredDrawable(context, drawableResId, courseColor);
+            holder.icon.setImageDrawable(drawable);
+        }
 
         //Read/Unread
         if (item.isReadState()) {

@@ -6,4 +6,5 @@
     <dimen name="recordingViewHeight">254dp</dimen>
     <dimen name="recordingViewWidth">390dp</dimen>
     <dimen name="mediaRecordingButton">64dp</dimen>
+    <dimen name="navigationDrawerWidth">340dp</dimen>
 </resources>

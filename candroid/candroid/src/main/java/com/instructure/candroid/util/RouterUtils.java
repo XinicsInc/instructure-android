@@ -23,45 +23,44 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.activity.BaseRouterActivity;
 import com.instructure.candroid.activity.NavigationActivity;
-import com.instructure.candroid.delegate.Navigation;
 import com.instructure.candroid.fragment.AnnouncementListFragment;
 import com.instructure.candroid.fragment.AssignmentFragment;
 import com.instructure.candroid.fragment.AssignmentListFragment;
 import com.instructure.candroid.fragment.BasicQuizViewFragment;
 import com.instructure.candroid.fragment.CalendarListViewFragment;
-import com.instructure.candroid.fragment.CourseGridFragment;
+import com.instructure.candroid.fragment.DashboardFragment;
 import com.instructure.candroid.fragment.CourseModuleProgressionFragment;
-import com.instructure.candroid.fragment.DetailedConversationFragment;
-import com.instructure.candroid.fragment.DetailedDiscussionFragment;
+import com.instructure.candroid.fragment.DiscussionDetailsFragment;
 import com.instructure.candroid.fragment.DiscussionListFragment;
 import com.instructure.candroid.fragment.FileListFragment;
 import com.instructure.candroid.fragment.GradesListFragment;
 import com.instructure.candroid.fragment.InboxFragment;
 import com.instructure.candroid.fragment.InternalWebviewFragment;
+import com.instructure.candroid.fragment.InboxConversationFragment;
 import com.instructure.candroid.fragment.ModuleListFragment;
 import com.instructure.candroid.fragment.NotificationListFragment;
 import com.instructure.candroid.fragment.PageDetailsFragment;
 import com.instructure.candroid.fragment.PageListFragment;
-import com.instructure.candroid.fragment.ParentFragment;
 import com.instructure.candroid.fragment.PeopleDetailsFragment;
 import com.instructure.candroid.fragment.PeopleListFragment;
 import com.instructure.candroid.fragment.QuizListFragment;
 import com.instructure.candroid.fragment.ScheduleListFragment;
-import com.instructure.candroid.fragment.SettingsFragment;
-import com.instructure.candroid.fragment.SyllabusFragment;
+import com.instructure.candroid.fragment.CourseSettingsFragment;
 import com.instructure.candroid.fragment.UnSupportedFeatureFragment;
 import com.instructure.candroid.fragment.UnSupportedTabFragment;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Tab;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.Logger;
 import com.instructure.pandautils.utils.Const;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,17 +94,18 @@ public class RouterUtils {
     }
 
     static {
-        sRoutes.add(new Route("/", CourseGridFragment.class));
+        sRoutes.add(new Route("/", DashboardFragment.class));
         // region Conversations
-        sRoutes.add(new Route("/conversations", InboxFragment.class, Navigation.NavigationPosition.INBOX));
-        sRoutes.add(new Route("/conversations/:conversation_id", InboxFragment.class, DetailedConversationFragment.class, Navigation.NavigationPosition.INBOX));
+        sRoutes.add(new Route("/conversations", InboxFragment.class));
+        sRoutes.add(new Route("/conversations/:conversation_id", InboxFragment.class, InboxConversationFragment.class));
+        sRoutes.add(new Route("/conversations/:conversation_id", NotificationListFragment.class, InboxConversationFragment.class));
         sRoutes.add(new Route("/login.*", ROUTE_TYPE.NOT_INTERNALLY_ROUTED));
         // endregion
 
         //////////////////////////
         // Courses
         //////////////////////////
-        sRoutes.add(new Route(courseOrGroup("/"), CourseGridFragment.class));
+        sRoutes.add(new Route(courseOrGroup("/"), DashboardFragment.class));
         sRoutes.add(new Route(courseOrGroup("/:course_id"), null, Tab.HOME_ID));
 
         // region Modules
@@ -145,7 +145,7 @@ public class RouterUtils {
 
         // Discussions
         sRoutes.add(new Route(courseOrGroup("/:course_id/discussion_topics"), DiscussionListFragment.class, Tab.DISCUSSIONS_ID));
-        sRoutes.add(new Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionListFragment.class, DetailedDiscussionFragment.class, Tab.DISCUSSIONS_ID));
+        sRoutes.add(new Route(courseOrGroup("/:course_id/discussion_topics/:message_id"), DiscussionListFragment.class, DiscussionDetailsFragment.class, Tab.DISCUSSIONS_ID));
 
         // Pages
         sRoutes.add(new Route(courseOrGroup("/:course_id/pages"), PageListFragment.class, Tab.PAGES_ID));
@@ -156,7 +156,9 @@ public class RouterUtils {
         // Announcements
         sRoutes.add(new Route(courseOrGroup("/:course_id/announcements"), AnnouncementListFragment.class, Tab.ANNOUNCEMENTS_ID));
         // :message_id because it shares with discussions
-        sRoutes.add(new Route(courseOrGroup("/:course_id/announcements/:message_id"), AnnouncementListFragment.class, DetailedDiscussionFragment.class, Tab.ANNOUNCEMENTS_ID));
+        sRoutes.add(new Route(courseOrGroup("/:course_id/announcements/:message_id"), AnnouncementListFragment.class, DiscussionDetailsFragment.class, Tab.ANNOUNCEMENTS_ID));
+        // Announcements from the notifications tab
+        sRoutes.add(new Route(courseOrGroup("/:course_id/announcements/:message_id"), NotificationListFragment.class, DiscussionDetailsFragment.class, Tab.ANNOUNCEMENTS_ID));
 
         // Quiz
         sRoutes.add(new Route(courseOrGroup("/:course_id/quizzes"), QuizListFragment.class, Tab.QUIZZES_ID));
@@ -175,6 +177,7 @@ public class RouterUtils {
         sRoutes.add(new Route(courseOrGroup("/:course_id/assignments/:assignment_id"), AssignmentListFragment.class, AssignmentFragment.class, Tab.ASSIGNMENTS_ID));
         sRoutes.add(new Route(courseOrGroup("/:course_id/assignments/:assignment_id"), ScheduleListFragment.class, AssignmentFragment.class, Tab.ASSIGNMENTS_ID));
         sRoutes.add(new Route(courseOrGroup("/:course_id/assignments/:assignment_id"), NotificationListFragment.class, AssignmentFragment.class, Tab.ASSIGNMENTS_ID));
+        sRoutes.add(new Route(courseOrGroup("/:course_id/assignments/:assignment_id"), CalendarListViewFragment.class, AssignmentFragment.class, Tab.ASSIGNMENTS_ID));
 
 
         // Submissions
@@ -183,13 +186,13 @@ public class RouterUtils {
         sRoutes.add(new Route(courseOrGroup("/:course_id/assignments/:assignment_id/:sliding_tab_type/:submission_id"), AssignmentListFragment.class, AssignmentFragment.class, Tab.ASSIGNMENTS_ID));
 
         // Settings
-        sRoutes.add(new Route(courseOrGroup("/:course_id/settings"), SettingsFragment.class, Tab.SETTINGS_ID));
+        sRoutes.add(new Route(courseOrGroup("/:course_id/settings"), CourseSettingsFragment.class, Tab.SETTINGS_ID));
 
         // Unsupported
         // NOTE: An Exception to how the router usually works (Not recommended for urls that are meant to be internally routed)
         //  The .* will catch anything and route to UnsupportedFragment. If the users decides to press "open in browser" from the UnsupportedFragment, then InternalWebviewFragment is setup to handle the unsupportedFeature
         sRoutes.add(new Route(courseOrGroup("/:course_id/collaborations.*"), UnSupportedTabFragment.class, Tab.COLLABORATIONS_ID));
-        sRoutes.add(new Route(courseOrGroup("/:course_id/conferences.*"), UnSupportedTabFragment.class, Tab.CONFERENCES_ID));
+        //sRoutes.add(new Route(courseOrGroup("/:course_id/conferences.*"), UnSupportedTabFragment.class, Tab.CONFERENCES_ID)); //No longer supported. Left here so you read this and know.
         sRoutes.add(new Route(courseOrGroup("/:course_id/outcomes.*"), UnSupportedTabFragment.class, Tab.OUTCOMES_ID));
 
         sRoutes.add(new Route("/files", FileListFragment.class));
@@ -240,7 +243,7 @@ public class RouterUtils {
         return route;
     }
 
-    public static Route getInternalRoute(Class<? extends ParentFragment> masterCls, Class<? extends ParentFragment> detailCls) {
+    public static Route getInternalRoute(Class<? extends FragmentInteractions> masterCls, Class<? extends FragmentInteractions> detailCls) {
         Route route = null;
         for (Route r : sRoutes) {
             if (r.apply(masterCls, detailCls)) {
@@ -251,11 +254,11 @@ public class RouterUtils {
         return route;
     }
 
-    public static String createUrl(Context context, CanvasContext.Type type, Class<? extends ParentFragment> masterCls, HashMap<String, String> replacementParams) {
-        return createUrl(context, type, masterCls, null, replacementParams, null);
+    public static String createUrl(CanvasContext.Type type, Class<? extends FragmentInteractions> masterCls, HashMap<String, String> replacementParams) {
+        return createUrl(type, masterCls, null, replacementParams, null);
     }
 
-    public static String createUrl(Context context, CanvasContext.Type type, Class<? extends ParentFragment> masterCls, Class<? extends ParentFragment> detailCls, HashMap<String, String> replacementParams, HashMap<String, String> queryParams) {
+    public static String createUrl(CanvasContext.Type type, Class<? extends FragmentInteractions> masterCls, Class<? extends FragmentInteractions> detailCls, HashMap<String, String> replacementParams, HashMap<String, String> queryParams) {
         if(replacementParams == null || replacementParams.isEmpty()) {
             return null;
         }
@@ -323,12 +326,11 @@ public class RouterUtils {
         if (activity == null) {
             return;
         }
-        boolean isReceivedFromOutsideOfApp = !(activity instanceof BaseRouterActivity);
 
         UrlValidity urlValidity = new UrlValidity(url, ApiPrefs.getDomain());
 
         if (!urlValidity.isValid()) {
-            routeToLandingPage(activity, isReceivedFromOutsideOfApp);
+            routeToLandingPage(activity, true);
         }
 
         boolean isHostForLoggedInUser = urlValidity.isHostForLoggedInUser();
@@ -339,41 +341,20 @@ public class RouterUtils {
                 ((AnalyticsEventHandling)application).trackScreen("AppRouter");
             }
 
-            if (isReceivedFromOutsideOfApp) {
-                Intent intent = new Intent(activity, NavigationActivity.getStartActivityClass());
+            if (activity instanceof BaseRouterActivity) {
+                final Route route = getInternalRoute(url, ApiPrefs.getDomain());
+                if (route != null) ((BaseRouterActivity)activity).handleRoute(route);
+            } else {
+                Intent intent = new Intent(activity, NavigationActivity.Companion.getStartActivityClass());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(Const.PARSE, true);
                 intent.putExtra(Const.URL, url);
-                intent.putExtra(Const.RECEIVED_FROM_OUTSIDE, isReceivedFromOutsideOfApp);
-                if(animate) {
-                    activity.startActivity(intent);
-                    activity.overridePendingTransition(R.anim.fade_in_quick, R.anim.fade_out_quick);
-                }
                 activity.startActivity(intent);
-            } else {
-
-                final Route route = getInternalRoute(url, ApiPrefs.getDomain());
-                if (route != null) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            //Fixes an issue with adding the landing fragment where the screen ends up white and the fragment is invisible
-                            ((BaseRouterActivity)activity).handleRoute(route);
-                        }
-                    }, 300);
-                }
+                if(animate) activity.overridePendingTransition(R.anim.fade_in_quick, R.anim.fade_out_quick);
             }
         } else {
-            openInInternalWebViewFragment(activity, url, isReceivedFromOutsideOfApp);
+            openInInternalWebViewFragment(activity, url);
         }
-    }
-
-    public static void routeToNavigationMenuItem(Context context, Navigation.NavigationPosition position) {
-        Intent intent = new Intent(context, NavigationActivity.getStartActivityClass());
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra(Const.GOOGLE_NOW_VOICE_SEARCH, true);
-        intent.putExtra(Const.PARSE, position);
-        context.startActivity(intent);
     }
 
     private static String createQueryParamString(String url, HashMap<String, String> queryParams) {
@@ -392,7 +373,7 @@ public class RouterUtils {
         private boolean mIsValid = false;
         private Uri mUri;
 
-        public UrlValidity(String url, String userDomain) {
+        UrlValidity(String url, String userDomain) {
             mUri =  Uri.parse(url);
             if (mUri != null) {
                 mIsValid = true;
@@ -408,11 +389,11 @@ public class RouterUtils {
         }
 
         // region Getter && Setters
-        public boolean isHostForLoggedInUser() {
+        boolean isHostForLoggedInUser() {
             return mIsHostForLoggedInUser;
         }
 
-        public boolean isValid() {
+        boolean isValid() {
             return mIsValid;
         }
 
@@ -423,25 +404,22 @@ public class RouterUtils {
         // endregion
     }
 
-    private static void routeToLandingPage(Context context, boolean isReceivedFromOutsideOfApp) {
+    private static void routeToLandingPage(Context context, boolean clearBackStack) {
         Logger.d("routeToLandingPage()");
-        Intent intent = new Intent(context, NavigationActivity.getStartActivityClass());
-        if(isReceivedFromOutsideOfApp) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        }
+        Intent intent = new Intent(context, NavigationActivity.Companion.getStartActivityClass());
+        if(clearBackStack) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        else intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
 
-    private static void openInInternalWebViewFragment(Context context, String url, final boolean isReceivedFromOutsideOfApp) {
+    private static void openInInternalWebViewFragment(Context context, String url) {
         Logger.d("couldNotParseUrl()");
-        // TODO test if this works
-        Bundle bundle = InternalWebviewFragment.createBundle(url, null, false, null);
 
-        Intent intent = new Intent(context, NavigationActivity.getStartActivityClass());
-        if(isReceivedFromOutsideOfApp) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        }
+        Bundle bundle = InternalWebviewFragment.Companion.createBundle(url, null, false, null);
+
+        Intent intent = new Intent(context, NavigationActivity.Companion.getStartActivityClass());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
@@ -461,11 +439,10 @@ public class RouterUtils {
         private Pattern mRoutePattern;
         private ArrayList<String> mParamNames = new ArrayList<>();
         private List<String> mQueryParamNames; // used to validate a route that requires certain query params
-        private Class<? extends ParentFragment> mMasterCls;
-        private Class<? extends ParentFragment> mDetailCls;
+        private @Nullable Class<? extends FragmentInteractions> mMasterCls;
+        private @Nullable Class<? extends FragmentInteractions> mDetailCls;
         private String mTabId;
         private ROUTE_TYPE mRouteType = ROUTE_TYPE.INTERNALLY_ROUTED;
-        private Navigation.NavigationPosition mNavigationPosition = Navigation.NavigationPosition.UNKNOWN;
         // endregion
 
         // region Refers to the url that was applied to the route
@@ -476,35 +453,31 @@ public class RouterUtils {
         // endregion
 
         // region Constructors
-        public Route(String route, Class<? extends ParentFragment> masterCls, Class<? extends ParentFragment> detailCls, String tabId) {
+
+        public Route(String route, @Nullable Class<? extends FragmentInteractions> masterCls, @Nullable Class<? extends FragmentInteractions> detailCls) {
+            this(route);
+            mMasterCls = masterCls;
+            mDetailCls = detailCls;
+        }
+
+        public Route(String route, @Nullable Class<? extends FragmentInteractions> masterCls, @Nullable Class<? extends FragmentInteractions> detailCls, String tabId) {
             this(route, masterCls, tabId);
             mDetailCls = detailCls;
         }
 
-        public Route(String route, Class<? extends ParentFragment> masterCls, Class<? extends ParentFragment> detailCls, Navigation.NavigationPosition navigationPosition) {
-            this(route, masterCls, navigationPosition);
-            mDetailCls = detailCls;
-        }
-
-        public Route(String route, Class<? extends ParentFragment> masterCls, Class<? extends ParentFragment> detailCls, String tabId, List<String> queryParamNames) {
+        public Route(String route, @Nullable Class<? extends FragmentInteractions> masterCls, @Nullable Class<? extends FragmentInteractions> detailCls, String tabId, List<String> queryParamNames) {
             this(route, masterCls, tabId);
             mDetailCls = detailCls;
             mQueryParamNames = queryParamNames;
         }
 
-        public <Type extends ParentFragment> Route(String route, Class<Type> cls, String tabId) {
+        public <Type extends FragmentInteractions> Route(String route, @Nullable Class<Type> cls, String tabId) {
             this(route);
             mMasterCls = cls;
             mTabId = tabId;
         }
 
-        public <Type extends ParentFragment> Route(String route, Class<Type> cls, Navigation.NavigationPosition navigationPosition) {
-            this(route);
-            mMasterCls = cls;
-            mNavigationPosition = navigationPosition;
-        }
-
-        public <Type extends ParentFragment> Route(String route, Class<Type> cls) {
+        public <Type extends FragmentInteractions> Route(String route, @Nullable Class<Type> cls) {
             this(route);
             mMasterCls = cls;
         }
@@ -580,9 +553,8 @@ public class RouterUtils {
             return isMatch;
         }
 
-        public boolean apply(Class<? extends ParentFragment> masterCls, Class<? extends ParentFragment> detailCls) {
-            boolean isMatch = (!ROUTE_TYPE.NOT_INTERNALLY_ROUTED.equals(mRouteType) && masterCls == mMasterCls && detailCls == mDetailCls);
-            return isMatch;
+        public boolean apply(Class<? extends FragmentInteractions> masterCls, Class<? extends FragmentInteractions> detailCls) {
+            return (!ROUTE_TYPE.NOT_INTERNALLY_ROUTED.equals(mRouteType) && masterCls == mMasterCls && detailCls == mDetailCls);
         }
 
         public String createUrl(HashMap<String, String> replacementParams) {
@@ -643,7 +615,7 @@ public class RouterUtils {
                         // index 0 is the original string that was matched. Just get the group values
                         paramValues.add(matcher.group(i + 1));
                     } catch (Exception e) {
-
+                        //do nothing
                     }
                 }
             }
@@ -696,24 +668,16 @@ public class RouterUtils {
             return mRouteType;
         }
 
-        public <Type extends ParentFragment> Class<Type> getMasterCls() {
-            return (Class<Type>) mMasterCls;
+        public Class<? extends FragmentInteractions> getMasterCls() {
+            return mMasterCls;
         }
 
-        public <Type extends ParentFragment> Class<Type> getDetailCls() {
-            return (Class<Type>)mDetailCls;
+        public Class<? extends FragmentInteractions> getDetailCls() {
+            return mDetailCls;
         }
 
         public String getTabId() {
             return mTabId;
-        }
-
-        public Navigation.NavigationPosition getNavigationPosition() {
-            return mNavigationPosition;
-        }
-
-        public void setNavigationPosition(Navigation.NavigationPosition navigationPosition) {
-            this.mNavigationPosition = navigationPosition;
         }
 
         public HashMap<String, String> getParamsHash() {
@@ -773,9 +737,7 @@ public class RouterUtils {
      * @return a CanvasContext context_id (group_12345, course_12345)
      */
     public static String getContextIdFromURL(String urlString) {
-        if(TextUtils.isEmpty(urlString)) {
-            return "";
-        }
+        if(TextUtils.isEmpty(urlString)) return "";
 
         try {
             HashMap<String, String> params = new HashMap<>();
@@ -787,8 +749,7 @@ public class RouterUtils {
                     break;
                 }
             }
-
-            return CanvasContext.makeContextId(route.getContextType(), Long.parseLong(params.get(Param.COURSE_ID)));
+            return route != null ? CanvasContext.makeContextId(route.getContextType(), Long.parseLong(params.get(Param.COURSE_ID))) : "";
         } catch (Exception e) {
             return "";
         }

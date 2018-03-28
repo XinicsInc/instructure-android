@@ -19,10 +19,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.LoaderManager
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
 import android.view.MenuItem
 import android.webkit.CookieManager
@@ -30,39 +27,36 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.pandautils.dialogs.AttachmentPickerDialog
+import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.video.ActivityContentVideoViewClient
-import com.instructure.pandautils.video.ContentVideoViewClient
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.StudentContextFragment
-import com.instructure.teacher.dialog.AttachmentPickerDialog
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.factory.DiscussionsDetailsPresenterFactory
-import com.instructure.teacher.interfaces.FullScreenInteractions
-import com.instructure.teacher.interfaces.Identity
-import com.instructure.teacher.interfaces.MasterDetailInteractions
+import com.instructure.interactions.FullScreenInteractions
+import com.instructure.interactions.Identity
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
 import com.instructure.teacher.presenters.DiscussionsDetailsPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
-import com.instructure.teacher.utils.ProfileUtils
 import com.instructure.teacher.viewinterface.DiscussionsDetailsView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_discussions_details.*
 import kotlinx.android.synthetic.main.view_submissions_donut_group.*
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -77,19 +71,20 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     //region Member Variables
 
     private var mCanvasContext: CanvasContext by ParcelableArg(Course())
-    private var mDiscussionTopicHeader: DiscussionTopicHeader by ParcelableArg<DiscussionTopicHeader>(DiscussionTopicHeader())
-    private var mDiscussionTopic: DiscussionTopic by ParcelableArg<DiscussionTopic>(DiscussionTopic())
+    private var mDiscussionTopicHeader: DiscussionTopicHeader by ParcelableArg(DiscussionTopicHeader())
+    private var mDiscussionTopic: DiscussionTopic by ParcelableArg(DiscussionTopic())
     private var mDiscussionEntryId: Long by LongArg(default = 0L)
     private var mDiscussionTopicHeaderId: Long by LongArg(default = 0L)
     private var mSkipIdentityCheck: Boolean by BooleanArg(default = false)
     private var mSkipId: String by StringArg(default = "")
 
-    private var mVideoViewClient: ContentVideoViewClient? = null
     private var mIsAnnouncements: Boolean = false
     private var mIsNestedDetail: Boolean = false
 
     private var mSessionAuthJob: Job? = null
     private var mAuthenticatedSessionURL: String? = null
+
+    private var loadDiscussionJob: WeaveJob? = null
 
     //endregion
 
@@ -111,6 +106,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     override fun onDestroy() {
         super.onDestroy()
         mSessionAuthJob?.cancel()
+        loadDiscussionJob?.cancel()
     }
 
     override val identity: Long? get() = if(mDiscussionTopicHeaderId != 0L) mDiscussionTopicHeaderId else mDiscussionTopicHeader.id
@@ -123,13 +119,6 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     override fun onPresenterPrepared(presenter: DiscussionsDetailsPresenter?) {}
 
     override fun onReadySetGo(presenter: DiscussionsDetailsPresenter) {
-
-        EventBus.getDefault().getStickyEvent(DiscussionEntryEvent::class.java)?.once(javaClass.simpleName) { discussionEntry ->
-            //1. Add to the DiscussionTopic if it is not already there for some reason
-            //2. Check if we should show the entry, dependent on nesting
-            //3. If we should show, create the html and update the UI
-            presenter.addDiscussionEntryToDiscussionTopic(discussionEntry, false)
-        }
 
         EventBus.getDefault().getStickyEvent(DiscussionEntryUpdatedEvent::class.java)?.once(javaClass.simpleName) { discussionEntry ->
             presenter.updateDiscussionEntryToDiscussionTopic(discussionEntry)
@@ -219,52 +208,42 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     override fun populateDiscussionTopic(discussionTopicHeader: DiscussionTopicHeader, discussionTopic: DiscussionTopic) {
         //Check if we have permissions and if we have any discussions to display.
 
-        //TODO: for student access implement permission checks
+        loadDiscussionJob = tryWeave {
 
-        swipeRefreshLayout.isRefreshing = false
+            swipeRefreshLayout.isRefreshing = false
 
-        if(discussionTopic.views.isEmpty()) {
-            //Nothing to display
-            discussionRepliesHeaderWrapper.setGone()
-            return
-        }
+            if(discussionTopic.views.isEmpty()) {
+                //Nothing to display
+                discussionRepliesHeaderWrapper.setGone()
+                return@tryWeave
+            }
 
-        discussionRepliesHeaderWrapper.setVisible()
+            discussionRepliesHeaderWrapper.setVisible()
 
-        LoaderUtils.restartLoaderWithBundle(loaderManager, createLoaderBundle(presenter.discussionTopicHeader, presenter.discussionTopic, presenter.discussionEntryId),
-                object : LoaderManager.LoaderCallbacks<DiscussionsHtmlObject> {
-                    override fun onCreateLoader(id: Int, args: Bundle): Loader<DiscussionsHtmlObject> {
-                        return DiscussionsHtmlLoader(context, mCanvasContext,
-                                args.getParcelable<DiscussionTopicHeader>(DISCUSSION_TOPIC_HEADER),
-                                args.getParcelable<DiscussionTopic>(DISCUSSION_TOPIC).views,
-                                mIsAnnouncements, /*isReadOnly*/ false, isTablet,
-                                args.getLong(DISCUSSION_ENTRY_ID))
-                    }
+            val html = inBackground {
+                DiscussionUtils.createDiscussionTopicHtml(
+                        activity,
+                        isTablet,
+                        mCanvasContext,
+                        discussionTopicHeader,
+                        discussionTopic.views,
+                        mDiscussionEntryId)
+            }
 
-                    override fun onLoadFinished(loader: Loader<DiscussionsHtmlObject>, data: DiscussionsHtmlObject) {
-                        if (isAdded) {
-                            discussionRepliesWebView.setInvisible()
-                            if(CanvasWebView.containsArcLTI(data.html, "utf-8")) {
-                                getAuthenticatedURL(data.html, { loadHTMLReplies(it) })
+            discussionRepliesWebView.setInvisible()
+            if(CanvasWebView.containsArcLTI(html, "utf-8")) {
+                getAuthenticatedURL(html, { loadHTMLReplies(it) })
 
-                            } else {
-                                discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), data.html, "text/html", "utf-8", null)
-                            }
-                            discussionsScrollView.postDelayed({
-                                if(isAdded && discussionsScrollView != null) {
-                                    discussionsScrollView.post {
-                                        discussionsScrollView.scrollTo(0, presenter?.scrollPosition ?: 0)
-                                        discussionRepliesWebView.setVisible()
-                                    }
-                                }
-                            }, 300L)
-                        }
-                    }
+            } else {
+                discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), html, "text/html", "utf-8", null)
+            }
 
-                    override fun onLoaderReset(loader: Loader<DiscussionsHtmlObject>?) {}
-                },
-                R.id.formatLoaderID
-        )
+            delay(300)
+            discussionsScrollView.post {
+                discussionsScrollView.scrollTo(0, presenter?.scrollPosition ?: 0)
+                discussionRepliesWebView.setVisible()
+            }
+        } catch { Logger.e("Error loading discussion " + it.message) }
     }
 
     private fun setupAssignmentDetails(assignment: Assignment) = with(assignment) {
@@ -282,7 +261,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                 NumberHelper.formatDecimal(pointsPossible, 1, true))
 
         dueLayout.setVisible()
-        submissionsLayout.setVisible()
+        submissionsLayout.setVisible(!mCanvasContext.isDesigner())
 
         //set these as gone and make them visible if we have data for them
         availabilityLayout.setGone()
@@ -296,7 +275,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         val atSeparator = getString(R.string.at)
 
         allDates.singleOrNull()?.apply {
-            if (lockAt?.before(Date()) ?: false) {
+            if (lockAt?.before(Date()) == true) {
                 availabilityLayout.setVisible()
                 availabilityTextView.setText(R.string.closed)
             } else {
@@ -362,21 +341,21 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     private fun setupListeners() {
         dueLayout.setOnClickListener {
-            val args = DueDatesFragment.makeBundle(mDiscussionTopicHeader.assignment)
+            val args = DueDatesFragment.makeBundle(presenter.discussionTopicHeader.assignment)
             RouteMatcher.route(context, Route(null, DueDatesFragment::class.java, mCanvasContext, args))
         }
         submissionsLayout.setOnClickListener {
-            navigateToSubmissions(mCanvasContext as Course, mDiscussionTopicHeader.assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
+            navigateToSubmissions(mCanvasContext as Course, presenter.discussionTopicHeader.assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.ALL)
         }
         viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
         gradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCanvasContext as Course, mDiscussionTopicHeader.assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
+            navigateToSubmissions(mCanvasContext as Course, presenter.discussionTopicHeader.assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.GRADED)
         }
         ungradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCanvasContext as Course, mDiscussionTopicHeader.assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
+            navigateToSubmissions(mCanvasContext as Course, presenter.discussionTopicHeader.assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.NOT_GRADED)
         }
         notSubmittedWrapper.setOnClickListener {
-            navigateToSubmissions(mCanvasContext as Course, mDiscussionTopicHeader.assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
+            navigateToSubmissions(mCanvasContext as Course, presenter.discussionTopicHeader.assignment, AssignmentSubmissionListPresenter.SubmissionListFilter.MISSING)
         }
     }
 
@@ -387,14 +366,14 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     private fun loadDiscussionTopicHeader(discussionTopicHeader: DiscussionTopicHeader) {
         val displayName = discussionTopicHeader.author?.displayName
-        ProfileUtils.loadAvatarForUser(context, authorAvatar, displayName, discussionTopicHeader.author?.avatarImageUrl)
+        ProfileUtils.loadAvatarForUser(authorAvatar, displayName, discussionTopicHeader.author?.avatarImageUrl)
         authorAvatar.setupAvatarA11y(discussionTopicHeader.author?.displayName)
         authorAvatar.onClick {
             val bundle = StudentContextFragment.makeBundle(discussionTopicHeader.author?.id ?: 0, mCanvasContext.id)
             RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
         }
         authorName?.text = displayName
-        authoredDate?.text = presenter?.getFormattedDueDate(context, discussionTopicHeader.postedAt)
+        authoredDate?.text = DateHelper.getMonthDayAtTime(context, discussionTopicHeader.postedAt, context.getString(R.string.at))
         discussionTopicTitle?.text = discussionTopicHeader.title
 
         replyToDiscussionTopic.setTextColor(ThemePrefs.buttonColor)
@@ -415,7 +394,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun loadHTMLTopic(html: String) {
-        discussionTopicHeaderWebView.loadHtml(html, mDiscussionTopicHeader.title)
+        discussionTopicHeaderWebView.loadHtml(html, presenter.discussionTopicHeader.title)
     }
 
     private fun loadHTMLReplies(html: String) {
@@ -430,7 +409,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             //get the url
             mSessionAuthJob = tryWeave {
                 //get the url from html
-                val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(mDiscussionTopicHeader.message)
+                val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(presenter.discussionTopicHeader.message)
                 matcher.find()
                 val url = matcher.group(1)
 
@@ -452,13 +431,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         val matcher = Pattern.compile("src=\"([^;]+)").matcher(html)
         matcher.find()
         var newHTML: String = html
-        //we only want to change the urls that are part of an external tool, not everything (like avatars)
-        for(index in 1..matcher.groupCount()) {
-            val newUrl = matcher.group(index)
-            if(newUrl.contains("external_tools")) {
-                newHTML = html.replace(newUrl, mAuthenticatedSessionURL!!)
-            }
-        }
+        // We only want to change the urls that are part of an external tool, not everything (like avatars)
+        (1..matcher.groupCount())
+            .map { matcher.group(it) }
+            .filter { it.contains("external_tools") }
+            .forEach { newHTML = html.replace(it, mAuthenticatedSessionURL!!) }
         return newHTML
     }
 
@@ -478,8 +455,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             presenter.getSubmissionData(true)
 
             // Send out bus events to trigger a refresh for discussion list and submission list
-            DiscussionUpdatedEvent(mDiscussionTopicHeader, javaClass.simpleName).post()
-            mDiscussionTopicHeader.assignment?.let {
+            DiscussionUpdatedEvent(presenter.discussionTopicHeader, javaClass.simpleName).post()
+            presenter.discussionTopicHeader.assignment?.let {
                 AssignmentGradedEvent(it.id, javaClass.simpleName).post()
             }
         }
@@ -487,7 +464,6 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         discussionTopicHeaderWebView.onResume()
         discussionRepliesWebView.onResume()
 
-        setupVideoClient()
         setupWebView(discussionTopicHeaderWebView, false)
         setupWebView(discussionRepliesWebView, true)
     }
@@ -526,18 +502,6 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun setupVideoClient() {
-        mVideoViewClient = ActivityContentVideoViewClient(activity, ActivityContentVideoViewClient.HostingView {
-            val fragmentList = fragmentManager.fragments
-            if (fragmentList != null) {
-                if (fragmentList[0] is DialogFragment) {
-                    return@HostingView (fragmentList[0] as DialogFragment).dialog
-                }
-            }
-            null
-        })
-    }
-
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupWebView(webView: CanvasWebView, addJSSupport: Boolean) {
         WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
@@ -548,28 +512,34 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         webView.settings.allowFileAccess = true
         webView.settings.loadWithOverviewMode = true
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
-        webView.client = mVideoViewClient
         webView.canvasWebViewClientCallback = object: CanvasWebView.CanvasWebViewClientCallback {
             override fun routeInternallyCallback(url: String?) {
                 if (url != null) {
-                    val bundle = InternalWebViewFragment.makeBundle(url, url, false, "")
-                    RouteMatcher.route(context, Route(FullscreenInternalWebViewFragment::class.java, presenter?.canvasContext, bundle))
+                    if (!RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)) {
+                        val bundle = InternalWebViewFragment.makeBundle(url, url, false, "")
+                        RouteMatcher.route(context, Route(FullscreenInternalWebViewFragment::class.java, presenter?.canvasContext, bundle))
+                    }
                 }
             }
             override fun canRouteInternallyDelegate(url: String?): Boolean {
                 return url != null
             }
-            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {}
+            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
+                showToast(R.string.downloadingFile)
+                RouteMatcher.openMedia(activity, url ?: "")
+            }
             override fun onPageStartedCallback(webView: WebView?, url: String?) {}
             override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
-
         }
+
+        webView.addVideoClient(activity)
     }
 
 
     @Suppress("unused")
     private inner class JSDiscussionInterface {
 
+        @Suppress("UNUSED_PARAMETER")
         @JavascriptInterface
         fun onItemPressed(id: String) {
             //do nothing for now
@@ -632,8 +602,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         @JavascriptInterface
         fun getLikedImage(): String {
             //Returns a string of a bitmap colored for the thumbs up (like) image.
-            val likeImage = DiscussionsHtmlLoader.Companion.getBitmapFromAssets(context, "discussion_liked.png")
-            return DiscussionsHtmlLoader.Companion.makeBitmapForWebView(ThemePrefs.brandColor, likeImage)
+            val likeImage = DiscussionUtils.getBitmapFromAssets(context, "discussion_liked.png")
+            return DiscussionUtils.makeBitmapForWebView(ThemePrefs.brandColor, likeImage)
         }
 
         //A helper to log out messages from the JS code
@@ -646,9 +616,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
          * of the discussion replies webview and adds that to the elements position to come up with a relative position for the element
          * withing the scrollview. In sort we are finding the elements position withing a scrollview.
          */
+        @Suppress("UNUSED_PARAMETER")
         @JavascriptInterface
         fun calculateActualOffset(elementId: String, elementHeight: String, elementTopOffset: String): Boolean {
-            return isElementInViewPortWithinScrollView(elementHeight.toInt(), elementTopOffset.toInt())
+            // Javascript passes us back a number, which could be either a float or an int, so we'll need to convert the string first to a float, then an int
+            return isElementInViewPortWithinScrollView(elementHeight.toFloat().toInt(), elementTopOffset.toFloat().toInt())
         }
     }
 
@@ -662,8 +634,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) {
         val likingSum = if(discussionEntry.ratingSum == 0) "" else "(" + discussionEntry.ratingSum + ")"
-        val likingColor = DiscussionsHtmlLoader.getHexColorString(
-                if(discussionEntry.hasRated()) ThemePrefs.brandColor else ContextCompat.getColor(context, R.color.discussion_liking))
+        val likingColor = DiscussionUtils.getHexColorString(
+                if(discussionEntry.hasRated()) ThemePrefs.brandColor else ContextCompat.getColor(context, R.color.utils_discussion_liking))
         activity.runOnUiThread {
             discussionRepliesWebView.loadUrl("javascript:" + methodName + "('" + discussionEntry.id.toString() + "')")
             discussionRepliesWebView.loadUrl("javascript:updateLikedCount('" + discussionEntry.id.toString() + "','" + likingSum + "','" + likingColor + "')")
@@ -716,7 +688,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     override fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry) {
-        val deletedText = DiscussionsHtmlLoader.formatDeletedInfoText(context, discussionEntry)
+        val deletedText = DiscussionUtils.formatDeletedInfoText(context, discussionEntry)
         discussionRepliesWebView.post { discussionRepliesWebView.loadUrl(
                 "javascript:markAsDeleted" + "('" + discussionEntry.id.toString() + "','" + deletedText + "')") }
     }
@@ -792,14 +764,14 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     companion object {
-        val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
-        val DISCUSSION_TOPIC_HEADER_ID = "discussion_topic_header_id"
-        val DISCUSSION_TOPIC = "discussion_topic"
-        val DISCUSSION_ENTRY_ID = "discussion_entry_id"
-        val SKIP_IDENTITY_CHECK = "skip_identity_check"
-        val IS_NESTED_DETAIL = "is_nested_detail"
-        val SKIP_ID = "skipId"
-        val IS_ANNOUNCEMENT = "is_announcement"
+        const val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
+        const val DISCUSSION_TOPIC_HEADER_ID = "discussion_topic_header_id"
+        const val DISCUSSION_TOPIC = "discussion_topic"
+        const val DISCUSSION_ENTRY_ID = "discussion_entry_id"
+        private const val SKIP_IDENTITY_CHECK = "skip_identity_check"
+        private const val IS_NESTED_DETAIL = "is_nested_detail"
+        private const val SKIP_ID = "skipId"
+        private const val IS_ANNOUNCEMENT = "is_announcement"
 
         @JvmStatic fun makeBundle(discussionTopicHeader: DiscussionTopicHeader): Bundle = Bundle().apply {
             putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
@@ -812,6 +784,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
         @JvmStatic fun makeBundle(discussionTopicHeaderId: Long): Bundle = Bundle().apply {
             putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
+        }
+
+        @JvmStatic fun makeBundle(discussionTopicHeaderId: Long, entryId: Long): Bundle = Bundle().apply {
+            putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
+            putLong(DISCUSSION_ENTRY_ID, entryId)
         }
 
         @JvmStatic fun makeBundle(
@@ -831,10 +808,10 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
         @JvmStatic fun newInstance(canvasContext: CanvasContext, args: Bundle) = DiscussionsDetailsFragment().apply {
             if (args.containsKey(DISCUSSION_TOPIC_HEADER)) {
-                mDiscussionTopicHeader = args.getParcelable<DiscussionTopicHeader>(DISCUSSION_TOPIC_HEADER)
+                mDiscussionTopicHeader = args.getParcelable(DISCUSSION_TOPIC_HEADER)
             }
             if (args.containsKey(DISCUSSION_TOPIC)) {
-                mDiscussionTopic = args.getParcelable<DiscussionTopic>(DISCUSSION_TOPIC)
+                mDiscussionTopic = args.getParcelable(DISCUSSION_TOPIC)
             }
 
             mDiscussionEntryId = args.getLong(DISCUSSION_ENTRY_ID, 0L)

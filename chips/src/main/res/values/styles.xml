@@ -32,7 +32,7 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <style name="RecipientEditTextViewBase" parent="@android:attr/autoCompleteTextViewStyle">
+    <style name="RecipientEditTextViewBase" parent="android:Widget.AutoCompleteTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@null</item>

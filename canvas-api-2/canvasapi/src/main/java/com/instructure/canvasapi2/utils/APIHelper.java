@@ -25,8 +25,6 @@ import android.text.TextUtils;
 
 import com.instructure.canvasapi2.builders.RestParams;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
@@ -41,11 +39,6 @@ import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Response;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 
 public class APIHelper {
 
@@ -168,22 +161,6 @@ public class APIHelper {
             }
         }
         return false;
-    }
-
-    //Don't make static please
-    public Observable<LinkHeaders> processHeaders(@NonNull final okhttp3.Response response) {
-
-        return Observable.create(new Observable.OnSubscribe<LinkHeaders>() {
-            @Override
-            public void call(Subscriber<? super LinkHeaders> subscriber) {
-                try {
-                    subscriber.onNext(APIHelper.parseLinkHeaderResponse(response.headers()));
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                    Logger.e("Could not process headers: " + e);
-                }
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     public static Date stringToDate(final String iso8601string) {

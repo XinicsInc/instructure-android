@@ -17,6 +17,8 @@
 
 package com.instructure.parentapp.presenters;
 
+import android.support.annotation.NonNull;
+
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.UserManager;
 import com.instructure.canvasapi2.models.Student;
@@ -27,6 +29,7 @@ import com.instructure.parentapp.viewinterface.SettingsView;
 import java.util.List;
 
 import instructure.androidblueprint.SyncPresenter;
+import retrofit2.Response;
 
 /**
  * Copyright (c) 2016 Instructure. All rights reserved.
@@ -58,7 +61,7 @@ public class SettingsPresenter extends SyncPresenter<Student, SettingsView> {
 
     private StatusCallback<List<Student>> mStudentsCallback = new StatusCallback<List<Student>>(){
         @Override
-        public void onResponse(retrofit2.Response<List<Student>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<Student>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             getData().addOrUpdate(response.body());
             if(getViewCallback() != null) {
                 getViewCallback().hasStudent(!isEmpty());

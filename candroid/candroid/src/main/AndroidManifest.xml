@@ -31,6 +31,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
+
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
@@ -38,6 +39,10 @@
     <uses-permission android:name="com.instructure.candroid.permission.C2D_MESSAGE"/>
     <uses-permission android:name="com.google.android.c2dm.permission.REGISTER" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+    <instrumentation
+        android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+        android:targetPackage="com.instructure.candroid"/>
 
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
@@ -55,7 +60,7 @@
         android:logo="@drawable/canvas_logo_white"
         android:label="@string/app_name"
         android:theme="@style/CanvasMaterialTheme_Default"
-        android:name=".util.ApplicationManager"
+        android:name=".util.AppManager"
         android:hardwareAccelerated="true"
         android:supportsRtl="@bool/supportRTL"
         android:largeHeap="true"
@@ -76,6 +81,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.StudentSubmissionActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/SubmissionPSPDFKitTheme" />
 
         <activity android:name=".activity.LoginLandingPageActivity"
             android:theme="@style/LoginFlowTheme.NoActionBar"
@@ -102,9 +112,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.ColorPickerActivity"
-            android:theme="@style/CanvasMaterialTheme_Default.Translucent"/>
-
         <activity
             android:name=".activity.CandroidPSPDFActivity"
             android:theme="@style/PSPDFKitTheme"
@@ -115,13 +122,13 @@
             android:theme="@style/CanvasMaterialTheme_Default"
             android:label="@string/notifications"/>
 
-        <activity android:name=".activity.TutorialActivity"
-            android:label="@string/app_name"
-            android:theme="@style/CanvasMaterialTheme_Default.Fullscreen"/>
+        <activity android:name=".activity.GaugeActivity"
+            android:label="@string/gauge"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/CanvasMaterialTheme_Default"/>
 
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="@string/settings"
             android:theme="@style/CanvasMaterialTheme_Default"/>
 
         <activity android:name=".activity.PandaAvatarActivity"
@@ -129,21 +136,8 @@
             android:theme="@style/CanvasMaterialTheme_Default"/>
         <activity
             android:name=".activity.InternalWebViewActivity"
-            android:label="@string/app_name"
             android:theme="@style/CanvasMaterialTheme_Default"
             android:configChanges="orientation|screenSize"/>
-
-        <activity android:name=".activity.NewFeatureBannerActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
-        <activity android:name=".activity.SearchableActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Transparent">
-            <intent-filter>
-                <action android:name="com.google.android.gms.actions.SEARCH_ACTION"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
 
         <activity
             android:name="com.instructure.pandautils.activities.NotoriousMediaUploadPicker"
@@ -158,7 +152,7 @@
             android:name=".activity.InterwebsToApplication"
             android:launchMode="singleTop"
             android:excludeFromRecents="true"
-            android:theme="@android:style/Theme.Dialog"
+            android:theme="@style/Theme.Transparent.NoAnimationOrBackground"
             android:label="@string/app_name"
             android:configChanges="keyboardHidden|orientation">
             <intent-filter>
@@ -184,6 +178,16 @@
                 <data
                     android:host="*"
                     android:scheme="canvas-courses"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="*"
+                    android:scheme="canvas-student"/>
 
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -244,26 +248,19 @@
 
         <service android:name="com.instructure.pandautils.services.NotoriousUploadService"
             android:exported="false"/>
-        <service android:name="com.instructure.pandautils.services.FileUploadService"/>
 
-        <receiver android:name=".receivers.BootReceiver">
+        <receiver android:name=".receivers.InitializeReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
-        </receiver>
-
-        <receiver android:name=".receivers.PackageUpdateReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <data android:scheme="package" android:path="com.instructure.candroid" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
         <!--Push Notifications-->
 
-        <receiver android:name=".receivers.PushDeleteReceiver"/>
-
-        <receiver android:name=".receivers.PushExternalReceiver"
+        <receiver android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
@@ -272,7 +269,12 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".service.PushRegistrationService"/>
+        <service android:name=".receivers.StudentPushExternalReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </service>
 
         <service android:name=".service.PushInstanceIdService"
             android:exported="false">
@@ -284,49 +286,39 @@
         <!-- To do widget -->
         <receiver
             android:name=".widget.TodoWidgetProvider"
-            android:enabled="@bool/is_api_14_or_greater"
             android:label="@string/todoWidgetTitleLong">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="com.instructure.candroid.widget.todowidget.REFRESH" />
-                <action android:name="com.instructure.candroid.widget.allwidget.REFRESH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/todo_widget_info"/>
         </receiver>
+
         <service
             android:name=".widget.TodoViewWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
-        <instrumentation
-            android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
-            android:targetPackage="com.instructure.candroid"/>
-
         <!-- Grades Widget -->
         <receiver
             android:name=".widget.GradesWidgetProvider"
-            android:enabled="@bool/is_api_14_or_greater"
             android:label="@string/gradesWidgetTitleLong">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="com.instructure.candroid.widget.gardeswidget.REFRESH" />
-                <action android:name="com.instructure.candroid.widget.allwidget.REFRESH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/grades_widget_info"/>
         </receiver>
+
         <service
             android:name=".widget.GradesViewWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
@@ -334,25 +326,23 @@
         <!-- Notifications widget-->
         <receiver
             android:name=".widget.NotificationWidgetProvider"
-            android:enabled="@bool/is_api_14_or_greater"
             android:label="@string/notificationWidgetTitleLong">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
                 <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="com.instructure.candroid.widget.notificationwidget.REFRESH" />
-                <action android:name="com.instructure.candroid.widget.allwidget.REFRESH"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/notification_widget_info"/>
         </receiver>
+
         <service
             android:name=".widget.NotificationViewWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
         <!-- End of Widget Items -->
 
         <meta-data

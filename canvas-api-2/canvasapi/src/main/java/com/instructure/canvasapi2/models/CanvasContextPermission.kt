@@ -31,6 +31,9 @@ data class CanvasContextPermission(
         @SerializedName(SEND_MESSAGES)
         var send_messages: Boolean = false,
 
+        @SerializedName(SEND_MESSAGES_ALL)
+        var send_messages_all: Boolean = false,
+
         @SerializedName(VIEW_ALL_GRADES)
         var view_all_grades: Boolean = false,
 
@@ -59,6 +62,7 @@ data class CanvasContextPermission(
         const val DELETE = "delete"
         const val MANAGE_GRADES = "manage_grades"
         const val SEND_MESSAGES = "send_messages"
+        const val SEND_MESSAGES_ALL = "send_messages_all"
         const val VIEW_ALL_GRADES = "view_all_grades"
         const val VIEW_ANALYTICS = "view_analytics"
 

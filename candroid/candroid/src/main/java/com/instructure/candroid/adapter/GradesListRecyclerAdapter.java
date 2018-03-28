@@ -18,6 +18,8 @@
 package com.instructure.candroid.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -37,6 +39,7 @@ import com.instructure.canvasapi2.models.Assignment;
 import com.instructure.canvasapi2.models.AssignmentGroup;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Course;
+import com.instructure.canvasapi2.models.CourseGrade;
 import com.instructure.canvasapi2.models.Enrollment;
 import com.instructure.canvasapi2.models.GradingPeriod;
 import com.instructure.canvasapi2.models.GradingPeriodResponse;
@@ -46,45 +49,40 @@ import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.pandarecycler.util.GroupSortedList;
 import com.instructure.pandarecycler.util.Types;
-import com.instructure.pandautils.utils.CanvasContextColor;
-import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class GradesListRecyclerAdapter extends ExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder> {
 
 
-    private StatusCallback<List<AssignmentGroup>> mAssignmentGroupCallback;
-    private StatusCallback<Course> mCourseCallback;
-    private StatusCallback<GradingPeriodResponse> mGradingPeriodsCallback;
-    private StatusCallback<List<Enrollment>> mEnrollmentCallback;
+    private StatusCallback<List<AssignmentGroup>> assignmentGroupCallback;
+    private StatusCallback<Course> courseCallback;
+    private StatusCallback<GradingPeriodResponse> gradingPeriodsCallback;
+    private StatusCallback<List<Enrollment>> enrollmentCallback;
 
-    private AdapterToFragmentCallback<Assignment> mAdapterToFragmentCallback;
-    private AdapterToGradesCallback mAdapterToGradesCallback;
-    private SetSelectedItemCallback mSelectedItemCallback;
-    private WhatIfDialogStyled.WhatIfDialogCallback mDialogStyled;
+    private AdapterToFragmentCallback<Assignment> adapterToFragmentCallback;
+    private AdapterToGradesCallback adapterToGradesCallback;
+    private SetSelectedItemCallback selectedItemCallback;
+    private WhatIfDialogStyled.WhatIfDialogCallback dialogStyled;
 
-    private CanvasContext mCanvasContext;
-    private ArrayList<AssignmentGroup> mAssignmentGroups;
-    private HashMap<Long, Assignment> mAssignmentsHash;
-    private Double mWhatIfGrade;
-    private GradingPeriod mCurrentGradingPeriod;
+    private CanvasContext canvasContext;
+    private ArrayList<AssignmentGroup> assignmentGroups;
+    private HashMap<Long, Assignment> assignmentsHash;
+    private Double whatIfGrade;
+    private GradingPeriod currentGradingPeriod;
 
     //state for keeping track of grades for what/if and switching between periods
-    private String mCurrentGrade;
-    private double mCurrentScore;
-    private String mFinalGrade;
-    private double mFinalScore;
-
-    private boolean mIsAllPeriodsGradeShown;
+    private CourseGrade courseGrade;
 
     public interface AdapterToGradesCallback{
-        void notifyGradeChanged(double score, String grade);
+        void notifyGradeChanged(CourseGrade courseGrade);
         boolean getIsEdit();
         void setTermSpinnerState(boolean isEnabled);
         void setIsWhatIfGrading(boolean isWhatIfGrading);
@@ -105,14 +103,14 @@ public class GradesListRecyclerAdapter extends ExpandableRecyclerAdapter<Assignm
         StatusCallback<GradingPeriodResponse> gradingPeriodsCallback, WhatIfDialogStyled.WhatIfDialogCallback dialogStyled) {
         super(context, AssignmentGroup.class, Assignment.class);
 
-        mCanvasContext = canvasContext;
-        mAdapterToFragmentCallback = adapterToFragmentCallback;
-        mAdapterToGradesCallback = adapterToGradesCallback;
-        mGradingPeriodsCallback = gradingPeriodsCallback;
-        mDialogStyled = dialogStyled;
+        this.canvasContext = canvasContext;
+        this.adapterToFragmentCallback = adapterToFragmentCallback;
+        this.adapterToGradesCallback = adapterToGradesCallback;
+        this.gradingPeriodsCallback = gradingPeriodsCallback;
+        this.dialogStyled = dialogStyled;
 
-        mAssignmentGroups = new ArrayList<>();
-        mAssignmentsHash = new HashMap<>();
+        assignmentGroups = new ArrayList<>();
+        assignmentsHash = new HashMap<>();
         setExpandedByDefault(true);
 
         loadData();
@@ -146,7 +144,7 @@ public class GradesListRecyclerAdapter extends ExpandableRecyclerAdapter<Assignm
 
     @Override
     public void loadData() {
-        CourseManager.getCourseWithGrade(mCanvasContext.getId(), mCourseCallback, true);
+        CourseManager.getCourseWithGrade(canvasContext.getId(), courseCallback, true);
     }
 
     public void loadAssignmentsForGradingPeriod (long gradingPeriodID, boolean refreshFirst) {
@@ -157,57 +155,40 @@ public class GradesListRecyclerAdapter extends ExpandableRecyclerAdapter<Assignm
         }
 
         // Scope assignments if its for a student
-        boolean scopeToStudent = ((Course)mCanvasContext).isStudent();
-        AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(mCanvasContext.getId(), gradingPeriodID, scopeToStudent, isRefresh(), mAssignmentGroupCallback);
+        boolean scopeToStudent = ((Course) canvasContext).isStudent();
+        AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext.getId(), gradingPeriodID, scopeToStudent, isRefresh(), assignmentGroupCallback);
 
         //Fetch the enrollments associated with the selected gradingPeriodID, these will contain the
         //correct grade for the period
-        CourseManager.getEnrollmentsForGradingPeriod(mCanvasContext.getId(), gradingPeriodID, mEnrollmentCallback, true);
+        CourseManager.getEnrollmentsForGradingPeriod(canvasContext.getId(), gradingPeriodID, enrollmentCallback, true);
     }
 
 
     public void loadAssignment () {
-        //We need to update the course grades in all cases, so here are the additional MGP and
-        //none mgp cases for grade updates
-        if (isAllGradingPeriodsSelected()) {
-            //Grade update for all grading periods selected
-            mAdapterToGradesCallback.notifyGradeChanged(((Course) mCanvasContext).getFinalScore(), ((Course) mCanvasContext).getFinalGrade());
-            mFinalScore = ((Course) mCanvasContext).getFinalScore();
-            mFinalGrade = ((Course) mCanvasContext).getFinalGrade();
-        } else {
-            //Grade update for non - MGP
-            if(((Course) mCanvasContext).getCurrentScore() == 0.0
-                    && (((Course) mCanvasContext).getCurrentGrade() == null
-                    || "null".equals(((Course) mCanvasContext).getCurrentGrade()))) {
-                mAdapterToGradesCallback.notifyGradeChanged(0.0, mContext.getString(R.string.noGradeText));
-            } else {
-                mAdapterToGradesCallback.notifyGradeChanged(((Course) mCanvasContext).getCurrentScore(), ((Course) mCanvasContext).getCurrentGrade());
-            }
-            mFinalScore = ((Course) mCanvasContext).getFinalScore();
-            mFinalGrade = ((Course) mCanvasContext).getFinalGrade();
-            mCurrentScore = ((Course) mCanvasContext).getCurrentScore();
-            mCurrentGrade = ((Course) mCanvasContext).getCurrentGrade();
-        }
+        // All grading periods and no grading periods are the same case
+        courseGrade = ((Course) canvasContext).getCourseGrade(true);
+        adapterToGradesCallback.notifyGradeChanged(courseGrade);
+
         //Standard load assignments, unfiltered
-        AssignmentManager.getAssignmentGroupsWithAssignments(mCanvasContext.getId(), isRefresh(), mAssignmentGroupCallback);
+        AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext.getId(), isRefresh(), assignmentGroupCallback);
     }
 
     @Override
     public void setupCallbacks(){
         /*Logic regarding MGP is similar here as it is in both assignment recycler adapters,
             if changes are made here, check if they are needed in the other recycler adapters.*/
-        mCourseCallback = new StatusCallback<Course>() {
+        courseCallback = new StatusCallback<Course>() {
 
             @Override
-            public void onResponse(retrofit2.Response<Course> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Course> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 Course course = response.body();
-                mCanvasContext = course;
+                canvasContext = course;
 
                 //We want to disable what if grading if MGP weights are enabled
                 if(course.isWeightedGradingPeriods()) {
-                    mAdapterToGradesCallback.setIsWhatIfGrading(false);
+                    adapterToGradesCallback.setIsWhatIfGrading(false);
                 } else {
-                    mAdapterToGradesCallback.setIsWhatIfGrading(true);
+                    adapterToGradesCallback.setIsWhatIfGrading(true);
                 }
 
                 if (isAllGradingPeriodsSelected()) {
@@ -217,19 +198,18 @@ public class GradesListRecyclerAdapter extends ExpandableRecyclerAdapter<Assignm
 
                 for (Enrollment enrollment : course.getEnrollments()) {
                     if (enrollment.isStudent() && enrollment.isMultipleGradingPeriodsEnabled()) {
-                        mIsAllPeriodsGradeShown = enrollment.isTotalsForAllGradingPeriodsOption();
-                        if(mCurrentGradingPeriod == null || mCurrentGradingPeriod.getTitle() == null) {
+                        if(currentGradingPeriod == null || currentGradingPeriod.getTitle() == null) {
                             //we load current term
-                            mCurrentGradingPeriod = new GradingPeriod();
-                            mCurrentGradingPeriod.setId(enrollment.getCurrentGradingPeriodId());
-                            mCurrentGradingPeriod.setTitle(enrollment.getCurrentGradingPeriodTitle());
+                            currentGradingPeriod = new GradingPeriod();
+                            currentGradingPeriod.setId(enrollment.getCurrentGradingPeriodId());
+                            currentGradingPeriod.setTitle(enrollment.getCurrentGradingPeriodTitle());
                             //request the grading period objects and make the assignment calls
                             //This callback is fulfilled in the grade list fragment.
-                            CourseManager.getGradingPeriodsForCourse(mGradingPeriodsCallback, course.getId(), true);
+                            CourseManager.getGradingPeriodsForCourse(gradingPeriodsCallback, course.getId(), true);
                             return;
                         } else {
                             //Otherwise we load the info from the current grading period
-                            loadAssignmentsForGradingPeriod(mCurrentGradingPeriod.getId(), true);
+                            loadAssignmentsForGradingPeriod(currentGradingPeriod.getId(), true);
                             return;
                         }
                     }
@@ -240,60 +220,55 @@ public class GradesListRecyclerAdapter extends ExpandableRecyclerAdapter<Assignm
             }
         };
 
-        mAssignmentGroupCallback = new StatusCallback<List<AssignmentGroup>>() {
+        assignmentGroupCallback = new StatusCallback<List<AssignmentGroup>>() {
             @Override
-            public void onResponse(retrofit2.Response<List<AssignmentGroup>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<AssignmentGroup>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 //we still need to maintain local copies of the assignments/groups for what if grades
                 //so we have the assignments Hash and assignments group list
                 for (AssignmentGroup group : response.body()) {
                     addOrUpdateAllItems(group, group.getAssignments());
                     for(Assignment assignment : group.getAssignments()){
-                        mAssignmentsHash.put(assignment.getId(), assignment);
+                        assignmentsHash.put(assignment.getId(), assignment);
                     }
-                    if(!mAssignmentGroups.contains(group)){
-                        mAssignmentGroups.add(group);
+                    if(!assignmentGroups.contains(group)){
+                        assignmentGroups.add(group);
                     }
                 }
                 setAllPagesLoaded(true);
 
-                mAdapterToFragmentCallback.onRefreshFinished();
+                adapterToFragmentCallback.onRefreshFinished();
+            }
+
+            @Override
+            public void onFinished(ApiType type) {
+                GradesListRecyclerAdapter.this.onCallbackFinished(type);
             }
         };
 
-        mEnrollmentCallback = new StatusCallback<List<Enrollment>>() {
+        enrollmentCallback = new StatusCallback<List<Enrollment>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<Enrollment>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<Enrollment>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 for (Enrollment enrollment : response.body()) {
                     if (enrollment.isStudent() && enrollment.getUserId() == ApiPrefs.getUser().getId()) {
-                        mCurrentGrade = enrollment.getCurrentGrade();
-                        mCurrentScore = enrollment.getCurrentScore();
-                        mFinalGrade = enrollment.getFinalGrade();
-                        mFinalScore = enrollment.getFinalScore();
-                        //If there are no assignments and the grade is a zero/null we want to match
-                        //the web's behavior and set it to N/A
-                        if(mAssignmentsHash.isEmpty() && enrollment.getCurrentScore() == 0.0
-                                && (enrollment.getCurrentGrade() == null || "null".equals(enrollment.getCurrentGrade()))) {
-                            mAdapterToGradesCallback.notifyGradeChanged(0.0, mContext.getString(R.string.noGradeText));
-                        } else {
-                            mAdapterToGradesCallback.notifyGradeChanged(getCurrentScore(), getCurrentGrade());
-                        }
+                        courseGrade = ((Course) canvasContext).getCourseGradeFromEnrollment(enrollment, false);
+                        adapterToGradesCallback.notifyGradeChanged(courseGrade);
                         //Inform the spinner things are done
-                        mAdapterToGradesCallback.setTermSpinnerState(true);
+                        adapterToGradesCallback.setTermSpinnerState(true);
                         //we need to update the course that the fragment is using
-                        ((Course)mCanvasContext).addEnrollment(enrollment);
+                        ((Course) canvasContext).addEnrollment(enrollment);
                     }
                 }
             }
 
             @Override
-            public void onFail(Call<List<Enrollment>> response, Throwable error) {
-                mAdapterToGradesCallback.setTermSpinnerState(true);
+            public void onFail(@Nullable Call<List<Enrollment>> call, @NonNull Throwable error, @Nullable Response response) {
+                adapterToGradesCallback.setTermSpinnerState(true);
             }
 
         };
 
-        mSelectedItemCallback = new SetSelectedItemCallback() {
+        selectedItemCallback = new SetSelectedItemCallback() {
             @Override
             public void setSelected(int position) {
                 setSelectedPosition(position);
@@ -303,19 +278,17 @@ public class GradesListRecyclerAdapter extends ExpandableRecyclerAdapter<Assignm
 
     @Override
     public void onBindChildHolder(RecyclerView.ViewHolder holder, AssignmentGroup assignmentGroup, Assignment assignment) {
-        boolean isEdit = mAdapterToGradesCallback.getIsEdit();
+        boolean isEdit = adapterToGradesCallback.getIsEdit();
         if(isEdit){
-            GradeBinder.bind((GradeViewHolder) holder, getContext(), CanvasContextColor.getCachedColor(getContext(),
-                    mCanvasContext), mAssignmentsHash.get(assignment.getId()), (Course) mCanvasContext, mAdapterToGradesCallback.getIsEdit(), mDialogStyled, mAdapterToFragmentCallback, mSelectedItemCallback);
+            GradeBinder.bind((GradeViewHolder) holder, getContext(), ColorKeeper.getOrGenerateColor(canvasContext), assignmentsHash.get(assignment.getId()), (Course) canvasContext, adapterToGradesCallback.getIsEdit(), dialogStyled, adapterToFragmentCallback, selectedItemCallback);
         } else {
-            GradeBinder.bind((GradeViewHolder) holder, getContext(), CanvasContextColor.getCachedColor(getContext(),
-                    mCanvasContext), assignment, (Course) mCanvasContext, mAdapterToGradesCallback.getIsEdit(), mDialogStyled, mAdapterToFragmentCallback, mSelectedItemCallback);
+            GradeBinder.bind((GradeViewHolder) holder, getContext(), ColorKeeper.getOrGenerateColor(canvasContext), assignment, (Course) canvasContext, adapterToGradesCallback.getIsEdit(), dialogStyled, adapterToFragmentCallback, selectedItemCallback);
         }
     }
 
     @Override
     public void onBindHeaderHolder(RecyclerView.ViewHolder holder, AssignmentGroup assignmentGroup, boolean isExpanded) {
-        ExpandableHeaderBinder.bind(getContext(), mCanvasContext, (ExpandableViewHolder) holder, assignmentGroup, assignmentGroup.getName(), isExpanded, getViewHolderHeaderClicked());
+        ExpandableHeaderBinder.bind(getContext(), canvasContext, (ExpandableViewHolder) holder, assignmentGroup, assignmentGroup.getName(), isExpanded, getViewHolderHeaderClicked());
     }
 
     @Override
@@ -385,17 +358,17 @@ public class GradesListRecyclerAdapter extends ExpandableRecyclerAdapter<Assignm
 
     @Override
     public void resetData() {
-        mAssignmentsHash.clear();
-        mAssignmentGroups.clear();
+        assignmentsHash.clear();
+        assignmentGroups.clear();
         super.resetData();
     }
 
     public ArrayList<AssignmentGroup> getAssignmentGroups(){
-        return mAssignmentGroups;
+        return assignmentGroups;
     }
 
     public HashMap<Long, Assignment> getAssignmentsHash(){
-        return mAssignmentsHash;
+        return assignmentsHash;
     }
 
     private boolean compareAssignments(Assignment oldItem, Assignment newItem) {
@@ -422,55 +395,35 @@ public class GradesListRecyclerAdapter extends ExpandableRecyclerAdapter<Assignm
     }
 
     public void setWhatIfGrade(Double grade){
-        mWhatIfGrade = grade;
+        whatIfGrade = grade;
     }
 
     public Double getWhatIfGrade(){
-        return mWhatIfGrade;
+        return whatIfGrade;
     }
 
     public void setCurrentGradingPeriod(GradingPeriod gradingPeriod) {
-        mCurrentGradingPeriod = gradingPeriod;
+        currentGradingPeriod = gradingPeriod;
     }
 
     public GradingPeriod getCurrentGradingPeriod() {
-        return mCurrentGradingPeriod;
+        return currentGradingPeriod;
     }
 
-    public String getCurrentGrade(){
-        boolean hasValidGrades = false;
-        for (Assignment assignment : mAssignmentsHash.values()) {
-            Submission submission = assignment.getSubmission();
-            if (submission != null && submission.isGraded() && !Const.PENDING_REVIEW.equals(submission.getWorkflowState())) {
-                hasValidGrades = true;
-                break;
-            }
-        }
-        if (getCurrentScore() == 0 && !hasValidGrades) {
-            return mContext.getString(R.string.noGradeText);
-        }
-        return mCurrentGrade;
-    }
-
-    public double getCurrentScore(){
-        return mCurrentScore;
-    }
-
-    public String getFinalGrade(){
-        return mFinalGrade;
-    }
-
-    public double getFinalScore(){
-        return mFinalScore;
-    }
-
-    public boolean isAllPeriodsGradeShown(){
-        return mIsAllPeriodsGradeShown;
-    }
+    public CourseGrade getCourseGrade() { return courseGrade; }
 
     public boolean isAllGradingPeriodsSelected(){
-        return mCurrentGradingPeriod != null
-                && mCurrentGradingPeriod.getTitle() != null
-                && mCurrentGradingPeriod.getTitle().equals(getContext().getString(R.string.allGradingPeriods));
+        return currentGradingPeriod != null
+                && currentGradingPeriod.getTitle() != null
+                && currentGradingPeriod.getTitle().equals(getContext().getString(R.string.allGradingPeriods));
+    }
+
+    @Override
+    public void cancel() {
+        super.cancel();
+        assignmentGroupCallback.cancel();
+        courseCallback.cancel();
+        gradingPeriodsCallback.cancel();
+        enrollmentCallback.cancel();
     }
 }

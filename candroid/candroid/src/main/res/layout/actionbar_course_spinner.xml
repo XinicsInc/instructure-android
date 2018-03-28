@@ -64,15 +64,6 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/pulse"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:src="@drawable/pulse_indicator"
-            android:visibility="gone"
-            android:clickable="true"/>
-
     </FrameLayout>
 
     <ImageView

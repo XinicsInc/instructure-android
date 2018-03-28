@@ -23,16 +23,13 @@ import android.view.WindowManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.models.FileSubmitObject
-import com.instructure.pandautils.utils.LongArg
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
-import com.instructure.teacher.dialog.FileUploadDialog
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.DiscussionEntryEvent
 import com.instructure.teacher.events.post
@@ -42,7 +39,6 @@ import com.instructure.teacher.presenters.DiscussionsReplyPresenter.Companion.RE
 import com.instructure.teacher.presenters.DiscussionsReplyPresenter.Companion.REASON_MESSAGE_FAILED_TO_SEND
 import com.instructure.teacher.presenters.DiscussionsReplyPresenter.Companion.REASON_MESSAGE_IN_PROGRESS
 import com.instructure.teacher.utils.*
-import com.instructure.teacher.view.AttachmentView
 import com.instructure.teacher.viewinterface.DiscussionsReplyView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_discussions_reply.*
@@ -73,6 +69,7 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
 
     override fun onReadySetGo(presenter: DiscussionsReplyPresenter?) {
         rceTextEditor.setHint(R.string.rce_empty_message)
+        rceTextEditor.requestEditorFocus()
     }
 
     override fun messageSuccess(entry: DiscussionEntry) {
@@ -123,9 +120,12 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
                     if (presenter.getAttachment() != null) {
                         attachments.add(presenter.getAttachment()!!)
                     }
-                    val bundle = FileUploadDialog.createDiscussionsBundle(ApiPrefs.user!!.shortName, attachments)
-                    val fileUploadDialog = FileUploadDialog.newInstanceSingleSelect(activity.supportFragmentManager, bundle, mFileSelectedListener)
-                    fileUploadDialog.show(activity.supportFragmentManager, FileUploadDialog::class.java.simpleName)
+                    val bundle = UploadFilesDialog.createDiscussionsBundle(attachments)
+                    UploadFilesDialog.show(fragmentManager, bundle, { event, attachment ->
+                        if(event == UploadFilesDialog.EVENT_ON_FILE_SELECTED) {
+                            applyAttachment(attachment)
+                        }
+                    })
                 } else {
                     NoInternetConnectionDialog.show(fragmentManager)
                 }
@@ -133,10 +133,10 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
         }
     }
 
-    private val mFileSelectedListener = FileUploadDialog.OnSingleFileSelectedListener { file ->
+    private fun applyAttachment(file: FileSubmitObject?) {
         if(file != null) {
             presenter?.setAttachment(file)
-            attachments.setAttachment(file.toAttachment()) { action, attachment ->
+            attachments.setAttachment(file.toAttachment()) { action, _ ->
                 if (action == AttachmentView.AttachmentAction.REMOVE) {
                     presenter?.setAttachment(null)
                 }
@@ -148,9 +148,9 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
     }
 
     companion object {
-        val DISCUSSION_TOPIC_HEADER_ID = "DISCUSSION_TOPIC_HEADER_ID"
-        val DISCUSSION_ENTRY_ID = "DISCUSSION_ENTRY_ID"
-        val IS_ANNOUNCEMENT = "IS_ANNOUNCEMENT"
+        private const val DISCUSSION_TOPIC_HEADER_ID = "DISCUSSION_TOPIC_HEADER_ID"
+        private const val DISCUSSION_ENTRY_ID = "DISCUSSION_ENTRY_ID"
+        private const val IS_ANNOUNCEMENT = "IS_ANNOUNCEMENT"
 
         @JvmStatic
         fun makeBundle(

@@ -18,31 +18,29 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_root"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:paddingTop="16dp"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:clipChildren="false"
-    android:clipToPadding="false">
+    android:paddingTop="16dp">
 
     <RelativeLayout
         android:id="@+id/dialogHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:gravity="center_vertical"
-        android:paddingBottom="16dp"
         android:clipChildren="false"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:paddingBottom="16dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"
             android:visibility="invisible"/>
 
@@ -50,23 +48,21 @@
             android:id="@+id/dialogTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:layout_toEndOf="@+id/avatar"
             android:text="@string/uploadToCanvas"
             android:textColor="@color/canvasBackgroundDark"
-            android:layout_toRightOf="@+id/avatar"
-            android:layout_toEndOf="@+id/avatar"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/dialogSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/canvasTextMedium"
-            android:layout_toRightOf="@+id/avatar"
             android:layout_below="@+id/dialogTitle"
             android:layout_toEndOf="@+id/avatar"
+            android:textColor="@color/canvasTextMedium"
+            android:textSize="16sp"
             android:visibility="invisible"/>
     </RelativeLayout>
 
@@ -76,12 +72,12 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/dialogHeader"
         android:visibility="invisible">
+
         <TextView
             android:id="@+id/allowedExtensions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/canvasTextDark"
-            android:layout_marginLeft="4dp"
             android:textSize="16sp"
             android:visibility="gone"/>
 
@@ -91,12 +87,13 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/allowedExtensions"
             android:background="@drawable/rounded_corner_white_bg">
+
             <ListView
                 android:id="@+id/fileList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
                 android:layout_above="@+id/addFileButton"
+                android:layout_alignParentTop="true"
                 android:divider="@null"
                 android:dividerHeight="0dp"/>
 
@@ -104,16 +101,19 @@
                 android:id="@+id/addFileButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="?android:attr/listPreferredItemHeight"
-                android:layout_margin="0dp"
                 android:layout_alignParentBottom="true"
+                android:layout_margin="0dp"
                 android:layout_marginTop="8dp"
+                android:contentDescription="@string/addItem"
+                android:minHeight="?android:attr/listPreferredItemHeight"
                 android:text="@string/addItem"
-                android:textStyle="bold"
+                android:textAllCaps="true"
                 android:textColor="@color/canvasTextDark"
-                android:contentDescription="@string/turnIn"
-                android:textAllCaps="true"/>
+                android:textStyle="bold"/>
+
         </RelativeLayout>
+
     </RelativeLayout>
+
 </RelativeLayout>
 

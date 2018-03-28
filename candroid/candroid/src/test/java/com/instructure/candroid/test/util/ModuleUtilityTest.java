@@ -19,9 +19,10 @@ package com.instructure.candroid.test.util;
 
 import android.os.Bundle;
 import android.test.InstrumentationTestCase;
+
 import com.crashlytics.android.Crashlytics;
 import com.instructure.candroid.fragment.AssignmentFragment;
-import com.instructure.candroid.fragment.DetailedDiscussionFragment;
+import com.instructure.candroid.fragment.DiscussionDetailsFragment;
 import com.instructure.candroid.fragment.FileDetailsFragment;
 import com.instructure.candroid.fragment.InternalWebviewFragment;
 import com.instructure.candroid.fragment.ModuleQuizDecider;
@@ -32,14 +33,16 @@ import com.instructure.candroid.util.ModuleUtility;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.ModuleItem;
 import com.instructure.canvasapi2.models.ModuleObject;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
 import io.fabric.sdk.android.Fabric;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class ModuleUtilityTest extends InstrumentationTestCase {
 
@@ -138,6 +141,7 @@ public class ModuleUtilityTest extends InstrumentationTestCase {
         expectedBundle.putString(Const.INTERNAL_URL, "https://instructure.com?display=borderless");
         expectedBundle.putString(Const.ACTION_BAR_TITLE, "Hello");
         expectedBundle.putBoolean(Const.AUTHENTICATE, true);
+        expectedBundle.putBoolean(com.instructure.pandautils.utils.Const.IS_EXTERNAL_TOOL, true);
         expectedBundle.putBoolean(com.instructure.pandautils.utils.Const.IS_UNSUPPORTED_FEATURE, true);
 
         ParentFragment parentFragment = callGetFragment(moduleItem, course, null);
@@ -203,7 +207,7 @@ public class ModuleUtilityTest extends InstrumentationTestCase {
         expectedBundle.putBoolean(Const.ANNOUNCEMENT, false);
         ParentFragment parentFragment = callGetFragment(moduleItem, course, null);
         assertNotNull(parentFragment);
-        assertEquals(DetailedDiscussionFragment.class, parentFragment.getClass());
+        assertEquals(DiscussionDetailsFragment.class, parentFragment.getClass());
         assertEquals(expectedBundle.toString(), parentFragment.getArguments().toString());
     }
 

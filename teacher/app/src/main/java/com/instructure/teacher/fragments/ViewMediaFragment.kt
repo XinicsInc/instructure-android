@@ -30,7 +30,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.ViewMediaActivity
 import com.instructure.teacher.dialog.MobileDataWarningDialog
 import com.instructure.teacher.interfaces.ShareableFile
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.MediaContent
@@ -75,7 +76,7 @@ class ViewMediaFragment : Fragment(), ShareableFile {
         fullscreenButton.onClick {
             mExoAgent.flagForResume()
             val bundle = ViewMediaActivity.makeBundle(mUri.toString(), mThumbnailUrl, mContentType, mDisplayName, false)
-            RouteMatcher.route(context, Route(bundle, Route.RouteContext.MEDIA))
+            RouteMatcher.route(context, Route(bundle, RouteContext.MEDIA))
         }
     }
 

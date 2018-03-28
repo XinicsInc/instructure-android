@@ -20,7 +20,7 @@ import android.support.test.espresso.web.sugar.Web
 import android.support.test.espresso.web.sugar.Web.onWebView
 import android.support.test.espresso.web.webdriver.DriverAtoms.*
 import android.support.test.espresso.web.webdriver.Locator
-import com.instructure.teacher.ui.models.CanvasUser
+import com.instructure.soseedy.CanvasUser
 
 @Suppress("unused")
 class WebViewLoginPage : BasePage() {

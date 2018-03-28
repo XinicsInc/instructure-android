@@ -32,19 +32,15 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
+import com.instructure.interactions.MasterDetailInteractions
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.fragments.CourseBrowserEmptyFragment
 import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.fragments.EmptyFragment
-import com.instructure.teacher.interfaces.Identity
-import com.instructure.teacher.interfaces.MasterDetailInteractions
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.Identity
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.color
 import kotlinx.android.synthetic.main.activity_master_detail.*
 import retrofit2.Response
 
@@ -64,7 +60,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_master_detail)
 
-        mRoute = intent.extras.getParcelable<Route>(Const.ROUTE)
+        mRoute = intent.extras.getParcelable<Route>(Route.ROUTE)
 
         if (mRoute == null) {
             finish()
@@ -94,7 +90,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
                     setupWithCanvasContext(null)
                 } else {
                     CourseManager.getCourse(contextId, object : StatusCallback<Course>() {
-                        override fun onResponse(response: Response<Course>?, linkHeaders: LinkHeaders?, type: ApiType?) {
+                        override fun onResponse(response: Response<Course>, linkHeaders: LinkHeaders, type: ApiType) {
                             setupWithCanvasContext(response?.body() as Course)
                         }
                     }, false)
@@ -171,10 +167,8 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         ft.commit()
     }
 
-    override fun addFragment(route: Route?) {
-        if(route != null) {
-            addDetailFragment(RouteMatcher.getDetailFragment(route.canvasContext, route))
-        }
+    override fun addFragment(route: Route) {
+        addDetailFragment(RouteMatcher.getDetailFragment(route.canvasContext, route))
     }
 
     override fun popFragment(canvasContext: CanvasContext) {
@@ -206,9 +200,8 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         toggleResize()
     }
 
-    override fun isMasterVisible(): Boolean {
-        return master.visibility == View.VISIBLE
-    }
+    override val isMasterVisible: Boolean
+        get() = master.visibility == View.VISIBLE
 
     private fun toggleResize() {
         //prevent animation from executing if already running
@@ -284,7 +277,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         @JvmStatic
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, MasterDetailActivity::class.java)
-            intent.putExtra(Const.ROUTE, route as Parcelable)
+            intent.putExtra(Route.ROUTE, route as Parcelable)
             return intent
         }
     }

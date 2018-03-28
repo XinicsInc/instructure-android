@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper;
 import com.instructure.canvasapi2.utils.FileUtils;
 import com.instructure.canvasapi2.utils.MasqueradeHelper;
 import com.instructure.loginapi.login.tasks.LogoutTask;
+import com.instructure.pandautils.utils.FilePrefs;
 import com.instructure.pandautils.utils.ThemePrefs;
 import com.instructure.pandautils.utils.Utils;
 import com.instructure.teacher.R;
@@ -65,6 +66,7 @@ public class LogoutAsyncTask extends LogoutTask {
         RestBuilder.clearCacheDirectory();
         ApiPrefs.clearAllData();
         TeacherPrefs.INSTANCE.clearPrefs();
+        FilePrefs.INSTANCE.clearPrefs();
     }
 
     @Override

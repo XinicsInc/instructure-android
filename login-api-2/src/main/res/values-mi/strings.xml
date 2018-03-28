@@ -1,99 +1,134 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="hello_world">Hello ao!</string>
-  <string name="action_settings">tautuhinga</string>
-  <string name="mobileVerifyGeneral">e kore te tēnei taupānga mana hoki te whakamahi</string>
-  <string name="mobileVerifyDomainUnauthorized">E kore te tūmau tomo koutou te mana mo tenei taupānga.</string>
-  <string name="mobileVerifyUserAgentUnauthorized">Te kaihoko kaiwhakamahi mo tenei taupānga he kāore.</string>
-  <string name="mobileVerifyUnknownError">i taea ki te manatoko i te tūmau mō te whakamahi ki tenei taupānga matou.</string>
-  <string name="unknownDevice">Pūrere unknown</string>
-  <string name="errorOccurred">He hapa ohorere i puta.</string>
-  <string name="pageNotFound">Kaore i kitea te whārangi</string>
-  <string name="confirm">Whakaūngia</string>
-  <string name="cancel">Whakakore</string>
-  <string name="help">Āwhina</string>
-  <string name="enterURL">E tomo koutou URL Kanaweti:</string>
-  <string name="signIntoCanvasNetwork">E ngana ana ki te haina ki Canvas Network?</string>
-  <string name="remove">Tangohia te</string>
-  <string name="exampleURLSimple">myschool.instructure.com</string>
-  <string name="masquerade">poupou pakoko</string>
-  <string name="userId">ID kaiwhakamahi</string>
-  <string name="domain">Domain</string>
-  <string name="masqueradingUserId">Whakaahua ke ID Kaiwhakamahi</string>
-  <string name="masqueradingUserDomain">Whakaahua ke Rohe</string>
-  <string name="masqueradingBegin">Tīmata te whakaahua ke</string>
-  <string name="masqueradingStop">Kāti  te mahi whakaahua ke</string>
-  <!--Multiple User Sign in-->
-  <string name="removeUser">Tangohia te tenei kaiwhakamahi?</string>
-  <string name="removedForever">Ka whai koe ki te haina ano ki tenei kaiwhakamahi ki te uru ratou ihirangi.</string>
-  <!--Content Descriptions-->
-  <string name="canvasLogo">kānawehi Moko</string>
-  <string name="canvasLoginOn">Kānawehi Takiuru: ON</string>
-  <string name="canvasLoginOff">Kānawehi Takiuru: OFF</string>
-  <string name="siteAdminLogin">Pae Admin Takiuru: ON</string>
-  <string name="username">ingoa kaiwhakamahi</string>
-  <string name="password">kupuhipa</string>
-  <string name="authenticationRequired">motuhēhēnga hiahiatia</string>
-  <string name="invalidEmailPassword">īmēra muhu kupuhipa ranei</string>
-  <string name="login">takiuru</string>
-  <string name="logout">Takiputa</string>
-  <!--Logout Warning Dialog-->
-  <string name="logout_warning">Kei te tino hiahia koe ki te takiputa?</string>
-  <string name="logout_yes">Āe</string>
-  <string name="logout_no">Kāo</string>
-  <!--Smart Login-->
-  <string name="loginNearYou">tata koe</string>
-  <string name="loginCanvasNetwork">Canvas Network</string>
-  <string name="loginRightBehindYou">Matau muri koutou</string>
-  <string name="loginMiles">%1$s maero atu</string>
-  <string name="loginCanvasHelp">Kaua e kite i to koutou kura? E tomo te URL kura pato konei hoki te tauturu ranei.</string>
-  <string name="loginCanvasHelpWithUser">E tomo te URL kura pato konei hoki te tauturu ranei.</string>
-  <string name="loginHint">Kimihia koutou kura takiwa ranei</string>
-  <!--Zendesk Dialog-->
-  <string name="zendesk_reportAProblem">Pūrongo te raruraru</string>
-  <string name="zendesk_subject">Kaupapa</string>
-  <string name="zendesk_description">Whakaahuatanga</string>
-  <string name="zendesk_writeSomething">Tuhia tetahi mea ...</string>
-  <string name="zendesk_send">Tukua</string>
-  <string name="zendesk_feedbackThankyou">Mauruuru koe hoki te pūrongo tou take ki to tatou Team Tautoko. ka riro ia koe whakaū me whakahōu mā te īmēra.</string>
-  <string name="zendesk_severityText">Kia pehea te te e pa koe tenei?</string>
-  <string name="zendesk_casualQuestion">Just he pātai tüao, kōrero, whakaaro, whakaaro ...</string>
-  <string name="zendesk_casualQuestion_tag">just_a_comment</string>
-  <string name="zendesk_needHelp">Me ahau etahi awhina engari e kore te mea kōhukihuki.</string>
-  <string name="zendesk_needHelp_tag">e kore e akiaki</string>
-  <string name="zendesk_somethingsBroken">ngā pakaru tetahi mea, engari ka taea e ahau te mahi a tawhio noa te reira ki te tiki i te mea e hiahia ana ahau mea ai.</string>
-  <string name="zendesk_somethingsBroken_tag">kimi taea</string>
-  <string name="zendesk_cantGetThingsDone">e kore ahau e taea te tiki mea mahi noa hoki i koutou rongo ahau.</string>
-  <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
-  <string name="zendesk_extremelyCritical">OHORERE TINO TINO !!</string>
-  <string name="zendesk_extremelyCritical_tag">whawhati tata tino tino</string>
-  <string name="zendesk_emailAddress">īmēra Wāhitau</string>
-  <string name="zendesk_enterEmail">E tomo tō wāhitau īmēra ...</string>
-  <string name="zendesk_unknown">unknown</string>
-  <!--Distance Strings-->
-  <string name="lessThanOne">&lt; 1 mile (1.6 km)</string>
-  <string name="oneMile">1 mile (1.6 km)</string>
-  <string name="miles">maero</string>
-  <string name="kilometers">km</string>
-  <!--String for submitting tickets-->
-  <string name="device">pūrere</string>
-  <string name="osVersion">OS Putanga</string>
-  <string name="previousLoginTitle">Ngā takiurunga o mua</string>
-  <string name="canvasNetworks">Ngā Canvas whatunga</string>
-  <string name="findMySchool">Kimihia taku kura</string>
-  <string name="appTypeTeacher">Kaiako</string>
-  <string name="appTypeStudent">Ākonga</string>
-  <string name="appTypeParent">Matua</string>
-  <string name="canvasLowerCase">kānawehi</string>
-  <string name="whatsYourSchoolName">He aha te ingoa ō tō kura?</string>
-  <string name="next">E haere ake nei</string>
-  <string name="schoolInstructureCom">school.instructure.com</string>
-  <string name="contentDescription_removePreviousUser">Tango Kaiwhakmahi o mua</string>
-  <string name="accountDomainFooter">Kaore e taea te kimi i tō kura? Tarai ki te pātō te nuinga o te kura url</string>
-  <string name="accountDomainFooterLink">Pātō ki kōnei hei awhina</string>
-  <string name="login_noInternetConnectionTitle">Kaore he hononga ipurangi</string>
-  <string name="login_noInternetConnectionMessage">Tēnei mahi ka mahi he hononga ipurangi</string>
-  <string name="empty_feedback">E hiahiatia ana te kaupapa me te whakamārama ki te tuku urupare.</string>
-  <string name="versionNum">Whakaaturanga Tau</string>
-  <string name="scrollInstructions">Pānui ki te kite i ngā kōrero katoa</string>
+
+    <string name="hello_world">Hello ao!</string>
+    <string name="action_settings">Ngā Tautuhinga</string>
+    <string name="mobileVerifyGeneral">e kore te tēnei taupānga mana hoki te whakamahi</string>
+    <string name="mobileVerifyDomainUnauthorized">E kore te tūmau tomo koutou te mana mo tenei taupānga.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Te kaihoko kaiwhakamahi mo tenei taupānga he kāore.</string>
+    <string name="mobileVerifyUnknownError">i taea ki te manatoko i te tūmau mō te whakamahi ki tenei taupānga matou.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">He hapa ohorere i puta.</string>
+    <string name="pageNotFound">Kaore i kitea te whārangi</string>
+    <string name="confirm">Whakaū</string>
+    <string name="cancel">Whakakore</string>
+    <string name="help">Āwhina</string>
+    <string name="enterURL">E tomo koutou URL Canvas:</string>
+    <string name="signIntoCanvasNetwork">E ngana ana ki te haina ki Canvas Network?</string>
+    <string name="remove">Tango</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="masquerade">poupou pakoko</string>
+    <string name="userId">Kaiwhakamahi ID</string>
+    <string name="domain">Rohe</string>
+
+    <string name="masqueradingUserId">Whakaahua ke ID Kaiwhakamahi</string>
+    <string name="masqueradingUserDomain">Whakaahua ke Rohe</string>
+    <string name="masqueradingBegin">Tīmata te whakaahua ke</string>
+    <string name="masqueradingStop">Kāti  te mahi whakaahua ke</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Tangohia te tenei kaiwhakamahi?</string>
+    <string name="removedForever">Me haina anō koe ki tēnei kaiwhakamahi kia uru atu ki ō rātau ihirangi.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas Moko</string>
+
+    <string name="canvasLoginOn">Canvas_Login: WHAKAKĀ</string>
+    <string name="canvasLoginOff">Canvas_Login: WHAKAWETO</string>
+    <string name="siteAdminLogin">Pae Whakahaere Takiuru: WHAKAKĀ</string>
+
+    <string name="username">Ingoa kaiwhakamahi</string>
+    <string name="password">Kupuhipa</string>
+    <string name="authenticationRequired">motuhēhēnga hiahiatia</string>
+    <string name="invalidEmailPassword">īmēra muhu kupuhipa ranei</string>
+    <string name="login">Takiuru ki roto</string>
+    <string name="logout">Takiuru atu</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Kei te tino hiahia koe ki te takiputa?</string>
+    <string name="logout_yes">Āe</string>
+    <string name="logout_no">Kāo</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">tata koe</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">Matau muri koutou</string>
+    <string name="loginMiles">%1$s maero i tawhiti</string>
+    <string name="loginCanvasHelp">Kaore i te kite i tō kura? E tomo te URL kura pato konei hoki te tauturu ranei.</string>
+    <string name="loginCanvasHelpWithUser">E tomo te URL kura pato konei hoki te tauturu ranei.</string>
+    <string name="loginHint">Kimihia koutou kura takiwa ranei</string>
+
+    <!-- Zendesk Dialog -->
+    <string name="zendesk_reportAProblem">Pūrongo te raruraru</string>
+    <string name="zendesk_subject">Kaupapa</string>
+    <string name="zendesk_description">Whakaahuatanga</string>
+    <string name="zendesk_writeSomething">Tuhia tetahi mea &#8230;</string>
+    <string name="zendesk_send">Tukua</string>
+    <string name="zendesk_feedbackThankyou">Tēnā koe mo te whakamōhiotō take ki te Rōpū Āwhina.  Ka whiwhi koe i nga tohu me nga whakahou ma te īmēra.</string>
+    <string name="zendesk_severityText">Kia pehea te te e pa koe tenei?</string>
+    <string name="zendesk_casualQuestion">Just he pātai tüao, kōrero, whakaaro, whakaaro &#8230;</string>
+    <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+    <string name="zendesk_needHelp">E hiahia awhina ana ahau engaari kaore i te tere.</string>
+    <string name="zendesk_needHelp_tag">not_urgent</string>
+    <string name="zendesk_somethingsBroken">Kua pakaru tētahi mea engari ka taea e ahau te mahi a tawhio noa ki a oti ai ng āmea e hiahia ana ahau.</string>
+    <string name="zendesk_somethingsBroken_tag">kimi taea</string>
+    <string name="zendesk_cantGetThingsDone">Kaore e taea e ahau te whakaoti ki a hoki rongo rānō ahau mai ia koe.</string>
+    <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+    <string name="zendesk_extremelyCritical">TINO URUPARE NUI!!</string>
+    <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+    <string name="zendesk_emailAddress">īmēra Wāhitau</string>
+    <string name="zendesk_enterEmail">E tomo tō wāhitau īmēra &#8230;</string>
+    <string name="zendesk_unknown">Kaore e mōhiotia</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 maero (1.6 km)</string>
+    <string name="oneMile">1 maero (1.6 km)</string>
+    <string name="miles">maero</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">pūrere</string>
+    <string name="osVersion">OS Putanga</string>
+
+    <string name="previousLoginTitle">Ngā takiurunga o mua</string>
+    <string name="canvasNetworks">Canvas Network</string>
+    <string name="findMySchool">Kimihia taku kura</string>
+    <string name="appTypeTeacher">Kaiako</string>
+    <string name="appTypeStudent">Ākonga</string>
+    <string name="appTypeParent">Matua</string>
+    <string name="canvasLowerCase">kānawehi</string>
+    <string name="whatsYourSchoolName">He aha te ingoa o tō kura?</string>
+    <string name="next">E haere ake nei</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Tango Kaiwhakmahi o mua</string>
+    <string name="accountDomainFooter">Kaore e kitea tō kura? Tarai ki te pātō te nuinga o te kura url</string>
+    <string name="accountDomainFooterLink">Pātō ki kōnei hei awhina</string>
+
+    <string name="login_noInternetConnectionTitle">Kaore he hononga ipurangi</string>
+    <string name="login_noInternetConnectionMessage">Tēnei mahi ka mahi he hononga ipurangi</string>
+    <string name="empty_feedback">E hiahiatia ana te kaupapa me te whakamārama ki te tuku urupare.</string>
+    <string name="versionNum">Whakaaturanga Tau</string>
+    <string name="scrollInstructions">Pānui ki te kite i ngā kōrero katoa</string>
+
+    <string name="masqueradeErrorUserId">Me whakauru e koe he kaiwhakamahi id.</string>
+    <string name="masqueradeErrorDomain">Me whakauru e koe he rohe.</string>
+    <string name="masqueradeError">He hapa i te wā e ngana ana whakaahua kē.</string>
 </resources>

@@ -206,7 +206,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         val serviceIntent = Intent(activity, NotoriousUploadService::class.java)
         with(serviceIntent) {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            putExtra(Const.URI, mediaUri)
+            putExtra(Const.MEDIA_FILE_PATH, mediaUri.path)
             putExtra(Const.ACTION, NotoriousUploadService.ACTION.SUBMISSION_COMMENT)
             putExtra(Const.ASSIGNMENT, Assignment().apply { id = assignmentId; courseId = courseID } as Parcelable)
             putExtra(Const.STUDENT_ID, mAssignee.id)

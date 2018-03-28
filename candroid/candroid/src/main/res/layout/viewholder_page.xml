@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,89 +15,32 @@
   ~
   -->
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:clickable="true"
-    android:minHeight="?android:listPreferredItemHeight"
-    app:cardBackgroundColor="@color/white"
-    app:cardElevation="@dimen/card_elevation"
-    app:cardUseCompatPadding="true"
-    app:contentPadding="@dimen/card_inner_padding">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AdapterItem"
+    android:orientation="horizontal">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/icon"
+        style="@style/AdapterItemIcon"
+        android:importantForAccessibility="no"
+        tools:srcCompat="@drawable/vd_copy" />
 
-        <RelativeLayout
-            android:id="@+id/titleContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/textContainer"
+        style="@style/AdapterItemTextContainer"
+        android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="@dimen/gridIconSize"
-                android:layout_height="@dimen/gridIconSize"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/icon"
-                android:scaleType="fitCenter" />
+        <TextView
+            android:id="@+id/title"
+            style="@style/AdapterItemTitleText"
+            tools:text="Course Notification Title" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/icon"
-                android:layout_toRightOf="@id/icon">
+        <TextView
+            android:id="@+id/modified"
+            style="@style/AdapterItemDescriptionText"
+            android:text="@string/lastModified" />
 
-                <TextView
-                    android:id="@+id/title"
-                    style="@style/TextStyle.Primary.CardView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginEnd="12dp"/>
+    </LinearLayout>
 
-            </FrameLayout>
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/titleContainer"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:id="@+id/modified"
-                style="@style/TextStyle.Tertiary.SingleLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginEnd="4dp"
-                android:layout_marginRight="4dp"
-                android:text="@string/modified" />
-
-            <TextView
-                android:id="@+id/modified_date"
-                style="@style/TextStyle.Tertiary.SingleLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_toEndOf="@+id/modified"
-                android:layout_toRightOf="@+id/modified" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-</android.support.v7.widget.CardView>
+</LinearLayout>

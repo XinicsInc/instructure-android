@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -13,15 +13,59 @@
   ~
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ~
   -->
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_root"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundOffWhite">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/recycler_swipe_refresh_layout"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/discussionListToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="6dp"
+            app:popupTheme="@style/ToolBarPopupStyle"
+            app:theme="@style/ToolBarStyle"
+            tools:ignore="UnusedAttribute" />
+
+        <com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/discussionListToolbar"
+            android:orientation="vertical">
+
+            <com.instructure.pandarecycler.PandaRecyclerView
+                android:id="@+id/discussionRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="@android:color/transparent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        </com.instructure.pandautils.views.SwipeRefreshLayoutAppBar>
+
+        <com.instructure.candroid.view.EmptyPandaView
+            android:id="@+id/emptyPandaView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/createNewDiscussion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:tint="@color/white"
+        app:fabSize="normal"
+        app:elevation="4dp"
+        app:srcCompat="@drawable/vd_add"
+        android:contentDescription="@string/utils_addNew"/>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -19,6 +19,7 @@ package com.instructure.parentapp.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,8 @@ import com.instructure.parentapp.util.ApplicationManager;
 import com.instructure.parentapp.util.RouterUtils;
 import com.instructure.parentapp.video.ActivityContentVideoViewClient;
 import com.instructure.parentapp.view.CanvasWebView;
+
+import retrofit2.Response;
 
 public class CourseSyllabusFragment extends ParentFragment {
 
@@ -68,7 +71,7 @@ public class CourseSyllabusFragment extends ParentFragment {
 
     @Override
     protected int getRootLayout() {
-        return R.layout.syllabus_fragment;
+        return R.layout.fragment_syllabus;
     }
 
     @Override
@@ -203,7 +206,7 @@ public class CourseSyllabusFragment extends ParentFragment {
     private void setupCallbacks() {
         mSyllabusCallback = new StatusCallback<Course>(){
             @Override
-            public void onResponse(retrofit2.Response<Course> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Course> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 Course course = response.body();
                 if (course.getSyllabusBody() != null) {
                     mSyllabus = new ScheduleItem();

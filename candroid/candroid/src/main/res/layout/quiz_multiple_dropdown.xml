@@ -45,7 +45,7 @@
                     android:id="@+id/flag_question"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_bookmark_outline_grey"
+                    app:srcCompat="@drawable/vd_navigation_bookmarks"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="4dp"
                     android:layout_marginTop="8dp"

@@ -25,25 +25,25 @@ import android.widget.TextView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
+import com.instructure.pandautils.dialogs.DatePickerDialogFragment
+import com.instructure.pandautils.dialogs.TimePickerDialogFragment
+import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
+import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
-import com.instructure.teacher.dialog.DatePickerDialogFragment
-import com.instructure.teacher.dialog.FileUploadDialog
-import com.instructure.teacher.dialog.TimePickerDialogFragment
-import com.instructure.teacher.dialog.UnsavedChangesExitDialog
 import com.instructure.teacher.factory.CreateOrEditAnnouncementPresenterFactory
-import com.instructure.teacher.interfaces.Identity
+import com.instructure.interactions.Identity
 import com.instructure.teacher.presenters.CreateOrEditAnnouncementPresenter
 import com.instructure.teacher.utils.*
-import com.instructure.teacher.view.AttachmentView
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_create_or_edit_announcement.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CreateOrEditAnnouncementFragment :
         BasePresenterFragment<CreateOrEditAnnouncementPresenter, CreateOrEditAnnouncementView>(),
@@ -215,7 +215,7 @@ class CreateOrEditAnnouncementFragment :
         // Show existing attachment (if any)
         presenter.announcement.attachments?.firstOrNull()?.let {
             val attachmentView = AttachmentView(context)
-            attachmentView.setPendingAttachment(it, true) { action, attachment ->
+            attachmentView.setPendingRemoteFile(it, true) { action, attachment ->
                 if (action == AttachmentView.AttachmentAction.REMOVE) {
                     presenter.attachmentRemoved = true
                     presenter.announcement.attachments.remove(attachment)
@@ -309,12 +309,13 @@ class CreateOrEditAnnouncementFragment :
     }
 
     private fun addAttachment() {
-        val bundle = FileUploadDialog.createDiscussionsBundle(ApiPrefs.user?.shortName, null)
-        val fileUploadDialog = FileUploadDialog.newInstanceSingleSelect(fragmentManager, bundle) {
-            presenter.attachment = it
-            updateAttachmentUI()
-        }
-        fileUploadDialog.show(fragmentManager, FileUploadDialog::class.java.simpleName)
+        val bundle = UploadFilesDialog.createDiscussionsBundle(ArrayList())
+        UploadFilesDialog.show(fragmentManager, bundle, { event, attachment ->
+            if(event == UploadFilesDialog.EVENT_ON_FILE_SELECTED) {
+                presenter.attachment = attachment
+                updateAttachmentUI()
+            }
+        })
     }
 
     companion object {

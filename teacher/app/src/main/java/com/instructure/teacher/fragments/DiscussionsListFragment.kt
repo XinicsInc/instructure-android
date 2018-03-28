@@ -32,9 +32,10 @@ import com.instructure.teacher.dialog.DiscussionsMoveToDialog
 import com.instructure.teacher.events.*
 import com.instructure.teacher.factory.DiscussionListPresenterFactory
 import com.instructure.teacher.presenters.DiscussionListPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_discussion_list.*
@@ -247,6 +248,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
             val discussionTopicHeader = adapter.getItem(it)
             if(discussionTopicHeader != null) {
                 adapter.removeItem(discussionTopicHeader, false)
+                mNeedToForceNetwork = true
             }
         }
     }

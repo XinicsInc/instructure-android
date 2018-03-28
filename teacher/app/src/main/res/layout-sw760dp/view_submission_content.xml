@@ -21,7 +21,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.instructure.teacher.view.ProgressiveCanvasLoadingView
+    <com.instructure.pandautils.views.ProgressiveCanvasLoadingView
         android:id="@+id/loadingView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -220,7 +220,7 @@
                 android:visibility="gone"
                 tools:visibility="visible">
 
-                <com.instructure.teacher.view.ProgressiveCanvasLoadingView
+                <com.instructure.pandautils.views.ProgressiveCanvasLoadingView
                     android:id="@+id/speedGraderProgressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

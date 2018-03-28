@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2016 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,31 +16,42 @@
   -->
 
 <resources>
+
     <string name="action_settings">設定</string>
     <string name="canvasLogo">Canvas ロゴ</string>
-    <string name="email">Ｅメール</string>
+    <string name="email">メールアドレス</string>
+    <string name="emailAddress">メールアドレス</string>
     <string name="parent_email">ペアレント Eメール</string>
-    <string name="confirmPassword">パスワードの確認をする</string>
-    <string name="firstName">名前</string>
-    <string name="lastName">苗字</string>
+    <string name="confirmPassword">パスワードを確認</string>
+    <string name="firstName">名</string>
+    <string name="lastName">姓</string>
     <string name="password">パスワード</string>
     <string name="log_in">ログイン</string>
-    <string name="createAccount">アカウントの作成</string>
-    <string name="forgotPassword">パスワードを忘れました</string>
-    <string name="requestPassword">パスワードのリクエスト</string>
+    <string name="createAccount">アカウントを作成する</string>
+    <string name="create">作成</string>
+    <string name="forgotPassword">パスワードを忘れましたか？</string>
+    <string name="forgotPasswordWithoutQuestion">パスワードを忘れました</string>
+    <string name="enterAccountEmailHint">アカウントEメール</string>
+    <string name="requestPassword">パスワードをリクエストする</string>
+    <string name="resetPassword">パスワードをリセットする</string>
+    <string name="requestPasswordHelpText">リセットリクエストをメールで送信します。</string>
+    <string name="requestPasswordSuccess">パスワードはリセットされました。</string>
     <string name="fullName">フルネーム</string>
-    <string name="invalidEmail">メールアドレスが無効です。再度お試しください。</string>
-    <string name="next">次へ</string>
+    <string name="passwordsDoNotMatch">パスワードが一致しません。</string>
+    <string name="passwordsCannotBeBlank">パスワードを空白にすることはできません</string>
+    <string name="passwordResetFailed">現時点では、パスワードを再設定できませんでした。</string>
+    <string name="invalidEmail">無効なメールアドレス。もう一度試してください。</string>
+    <string name="next">次</string>
     <string name="createAccountMessage">入力したメールアドレス宛に、登録完了のためのEメールが送信されます。</string>
-    <string name="accountCreationSuccess">アカウントの作成が完了しました。登録を完了するために、Eメールの確認をしてください。</string>
-    <string name="errorOccurred">予期しないエラーが発生しました。再度お試しください。</string>
+    <string name="accountCreationSuccess">アカウントは正常に作成されました。メールを確認して登録を完了してください。</string>
+    <string name="errorOccurred">予期しないエラーが発生しました。再度試してください。</string>
     <string name="unknownDevice">不明なデバイス</string>
-    <string name="addStudent">受講生の追加</string>
+    <string name="addStudent">受講生を追加</string>
     <string name="school">学校</string>
-    <string name="finish">完了</string>
+    <string name="finish">フィニッシュ</string>
     <string name="close">閉じる</string>
-    <string name="noStudents">受講生がいません。受講生を追加するには、上記メニューにある3つのドットをタップしてください。</string>
-    <string name="noStudentsView">アカウントに関連する受講生がいません。</string>
+    <string name="noStudents">受講生はいません。受講生を追加するには、上のメニューの3つの点をタップします。</string>
+    <string name="noStudentsView">あなたのアカウントに関連付けられている受講生はいません。</string>
     <string name="noCourses">この受講生には受講できるコースがありません。</string>
     <string name="noAlerts">この受講生には閲覧できるアラートがありません。</string>
     <string name="noItemsToDisplayShort">アイテムなし</string>
@@ -49,16 +60,16 @@
     <string name="notifyWhen">次の時にアラートしてください</string>
     <string name="gradeAbove">より上のコース成績</string>
     <string name="gradeBelow">より下のコース成績</string>
-    <string name="assignmentMissing">課題が見つかりません</string>
-    <string name="teacherAnnouncements">コースアナウンスメント</string>
+    <string name="assignmentMissing">課題がありません</string>
+    <string name="teacherAnnouncements">コースのアナウンスメント</string>
     <string name="institutionAnnouncements">機関のアナウンスメント</string>
     <string name="assignmentGradeAbove">より上の課題成績</string>
     <string name="assignmentGradeBelow">より下の課題成績</string>
-    <string name="never">決してない</string>
+    <string name="never">まったくしない</string>
     <string name="save">保存</string>
     <string name="enterThreshold">パーセンテージを入力する</string>
     <string name="setGradeValueMessage">通知の受け取りを希望する成績の値を設定する</string>
-    <string name="removeStudent">受講生の削除</string>
+    <string name="removeStudent">生徒を消去する</string>
     <string name="removingStudent">生徒を消去する</string>
     <string name="studentRemoved">受講生の削除が完了しました</string>
     <string name="studentAdded">受講生の追加が完了しました</string>
@@ -73,37 +84,37 @@
     <string name="noLocation">場所が特定されていません</string>
     <string name="previousAlerts">以前のアラート</string>
     <string name="currentAlerts">現在のアラート</string>
-    <string name="badDomainError">ドメインが無効です。再度お試しください。</string>
+    <string name="badDomainError">無効なドメイン。もう一度試してください。</string>
     <string name="unauthorized">この情報にアクセスすることが許可されていません。</string>
-    <string name="revokedTokenErrorContent"> %1$sの情報にアクセスすることが許可されていません。設定メニューより、受講生にアクセスの許可を与えることができます。</string>
+    <string name="revokedTokenErrorContent">%1$sのあなたの情報にアクセスする権限がありません。設定メニューからあなたの受講生を再認証することができます。</string>
     <string name="revokedTokenErrorTitle">アクセストークンを取り消しました</string>
-    <string name="featureFlagDisabledError">この機関は、Canvas ペアレントモバイルアプリへのアクセスを有効にしていません。</string>
+    <string name="featureFlagDisabledError">この機関は、Canvas Parent モバイルアプリへのアクセスを有効にしていません。</string>
 
     <!-- Help strings -->
-    <string name="askInstructor">あなたの講師に質問する</string>
-    <string name="askInstructorDetails">質問があなたの講師に送信されました</string>
-    <string name="searchGuides">Canvas ガイドを検索</string>
+    <string name="askInstructor">講師に質問する</string>
+    <string name="askInstructorDetails">講師に質問が提出されます</string>
+    <string name="searchGuides">Canvas ガイドを検索する</string>
     <string name="canvasGuides">Canvas ガイド</string>
-    <string name="searchGuidesDetails">一般的な質問に対する回答を検索</string>
-    <string name="reportProblem">問題を報告</string>
+    <string name="searchGuidesDetails">よくある質問に対する回答を見つける</string>
+    <string name="reportProblem">問題を報告する</string>
     <string name="reportProblemDetails">アプリが正しく作動しない場合、連絡してください</string>
     <string name="requestFeature">機能をリクエストする</string>
     <string name="requestFeatureDetails">アプリを向上させるためのアイディアをお持ちですか？</string>
     <string name="shareYourLove">アプリへの愛を共有しましょう</string>
     <string name="shareYourLoveDetails">このアプリの好きな部分を教えてください</string>
     <string name="sendFeedback">フィードバックを送る</string>
-    <string name="sendMail">Eメール&#8230;を送信する</string>
-    <string name="help_domain">ドメイン：</string>
+    <string name="sendMail">メールを送信しています&#8230;</string>
+    <string name="help_domain">ドメイン ：</string>
     <string name="help_versionNum">バージョン:</string>
     <string name="help_userId">ユーザーID：</string>
     <string name="help_email">Eメール：</string>
     <string name="help_locale">場所：</string>
     <string name="installDate">インストール日:</string>
     <string name="icon">アイコン</string>
-    <string name="due">期限: </string>
-    <string name="no_due_date">期限日はありません</string>
+    <string name="due">期限：</string>
+    <string name="no_due_date">期日なし</string>
     <string name="tapToSet">タップして設定する</string>
-    <string name="alarmNotSet">アラームの設定ができませんでした。再度お試しください。</string>
+    <string name="alarmNotSet">アラームを設定できませんでした。もう一度試してください。</string>
     <string name="could_not_route_course">そのコース登録が見つかりませんでした。</string>
     <string name="could_not_route_assignment">その課題が見つかりませんでした。</string>
     <string name="email_already_exists">そのメールアドレスを使用するユーザーがすでに存在しています。</string>
@@ -113,7 +124,7 @@
     <string name="location">場所</string>
     <string name="time">時間</string>
     <string name="student_avatar">受講生のアバター</string>
-    <string name="previous">以前の</string>
+    <string name="previous">前</string>
     <string name="empty_view">コンテンツが見つからない場合、表示された内容を見る</string>
     <string name="tab_icon">そのタブ上のアイコン</string>
     <string name="add_student_icon">受講生追加用のアイコン</string>
@@ -122,25 +133,25 @@
     <string name="course_threshold_grade_below_invalid">この限界値は、高いコース限界値より低くなければなりません。</string>
     <string name="assignment_threshold_grade_above_invalid">この限界値は、低い課題限界値より上でなければなりません。</string>
     <string name="assignment_threshold_grade_below_invalid">この限界値は、高い課題限界値より下でなければなりません。</string>
-    <string name="set_reminder">リマインダーの設定</string>
+    <string name="set_reminder">リマインダーを設定する</string>
     <string name="enter_student_institution">受講生の機関を入力する</string>
     <string name="enter_student_login">受講生のログインとパスワードを入力する</string>
-    <string name="access_not_enabled">この機関は、Canvas ペアレントモバイルアプリへのアクセスを有効にしていません。</string>
-    <string name="dismiss">棄却する</string>
+    <string name="access_not_enabled">この機関は、Canvas Parent モバイルアプリへのアクセスを有効にしていません。</string>
+    <string name="dismiss">却下する</string>
     <string name="invalid_username_password">そのEメールとパスワードの組み合わせは無効です。</string>
-    <string name="opening">開始&#8230;</string>
-    <string name="locked_assignment_desc">この課題は、モジュール %s の一部で、まだロック解除されていません。</string>
+    <string name="opening">開いています&#8230;</string>
+    <string name="locked_assignment_desc">この課題は、%sモジュールの一部であり、まだアンロックされていません。</string>
     <string name="locked_assignment_desc_line2">このコンテンツの解除方法についての詳細は、ブラウザでコースモジュールページを参照してください。</string>
     <string name="locked_assignment_not_module">この課題はロックされています。</string>
     <string name="no_description">この課題の説明はありません</string>
-    <string name="cannot_view_file">アプリ内でこのファイルを閲覧できません。ブラウザで閲覧してください。</string>
-    <string name="calendar_event">カレンダーイベント</string>
+    <string name="cannot_view_file">このファイルをアプリで見ることはできません。ブラウザでご覧ください。</string>
+    <string name="calendar_event">予定表のイベント</string>
     <string name="set_reminder_toggle">リマインダートグルの設定</string>
     <string name="or">または</string>
     <string name="canvas_login_text">Canvas にログインする</string>
 
     <!-- Feature Request -->
-    <string name="featureSubject">Canvas ペアレントアプリ [Android] へのアイデア</string>
+    <string name="featureSubject">Canvas Parent アプリ [Android] へのアイデア</string>
     <string name="understandRequest">次の情報は、あなたのアイデアをより良く理解するために役立ちます:</string>
 
     <!-- Distance Strings -->
@@ -151,14 +162,16 @@
 
     <string name="grade">成績：</string>
     <string name="notGraded">まだ採点されていません</string>
-    <string name="missing">紛失</string>
-    <string name="submitted">提出済み</string>
+    <string name="missing">欠如</string>
+    <string name="submitted">タスクの成績を送信</string>
     <string name="in_class">教室内</string>
     <string name="excused">免除</string>
-    <string name="late">遅滞</string>
+    <string name="late">遅れている</string>
     <string name="greaterThan9">9+</string>
 
-    <string name="onlyCanvasObservers">Canvas Parent では、Canvas オブザーバーのみが認証を行うことができます。</string>
+    <string name="onlyCanvasObservers">Canvas オブサーバーのみが Canvas Parent 内で承認を行うことができます。</string>
+    <string name="unableToAddStudentError">現在、この受講生を追加できません。</string>
+
     <string name="open_source">ソースを開く</string>
     <string name="open_source_details">オープンソースライセンスを表示する</string>
 
@@ -181,4 +194,12 @@
     <string name="selectRegion">地域ピッカー</string>
     <string name="unauthorizedRegion">承認されていない地域</string>
     <string name="mismatchedRegionMessage">この機関は選択した地域の外にあります。この機関に受講生を追加するには、ログインページの[地域選択]オプションを使用して、地域のアカウントを作成してください%1$s。</string>
+
+    <string name="notification_channel_name">一般的な通知</string>
+    <string name="notification_channel_description">あなたの受講生へのリマインダーと重要な情報の通知。</string>
+
+    <string name="whatsYourStudentsSchoolName">学生の学校名を入力</string>
+    <string name="findYourStudentsSchoolHint">あなたの学生の学校や地区を探す</string>
+    <string name="noGradeText">N/A</string>
+    <string name="locked">ロックされています</string>
 </resources>

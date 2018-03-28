@@ -58,7 +58,7 @@ public abstract class CanvasRestAdapter {
 
     /**
      * Constructor for CanvasRestAdapter
-     * @param statusCallback Only null when not making calls via callbacks. RestBuilder requires one, RXRestBuilder should not pass one
+     * @param statusCallback Only null when not making calls via callbacks. RestBuilder requires one
      */
     protected CanvasRestAdapter(@Nullable StatusCallback statusCallback) {
         mCallback = statusCallback;
@@ -287,8 +287,7 @@ public abstract class CanvasRestAdapter {
     }
 
     /**
-     * protected because of RX may want to override to provide a different converter factory
-     * @param params RXParams
+     * @param params RestParams
      * @param apiContext courses, groups, sections, users, or nothing
      * @return Retrofit.Builder
      */

@@ -15,8 +15,8 @@
  */
 package com.instructure.teacher.ui.pages
 
+import com.instructure.soseedy.CanvasUser
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.CanvasUser
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
@@ -33,9 +33,7 @@ class AssignmentSubmissionListPage : BasePage(), PageAssert by SimplePageAssert(
 
     private val assignmentSubmissionFilterButton by OnViewWithId(R.id.submissionFilter)
 
-    private val filterAllSubmissions by OnViewWithId(R.id.allSubmissions, false)
-
-    private val filterSubmittedLate by OnViewWithId(R.id.submittedLate, false)
+    private val assignmentSubmissionFilterBySubmissionsButton by WaitForViewWithText(R.string.filterSubmissionsLowercase)
 
     private val assignmentSubmissionStatus by OnViewWithId(R.id.submissionStatus)
 
@@ -78,16 +76,20 @@ class AssignmentSubmissionListPage : BasePage(), PageAssert by SimplePageAssert(
         assignmentSubmissionFilterButton.click()
     }
 
+    fun clickFilterSubmissions() {
+        assignmentSubmissionFilterBySubmissionsButton.click()
+    }
+
     fun clickSubmission(student: CanvasUser) {
         waitForViewWithText(student.name).click()
     }
 
-    fun filterSubmittedLate() {
+    fun clickFilterSubmittedLate() {
         onViewWithText(R.string.submitted_late).click()
     }
 
-    fun filterUngraded() {
-        onViewWithText(R.string.havent_been_graded).click()
+    fun clickFilterUngraded() {
+        onViewWithText(R.string.not_graded).click()
     }
 
     fun assertFilterLabelText(text: Int) {
@@ -156,5 +158,9 @@ class AssignmentSubmissionListPage : BasePage(), PageAssert by SimplePageAssert(
 
     fun assertDisplaysAnonymousName() {
         waitForViewWithId(R.id.studentName).assertHasText(R.string.anonymousStudentLabel)
+    }
+
+    fun clickFilterDialogOk() {
+        waitForViewWithText(android.R.string.ok).click()
     }
 }

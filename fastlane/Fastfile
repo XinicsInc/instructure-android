@@ -78,7 +78,7 @@ platform :android do
     next if SmartBuildUtils.skippable? app
     gradle(
         project_dir: app,
-        task:        'assemble',
+        task:        'assembleDev',
         build_type:  'Debug',
         flags:       '--stacktrace'
     )
@@ -110,7 +110,7 @@ platform :android do
     raise "HockeyApp API key not found. Please set in HOCKEY_API_KEY environment variable" unless ENV['HOCKEY_API_KEY']
     gradle(
         project_dir:   app,
-        task:          'assemble',
+        task:          'assembleProd',
         build_type:    'Release',
         flags:         [
                            '--stacktrace',
@@ -231,6 +231,11 @@ platform :android do
     end
   end
 
+  desc 'Run Teacher Espresso tests on GCloud with gRPC'
+  lane :teacher_gcloud_grpc do |options|
+    GCloud.new(app: 'teacher').run_tests
+  end
+
   desc 'Run Espresso tests on Google Cloud. Only works on Bitrise. fastlane espresso_gcloud app:teacher class:ProfilePageTest method:displaysPageObjects'
   lane :espresso_gcloud do |options|
     raise "Please Specify app name. E.g. 'fastlane espresso_gcloud app:teacher'" unless options.has_key?(:app)
@@ -310,8 +315,9 @@ platform :android do
     app = options[:app]
     raise "Unrecognized app '#{app}'. " unless apps.include? app
     next if SmartBuildUtils.skippable? app
+    variant = options[:variant] || ''
     flags = "-p #{app} -Pcoverage"
-    gradlew "#{flags} :app:test"
+    gradlew "#{flags} :app:test#{variant}"
   end
 
 end # platform :android

@@ -32,13 +32,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.dialog.AccountNotificationDialog;
 import com.instructure.candroid.holders.QuizMultiChoiceViewHolder;
 import com.instructure.candroid.interfaces.QuizPostMultiAnswers;
 import com.instructure.candroid.interfaces.QuizToggleFlagState;
+import com.instructure.candroid.util.StringUtilities;
 import com.instructure.canvasapi2.models.QuizSubmissionAnswer;
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.views.CanvasWebView;
 
 public class QuizMultiAnswerBinder {
@@ -95,7 +95,7 @@ public class QuizMultiAnswerBinder {
             if (!TextUtils.isEmpty(answer.getHtml())) {
                 textView.setVisibility(View.GONE);
 
-                final String html = AccountNotificationDialog.trimTrailingWhitespace(answer.getHtml()).toString();
+                final String html = StringUtilities.trimTrailingWhitespace(answer.getHtml()).toString();
 
                 webView.formatHTML(html, "");
 
@@ -138,11 +138,12 @@ public class QuizMultiAnswerBinder {
                 });
             }
 
-            final Drawable courseColorFlag = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_bookmark_fill_grey, courseColor);
-            if (quizSubmissionQuestion.isFlagged()) {
+            final Drawable courseColorFlag = ColorKeeper.getColoredDrawable(context, R.drawable.vd_bookmark_filled, courseColor);
+
+            if(quizSubmissionQuestion.isFlagged()) {
                 holder.flag.setImageDrawable(courseColorFlag);
             } else {
-                holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+                holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
             }
 
             holder.flag.setOnClickListener(new View.OnClickListener() {
@@ -150,8 +151,7 @@ public class QuizMultiAnswerBinder {
                 public void onClick(View view) {
                     if (quizSubmissionQuestion.isFlagged()) {
                         //unflag it
-
-                        holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+                        holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
                         flagStateCallback.toggleFlagged(false, quizSubmissionQuestion.getId());
                         quizSubmissionQuestion.setFlagged(false);
                     } else {

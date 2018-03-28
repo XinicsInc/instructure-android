@@ -1,167 +1,193 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="chooseMedia">Выбрать медиа</string>
-  <string name="takeVideo">Снять видео</string>
-  <string name="noCameraOnDevice">Нет камеры</string>
-  <!--NotoriousPicker/uploadService-->
-  <string name="notificationTitle">Загрузка на Canvas</string>
-  <string name="preparingUpload">Подготовка к загрузке</string>
-  <string name="loadingFilesIndeterminate">Загрузка файлов...</string>
-  <string name="fileUploadSuccess">Загрузка прошла успешно</string>
-  <string name="noNetwork">Сеть недоступна - повторите попытку позже</string>
-  <string name="uploadMessage">\"Загрузка в процессе. Проверить уведомления о статусе загрузки.</string>
-  <string name="mediaUpload">Загрузка медиа</string>
-  <string name="uploadingFile">Загрузка файла...</string>
-  <string name="errorUploadingFile">Произошла ошибка при загрузке файла. Пожалуйста, попробуйте еще раз.</string>
-  <string name="fileSubmission">Отправить файл(ы)</string>
-  <string name="uploadFiles">Загрузить файл(ы)</string>
-  <string name="upload">Загрузить</string>
-  <string name="errorSendingMessage">Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте еще раз.</string>
-  <!--Turn in Files-->
-  <string name="chooseFileSource">Выберите файл из...</string>
-  <string name="addFile">Добавить файл</string>
-  <string name="choose_a_file">Выбрать файл</string>
-  <string name="fromCamera">Камера</string>
-  <string name="fromGallery">Галлерея</string>
-  <string name="fromDevice">Устройство</string>
-  <string name="fromOtherApplication">Другое</string>
-  <string name="Domain">Домейн</string>
-  <string name="files">Файлы</string>
-  <string name="file">Файл</string>
-  <string name="addItem">Добавить элемент</string>
-  <string name="assignment">Задание</string>
-  <string name="attachedFiles">Attached Files</string>
-  <string name="turnIn">Включить</string>
-  <string name="course">Курс</string>
-  <string name="sending">Отправка...</string>
-  <!--rating dialog-->
-  <string name="star1">Количество звезд Одна</string>
-  <string name="star2">Количество звезд Две</string>
-  <string name="star3">Количество звезд Три</string>
-  <string name="star4">Количество звезд Четыре</string>
-  <string name="star5">Количество звезд Пять</string>
-  <!--Submitting files-->
-  <string name="fileQuotaExceeded">Вы в настоящее время превысили квоту хранения файлов.</string>
-  <string name="errorSubmittingFiles">Произошла ошибка при возврате ваших файлов. Пожалуйста, попробуйте еще раз.</string>
-  <string name="errorLoadingFiles">Произошла ошибка при загрузке файла. Проверьте подключение к Интернету и повторите попытку.</string>
-  <string name="filesUploadedSuccessfully">Файлы загружены успешно.</string>
-  <string name="filesSubmittedSuccessfully">Файлы успешно отправлены.</string>
-  <string name="messageSentSuccessfully">Сообщение успешно отправлено.</string>
-  <string name="shareWithCanvas">Другие приложения могут обмениваться файлами с Canvas! Обратите внимание на иконку ниже в приложениях и нажмите на Canvas.</string>
-  <string name="shareWithCanvas2">Это откроет это приложение. Затем просто выберите, какой курс и задание, вы хотите вернуть в файле.</string>
-  <string name="contentDescriptionSocialShare">Поделиться иконкой</string>
-  <string name="submitAssignment">Отправить задание</string>
-  <string name="assignmentHeader">Задание :</string>
-  <string name="submittingAssignment">Отправка задания...</string>
-  <string name="conversations">Разговоры</string>
-  <string name="inbox">Входящие</string>
-  <string name="divider">Разделитель</string>
-  <string name="legal">Законный</string>
-  <string name="completeHomework">ВЫПОЛНИТЕ свою домашнюю работу</string>
-  <string name="takeExam">Пройдите экзамен</string>
-  <string name="fileIcon">Иконка файла</string>
-  <string name="uploadingFileNum" formatted="false">Загрузка %d из %d</string>
-  <string name="fileLocked" formatted="false">%s было заблокировано.</string>
-  <string name="filePermissionGranted">Файл теперь готов к загрузке, пожалуйста, попробуйте еще раз.</string>
-  <string name="filePermissionDenied">Файл не может быть загружен без предоставления разрешения.</string>
-  <string name="pleaseTryAgain">Разрешение дано, пожалуйста, попробуйте еще раз.</string>
-  <string name="pickVideo">Выберите видеоролик</string>
-  <!--Errors-->
-  <string name="errorOccurred">Произошла непредвиденная ошибка.</string>
-  <string name="serverError">Возникла ошибка сервера.</string>
-  <string name="unauthorized">Вы не авторизованы для получения к этому доступа. Либо у вас нет права доступа, либо у вас еще нет доступа (так как ваш курс еще не начался)</string>
-  <string name="fileNoLongerExists">Этот файл больше не существует.</string>
-  <string name="invalidAccessToken">Время сеанса истекло. Пожалуйста, войдите, чтобы начать новую сессию.</string>
-  <string name="uploadingFromSourceFailed">Загрузка файла из этого источника не может быть завершена.</string>
-  <string name="errorGettingPhoto">Произошла ошибка при получении фото. Пожалуйста, попробуйте еще раз.</string>
-  <string name="errorTextMissing">Добавьте текст, чтобы отправить сообщение</string>
-  <string name="fileUploadNotSupported">Вы не можете загружать файлы в выбранное задание.</string>
-  <string name="noCourseSelected">Пожалуйста, выберите курс</string>
-  <string name="selectCourse">Выберите курс</string>
-  <string name="selectAssignment">Выберите задание</string>
-  <string name="loadingAssignments">Загрузка заданий...</string>
-  <string name="noAssignmentSelected">Пожалуйста, выберите задание</string>
-  <string name="noAssignmentsWithFileUpload">На этом курсе нет заданий, которые позволяют загрузку файлов.</string>
-  <string name="teacherNotAllowedFileSubmission">Как преподаватель этого курса, вы не можете отправлять файлы</string>
-  <string name="noFilesUploaded">Вы не выбрали никаких файлов.</string>
-  <string name="oneOrMoreExtensionNotAllowed">Один или несколько файлов имеет неразрешенное расширение файла,</string>
-  <string name="extensionNotAllowed">Выбранный тип файла не допускается.</string>
-  <string name="allowedExtensions">Допустимые расширения:</string>
-  <!--Media Task Loader-->
-  <string name="noDataConnection">Проверьте подключение и повторите попытку.</string>
-  <string name="noApps">На вашем устройстве не установлены какие-либо приложения, которые могут обработать этот файл.</string>
-  <string name="noAppsShort">Невозможно открыть</string>
-  <string name="unexpectedErrorOpeningFile">Произошла непредвиденная ошибка при попытке открыть файл.</string>
-  <string name="unexpectedErrorDownloadingFile">Произошла непредвиденная ошибка при попытке загрузить файл.</string>
-  <string name="done">Готово</string>
-  <!--Tutorial Messages-->
-  <string name="tutorial_tipColorPickerTitle">Выберите цвет курса</string>
-  <string name="tutorial_tipColorPickerMessage">Вы можете выбрать из множества цветов, чтобы настроить свои курсы.</string>
-  <string name="tutorial_tipCourseGradesTitle">Быстро просмотреть оценки</string>
-  <string name="tutorial_tipCourseGradesMessage">Перейдите к оценкам, нажав на оценку курса.</string>
-  <string name="tutorial_tipLandingPageTitle">Выберите целевую страницу</string>
-  <string name="tutorial_tipLandingPageMessage">После выбора целевой страницы, Canvas загрузит эту страницу автоматически при запуске приложения.</string>
-  <string name="tutorial_tipLockSlideTitle">Блокировка и разблокировка экрана</string>
-  <string name="tutorial_tipLockSlideMessage">Блокировка экрана позволяет прокручивать экран, не открывая меню навигации.</string>
-  <string name="tutorial_tipHideStudentNames">Скрыть имена при установке оценивания</string>
-  <string name="tutorial_tipHideStudentNamesMessage">Устраните предвзятость, скрыв имена учащихся.</string>
-  <string name="tutorial_tipMyCoursesTitle">Мои курсы</string>
-  <string name="tutorial_tipMyCoursesMessage">Переключайтесь между \"Мой курс\" и \"Все курсы\" в один момент!</string>
-  <string name="tutorial_tipSwitchUsers">Сменить пользователя</string>
-  <string name="tutorial_tipSwitchUsersMessage">Простое переключение и добавление пользователей.</string>
-  <string name="tutorial_tipViewProfile">Ваш профиль</string>
-  <string name="tutorial_tipViewProfileMessage">Просмотр и изменение вашего аватара профиля или изображения заставки. Вы можете также просмотреть ваши личные файлы.</string>
-  <string name="tutorial_tipNotificationPreferences">Настройка уведомлений</string>
-  <string name="tutorial_tipNotificationPreferencesMessage">Фильтруйте ваши предпочтения и установите флажки для включения или отключения определенного типа уведомлений.</string>
-  <string name="tutorial_tipNavigationShortcuts">Быстрое переключение между курсами.</string>
-  <string name="tutorial_tipNavigationShortcutsMessage">Переключайтесь между вашими любимыми курсами.</string>
-  <!--Permissions-->
-  <string name="permissionDenied">Для использования этой функции, сначала нужно получить разрешение.</string>
-  <string name="noConnection">Нет связи</string>
-  <!--General-->
-  <string name="yes">Да</string>
-  <string name="no">Нет</string>
-  <string name="inbox_all">Входящие</string>
-  <string name="inbox_unread">Не прочитано</string>
-  <string name="inbox_starred">Отмечено звездочкой</string>
-  <string name="inbox_sent">Отправлено</string>
-  <string name="inbox_archived">Помещено в архив</string>
-  <string name="forbidden">Ответы видны только тем, кто опубликовал не менее одного ответа.</string>
-  <string name="like">Мне нравится</string>
-  <string name="likes">Количество отметок \"Мне нравится\"</string>
-  <string name="lockedAssignmentNotModule">Это задание заблокировано.</string>
-  <string name="deletedEntryNoChildren">У этой удаленной записи обсуждения нет ответов.</string>
-  <string name="deleted">[Удалено]</string>
-  <string name="deleted_by">[Удалено %1$s]</string>
-  <string name="lockedDiscussionDesc">Эта дискуссия является частью модуля %s и еще не была разблокирована.</string>
-  <string name="gradedDiscussion">Оцениваемая дискуссия</string>
-  <string name="pointsPossible">Возможное количество баллов</string>
-  <string name="sideCommentEntry">В дискуссиях этого типа нельзя комментировать никакие объекты этого уровня.</string>
-  <string name="accessibility_overflow">Превышение допустимого предела</string>
-  <string name="discussion_response">Комментарий</string>
-  <string name="discussion_responses">Комментарии</string>
-  <string name="discussion_unread">Не прочитано</string>
-  <string name="discussion_reply">Ответить</string>
-  <string name="close">Закрыть</string>
-  <!--App Names-->
-  <string name="utils_canvas">Canvas</string>
-  <string name="utils_canvasTeacher">Преподаватель Canvas</string>
-  <string name="utils_canvasParent">Canvas Parent</string>
-  <string name="utils_polls">Опросы Canvas</string>
-  <string name="utils_speedgrader">Speedgrader</string>
-  <!--Rating Dialog-->
-  <string name="utils_howAreWeDoing">Как мы работаем?</string>
-  <string name="utils_rateUs">Как бы вы оценили нас?</string>
-  <string name="utils_doBetter">Что мы можем сделать лучше?</string>
-  <string name="utils_sendFeedback">Отправить отзыв</string>
-  <string name="utils_suggestions">Предложения по Android</string>
-  <string name="utils_domain">Домен</string>
-  <string name="utils_versionNum">Версия:</string>
-  <string name="utils_userId">Идентификатор пользователя</string>
-  <string name="utils_email">Адрес электронной почты</string>
-  <string name="utils_dontShowAgain">Не показывать снова</string>
-  <string name="utils_installDate">Дата установки:</string>
-  <string name="utils_device">Устройство</string>
-  <string name="utils_osVersion">Версия ОС</string>
-  <string name="loading">Загрузка</string>
+    <string name="chooseMedia">Выбрать медиа</string>
+    <string name="takeVideo">Снять видео</string>
+    <string name="noCameraOnDevice">Нет камеры</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Загрузка на Canvas</string>
+    <string name="preparingUpload">Подготовка к загрузке</string>
+    <string name="loadingFilesIndeterminate">Загрузка файлов&#8230;</string>
+    <string name="fileUploadSuccess">Загрузка прошла успешно</string>
+    <string name="noNetwork">Сеть не доступна - повторите попытку позже.</string>
+    <string name="uploadMessage">"Выполняется отправка. Следите за уведомлениями о состоянии отправки.</string>
+    <string name="mediaUpload">Загрузка медиа</string>
+    <string name="uploadingFile">Загрузка файла&#8230;</string>
+    <string name="errorUploadingFile">Произошла ошибка при отправке вашего файла. Попробуйте еще раз.</string>
+    <string name="fileSubmission">Отправить файл(ы)</string>
+    <string name="uploadFiles">Загрузить файл(ы)</string>
+    <string name="upload">Отправить</string>
+    <string name="errorSendingMessage">Произошла ошибка при отправке вам сообщения. Попробуйте еще раз.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Уведомления об отправке файлов</string>
+    <string name="notificationChannelNameFileUploadsDescription">Уведомления Canvas о текущих отправках файлов.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Выберите файл из&#8230;</string>
+    <string name="addFile">Добавить файл</string>
+    <string name="choose_a_file">Выбрать файл</string>
+
+    <string name="fromCamera">Камера</string>
+    <string name="fromGallery">Галлерея</string>
+    <string name="fromDevice">Устройство</string>
+    <string name="fromOtherApplication">Другое</string>
+    <string name="Domain">Домен</string>
+    <string name="files">Файлы</string>
+    <string name="file">Файл</string>
+    <string name="addItem">Добавить элемент</string>
+    <string name="assignment">Задание</string>
+    <string name="attachedFiles">Attached Files</string>
+    <string name="turnIn">Включить</string>
+    <string name="course">Курс</string>
+    <string name="sending">Отправка&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Количество звезд Одна</string>
+    <string name="star2">Количество звезд Две</string>
+    <string name="star3">Количество звезд Три</string>
+    <string name="star4">Количество звезд Четыре</string>
+    <string name="star5">Количество звезд Пять</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Вы в настоящее время превысили квоту хранения файлов.</string>
+    <string name="errorSubmittingFiles">Произошла ошибка при передаче ваших файлов. Попробуйте еще раз.</string>
+    <string name="errorLoadingFiles">Произошла ошибка при загрузке вашего файла. Проверьте интернет-подключение и попробуйте еще раз.</string>
+    <string name="filesUploadedSuccessfully">Файлы загружены успешно.</string>
+    <string name="filesSubmittedSuccessfully">Файлы успешно отправлены.</string>
+    <string name="messageSentSuccessfully">Сообщение успешно отправлено.</string>
+    <string name="shareWithCanvas">С помощью других приложений можно делиться файлами через Canvas! Найдите значок ниже в приложениях и нажмите на Canvas.</string>
+    <string name="shareWithCanvas2">При этом откроется это приложение. Затем просто выберите курс и задание, для которых вы хотите отправить файл.</string>
+    <string name="contentDescriptionSocialShare">Поделиться иконкой</string>
+    <string name="submitAssignment">Отправить задание</string>
+    <string name="assignmentHeader">Задание :</string>
+    <string name="submittingAssignment">Отправка задания&#8230;</string>
+    <string name="conversations">Разговоры </string>
+    <string name="inbox">Входящие </string>
+    <string name="divider">Разделитель</string>
+    <string name="legal">Юридические вопросы</string>
+    <string name="completeHomework">ВЫПОЛНИТЕ свою домашнюю работу</string>
+    <string name="takeExam">Пройдите экзамен</string>
+    <string name="fileIcon">Иконка файла</string>
+    <string name="uploadingFileNum" formatted="false">Отправка %d из %d</string>
+    <string name="fileLocked" formatted="false">%s заблокирован.</string>
+    <string name="filePermissionGranted">Файл теперь готов к загрузке, пожалуйста, попробуйте еще раз.</string>
+    <string name="filePermissionDenied">Файл не может быть загружен без предоставления разрешения.</string>
+    <string name="pleaseTryAgain">Разрешение дано, пожалуйста, попробуйте еще раз.</string>
+    <string name="pickVideo">Выберите видеоролик</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Произошла непредвиденная ошибка.</string>
+    <string name="serverError">Произошла ошибка сервера.</string>
+    <string name="unauthorized">У вас нет права доступа к этому. У вас пока нет либо разрешений, либо доступа (похоже, что ваш курс еще не начался)</string>
+    <string name="fileNoLongerExists">Этот файл больше не существует.</string>
+    <string name="invalidAccessToken">Время вашего сеанса истекло. Войдите в систему, чтобы начать новый сеанс.</string>
+    <string name="uploadingFromSourceFailed">Загрузка файла из этого источника не может быть завершена.</string>
+    <string name="errorGettingPhoto">Произошла ошибка при получении фотографии. Попробуйте еще раз.</string>
+    <string name="errorTextMissing">Добавьте текст, чтобы отправить сообщение</string>
+
+    <string name="fileUploadNotSupported">Вы не можете отправить эти файлы в выбранное задание.</string>
+    <string name="noCourseSelected">Пожалуйста, выберите курс</string>
+    <string name="selectCourse">Выбрать курс</string>
+    <string name="selectAssignment">Выбор задания</string>
+    <string name="loadingAssignments">Загрузка заданий&#8230;</string>
+    <string name="noAssignmentSelected">Пожалуйста, выберите задание</string>
+    <string name="noAssignmentsWithFileUpload">На этом курсе нет заданий, которые позволяют загрузку файлов.</string>
+    <string name="teacherNotAllowedFileSubmission">Так как вы являетесь преподавателем на этом курсе, вы не можете отправлять файлы</string>
+    <string name="noFilesUploaded">Вы не выбрали ни одного файла.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Один или более файлов имеют недопустимое расширение</string>
+    <string name="extensionNotAllowed">Выбранный тип файла не допускается.</string>
+    <string name="allowedExtensions">Допустимые расширения: </string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Проверьте подключение и повторите попытку. </string>
+    <string name="noApps">На вашем устройстве не установлено приложение, способное работать с этим файлом.</string>
+    <string name="noAppsShort">Невозможно открыть</string>
+    <string name="unexpectedErrorOpeningFile">Произошла непредвиденная ошибка при попытке открыть файл.</string>
+    <string name="unexpectedErrorDownloadingFile">Произошла непредвиденная ошибка при попытке загрузить файл.</string>
+
+    <string name="done">Готово</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Для использования этой функции, сначала нужно получить разрешение.</string>
+    <string name="noConnection">Нет связи</string>
+
+    <!--General-->
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+
+    <string name="inbox_all">Входящие</string>
+    <string name="inbox_unread">Не прочитано</string>
+    <string name="inbox_starred">Отмечено звездочкой</string>
+    <string name="inbox_sent">Отправлено</string>
+    <string name="inbox_archived">Помещено в архив</string>
+
+    <string name="forbidden">Ответы видны только тем, кто опубликовал не менее одного ответа.</string>
+
+    <string name="like">Мне нравится</string>
+    <string name="likes">Количество отметок "Мне нравится"</string>
+    <string name="lockedAssignmentNotModule">Это задание заблокировано.</string>
+    <string name="deletedEntryNoChildren">У этой удаленной записи обсуждения нет ответов.</string>
+    <string name="deleted">[Удалено]</string>
+    <string name="deleted_by">[Удалено %1$s]</string>
+    <string name="lockedDiscussionDesc">Эта дискуссия является частью модуля %s и еще не была разблокирована.</string>
+    <string name="gradedDiscussion">Оцениваемая дискуссия</string>
+    <string name="pointsPossible">Возможное количество баллов</string>
+    <string name="sideCommentEntry">В дискуссиях этого типа нельзя комментировать никакие объекты этого уровня.</string>
+
+    <string name="accessibility_overflow">Превышение допустимого предела</string>
+
+    <string name="discussion_response">Комментарий</string>
+    <string name="discussion_responses">Комментарии</string>
+    <string name="discussion_unread">Не прочитано</string>
+    <string name="discussion_reply">Ответить</string>
+    <string name="close">Закрыть</string>
+
+    <string name="noInternetConnectionTitle">Нет интернет-соединения</string>
+    <string name="noInternetConnectionMessage">Для выполнения этого действия необходимо интернет-соединение.</string>
+    <string name="content_description_avatar">Аватар</string>
+    <string name="formattedAvatarAction">Просмотр данных пользователя для %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Преподаватель Canvas</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Опросы Canvas</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Как мы работаем?</string>
+    <string name="utils_rateUs">Как бы вы оценили нас?</string>
+    <string name="utils_doBetter">Что мы можем сделать лучше?</string>
+    <string name="utils_sendFeedback">Отправить отзыв</string>
+    <string name="utils_suggestions">Предложения по Android</string>
+    <string name="utils_domain">Домен</string>
+    <string name="utils_versionNum">Версия:</string>
+    <string name="utils_userId">Идентификатор пользователя</string>
+    <string name="utils_email">Адрес электронной почты</string>
+    <string name="utils_dontShowAgain">Не показывать снова</string>
+    <string name="utils_installDate">Дата установки:</string>
+    <string name="utils_device">Устройство</string>
+    <string name="utils_osVersion">Версия ОС</string>
+    <string name="loading">Загрузка</string>
+    <string name="save">Сохранить</string>
+    <string name="cropInstructions">Захватите и перетащите края изображения, чтобы изменить его размер.</string>
+
 </resources>

@@ -129,8 +129,8 @@ class CreateDiscussionPresenter(private val mCanvasContext: CanvasContext, priva
 
     fun deleteDiscussionTopicHeader(discussionTopicHeaderId: Long) {
         DiscussionManager.deleteDiscussionTopicHeader(mCanvasContext, discussionTopicHeaderId, object: StatusCallback<Void>(){
-            override fun onResponse(response: Response<Void>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-                if(response?.code() in 200..299) {
+            override fun onResponse(response: Response<Void>, linkHeaders: LinkHeaders, type: ApiType) {
+                if(response.code() in 200..299) {
                     DiscussionTopicHeaderDeletedEvent(discussionTopicHeaderId, (DiscussionsDetailsFragment::class.java.toString() + ".onResume()")).post()
                     viewCallback?.discussionDeletedSuccessfully(discussionTopicHeaderId)
                 }

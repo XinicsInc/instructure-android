@@ -62,12 +62,15 @@ class AssignmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         } else {
             if (assignment.dueAt != null) {
                 dueDate.text = closedString + context.getString(R.string.due, DateHelper.getMonthDayAtTime(context, assignment.dueAt, context.getString(R.string.at)))
+            } else if (assignment.allDates.size == 1 && assignment.allDates.get(0).dueAt != null) {
+                // If a due date is to one section and nothing for everyone else, we can still show the due date
+                dueDate.text = closedString + context.getString(R.string.due, DateHelper.getMonthDayAtTime(context, assignment.allDates.get(0).dueAt, context.getString(R.string.at)))
             } else {
                 dueDate.text = closedString + context.getString(R.string.no_due_date)
             }
         }
 
-        if (assignment.needsGradingCount == 0L) {
+        if (assignment.needsGradingCount == 0L || assignment.gradingType == Assignment.NOT_GRADED_TYPE) {
             ungradedCount.setGone().text = ""
         } else {
             ungradedCount.setVisible().text = context.resources.getQuantityString(

@@ -1313,7 +1313,7 @@ public class CaldroidFragment extends DialogFragment {
         dateViewPager.setAdapter(infinitePagerAdapter);
 
         // Setup pageChangeListener
-        dateViewPager.setOnPageChangeListener(pageChangeListener);
+        dateViewPager.addOnPageChangeListener(pageChangeListener);
     }
 
     /**

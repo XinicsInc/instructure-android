@@ -30,13 +30,13 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class FileListRecyclerAdapterTest extends InstrumentationTestCase {
     private FileListRecyclerAdapter mAdapter;
 
     public static class FileListRecyclerAdapterWrapper extends FileListRecyclerAdapter {
-        protected FileListRecyclerAdapterWrapper(Context context) { super(context, null, 0, "", null, false); }
+        protected FileListRecyclerAdapterWrapper(Context context) { super(context, null, false, new FileFolder(), null, true); }
     }
 
     @Before

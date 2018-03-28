@@ -24,36 +24,13 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="?android:attr/actionBarSize"
         android:background="@color/defaultPrimary"
         android:elevation="6dp"
+        app:title="@string/tab_courses"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
-        tools:ignore="UnusedAttribute">
-
-        <com.instructure.teacher.view.CustomToolbarIconView
-            android:id="@+id/logoImageView"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/toolbarIconPadding"
-            android:layout_marginTop="@dimen/toolbarIconPadding"
-            android:importantForAccessibility="no"
-            android:scaleType="centerCrop" />
-
-        <TextView
-            android:id="@+id/titleTextView"
-            style="@style/ToolBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:paddingStart="24dp"
-            android:singleLine="true"
-            android:text="@string/tab_courses"
-            android:maxLines="1"
-            tools:ignore="Deprecated,RtlSymmetry" />
-
-    </android.support.v7.widget.Toolbar>
+        tools:ignore="UnusedAttribute"/>
 
     <FrameLayout
         android:id="@+id/coursesHeaderWrapper"

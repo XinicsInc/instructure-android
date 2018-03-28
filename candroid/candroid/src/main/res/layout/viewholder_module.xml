@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -17,107 +16,76 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AdapterItem"
     android:background="@color/moduleItemBackground">
 
     <LinearLayout
-        android:id="@+id/clickContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:minHeight="?android:listPreferredItemHeight"
-        android:orientation="vertical"
-        android:paddingBottom="8dp"
-        android:paddingLeft="@dimen/card_header_margins"
-        android:paddingRight="@dimen/card_header_margins"
-        android:paddingTop="8dp"
-        android:background="?android:selectableItemBackground">
+        android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/icon"
+            style="@style/AdapterItemIcon"
+            android:importantForAccessibility="no"
+            tools:srcCompat="@drawable/vd_assignment" />
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="@dimen/gridIconSize"
-                android:layout_height="@dimen/gridIconSize"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/icon"
-                android:scaleType="fitCenter" />
+        <LinearLayout
+            android:id="@+id/textContainer"
+            style="@style/AdapterItemTextContainer"
+            android:orientation="vertical">
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/icon"
-                android:layout_toRightOf="@id/icon">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/title"
-                    style="@style/TextStyle.Primary.CardView"
-                    android:layout_width="wrap_content"
+                    style="@style/AdapterItemTitleText"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginStart="12dp" />
+                    android:layout_weight="1"
+                    tools:text="Person Name" />
 
-            </FrameLayout>
+                <ImageView
+                    android:id="@+id/indicator"
+                    android:layout_width="@dimen/gridIconSizeSmall"
+                    android:layout_height="@dimen/gridIconSizeSmall"
+                    android:contentDescription="@string/locked"
+                    android:scaleType="fitCenter"
+                    tools:srcCompat="@drawable/vd_lock"
+                    android:layout_marginStart="12dp"/>
 
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/description"
-                style="@style/TextStyle.Secondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:layout_gravity="center_vertical"/>
+                style="@style/AdapterItemDescriptionText"
+                tools:text="An assignment description with some length so we can ensure it looks amazing on every device!" />
 
-            <ImageView
-                android:id="@+id/indicator"
-                style="@style/TextStyle.Tertiary.SingleLine"
-                android:layout_width="@dimen/gridIconSizeSmall"
-                android:layout_height="@dimen/gridIconSizeSmall"
-                android:contentDescription="@string/locked"
-                android:scaleType="fitCenter"
-                android:layout_gravity="center_vertical"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/date"
+                    style="@style/AdapterItemDescriptionText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="No Due Date"/>
+
+                <TextView
+                    android:id="@+id/points"
+                    style="@style/AdapterItemDescriptionText"
+                    tools:text="-/100"/>
+
+            </LinearLayout>
 
         </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/date"
-                style="@style/TextStyle.Tertiary.SingleLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <TextView
-                android:id="@+id/points"
-                style="@style/TextStyle.Tertiary.SingleLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true" />
-
-        </RelativeLayout>
 
     </LinearLayout>
 
@@ -125,16 +93,16 @@
         android:id="@+id/shadowTop"
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        android:layout_alignParentTop="true"
         android:background="@drawable/shadow_bottom_top"
-        android:visibility="invisible"
-        android:layout_alignParentTop="true"/>
+        android:visibility="invisible" />
 
     <View
         android:id="@+id/shadowBottom"
         android:layout_width="match_parent"
         android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/shadow_bottom_top"
-        android:visibility="invisible"
-        android:layout_alignParentBottom="true"/>
+        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -23,7 +23,6 @@
               android:padding="16dp">
 
     <TextView
-        android:id="@+id/line_one"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/shareWithCanvas"/>
@@ -31,12 +30,11 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_cv_share"
+        android:background="@drawable/vd_share"
         android:layout_gravity="center"
         android:contentDescription="@string/contentDescriptionSocialShare"/>
 
     <TextView
-        android:id="@+id/line_two"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/shareWithCanvas2"/>

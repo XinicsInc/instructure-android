@@ -50,7 +50,7 @@ import retrofit2.Response
 
 class CreateAccountActivity : AppCompatActivity() {
 
-    private val saveButton: TextView? get() = findViewById<TextView>(R.id.createAccount)
+    private val saveButton: TextView? get() = findViewById(R.id.createAccount)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -157,17 +157,17 @@ class CreateAccountActivity : AppCompatActivity() {
             UserManager.addParentAirwolf(ApiPrefs.airwolfDomain, parent, object : StatusCallback<ParentResponse>() {
                 override fun onResponse(response: Response<ParentResponse>, linkHeaders: LinkHeaders, type: ApiType) {
                     val prefs = Prefs(this@CreateAccountActivity, com.instructure.parentapp.util.Const.CANVAS_PARENT_SP)
-                    prefs.save(Const.ID, response.body().parentId)
+                    prefs.save(Const.ID, response.body()?.parentId)
                     prefs.save(Const.NAME, email.text.toString())
 
                     //success. Save the id and token
-                    ApiPrefs.token = response.body().token
+                    response.body()?.let { ApiPrefs.token = it.token }
 
                     //Take the parent to the add user page.
                     //We want to refresh cache so the main activity can load quickly with accurate information
                     UserManager.getStudentsForParentAirwolf(
                             ApiPrefs.airwolfDomain,
-                            response.body().parentId,
+                            response.body()?.parentId,
                             object : StatusCallback<List<Student>>() {
                                 override fun onResponse(response: Response<List<Student>>, linkHeaders: LinkHeaders, type: ApiType) {
                                     //restart the main activity
@@ -179,8 +179,8 @@ class CreateAccountActivity : AppCompatActivity() {
                             })
                 }
 
-                override fun onFail(response: Call<ParentResponse>, error: Throwable, code: Int) {
-                    if (code == 400) {
+                override fun onFail(call: Call<ParentResponse>?, error: Throwable, response: Response<*>?) {
+                    if (response?.code() == 400) {
                         Toast.makeText(this@CreateAccountActivity, getString(R.string.email_already_exists), Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this@CreateAccountActivity, getString(R.string.errorOccurred), Toast.LENGTH_SHORT).show()

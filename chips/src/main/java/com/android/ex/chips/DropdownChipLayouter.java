@@ -3,6 +3,7 @@ package com.android.ex.chips;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
@@ -16,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.instructure.pandautils.utils.ProfileUtils;
 
 /**
  * A class that inflates and binds the views in the dropdown list from
@@ -153,28 +156,37 @@ public class DropdownChipLayouter {
         if (view == null) {
             return;
         }
-
+        Log.d("canvasLog", "AVATAR: " + entry.getAvatarUrl());
         if (showImage) {
-            byte[] photoBytes = entry.getPhotoBytes();
-
             switch (type) {
-                case BASE_RECIPIENT:
-                    if (photoBytes != null && photoBytes.length > 0) {
-                        final Bitmap photo = BitmapFactory.decodeByteArray(photoBytes, 0,
-                            photoBytes.length);
-                        view.setImageBitmap(photo);
+                case BASE_RECIPIENT: {
+                    if(ProfileUtils.shouldLoadAltAvatarImage(entry.getAvatarUrl())) {
+                        view.setImageBitmap(ProfileUtils.getInitialsAvatarBitMap(mContext, entry.getName()));
                     } else {
-                        view.setImageResource(getDefaultPhotoResId());
+                        byte[] photoBytes = entry.getPhotoBytes();
+                        if (photoBytes != null && photoBytes.length > 0) {
+                            final Bitmap photo = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
+                            view.setImageBitmap(photo);
+                        } else {
+                            view.setImageResource(getDefaultPhotoResId());
+                        }
                     }
                     break;
-                case SINGLE_RECIPIENT:
-                    if (photoBytes != null && photoBytes.length > 0) {
-                        final Bitmap photo = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
-                        view.setImageBitmap(photo);
+                }
+                case SINGLE_RECIPIENT: {
+                    if(ProfileUtils.shouldLoadAltAvatarImage(entry.getAvatarUrl())) {
+                        view.setImageBitmap(ProfileUtils.getInitialsAvatarBitMap(mContext, entry.getName()));
                     } else {
-                        view.setImageResource(getDefaultPhotoResId());
+                        byte[] photoBytes = entry.getPhotoBytes();
+                        if (photoBytes != null && photoBytes.length > 0) {
+                            final Bitmap photo = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
+                            view.setImageBitmap(photo);
+                        } else {
+                            view.setImageResource(getDefaultPhotoResId());
+                        }
                     }
                     break;
+                }
                 default:
                     break;
             }

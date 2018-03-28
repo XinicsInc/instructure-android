@@ -22,13 +22,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.util.ApplicationManager;
 import com.instructure.canvasapi2.models.CommunicationChannel;
-import com.instructure.pandautils.utils.TutorialUtils;
 
 public class CommunicationChannelsAdapter extends ArrayAdapter<CommunicationChannel> {
 
@@ -45,8 +42,8 @@ public class CommunicationChannelsAdapter extends ArrayAdapter<CommunicationChan
             view = inflater.inflate(R.layout.actionbar_course_spinner, parent, false);
         }
 
-        final TextView mTitle = (TextView)view.findViewById(R.id.text1);
-        final TextView mSubTitle = (TextView)view.findViewById(R.id.text2);
+        final TextView mTitle = view.findViewById(R.id.text1);
+        final TextView mSubTitle = view.findViewById(R.id.text2);
 
         final String title = getContext().getString(R.string.notifications);
         final String subTitle = getItem(position).address;
@@ -56,8 +53,6 @@ public class CommunicationChannelsAdapter extends ArrayAdapter<CommunicationChan
         mSubTitle.setText(subTitle);
         mSubTitle.setVisibility(View.VISIBLE);
 
-        createTutorial((FragmentActivity)getContext(), view);
-
         return view;
     }
 
@@ -66,8 +61,8 @@ public class CommunicationChannelsAdapter extends ArrayAdapter<CommunicationChan
 
         view = inflater.inflate(R.layout.text_adapter_item, parent, false);
 
-        TextView text1 = (TextView)view.findViewById(R.id.text1);
-        TextView text2 = (TextView)view.findViewById(R.id.text2);
+        TextView text1 = view.findViewById(R.id.text1);
+        TextView text2 = view.findViewById(R.id.text2);
         text1.setText(getItem(position).address);
         text2.setText(getStringForType(getItem(position).type));
 
@@ -86,11 +81,4 @@ public class CommunicationChannelsAdapter extends ArrayAdapter<CommunicationChan
         }
     }
 
-
-    private void createTutorial(FragmentActivity content, View view){
-        ImageView pulse = (ImageView)view.findViewById(R.id.pulse);
-        new TutorialUtils(content, ApplicationManager.getPrefs(getContext()), pulse, TutorialUtils.TYPE.NOTIFICATION_PREFERENCES)
-                .setContent(content.getString(R.string.tutorial_tipNotificationPreferences), content.getString(R.string.tutorial_tipNotificationPreferencesMessage))
-                .build();
-    }
 }

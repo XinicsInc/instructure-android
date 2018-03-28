@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -15,6 +15,7 @@
   ~     limitations under the License.
   ~
   -->
+
 <resources>
     <string name="rce_contentDescription_undo">Wete</string>
     <string name="rce_contentDescription_redo">Mahi anō</string>
@@ -32,7 +33,7 @@
     <string name="rce_contentDescription_insert_bullets">Whakauru Rārangi Papa</string>
     <string name="rce_contentDescription_insert_numbers">Whakauru Rārangi Tatauhia</string>
     <string name="rce_contentDescription_insert_photo">Whakauru Whakaahua</string>
-    <string name="rce_contentDescription_insert_link">Whakauru Hono</string>
+    <string name="rce_contentDescription_insert_link">Whakauru Haono</string>
     <string name="rce_contentDescription_block_quote">Poraka Whakahua</string>
 
     <string name="rce_contentDescription_color_none">Tae Kore</string>

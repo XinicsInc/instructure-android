@@ -17,8 +17,6 @@
 
 package com.instructure.candroid.fragment;
 
-
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
@@ -28,6 +26,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -37,48 +36,51 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.instructure.candroid.R;
-import com.instructure.candroid.delegate.Navigation;
-import com.instructure.candroid.util.ApplicationManager;
-import com.instructure.pandautils.utils.Const;
+import com.instructure.interactions.Navigation;
+import com.instructure.interactions.FragmentInteractions;
+import com.instructure.candroid.util.AppManager;
 import com.instructure.candroid.util.DownloadMedia;
 import com.instructure.candroid.util.LoggingUtility;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Submission;
+import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.PandaViewUtils;
 import com.instructure.pandautils.utils.PermissionUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 
 import java.io.InputStream;
 import java.net.URL;
 
-
 public class SubmissionViewOnlineURLFragment extends ParentFragment {
 
     //logic variables
-    private String url;
     private Submission submission;
     
     //view variables
+    private Toolbar toolbar;
     private ImageView previewImage;
     private Button urlButton;
     private View loadingView;
+    private TextView submittedImage;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.DETAIL; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.DETAIL; }
 
     @Override
-    public String getFragmentTitle() {
-        return "";
+    @NonNull
+    public String title() {
+        return getString(R.string.urlSubmission);
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // LifeCycle
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = getLayoutInflater().inflate(R.layout.submission_view_online_url_fragment, container, false);
-       
+        View rootView = getLayoutInflater().inflate(R.layout.fragment_submission_view_online_url, container, false);
+
         setupViews(rootView);      
         
         return rootView;
@@ -89,18 +91,30 @@ public class SubmissionViewOnlineURLFragment extends ParentFragment {
         super.onActivityCreated(savedInstanceState);
         populateViews();
 
-        if(submission.getAttachments() != null && submission.getAttachments().size() > 0) {
+        if(submission.getAttachments().size() > 0) {
             //get the image from the server and display it
             DownloadImageTask downloadImage = new DownloadImageTask(previewImage);
             downloadImage.execute(submission.getAttachments().get(0).getUrl());
+        } else {
+            // the image snapshot isn't there (yet, or possibly ever), change the description to match the web
+            submittedImage.setText(R.string.urlSubmissionNoPreview);
         }
     }
+
+    @Override
+    public void applyTheme() {
+        setupToolbarMenu(toolbar);
+        toolbar.setTitle(title());
+        PandaViewUtils.setupToolbarBackButton(toolbar, this);
+        ViewStyler.themeToolbar(getActivity(), toolbar, getCanvasContext());
+    }
+
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         menu.add(getResources().getString(R.string.open));
 
-        if(ApplicationManager.isDownloadManagerAvailable(getActivity()))
+        if(AppManager.isDownloadManagerAvailable(getActivity()))
             menu.add(getResources().getString(R.string.download));
 
         //I'm not sure why, but on tablets onContextItemSelected wasn't getting called. It looks like it's basically the
@@ -138,21 +152,18 @@ public class SubmissionViewOnlineURLFragment extends ParentFragment {
         DownloadMedia.downloadMedia(getActivity(), submission.getAttachments().get(0).getUrl(), submission.getAttachments().get(0).getFilename(), submission.getAttachments().get(0).getDisplayName());
     }
 
-    /////////////////////////////////////////////////////////////////////////// 
-    // Views 
-    ///////////////////////////////////////////////////////////////////////////
-
     private void setupViews(View rootView) {
+        toolbar = rootView.findViewById(R.id.toolbar);
         previewImage = (ImageView)rootView.findViewById(R.id.previewImage);
         urlButton = (Button) rootView.findViewById(R.id.urlButton);
         loadingView = rootView.findViewById(R.id.loadingLayout);
         loadingView.setVisibility(View.GONE);
-        
+        submittedImage = rootView.findViewById(R.id.submittedImage);
+
         //allow long presses to show context menu
         registerForContextMenu(previewImage);
     }
     private void populateViews() {
-        url = submission.getPreviewUrl();
         urlButton.setText(getString(R.string.visitPage) + " " + submission.getUrl());
         setupListeners();
     }
@@ -162,7 +173,7 @@ public class SubmissionViewOnlineURLFragment extends ParentFragment {
             
             @Override
             public void onClick(View v) {
-                InternalWebviewFragment.loadInternalWebView(getActivity(), ((Navigation)getActivity()), InternalWebviewFragment.createBundle(getCanvasContext(), submission.getUrl(), false));
+                InternalWebviewFragment.Companion.loadInternalWebView(getActivity(), ((Navigation)getActivity()), InternalWebviewFragment.Companion.createBundle(getCanvasContext(), submission.getUrl(), false));
             }
         });
 
@@ -286,10 +297,6 @@ public class SubmissionViewOnlineURLFragment extends ParentFragment {
             }
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void handleIntentExtras(Bundle extras) {

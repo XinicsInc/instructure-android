@@ -16,12 +16,12 @@
  */
 package com.instructure.teacher.holders
 
+import android.animation.AnimatorInflater
+import android.animation.ObjectAnimator
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.teacher.R
-import com.nineoldandroids.animation.AnimatorInflater
-import com.nineoldandroids.animation.ObjectAnimator
 import kotlinx.android.synthetic.main.adapter_assignment_group_header.view.*
 
 class AssignmentGroupHeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {

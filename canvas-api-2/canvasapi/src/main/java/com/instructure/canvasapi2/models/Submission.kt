@@ -72,8 +72,14 @@ data class Submission(
         @SerializedName("discussion_entries")
         var discussionEntries: ArrayList<DiscussionEntry> = arrayListOf(),
         // Group Info only available when including groups in the Submissions#index endpoint
-        var group: Group? = null
-) : CanvasModel<Submission>(), PaperParcelable {
+        var group: Group? = null,
+        @SerializedName("points_deducted")
+        var pointsDeducted: Double? = null,
+        @SerializedName("entered_score")
+        var enteredScore: Double = 0.0,
+        @SerializedName("entered_grade")
+        var enteredGrade: String? = null
+        ) : CanvasModel<Submission>(), PaperParcelable {
 
     override fun getId() = id
 

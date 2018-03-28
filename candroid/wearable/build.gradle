@@ -15,18 +15,13 @@
  *
  */
 
-repositories {
-    jcenter()
-    maven { url 'https://jitpack.io' }
-}
-
 buildscript {
     repositories {
         jcenter()
         maven { url 'https://jitpack.io' }
+        google()
     }
     dependencies {
-        // https://bintray.com/android/android-tools/com.android.tools.build.gradle/view
         classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
     }
 }

@@ -29,7 +29,7 @@ import com.instructure.teacher.events.FileFolderUpdatedEvent
 import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
 import com.instructure.teacher.models.EditableFile
 import com.instructure.teacher.presenters.ViewPdfFragmentPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.ViewPdfFragmentView

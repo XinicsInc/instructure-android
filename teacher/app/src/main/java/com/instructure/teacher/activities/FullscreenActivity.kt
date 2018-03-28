@@ -27,12 +27,12 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.interactions.FullScreenInteractions
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.R
 import com.instructure.teacher.events.AssignmentDescriptionEvent
-import com.instructure.teacher.interfaces.FullScreenInteractions
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import instructure.rceditor.RCEConst.HTML_RESULT
 import instructure.rceditor.RCEFragment
@@ -50,7 +50,7 @@ class FullscreenActivity : BaseAppCompatActivity(), RCEFragment.RCEFragmentCallb
 
         if (savedInstanceState == null) {
 
-            mRoute = intent.extras.getParcelable<Route>(Const.ROUTE)
+            mRoute = intent.extras.getParcelable(Route.ROUTE)
 
             if (mRoute == null) {
                 finish()
@@ -65,8 +65,8 @@ class FullscreenActivity : BaseAppCompatActivity(), RCEFragment.RCEFragmentCallb
                     setupWithCanvasContext(null)
                 } else {
                     CourseManager.getCourse(contextId, object : StatusCallback<Course>() {
-                        override fun onResponse(response: Response<Course>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-                            setupWithCanvasContext(response?.body() as Course)
+                        override fun onResponse(response: Response<Course>, linkHeaders: LinkHeaders, type: ApiType) {
+                            setupWithCanvasContext(response.body() as Course)
                         }
                     }, false)
                 }
@@ -118,7 +118,7 @@ class FullscreenActivity : BaseAppCompatActivity(), RCEFragment.RCEFragmentCallb
         @JvmStatic
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, FullscreenActivity::class.java)
-            intent.putExtra(Const.ROUTE, route as Parcelable)
+            intent.putExtra(Route.ROUTE, route as Parcelable)
             return intent
         }
     }

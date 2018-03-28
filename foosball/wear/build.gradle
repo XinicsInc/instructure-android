@@ -46,7 +46,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:cardview-v7:$GLOBAL_SUPPORT_LIBRARY_VERSION"
-    compile project(':wearutils')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api project(':wearutils')
+    implementation ("com.android.support:cardview-v7:$GLOBAL_SUPPORT_LIBRARY_VERSION")
+    implementation ("com.android.support:support-v4:$GLOBAL_SUPPORT_LIBRARY_VERSION")
 }

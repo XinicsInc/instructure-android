@@ -27,6 +27,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandarecycler.util.UpdatableSortedList
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.PageListAdapter
 import com.instructure.teacher.events.PageCreatedEvent
@@ -35,7 +39,7 @@ import com.instructure.teacher.events.PageUpdatedEvent
 import com.instructure.teacher.factory.PageListPresenterFactory
 import com.instructure.teacher.holders.PageViewHolder
 import com.instructure.teacher.presenters.PageListPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.PageListView

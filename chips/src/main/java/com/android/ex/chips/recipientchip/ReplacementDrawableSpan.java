@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.text.style.ReplacementSpan;
 
 /**
@@ -41,14 +42,14 @@ public class ReplacementDrawableSpan extends ReplacementSpan {
     }
 
     @Override
-    public int getSize(Paint paint, CharSequence text, int i, int i2, Paint.FontMetricsInt fm) {
+    public int getSize(@NonNull Paint paint, CharSequence text, int i, int i2, Paint.FontMetricsInt fm) {
         setupFontMetrics(fm, paint);
         return getBounds().right;
     }
 
     @Override
-    public void draw(Canvas canvas, CharSequence charSequence, int start, int end, float x, int top,
-                     int y, int bottom, Paint paint) {
+    public void draw(@NonNull Canvas canvas, CharSequence charSequence, int start, int end, float x, int top,
+                     int y, int bottom, @NonNull Paint paint) {
         canvas.save();
         int transY = (bottom - mDrawable.getBounds().bottom + top) / 2;
         canvas.translate(x, transY);

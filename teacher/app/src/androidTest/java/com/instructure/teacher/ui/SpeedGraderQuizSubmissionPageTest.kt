@@ -15,7 +15,7 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.models.CanvasUser
+import com.instructure.dataseeding.util.*
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
@@ -29,13 +29,13 @@ class SpeedGraderQuizSubmissionPageTest : TeacherTest() {
 
     @Test
     fun displaysNoSubmission() {
-        getToQuizSubmissionPage()
+        getToQuizSubmissionPage(submitQuiz = false)
         speedGraderQuizSubmissionPage.assertShowsNoSubmissionState()
     }
 
     @Test
     fun displaysPendingReviewState() {
-        getToQuizSubmissionPage()
+        getToQuizSubmissionPage(addQuestion = true)
         speedGraderQuizSubmissionPage.assertShowsPendingReviewState()
     }
 
@@ -45,15 +45,50 @@ class SpeedGraderQuizSubmissionPageTest : TeacherTest() {
         speedGraderQuizSubmissionPage.assertShowsViewQuizState()
     }
 
-    private fun getToQuizSubmissionPage(): CanvasUser {
-        val teacher = logIn()
-        val course = getNextCourse()
+    private fun getToQuizSubmissionPage(addQuestion: Boolean = false, submitQuiz: Boolean = true) {
+        val data = seedData(teachers = 1, favoriteCourses = 1, students = 1)
+        val teacher = data.teachersList[0]
+        val student = data.studentsList[0]
+        val course = data.coursesList[0]
+        val courseId = course.id
+
+        // note that the quiz is set to unpublished if we're adding questions
+        val quiz = seedQuizzes(
+                courseId = courseId,
+                quizzes = 1,
+                withDescription = false,
+                lockAt = 1.week.fromNow.iso8601,
+                unlockAt = 2.days.ago.iso8601,
+                published = !addQuestion,
+                teacherToken = teacher.token).quizzesList[0]
+        val quizId = quiz.id
+
+        if (addQuestion) {
+            seedQuizQuestion(
+                    courseId = courseId,
+                    quizId = quizId,
+                    teacherToken = teacher.token
+            )
+
+            publishQuiz(courseId = courseId,
+                    quizId = quizId,
+                    teacherToken = teacher.token)
+        }
+
+        if (submitQuiz) {
+            seedQuizSubmission(
+                    courseId = courseId,
+                    quizId = quizId,
+                    studentToken = student.token
+            )
+        }
+
+        tokenLogin(teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
-        quizListPage.clickQuiz(getNextQuiz())
-        quizDetailsPage.openSubmissionsPage()
-        quizSubmissionListPage.clickSubmission(getNextStudent(course))
-        return teacher
-    }
 
+        quizListPage.clickQuiz(quiz)
+        quizDetailsPage.openSubmissionsPage()
+        quizSubmissionListPage.clickSubmission(student)
+    }
 }

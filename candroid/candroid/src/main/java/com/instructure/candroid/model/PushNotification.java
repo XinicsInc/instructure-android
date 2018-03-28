@@ -25,7 +25,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.instructure.candroid.BuildConfig;
-import com.instructure.candroid.util.ApplicationManager;
+import com.instructure.candroid.util.StudentPrefs;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 
@@ -80,20 +80,21 @@ public class PushNotification implements Parcelable {
         final String json = new Gson().toJson(pushes);
         final String key = getPushStoreKey(push);
         if(!TextUtils.isEmpty(key)) {
-            ApplicationManager.getPrefs(context).save(key, json);
+            StudentPrefs.INSTANCE.putString(key, json);
             return true;
         }
         return false;
     }
 
     public static void clearPushHistory(Context context) {
-        ApplicationManager.getPrefs(context).save(getPushStoreKey(context), "");
+        String key = getPushStoreKey(context);
+        if (key != null) StudentPrefs.INSTANCE.remove(key);
     }
 
     public static List<PushNotification> getStoredPushes(Context context) {
         String key = getPushStoreKey(context);
         if(!TextUtils.isEmpty(key)) {
-            String json = ApplicationManager.getPrefs(context).load(key, "");
+            String json = StudentPrefs.INSTANCE.getString(key, "");
             if (!TextUtils.isEmpty(json)) {
                 Type type = new TypeToken<List<PushNotification>>() {
                 }.getType();

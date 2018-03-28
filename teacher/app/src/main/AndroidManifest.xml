@@ -131,6 +131,16 @@
                     android:host="*"
                     android:scheme="canvas-courses" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:scheme="canvas-teacher" />
+            </intent-filter>
         </activity>
 
         <activity
@@ -177,6 +187,7 @@
         </provider>
 
         <service android:name=".services.FileUploadService" />
+        <service android:name=".services.FileDownloadService" />
         <service android:name="com.instructure.pandautils.services.NotoriousUploadService"/>
 
         <provider
@@ -188,6 +199,41 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
+
+        <!--Push Notifications-->
+
+        <receiver android:name=".receivers.InitializeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.instructure.candroid"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".receivers.TeacherPushExternalReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".services.PushInstanceIdService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

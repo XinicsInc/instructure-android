@@ -16,46 +16,40 @@
   ~
   -->
 
-<com.instructure.candroid.view.CardifyView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
-            android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.instructure.pandarecycler.PandaRecyclerView
+            android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:cacheColorHint="@android:color/transparent"/>
 
-            <com.instructure.pandarecycler.PandaRecyclerView
-                android:id="@+id/listView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:cacheColorHint="@android:color/transparent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+    <com.instructure.candroid.view.EmptyPandaView
+        android:id="@+id/emptyPandaView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="0"
+        android:visibility="gone"/>
 
-        <com.instructure.candroid.view.EmptyPandaView
-            android:id="@+id/emptyPandaView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="0"
-            android:visibility="gone"/>
-
-        <Button
-            style="@style/ButtonCanvasTheme"
-            android:id="@+id/select_option"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_gravity="end"
-            android:text="@string/select"/>
-    </LinearLayout>
-
-</com.instructure.candroid.view.CardifyView>
+    <Button
+        style="@style/ButtonCanvasTheme"
+        android:id="@+id/select_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_gravity="end"
+        android:text="@string/select"/>
+</LinearLayout>

@@ -17,19 +17,33 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundOffWhite">
+    android:background="@color/canvasBackgroundWhite">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/defaultPrimary"
+        android:elevation="6dp"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:targetApi="lollipop" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/toolbar"
         android:layout_above="@+id/editOptions">
 
         <include layout="@layout/recycler_swipe_refresh_layout" />
+
     </FrameLayout>
 
     <LinearLayout
@@ -41,7 +55,8 @@
         android:orientation="horizontal"
         android:visibility="gone"
         android:minHeight="42dp"
-        android:elevation="20dp">
+        android:elevation="6dp"
+        tools:targetApi="lollipop">
 
         <Button
             android:id="@+id/confirmButton"

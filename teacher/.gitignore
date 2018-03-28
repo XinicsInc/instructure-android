@@ -50,6 +50,7 @@ gradle.properties
 # Private data
 app/fabric.properties
 private.properties
+app/google-services.json
 
 # OSS License data
 app/src/main/res/raw/third_party_license_metadata
@@ -58,3 +59,6 @@ app/src/main/res/raw/third_party_licenses
 # Espresso Data
 app/src/androidTest/java/com/instructure/parentapp/ui/data/**/*
 app/src/androidTest/java/com/instructure/teacher/ui/data/**/*
+
+# Flank
+results/

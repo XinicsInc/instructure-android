@@ -3,3 +3,6 @@ private.properties=private.properties
 
 # Fabric
 fabric.properties=app/fabric.properties
+
+# Google Services
+google-services.json=app/google-services.json

@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2016 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,44 +16,55 @@
   -->
 
 <resources>
-    <string name="action_settings">Reglaj</string>
+
+    <string name="action_settings">Paramèt</string>
     <string name="canvasLogo">Logo Canvas</string>
     <string name="email">Imèl</string>
+    <string name="emailAddress">Adrès imèl</string>
     <string name="parent_email">Imèl Paran</string>
-    <string name="confirmPassword">Konfime Modpas</string>
+    <string name="confirmPassword">Konfime modpas</string>
     <string name="firstName">Non</string>
-    <string name="lastName">Siyati</string>
+    <string name="lastName">siyati</string>
     <string name="password">Modpas</string>
     <string name="log_in">Konekte</string>
     <string name="createAccount">Kreye Kont</string>
-    <string name="forgotPassword">Bliye Modpas</string>
+    <string name="create">Kreye</string>
+    <string name="forgotPassword">Bliye Modpas?</string>
+    <string name="forgotPasswordWithoutQuestion">Bliye Modpas</string>
+    <string name="enterAccountEmailHint">Kont Imèl</string>
     <string name="requestPassword">Mande Modpas</string>
+    <string name="resetPassword">Reyinisyalize Modpas</string>
+    <string name="requestPasswordHelpText">N ap voye yon demann reyinisyalizasyon sou imèl ou.</string>
+    <string name="requestPasswordSuccess">Modpas ou a reyinisyalize.</string>
     <string name="fullName">Non Konplè</string>
-    <string name="invalidEmail">Adrès Imèl envalid. Eseye ankò</string>
+    <string name="passwordsDoNotMatch">Modpas yo pa koresponn.</string>
+    <string name="passwordsCannotBeBlank">Modpas yo pa dwe vid</string>
+    <string name="passwordResetFailed">Nou paka reyinisyalize modpas ou a kounye a.</string>
+    <string name="invalidEmail">Adrès Imèl envalid Eseye ankò.</string>
     <string name="next">Pwochen</string>
     <string name="createAccountMessage">Y ap voye yon imèl sou adrès imèl ou bay la pou fini ak enskripsyon an.</string>
-    <string name="accountCreationSuccess">Kreyasyon kont reyisi. Tanpri tcheke imèl ou pou fini ak enskripsyon an.</string>
-    <string name="errorOccurred">Gen yon erè ki fèt sanzatann. Tanpri eseye ankò.</string>
+    <string name="accountCreationSuccess">Kreyasyon kont reyisi! Tanpri verifye imèl ou pou fini enskripsyon an.</string>
+    <string name="errorOccurred">Yon erè fèt sanzatann. Tanpri eseye ankò.</string>
     <string name="unknownDevice">Aparèy Enkoni</string>
     <string name="addStudent">Ajoute Elèv</string>
     <string name="school">Lekòl</string>
     <string name="finish">Fini</string>
     <string name="close">Fèmen</string>
-    <string name="noStudents">Pa gen elèv disponib. Pou ajoute yon elèv tape sou twa pwen ki nan meni pi wo a.</string>
-    <string name="noStudentsView">Pa gen elèv ki asosye a kont ou a.</string>
+    <string name="noStudents">Pa gen elèv disponib. Pou ajoute elèv yo tape sou twa ti pwen nan meni pi wo a.</string>
+    <string name="noStudentsView">Pa gen elèv ki asosye ak kont ou an.</string>
     <string name="noCourses">Elè sa a pa gen kou disponib</string>
     <string name="noAlerts">Elèv sa a pa gen alèt pou afiche.</string>
     <string name="noItemsToDisplayShort">Okenn atik</string>
     <string name="emailsSentTo">Imèl ale jwenn:</string>
     <string name="logged_in_as">Konekte tankou:</string>
     <string name="notifyWhen">Fè mwen konnen lè</string>
-    <string name="gradeAbove">Kategori kou pi wo a</string>
-    <string name="gradeBelow">Kategori kou pi ba a</string>
-    <string name="assignmentMissing">Sesyon manke</string>
+    <string name="gradeAbove">Nòt kou pi wo a</string>
+    <string name="gradeBelow">Nòt kou pi ba a</string>
+    <string name="assignmentMissing">Sesyon ki manke</string>
     <string name="teacherAnnouncements">Anons Kou</string>
     <string name="institutionAnnouncements">Anons Enstitisyon</string>
-    <string name="assignmentGradeAbove">Kategori sesyon pi wo a</string>
-    <string name="assignmentGradeBelow">Sesyon klas pi ba a</string>
+    <string name="assignmentGradeAbove">Npot sesyon pi wo a</string>
+    <string name="assignmentGradeBelow">Npot sesyon pi ba a</string>
     <string name="never">Jamè</string>
     <string name="save">Anrejistre</string>
     <string name="enterThreshold">Antre Pousantaj</string>
@@ -75,9 +86,9 @@
     <string name="currentAlerts">Alèt Aktyèl</string>
     <string name="badDomainError">Domèn envalid. Eseye ankò.</string>
     <string name="unauthorized">Ou pa gen otorizasyon pou wè enfòmasyon sa yo.</string>
-    <string name="revokedTokenErrorContent">Ou pa gen otorizasyon pou w wè enfòmasyon %1$s. Ou kapab re otorize elèv ou a nan meni konfigirasyon an.</string>
+    <string name="revokedTokenErrorContent">Ou pa gen otorizasyon pou wè enfòmasyon %1$s. Ou ka re otorize elèv ou a nan meni paramèt yo.</string>
     <string name="revokedTokenErrorTitle">Token Aksè Revoke</string>
-    <string name="featureFlagDisabledError">Enstitisyon sa a pa bay aksè a aplikasyon mobil Canvas Parent lan.</string>
+    <string name="featureFlagDisabledError">Enstitisyon sa a pa aktive aksè sou app mobil Canvas Parent lan.</string>
 
     <!-- Help strings -->
     <string name="askInstructor">Poze Enstriktè ou a yon Kesyon</string>
@@ -103,7 +114,7 @@
     <string name="due">Delè:</string>
     <string name="no_due_date">San Delè</string>
     <string name="tapToSet">Tape pou konfigire</string>
-    <string name="alarmNotSet">Alam nan pa kapab pwograme. Eseye ankò.</string>
+    <string name="alarmNotSet">Alam pa ka defini. Eseye ankò.</string>
     <string name="could_not_route_course">Pa kapab jwenn enskripsyon kou a.</string>
     <string name="could_not_route_assignment">Pa kapab jwenn sesyon an.</string>
     <string name="email_already_exists">Yon itilizatè egziste deja ak imèl sa a.</string>
@@ -111,7 +122,7 @@
     <string name="password_reset_no_user">Nou pa jwenn okenn itilizatè ak adrès imèl sa a.</string>
     <string name="reset_password">Reyinisyalize Modpas</string>
     <string name="location">Anplasman</string>
-    <string name="time">Lè</string>
+    <string name="time">Tan</string>
     <string name="student_avatar">Avata Elèv</string>
     <string name="previous">Anvan</string>
     <string name="empty_view">Montre afichaj la lè yo pa jwenn okenn kontni</string>
@@ -122,21 +133,21 @@
     <string name="course_threshold_grade_below_invalid">Limit sa a dwe pi ba limit kou siperyè a.</string>
     <string name="assignment_threshold_grade_above_invalid">Limit sa a dwe pi wo limit sesyon enferyè a.</string>
     <string name="assignment_threshold_grade_below_invalid">Limit sa a dwe pi ba limit sesyon siperyè a.</string>
-    <string name="set_reminder">Pwograme Alam</string>
+    <string name="set_reminder">Aktive Rapèl</string>
     <string name="enter_student_institution">Antre enstitisyon elèv la</string>
     <string name="enter_student_login">Antre non itilizatè ak modpas elèv la</string>
-    <string name="access_not_enabled">Enstitisyon sa a pa bay aksè a aplikasyon mobil Canvas Parent lan.</string>
+    <string name="access_not_enabled">Enstitisyon sa a pa aktive aksè sou app mobil Canvas Parent lan.</string>
     <string name="dismiss">Rejte</string>
     <string name="invalid_username_password">Konbinezon imèl ak modpas la envalid.</string>
-    <string name="opening">Opening&#8230;</string>
-    <string name="locked_assignment_desc">Sesyon sa a fè pati modil %s e li poko debloke.</string>
+    <string name="opening">Ouvèti&#8230;</string>
+    <string name="locked_assignment_desc">Dikisyon sa a fè pati modil %s e li poko debloke.</string>
     <string name="locked_assignment_desc_line2">Al gade paj modil kou yo nan yon navigatè pou jwenn enfòmasyon sou kijan pou debloke kontni sa a.</string>
     <string name="locked_assignment_not_module">Sesyon sa a bloke.</string>
     <string name="no_description">Pa gen deskripsyon pou sesyon sa a</string>
-    <string name="cannot_view_file">Ou pa kapab wè fichye sa a nan app la.Tanpri gade li nan yon navigatè.</string>
+    <string name="cannot_view_file">Paka wè fichye sa a nan app la. Tanpri afiche nan navigatè.</string>
     <string name="calendar_event">Kalandriye Aktivite</string>
     <string name="set_reminder_toggle">Aktive/Dezaktive Alam</string>
-    <string name="or">Oswa</string>
+    <string name="or">oswa</string>
     <string name="canvas_login_text">Konekte ak Canvas</string>
 
     <!-- Feature Request -->
@@ -155,10 +166,12 @@
     <string name="submitted">Soumèt</string>
     <string name="in_class">Nan Klas</string>
     <string name="excused">Egzante</string>
-    <string name="late">An Reta</string>
+    <string name="late">An reta</string>
     <string name="greaterThan9">9+</string>
 
     <string name="onlyCanvasObservers">Sèlman obsèvatè Canvas ki ka otantifye nan Canvas Parent.</string>
+    <string name="unableToAddStudentError">Nou paka ajoute elèv sa a kounye a.</string>
+
     <string name="open_source">Open Source</string>
     <string name="open_source_details">Afiche lisans open source</string>
 
@@ -180,5 +193,13 @@
     <string name="selectChildRegion">Chwazi rejyon elèv</string>
     <string name="selectRegion">Seleksyonè Rejyon</string>
     <string name="unauthorizedRegion">Rejyon non Otorize</string>
-    <string name="mismatchedRegionMessage">Enstitisyon sa a pa nan rejyon ou te seleksyone yo. Pou ajoute yon elèv nan enstitisyon sa a, tanpri itilize opsyon "Seleksyonè Rejyon" ki nan paj koneksyon an pou ka kreye yon kont nan rejyon %1$s.</string>
+    <string name="mismatchedRegionMessage">Enstitisyon sa a pa nan rejyon ou te seleksyone yo. Pou ajoute yon elèv nan enstitisyon sa a, tanpri itilize opsyon \"Seleksyonè Rejyon\" ki nan paj koneksyon an pou ka kreye yon kont nan rejyon %1$s.</string>
+
+    <string name="notification_channel_name">Avètisman Jeneral</string>
+    <string name="notification_channel_description">Avètisman pou rapèl ak enfòmasyon enpòtan ki an rapò ak elèv ou a.</string>
+
+    <string name="whatsYourStudentsSchoolName">Antre non lekòl elèv ou a</string>
+    <string name="findYourStudentsSchoolHint">Jwenn lekòl oswa distri elèv ou a</string>
+    <string name="noGradeText">N/A</string>
+    <string name="locked">Bloke</string>
 </resources>

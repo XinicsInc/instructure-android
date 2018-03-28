@@ -14,29 +14,13 @@
  *     limitations under the License.
  *
  */
+
 apply plugin: 'com.android.library'
+apply plugin: 'com.apollographql.android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
-repositories {
-    jcenter()
-    maven { url 'https://jitpack.io' }
-    maven { url 'https://maven.google.com' }
-}
-
-buildscript {
-
-    repositories {
-        jcenter()
-        maven { url 'https://jitpack.io' }
-        maven { url 'https://maven.google.com' }
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
-    }
-}
-
-String isTesting() {
+static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
         "true"
     } else {
@@ -45,14 +29,12 @@ String isTesting() {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
         buildConfigField "boolean", "IS_TESTING", isTesting()
     }
 
@@ -62,58 +44,62 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+}
 
-    useLibrary 'org.apache.http.legacy'
+apollo {
+    useJavaBeansSemanticNaming = true
+    customTypeMapping['URL'] = "java.lang.String"
+    customTypeMapping['Time'] = "java.util.Date"
+    customTypeMapping['ID'] = "java.lang.String"
 }
 
 dependencies {
 
-    /* Support Libs */
-    compile rootProject.ext.supportDependencies.appCompat
-    compile "com.android.support:support-annotations:$GLOBAL_SUPPORT_LIBRARY_VERSION"
-    compile "com.android.support:multidex:$GLOBAL_MULTI_DEX_VERSION"
-
     /* Kotlin */
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$GLOBAL_KOTLIN_VERSION"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$GLOBAL_KOTLIN_COROUTINES_VERSION"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$GLOBAL_KOTLIN_COROUTINES_VERSION"
+    implementation Libs.KOTLIN_STD_LIB
+    api Libs.KOTLIN_COROUTINES_CORE
+    api Libs.KOTLIN_COROUTINES_ANDROID
 
     /* Retrofit / GSON */
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile("com.squareup.retrofit2:converter-simplexml:2.2.0") {
+    api('com.squareup.retrofit2:retrofit:2.3.0') {
+        exclude module: 'okhttp'
+    }
+    implementation 'com.google.code.gson:gson:2.8.0'
+    api 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation("com.squareup.retrofit2:converter-simplexml:2.3.0") {
         exclude module: 'stax-api'
         exclude module: 'stax'
         exclude module: 'xpp3'
     }
-    compile('com.squareup.retrofit2:retrofit:2.2.0') {
-        exclude module: 'okhttp'
-    }
 
     /* PaperParcel */
-    compile 'nz.bradcampbell:paperparcel:2.0.2'
-    compile 'nz.bradcampbell:paperparcel-kotlin:2.0.2'
+    implementation 'nz.bradcampbell:paperparcel:2.0.2'
+    implementation 'nz.bradcampbell:paperparcel-kotlin:2.0.2'
     kapt 'nz.bradcampbell:paperparcel-compiler:2.0.2'
 
     /* OKHttp */
     /* NOTE: always update the logging-interceptor to the same okhttp version */
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.5'
-    compile 'com.squareup.okio:okio:1.12.0'
-    compile 'com.squareup.okhttp3:okhttp:3.7.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    implementation 'com.squareup.okhttp:okhttp-urlconnection:2.7.5'
+    implementation 'com.squareup.okio:okio:1.13.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
 
-    /* RXJava */
-    compile 'io.reactivex:rxjava:1.2.5'
-    compile 'io.reactivex:rxandroid:1.2.1'
+    /* GraphQL */
+    api Libs.APOLLO_RUNTIME
+    api Libs.APOLLO_ANDROID_SUPPORT
+    implementation Libs.APOLLO_HTTP_CACHE
 
     /* EventBus */
-    compile 'org.greenrobot:eventbus:3.0.0'
+    api 'org.greenrobot:eventbus:3.0.0'
     kapt 'org.greenrobot:eventbus-annotation-processor:3.0.0'
 
     /* Test Dependencies */
-    testCompile 'junit:junit:4.12'
+    testImplementation Libs.JUNIT
+
+    /* Support Libs */
+    implementation Libs.SUPPORT_APPCOMPAT
+    implementation Libs.SUPPORT_ANNOTATION
+
+    /* Paper No SQl Storage */
+    api 'io.paperdb:paperdb:2.6'
 }

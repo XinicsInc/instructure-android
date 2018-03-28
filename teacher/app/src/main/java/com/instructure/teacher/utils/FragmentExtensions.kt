@@ -35,6 +35,3 @@ var Fragment.statusBarColor: Int
     get() = activity.statusBarColor
     set(value) { activity.statusBarColor = value }
 
-val Fragment.isTablet: Boolean
-    get() = context.resources.getBoolean(R.bool.is_device_tablet)
-

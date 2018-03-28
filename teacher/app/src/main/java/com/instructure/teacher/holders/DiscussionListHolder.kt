@@ -23,10 +23,10 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import kotlinx.android.synthetic.main.adapter_discussion.view.*
 import java.util.*
 
@@ -59,9 +59,11 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
         publishedBar.visibility = if (discussionTopicHeader.isPublished) View.VISIBLE else View.INVISIBLE
 
         if(isAssignmentType) {
-            dueDate.text =
-                    if(discussionTopicHeader.assignment.dueAt == null) getFormattedLastPost(context, discussionTopicHeader.lastReplyAt)
-                    else getFormattedDueDate(context, discussionTopicHeader.assignment.dueAt)
+            dueDate.text = when {
+                discussionTopicHeader.assignment.dueAt == null -> getFormattedLastPost(context, discussionTopicHeader.lastReplyAt)
+                discussionTopicHeader.assignment.allDates.size > 1 -> context.getString(R.string.multiple_due_dates)
+                else -> getFormattedDueDate(context, discussionTopicHeader.assignment.dueAt)
+            }
             points.text = resources.getQuantityString(
                     R.plurals.quantityPointsAbbreviated,
                     discussionTopicHeader.assignment.pointsPossible.toInt(),
@@ -69,7 +71,11 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
             )
             points.setVisible()
         } else {
-            dueDate.text = getFormattedLastPost(context, discussionTopicHeader.lastReplyAt)
+            dueDate.text = if (isAnnouncement) {
+                getFormattedPostedOn(context, discussionTopicHeader.postedAt)
+            } else {
+                getFormattedLastPost(context, discussionTopicHeader.lastReplyAt)
+            }
             points.setGone()
         }
 
@@ -92,7 +98,12 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
         return context.getString(R.string.last_post).format(DateHelper.getFormattedDate(context, date))
     }
 
-    fun getFormattedDueDate(context: Context, date: Date?): String {
+    private fun getFormattedPostedOn(context: Context, date: Date?): String {
+        if(date == null) return ""
+        return context.getString(R.string.utils_postedOnDate).format(DateHelper.getFormattedDate(context, date))
+    }
+
+    private fun getFormattedDueDate(context: Context, date: Date?): String {
         if(date == null) return ""
         val dueDate = DateHelper.getDayMonthDateFormatUniversal().format(date)
         val dueTime = DateHelper.getDayAbbreviationFormat(context).format(date)

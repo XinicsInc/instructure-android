@@ -18,18 +18,18 @@
 package com.instructure.pandautils.utils;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -44,8 +44,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class FileUploadUtils {
+
     public static final String FILE_SCHEME = "file";
     public static final String CONTENT_SCHEME = "content";
+
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
@@ -53,17 +55,15 @@ public class FileUploadUtils {
      * <p/>
      * http://stackoverflow.com/questions/20067508/get-real-path-from-uri-android-kitkat-new-storage-access-framework
      *
-     * @param activity The activity context.
+     * @param context An Android Context
      * @param uri      The Uri to query.
      * @author paulburke
      */
     @SuppressLint("NewApi")
-    public static String getPath(final Activity activity, final Uri uri) {
-
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+    public static String getPath(final Context context, final Uri uri) {
 
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(activity, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
 
@@ -78,12 +78,16 @@ public class FileUploadUtils {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
                 final String id = DocumentsContract.getDocumentId(uri);
+
+                if (id.startsWith("raw:")) {
+                    return id.replaceFirst("raw:", "");
+                }
+
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
-                return getDataColumn(activity.getContentResolver(), contentUri, null, null);
+                return getDataColumn(context.getContentResolver(), contentUri, null, null);
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -106,13 +110,13 @@ public class FileUploadUtils {
                         split[1]
                 };
 
-                return getDataColumn(activity.getContentResolver(), contentUri, selection, selectionArgs);
+                return getDataColumn(context.getContentResolver(), contentUri, selection, selectionArgs);
             }
         }
         // MediaStore (and general)
         else if (CONTENT_SCHEME.equalsIgnoreCase(uri.getScheme())) {
             // Return the remote address
-            return getDataColumn(activity.getContentResolver(), uri, null, null);
+            return getDataColumn(context.getContentResolver(), uri, null, null);
         }
         // File
         else if (FILE_SCHEME.equalsIgnoreCase(uri.getScheme())) {
@@ -201,246 +205,15 @@ public class FileUploadUtils {
         return index;
     }
 
-    /**
-     * Traditionally we were able to check for the MediaColumns.Data type to get a file's absolute path. However with new
-     * fileProvider and permissions added in KitKat, _data may not be passed in through a URI. In those cases, we use openFileDescriptor
-     * in order to access another apps file
-     * @param context
-     * @param uri
-     * @return
-     */
-    public static FileSubmitObject getFileSubmitObjectFromInputStream(Context context, Uri uri, String fileName, final String mimeType) {
-        if (uri == null) return null;
-        File file;
-        String errorMessage = "";
-        // copy file from uri into new temporary file and pass back that new file's path
-        InputStream input = null;
-        FileOutputStream output = null;
-        try {
-            ContentResolver cr = context.getContentResolver();
-
-            input = cr.openInputStream(uri);
-            // add extension to filename if needed
-            int lastDot = fileName.lastIndexOf(".");
-            if (lastDot == -1) {
-                fileName = fileName +"." +getFileExtensionFromMimeType(cr.getType(uri));
-            }
-
-            // create a temp file to copy the uri contents into
-            String tempFilePath = getTempFilePath(fileName, context);
-
-            output = new FileOutputStream(tempFilePath);
-            int read = 0;
-            byte[] bytes = new byte[4096];
-            while ((read = input.read(bytes)) != -1) {
-                output.write(bytes, 0, read);
-            }
-            // return the filepath of our copied file.
-            file =  new File(tempFilePath);
-
-        } catch (FileNotFoundException e) {
-            file = null;
-            errorMessage = context.getString(R.string.errorOccurred);
-            Log.e(Const.PANDA_UTILS_FILE_UPLOAD_UTILS_LOG, e.toString());
-        } catch (Exception exception) {
-            // if querying the datacolumn and the FileDescriptor both fail We can't handle the shared file.
-            file = null;
-            Log.e(Const.PANDA_UTILS_FILE_UPLOAD_UTILS_LOG, exception.toString());
-            errorMessage = context.getString(R.string.errorLoadingFiles);
-        } finally {
-            if (input != null) try {
-                input.close();
-            } catch (Exception ignored) {}
-            if (output != null) try {
-                output.close();
-            } catch (Exception ignored) {}
-        }
-
-        if(file != null){
-            return new FileSubmitObject(fileName, file.length(), mimeType, file.getAbsolutePath(), errorMessage);
-        }
-        return new FileSubmitObject(fileName, 0, mimeType, "", errorMessage);
-    }
-
-    public static String getFileNameColumn(ContentResolver resolver, Uri uri){
-        String fileName = "";
-        final String[] proj = { MediaStore.MediaColumns.DISPLAY_NAME };
-
-        // get file name
-        Cursor metaCursor = resolver.query(uri, proj, null, null, null);
-        if (metaCursor != null) {
-            try {
-                if (metaCursor.moveToFirst()) {
-                    fileName = metaCursor.getString(0);
-                }
-            }catch(Exception e){
-
-            } finally {
-                metaCursor.close();
-            }
-        }
-
-        return fileName;
-    }
-
-    public static String getFileNameWithDefault(ContentResolver resolver, Uri uri, String mimeType){
-        String fileName = "";
-        String scheme = uri.getScheme();
-        if (FILE_SCHEME.equalsIgnoreCase(scheme)) {
-            fileName = uri.getLastPathSegment();
-        } else if (CONTENT_SCHEME.equalsIgnoreCase(scheme)) {
-            final String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME};
-
-            // get file name
-            Cursor metaCursor = resolver.query(uri, proj, null, null, null);
-            if (metaCursor != null) {
-                try {
-                    if (metaCursor.moveToFirst()) {
-                        fileName = metaCursor.getString(0);
-                    }
-                } catch (Exception e) {
-
-                } finally {
-                    metaCursor.close();
-                }
-            }
-        }
-
-        return getTempFilename(fileName);
-    }
-
-    public static long getFileSizeColumn(ContentResolver resolver, Uri uri){
-        long fileSize = 0;
-        final String[] proj = { MediaStore.MediaColumns.SIZE };
-
-        // get file name
-        Cursor metaCursor = resolver.query(uri, proj, null, null, null);
-        if (metaCursor != null) {
-            try {
-                if (metaCursor.moveToFirst()) {
-                    fileSize = metaCursor.getLong(0);
-                }
-            }catch(Exception e){
-
-            } finally {
-                metaCursor.close();
-            }
-        }
-
-        return fileSize;
-    }
-
-    public static String getFileMimeType(ContentResolver resolver, Uri uri){
-        String scheme = uri.getScheme();
-        String mimeType = null;
-        if (FILE_SCHEME.equalsIgnoreCase(scheme)) {
-            if (uri.getLastPathSegment() != null) {
-                mimeType = getMimeTypeFromFileNameWithExtension(uri.getLastPathSegment());
-            }
-        } else if (CONTENT_SCHEME.equalsIgnoreCase(scheme)) {
-             mimeType = resolver.getType(uri);
-        }
-        if(mimeType == null){
-            return "*/*";
-        }
-        return mimeType;
-    }
-
-    public static String getMimeTypeFromFileNameWithExtension(String fileNameWithExtension) {
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        int index = fileNameWithExtension.indexOf(".");
-        String ext = "";
-        if (index != -1) {
-            ext = fileNameWithExtension.substring(index + 1).toLowerCase(); // Add one so the dot isn't included
-        }
-        return mime.getMimeTypeFromExtension(ext);
-    }
-
-    public static String getFileExtensionFromMimeType(String mimeType){
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        String extension =  mime.getExtensionFromMimeType(mimeType);
-        if(extension == null){
-            return "";
-        }
-        return extension;
-    }
-
-    public static boolean hasExtension(String fileName){
-        int lastDot = fileName.lastIndexOf(".");
-        return lastDot != -1;
-    }
-
-    /**
-     * Generates a filename for files which are either unnamed or are given a default name.
-     * Some apps (google photos) will return 'image.jpg' for unnamed images. This will also append the
-     * extension to the end of the filename, for cases where that is excluded from the URI.
-     * @param fileName
-     * @return
-     */
-    public static String getTempFilename(String fileName){
-        if(fileName == null || "".equals(fileName)){
-            fileName = "File_Upload";
-        }
-        else if(fileName.equals("image.jpg")){
-            fileName = "Image_Upload";
-        }
-        else if(fileName.equals("video.mpg") || fileName.equals("video.mpeg")){
-            // image doesn't have a name.
-            fileName = "Video_Upload";
-        }
-
-        return fileName;
-    }
-
-    /**
-     * Creates a new file from the context of our activity and passes back the Path to that new file.
-
-     * @param fileName
-     * @return
-     * @throws IOException
-     */
-    private static String getTempFilePath(String fileName, Context context) throws IOException {
-        return getTempFolder(context).getPath() + "/" + fileName;
-    }
-
-/*
-* Maintaining for history
-* *//**
-     * Users can view the files they're uploading to canvas before uploading. In order to share copied files from the cloud,
-     * we create an external directory for these files, then delete them after uploads finish.
-     * @return Directory for the CanvasFolder
-     *//*
-    public static File getExternalCanvasFolder(){
-        File canvasFolder = new File(Environment.getExternalStorageDirectory(), "Canvas");
-        if (!canvasFolder.exists()) {
-            canvasFolder.mkdirs();
-        }
-        return canvasFolder;
-    }
-
-    public static boolean deleteCanvasDirectory(){
-        return deleteDirectory(getExternalCanvasFolder());
-    }
-
-    */
-
-    public static File getTempFolder(Context context) {
-        File tempFolder = new File(context.getCacheDir(), "temp");
-        tempFolder.mkdirs();
-        return tempFolder;
-    }
-
-    public static boolean deleteDirectory(File fileFolder){
-        if (fileFolder.isDirectory()){
-            String[] children = fileFolder.list();
-            for (int i = 0; i < children.length; i++){
-                boolean success = deleteDirectory(new File(fileFolder, children[i]));
-                if (!success){
-                    return false;
-                }
-            }
-        }
-        return fileFolder.delete();
+    @Nullable
+    public static String getFileNameFromUri(ContentResolver resolver, Uri uri) {
+        Cursor cursor = resolver.query(uri, null, null, null, null);
+        if (cursor == null) return null;
+        int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        cursor.moveToFirst();
+        String name = cursor.getString(nameIndex);
+        cursor.close();
+        return name;
     }
 
     /**
@@ -473,6 +246,176 @@ public class FileUploadUtils {
      */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public static FileSubmitObject getFileSubmitObjectFromInputStream(Context context, Uri uri, String fileName, final String mimeType) {
+        if (uri == null) return null;
+        File file;
+        String errorMessage = "";
+        // copy file from uri into new temporary file and pass back that new file's path
+        InputStream input = null;
+        FileOutputStream output = null;
+        try {
+            ContentResolver cr = context.getContentResolver();
+
+            input = cr.openInputStream(uri);
+            // add extension to filename if needed
+            int lastDot = fileName.lastIndexOf(".");
+            if (lastDot == -1) {
+                fileName = fileName + "." + getFileExtensionFromMimeType(cr.getType(uri));
+            }
+
+            // create a temp file to copy the uri contents into
+            String tempFilePath = getTempFilePath(context, fileName);
+
+            output = new FileOutputStream(tempFilePath);
+            int read = 0;
+            byte[] bytes = new byte[4096];
+            while ((read = input.read(bytes)) != -1) {
+                output.write(bytes, 0, read);
+            }
+            // return the filepath of our copied file.
+            file = new File(tempFilePath);
+
+        } catch (FileNotFoundException e) {
+            file = null;
+            errorMessage = context.getString(R.string.errorOccurred);
+            Log.e(Const.PANDA_UTILS_FILE_UPLOAD_UTILS_LOG, e.toString());
+        } catch (Exception exception) {
+            // if querying the datacolumn and the FileDescriptor both fail We can't handle the shared file.
+            file = null;
+            Log.e(Const.PANDA_UTILS_FILE_UPLOAD_UTILS_LOG, exception.toString());
+            errorMessage = context.getString(R.string.errorLoadingFiles);
+        } finally {
+            if (input != null) try {
+                input.close();
+            } catch (Exception ignored) {
+            }
+            if (output != null) try {
+                output.close();
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (file != null) {
+            return new FileSubmitObject(fileName, file.length(), mimeType, file.getAbsolutePath(), errorMessage);
+        }
+        return new FileSubmitObject(fileName, 0, mimeType, "", errorMessage);
+    }
+
+    public static String getFileNameWithDefault(ContentResolver resolver, Uri uri, String mimeType) {
+        String fileName = "";
+        String scheme = uri.getScheme();
+        if (FILE_SCHEME.equalsIgnoreCase(scheme)) {
+            fileName = uri.getLastPathSegment();
+        } else if (CONTENT_SCHEME.equalsIgnoreCase(scheme)) {
+            final String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME};
+
+            // get file name
+            Cursor metaCursor = resolver.query(uri, proj, null, null, null);
+            if (metaCursor != null) {
+                try {
+                    if (metaCursor.moveToFirst()) {
+                        fileName = metaCursor.getString(0);
+                    }
+                } catch (Exception ignore) {
+
+                } finally {
+                    metaCursor.close();
+                }
+            }
+        }
+
+        return getTempFilename(fileName);
+    }
+
+
+    public static String getFileMimeType(ContentResolver resolver, Uri uri) {
+        String scheme = uri.getScheme();
+        String mimeType = null;
+        if (FILE_SCHEME.equalsIgnoreCase(scheme)) {
+            if (uri.getLastPathSegment() != null) {
+                mimeType = getMimeTypeFromFileNameWithExtension(uri.getLastPathSegment());
+            }
+        } else if (CONTENT_SCHEME.equalsIgnoreCase(scheme)) {
+            mimeType = resolver.getType(uri);
+        }
+        if (mimeType == null) {
+            return "*/*";
+        }
+        return mimeType;
+    }
+
+    public static String getMimeTypeFromFileNameWithExtension(String fileNameWithExtension) {
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        int index = fileNameWithExtension.indexOf(".");
+        String ext = "";
+        if (index != -1) {
+            ext = fileNameWithExtension.substring(index + 1).toLowerCase(); // Add one so the dot isn't included
+        }
+        return mime.getMimeTypeFromExtension(ext);
+    }
+
+    public static String getTempFilename(String fileName) {
+        if (fileName == null || "".equals(fileName)) {
+            fileName = "File_Upload";
+        } else if (fileName.equals("image.jpg")) {
+            fileName = "Image_Upload";
+        } else if (fileName.equals("video.mpg") || fileName.equals("video.mpeg")) {
+            // image doesn't have a name.
+            fileName = "Video_Upload";
+        }
+
+        return fileName;
+    }
+
+    public static String getFileExtensionFromMimeType(String mimeType) {
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        String extension = mime.getExtensionFromMimeType(mimeType);
+        if (extension == null) {
+            return "";
+        }
+        return extension;
+    }
+
+    private static String getTempFilePath(Context context, String fileName) throws IOException {
+
+        fileName = fileName.replace("/", "_");
+        File outputDir = getCacheDir(context);
+        File outputFile = new File(outputDir, fileName);
+        return outputFile.getAbsolutePath();
+    }
+
+
+    public static File getCacheDir(Context context) {
+        File canvasFolder = new File(context.getCacheDir(), "file_upload");
+        if (!canvasFolder.exists()) {
+            canvasFolder.mkdirs();
+        }
+        return canvasFolder;
+    }
+
+    public static boolean deleteTempDirectory(Context context){
+        return deleteDirectory(getCacheDir(context)) && deleteDirectory(getExternalCacheDir(context));
+    }
+
+    public static boolean deleteDirectory(File fileFolder){
+        if (fileFolder.isDirectory()){
+            String[] children = fileFolder.list();
+            for (String aChildren : children) {
+                boolean success = deleteDirectory(new File(fileFolder, aChildren));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return fileFolder.delete();
+    }
+
+    public static File getExternalCacheDir(Context context) {
+        File cacheDir = new File(context.getExternalCacheDir(), "file_upload");
+        if (!cacheDir.exists()) cacheDir.mkdirs();
+        return cacheDir;
     }
 
     public static Bundle createTaskLoaderBundle(CanvasContext canvasContext, String url, String title, boolean authenticate) {

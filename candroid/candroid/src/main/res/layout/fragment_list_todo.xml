@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -15,20 +14,34 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/canvasBackgroundOffWhite">
+    android:background="@color/canvasBackgroundWhite">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/defaultPrimary"
+        android:elevation="6dp"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:targetApi="lollipop" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/editOptions">
+        android:layout_above="@+id/editOptions"
+        android:layout_below="@+id/toolbar">
 
-        <include layout="@layout/recycler_swipe_refresh_layout"/>
+        <include layout="@layout/recycler_swipe_refresh_layout" />
+
     </FrameLayout>
 
     <LinearLayout
@@ -37,26 +50,26 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/canvasBackgroundMedium"
-        android:orientation="horizontal"
-        android:visibility="gone"
+        android:elevation="6dp"
         android:minHeight="42dp"
-        android:elevation="20dp">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/confirmButton"
+            style="?android:borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/confirm"
-            style="?android:borderlessButtonStyle"/>
+            android:text="@string/confirm" />
 
         <Button
             android:id="@+id/cancelButton"
+            style="?android:borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/cancel"
-            style="?android:borderlessButtonStyle"/>
+            android:text="@string/cancel" />
 
     </LinearLayout>
 

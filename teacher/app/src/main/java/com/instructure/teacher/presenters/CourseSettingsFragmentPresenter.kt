@@ -42,8 +42,8 @@ class CourseSettingsFragmentPresenter : FragmentPresenter<CourseSettingsFragment
     }
 
     private val mEditCourseNameCallback = object : StatusCallback<Course>() {
-        override fun onResponse(response: Response<Course>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-            response?.body()?.let {
+        override fun onResponse(response: Response<Course>, linkHeaders: LinkHeaders, type: ApiType) {
+            response.body()?.let {
                 EventBus.getDefault().postSticky(CourseUpdatedEvent(it))
                 viewCallback?.updateCourseName(it)
             }
@@ -59,8 +59,8 @@ class CourseSettingsFragmentPresenter : FragmentPresenter<CourseSettingsFragment
     }
 
     private val mEditCourseHomePageCallback = object : StatusCallback<Course>() {
-        override fun onResponse(response: Response<Course>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-            response?.body()?.let {
+        override fun onResponse(response: Response<Course>, linkHeaders: LinkHeaders, type: ApiType) {
+            response.body()?.let {
                 EventBus.getDefault().postSticky(CourseUpdatedEvent(it))
                 viewCallback?.updateCourseHomePage(it.homePage)
             }

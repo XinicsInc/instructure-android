@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -29,8 +29,9 @@
     <string name="tab_discussions">Discussions</string>
     <string name="tab_announcements">Announcements</string>
     <string name="tab_attendance">Attendance</string>
+    <string name="tab_pages">Pages</string>
+    <string name="tab_todo">To Do</string>
     <string name="content_description_school_logo">School Logo</string>
-    <string name="content_description_avatar">Avatar</string>
     <string name="search_guides">Search the Canvas Guides</string>
     <string name="canvas_guides">Canvas Guides</string>
     <string name="search_guides_icon">Icon for Canvas Guides</string>
@@ -267,7 +268,7 @@
     <string name="error_occurred">An unexpected error occurred.</string>
     <string name="no_assignments_with_file_upload">This course has no assignments that allow file uploads.</string>
     <string name="extension_not_allowed">The selected file type is not allowed.</string>
-    <string name="allowed_extensions">Allowed extensions:&#160;</string>
+    <string name="allowed_extensions">Allowed extensions: </string>
     <string name="files_uploaded_successfully">Files uploaded successfully.</string>
     <string name="error_uploading_file">An error occurred uploading your file. Please try again.</string>
     <string name="uploading_file">Uploading file&#8230;</string>
@@ -292,7 +293,7 @@
     <string name="server_error">A server error has occurred.</string>
     <string name="error_loading_files">An error occurred loading your file. Please check your internet connection and try again.</string>
     <string name="files_submitted_successfully">Files submitted successfully.</string>
-    <string name="no_data_connection"> Please check your data connection and try again. </string>
+    <string name="no_data_connection">Please check your data connection and try again.</string>
     <string name="teacher_logout_warning">Are you sure you want to log out?</string>
     <string name="teacher_yes">Yes</string>
     <string name="teacher_no">No</string>
@@ -308,14 +309,14 @@
     <!--Course Settings-->
     <string name="course_settings">Course Settings</string>
     <string name="course_name">Course Name</string>
-    <string name="set_home_to">Set \'Home\' to…</string>
+    <string name="set_home_to">Set \'Home\' to&#8230;</string>
     <string name="course_activity_stream">Course Activity Stream</string>
     <string name="pages_front_page">Pages Front Page</string>
+    <string name="frontPage">Front Page</string>
     <string name="course_modules">Course Modules</string>
     <string name="assignments_list">Assignments List</string>
     <string name="syllabus">Syllabus</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Multiple Due Dates</string>
     <string name="everyone">Everyone</string>
@@ -323,7 +324,7 @@
     <string name="unknown_student">Unknown Student</string>
     <string name="closed">Closed</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">Due %s at %s</string>
+    <string name="due_date_at_time" formatted="false">Due %1s at %2s</string>
     <string name="last_post" formatted="false">Last post %s</string>
     <string name="submission_types">Submission Types</string>
     <string name="full_due_date_details">Full due date details</string>
@@ -395,7 +396,7 @@
     <string name="points">Points</string>
     <string name="gpa_scale">GPA Scale</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -404,7 +405,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -451,7 +452,7 @@
     <string name="rating_button_content_description_custom">Custom score %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">"%1$s, %2$s</string>
+    <string name="rating_button_content_description">%1$s, %2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="one">out of %s pt</item>
@@ -472,9 +473,11 @@
     <string name="assignments">Assignments</string>
     <string name="clear_filter">Clear filter</string>
     <string name="due">Due %1$s</string>
+    <string name="updated">Updated %1$s</string>
+
     <plurals name="needsGradingCount">
         <item quantity="one">%s needs grading</item>
-        <item quantity="other">%s need marking</item>
+        <item quantity="other">%s need grading</item>
     </plurals>
     <plurals name="needsGradingNoQuantity">
         <item quantity="one">Needs Grading</item>
@@ -498,7 +501,7 @@
         <item quantity="other">%d groups</item>
     </plurals>
     <string name="cmp_closed">Closed</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022  </string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">favourite</string>
     <string name="content_description_not_favorite">not favourite</string>
@@ -530,10 +533,9 @@
     <string name="contentDescriptionFileIcon">File Icon</string>
     <string name="contentDescriptionExpandPage">Expand Page</string>
     <string name="contentDescriptionCollapsePage">Collapse Page</string>
-
     <string name="noInternetConnectionTitle">No Internet Connection</string>
     <string name="noInternetConnectionMessage">This action requires an internet connection.</string>
-  
+
     <string name="emptyDetailsMessage">Tap on an item in the list to view the details</string>
 
     <string name="assignmentQuizzes">Assignment Quizzes</string>
@@ -553,7 +555,7 @@
     <string name="gradedSurvey">Marked Survey</string>
     <string name="ungradedSurvey">Unmarked Survey</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -650,8 +652,8 @@
     <string name="submissionIsMediaFile">This submission is a media file</string>
     <string name="tryAgain">Try again</string>
     <string name="couldNotPlayFormat">This media format is not supported</string>
-    <string name="openWithAnotherApp">Open with…</string>
-    
+    <string name="openWithAnotherApp">Open with&#8230;</string>
+
     <string name="speedgraderCommentAddedSubmission">Assignment submitted. Tap to view.</string>
     <string name="speedgraderCommentSubmittedFiles">Submitted files:</string>
     <string name="no_submission_comments">There are no submission comments</string>
@@ -800,4 +802,92 @@
     <string name="markAllAsPresent">Mark All as Present</string>
     <string name="calendar">Calendar</string>
     <string name="filterSections">Filter Sections</string>
+    <string name="addVideoComment">Add video comment</string>
+    <string name="addAudioComment">Add audio comment</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d hours, %2$d minutes, and %3$d seconds</string>
+    <string name="recordingTimerSpeechDivider">%1$s out of %2$s</string>
+    <string name="replay">Replay</string>
+    <string name="stop">Stop</string>
+    <string name="startRecordingAudio">Start recording audio</string>
+    <string name="stopRecordingAudio">Stop recording audio</string>
+    <string name="startRecordingVideo">Start recording video</string>
+    <string name="stopRecordingVideo">Stop recording video</string>
+    <string name="closeRecordingView">Close recording view</string>
+    <string name="deleteRecording">Delete recording</string>
+    <string name="videoCommentReplay">Video Comment Replay</string>
+    <string name="addMediaComment">Add media comment</string>
+    <string name="copyrightHolder">Copyright Holder</string>
+    <string name="access">Access</string>
+    <string name="usageRights">Usage Rights</string>
+    <string name="deleteFile">Delete File</string>
+    <string name="holdCopyright">I hold the copyright</string>
+    <string name="havePermission">I have permission to use file</string>
+    <string name="publicDomain">Public Domain File</string>
+    <string name="fairUse">Fair Use Exception</string>
+    <string name="creativeCommons">Creative Commons File</string>
+    <string name="editFile">Edit File</string>
+    <string name="deleteFolder">Delete Folder</string>
+    <string name="editFolder">Edit Folder</string>
+    <string name="deleteFileMessage">Are you sure you want to delete this file?</string>
+    <string name="deleteFolderMessage">Are you sure you want to delete this folder? All contents of this folder will also be deleted.</string>
+    <string name="newFolder">New Folder</string>
+    <string name="createAFolder">Create A Folder</string>
+    <string name="createFolder">Create Folder</string>
+    <string name="createAFile">Create A File</string>
+    <string name="createFileFolderFabContentDesc">Show Create File and Create Folder Buttons</string>
+    <string name="unpublish">Unpublish</string>
+    <string name="restrictedAccess">Restricted Access</string>
+    <string name="restricted">Restricted</string>
+    <string name="hidden">Hidden, files inside will be available with links.</string>
+    <string name="studentsWithLink">Only available to students with link. Not available in student files.</string>
+    <string name="scheduleAvailability">Schedule student availability</string>
+    <string name="folderCreationError">An error occurred during folder creation.</string>
+
+    <string name="setAsFrontPage">Set as Front Page</string>
+    <string name="canEdit">Can Edit</string>
+    <string name="pageDetails">Page Details</string>
+    <string name="pageSuccessfullyUpdated">Page successfully updated.</string>
+    <string name="pageSuccessfullyCreated">Page successfully created.</string>
+    <string name="editPageTitle">Edit Page</string>
+    <string name="createPageTitle">Create Page</string>
+    <string name="pageTitleMustBeSet">Page title must be set.</string>
+    <string name="pageDeleteTitle">Delete Page?</string>
+    <string name="pageDelete">Delete Page</string>
+    <string name="pageDeleteMessage">This will delete the page. This action cannot be undone.</string>
+    <string name="errorSavingPage">An error occurred trying to save this page. Try again.</string>
+    <string name="frontPageUnpublishedError">A page cannot be the front page and unpublished.</string>
+
+    <string name="onlyTeachers">Only Teachers</string>
+    <string name="teachersAndStudents">Teachers and Students</string>
+    <string name="anyone">Anyone</string>
+    <string name="groupMembers">Only Members</string>
+    <string name="license">License</string>
+    <string name="availableFromAfterTo">Availability end date must be after start date</string>
+    <string name="errorDeletingFile">An error occurred deleting this file</string>
+    <string name="errorDeletingFolder">An error occurred deleting this folder</string>
+    <string name="errorUpdatingFile">An error occurred updating this file</string>
+    <string name="errorUpdatingFolder">An error occurred updating this folder</string>
+
+    <string name="toDoEmpty">Nothing more to do!\n Enjoy your day.</string>
+    <string name="toDoNoSubmissions">There are no submissions to grade for this assignment.</string>
+    <string name="errorToDoRouteFailed">An error occurred trying to view this To Do item.</string>
+    <string name="errorIsDesigner">Designer enrolment cannot view this.</string>
+
+    <string name="sections">Sections</string>
+    <string name="filterBy">Filter By&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">for %s</string>
+    <string name="filterBySection">Filter by section</string>
+    <string name="filterSubmissionsLowercase">Filter submissions</string>
+
+    <string name="latePenalty">Late penalty</string>
+    <string name="finalGrade">Final Grade</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s pt</item>
+        <item quantity="other">-%s pts</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s point</item>
+        <item quantity="other">-%s points</item>
+    </plurals>
 </resources>

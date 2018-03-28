@@ -16,10 +16,7 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.clickInboxTab
-import com.instructure.teacher.ui.utils.getNextConversation
-import com.instructure.teacher.ui.utils.logIn
+import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
 class AddMessagePageTest: TeacherTest() {
@@ -45,9 +42,15 @@ class AddMessagePageTest: TeacherTest() {
     }
 
     private fun getToReply() {
-        logIn()
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val teacher = data.teachersList[0]
+        val student = data.studentsList[0]
+
+        val conversation = seedConversation(student, listOf(teacher))
+
+        tokenLogin(teacher)
         coursesListPage.clickInboxTab()
-        val conversation = getNextConversation()
+
         inboxPage.clickConversation(conversation)
         inboxMessagePage.clickReply()
     }

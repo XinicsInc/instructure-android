@@ -19,10 +19,13 @@ package com.instructure.parentapp.binders;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.TextView;
 
 import com.instructure.canvasapi2.models.Course;
+import com.instructure.canvasapi2.models.CourseGrade;
 import com.instructure.canvasapi2.models.Student;
 import com.instructure.canvasapi2.utils.NumberHelper;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.pandautils.utils.Prefs;
 import com.instructure.pandautils.utils.Utils;
@@ -49,8 +52,9 @@ public class CourseBinder extends BaseBinder {
                 BuildConfig.IS_TESTING);
         holder.courseCode.setText(course.getCourseCode());
 
-        holder.gradeText.setVisibility(View.VISIBLE);
+        holder.gradeContainer.setVisibility(View.VISIBLE);
         holder.scoreText.setVisibility(View.VISIBLE);
+        holder.gradeText.setVisibility(View.VISIBLE);
 
         Prefs prefs = new Prefs(context, com.instructure.parentapp.util.Const.CANVAS_PARENT_SP);
         int color = prefs.load(Const.NEW_COLOR, -1);
@@ -59,27 +63,13 @@ public class CourseBinder extends BaseBinder {
             holder.gradeText.setTextColor(color);
             holder.scoreText.setTextColor(color);
         }
-        if (!course.isHideFinalGrades()) {
-            Double grade = course.getCurrentScore();
-            String gradeStr = NumberHelper.doubleToPercentage(grade);
-            if (course.getCurrentGrade() != null) {
-                holder.gradeText.setText(course.getCurrentGrade());
-                Utils.testSafeContentDescription(holder.gradeText,
-                        String.format(context.getString(R.string.grade_text_content_desc), holder.getAdapterPosition()),
-                        course.getCurrentGrade(),
-                        BuildConfig.IS_TESTING);
-            } else {
-                holder.gradeText.setVisibility(View.GONE);
-            }
 
-            holder.scoreText.setText(gradeStr);
-            Utils.testSafeContentDescription(holder.scoreText,
-                    String.format(context.getString(R.string.score_text_content_desc), holder.getAdapterPosition()),
-                    gradeStr + "%",
-                    BuildConfig.IS_TESTING);
+        if(course.getCourseGrade(false).isLocked()) {
+            holder.gradeContainer.setVisibility(View.GONE);
+            holder.lockedGradeImage.setVisibility(View.VISIBLE);
+            holder.lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_lock, color));
         } else {
-            holder.gradeText.setText("-");
-            holder.scoreText.setVisibility(View.GONE);
+            setGradeView(holder.gradeText, holder.scoreText, course.getCourseGrade(false), context, holder.getAdapterPosition());
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -90,4 +80,24 @@ public class CourseBinder extends BaseBinder {
         });
     }
 
+    private static void setGradeView(TextView gradeTextView, TextView scoreTextView, CourseGrade courseGrade, Context context, int adapterPosition) {
+        if(courseGrade.getNoCurrentGrade()) {
+            gradeTextView.setText(R.string.noGradeText);
+            scoreTextView.setVisibility(View.GONE);
+        } else {
+            Double score = courseGrade.getCurrentScore();
+            String scoreString = NumberHelper.doubleToPercentage(score, 2);
+
+            gradeTextView.setText((courseGrade.hasCurrentGradeString()) ? courseGrade.getCurrentGrade() : "");
+            scoreTextView.setText((scoreString));
+            Utils.testSafeContentDescription(gradeTextView,
+                    String.format(context.getString(R.string.grade_text_content_desc), adapterPosition),
+                    courseGrade.getCurrentGrade(),
+                    BuildConfig.IS_TESTING);
+            Utils.testSafeContentDescription(scoreTextView,
+                    String.format(context.getString(R.string.score_text_content_desc), adapterPosition),
+                    scoreString + "%",
+                    BuildConfig.IS_TESTING);
+        }
+    }
 }
