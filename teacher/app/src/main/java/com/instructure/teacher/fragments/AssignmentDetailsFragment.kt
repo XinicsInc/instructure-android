@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
-import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
@@ -35,11 +34,11 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
-import com.instructure.teacher.interfaces.Identity
-import com.instructure.teacher.interfaces.MasterDetailInteractions
+import com.instructure.interactions.Identity
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.teacher.presenters.AssignmentDetailsPresenter
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.AssignmentDetailsView
@@ -132,7 +131,6 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         configureSubmissionTypes(assignment)
         configureDescription(assignment)
         configureSubmissionDonuts(assignment)
-
     }
 
     // region Configure Assignment
@@ -212,19 +210,20 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             //External tool
             submissionTypesArrowIcon.setVisible()
             submissionTypesLayout.onClickWithRequireNetwork {
+                // if the user is a designer we don't want to let them look at LTI tools
+                if (mCourse.isDesigner) {
+                    toast(R.string.errorIsDesigner)
+                    return@onClickWithRequireNetwork
+                }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
                     val args = LTIWebViewFragment.makeLTIBundle(ltiUrl)
-                    RouteMatcher.route(context, Route(LTIWebViewFragment::class.java, canvasContext, args))
+                    RouteMatcher.route(context, Route(LTIWebViewFragment::class.java, mCourse, args))
                 }
             }
         }
 
-        if (BuildConfig.POINT_TWO) {
-            submissionsLayout.setVisible()
-        } else {
-            submissionsLayout.setGone()
-        }
+        submissionsLayout.setVisible(!mCourse.isDesigner)
     }
 
     @Suppress("UsePropertyAccessSyntax")
@@ -254,8 +253,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {}
             override fun onPageStartedCallback(webView: WebView?, url: String?) {}
             override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
-            override fun routeInternallyCallback(url: String?) { RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true) }
-            override fun canRouteInternallyDelegate(url: String?): Boolean = RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
+            override fun routeInternallyCallback(url: String?) { RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, true) }
+            override fun canRouteInternallyDelegate(url: String?): Boolean = RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, false)
         }
 
         descriptionWebView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {

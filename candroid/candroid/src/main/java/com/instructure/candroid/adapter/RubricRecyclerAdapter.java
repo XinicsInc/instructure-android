@@ -18,8 +18,10 @@
 package com.instructure.candroid.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.instructure.candroid.R;
@@ -45,14 +47,18 @@ import com.instructure.canvasapi2.models.Submission;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.canvasapi2.utils.NumberHelper;
 import com.instructure.pandarecycler.util.GroupSortedList;
 import com.instructure.pandarecycler.util.Types;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCriterion, RubricItem, RecyclerView.ViewHolder> {
 
@@ -129,7 +135,7 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
     }
 
     private void onBindTopHeaderHolder(RecyclerView.ViewHolder holder) {
-        RubricTopHeaderBinder.bind(getContext(), (RubricTopHeaderViewHolder) holder, getCurrentPoints(), getCurrentGrade(), mAssignment.isMuted());
+        RubricTopHeaderBinder.bind(getContext(), mCanvasContext, (RubricTopHeaderViewHolder) holder, getCurrentPoints(), getCurrentGrade(), getLatePenalty(), getFinalGrade(), mAssignment.isMuted());
     }
 
     // region Data
@@ -152,7 +158,7 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
     public void setupCallbacks() {
         mSubmissionCallback = new StatusCallback<Submission>() {
             @Override
-            public void onResponse(retrofit2.Response<Submission> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Submission> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 Submission submission = response.body();
                 mAssessmentMap = submission.getRubricAssessment();
                 mAssignment.setSubmission(submission);
@@ -162,7 +168,7 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
             }
 
             @Override
-            public void onFail(Call<Submission> callResponse, Throwable error, retrofit2.Response response) {
+            public void onFail(@Nullable Call<Submission> call, @NonNull Throwable error, @Nullable Response response) {
                 populateAssignmentDetails();
             }
         };
@@ -193,6 +199,7 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
                 addOrUpdateItem(rubricCriterion, new RubricRatingItem(rating));
             }
             populateFreeFormRatingItems(rubric);
+            insertCount = addTotalPointsFromRange(rubricCriterion, insertCount);
         }
     }
 
@@ -204,15 +211,42 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
                 mInsertedOrderHash.put(rubricCriterion.getId(), ++insertCount);
                 addOrUpdateItem(rubricCriterion, gradedRating);
             }
+            insertCount = addTotalPointsFromRange(rubricCriterion, insertCount);
         }
+    }
+
+    /**
+     * We only want to add a score if the rubric uses a range, otherwise they already know their score
+     * @param rubricCriterion
+     */
+    private int addTotalPointsFromRange(RubricCriterion rubricCriterion, int insertCount) {
+        if(!rubricCriterion.getCriterionUseRange()) return insertCount;
+
+        Submission lastSubmission = mAssignment.getSubmission();
+        if(lastSubmission != null){
+            RubricCriterionAssessment rating =  lastSubmission.getRubricAssessment().get(rubricCriterion.getId());
+            if(rating != null){
+                RubricCriterionRating rubricCriterionRating = new RubricCriterionRating();
+                rubricCriterionRating.setDescription(getContext().getString(R.string.score));
+                if(rating.getPoints() != null) {
+                    rubricCriterionRating.setPoints(rating.getPoints());
+                }
+                rubricCriterionRating.setId("null" + (rubricCriterion.getId()));
+
+                mInsertedOrderHash.put(rubricCriterion.getId(), ++insertCount);
+                addOrUpdateItem(rubricCriterion, new RubricRatingItem(rubricCriterionRating));
+            }
+        }
+        return insertCount;
     }
 
     @Nullable
     private RubricItem getFreeFormRatingForCriterion(RubricCriterion criterion){
         Submission lastSubmission = mAssignment.getSubmission();
-        if(lastSubmission != null){
-          RubricCriterionAssessment rating =  lastSubmission.getRubricAssessment().get(criterion.getId());
-            if(rating != null){
+        if (lastSubmission != null){
+          RubricCriterionAssessment rating = lastSubmission.getRubricAssessment().get(criterion.getId());
+            // we only care about the comment if it isn't null
+            if (rating != null && !(rating.getComments() == null && rating.getPoints() == null)){
                 return new RubricCommentItem(rating.getComments(), rating.getPoints());
             }
             return null;
@@ -251,11 +285,53 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
             return getContext().getString(R.string.grade) + "\n" + getContext().getString(R.string.excused) + " / " + pointsPossible;
         }
         if (containsGrade()) {
-            String grade = mAssignment.getSubmission().getGrade();
+            String grade;
+            if(mAssignment.getSubmission().getPointsDeducted() == null) {
+                grade = mAssignment.getSubmission().getGrade();
+            } else {
+                grade = mAssignment.getSubmission().getEnteredGrade();
+            }
             if (isGradeLetterOrPercentage(grade)) {
                 return getContext().getString(R.string.grade) + "\n" + grade;
             } else {
                 return getContext().getString(R.string.grade) + "\n" + grade + " / " + pointsPossible;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Takes into account late policy
+     * @return
+     */
+    @Nullable
+    private String getLatePenalty() {
+
+        if (isExcused()) {
+            return null;
+        }
+        if (mAssignment.getSubmission() != null && mAssignment.getSubmission().getPointsDeducted() != null) {
+            return String.format(Locale.getDefault(), getContext().getString(R.string.latePenalty), NumberHelper.formatDecimal(mAssignment.getSubmission().getPointsDeducted(),2, true));
+        }
+        return null;
+    }
+
+    /**
+     * Takes into account late policy
+     * @return
+     */
+    @Nullable
+    private String getFinalGrade() {
+        String pointsPossible = getPointsPossible();
+        if (isExcused()) {
+            return null;
+        }
+        if (containsGrade()) {
+            String grade = mAssignment.getSubmission().getGrade();
+            if (isGradeLetterOrPercentage(grade)) {
+                return getContext().getString(R.string.finalGrade) + "\n" + grade;
+            } else {
+                return getContext().getString(R.string.finalGrade) + "\n" + grade + " / " + pointsPossible;
             }
         }
         return null;
@@ -268,8 +344,13 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
         }
         if (containsGrade()) {
             String grade = mAssignment.getSubmission().getGrade();
+
             if (isGradeLetterOrPercentage(grade)) {
-                return getContext().getString(R.string.points) + "\n" +  mAssignment.getSubmission().getScore() + " / " + pointsPossible;
+                if(mAssignment.getSubmission().getPointsDeducted() == null) {
+                    return getContext().getString(R.string.points) + "\n" + mAssignment.getSubmission().getScore() + " / " + pointsPossible;
+                } else {
+                    return getContext().getString(R.string.points) + "\n" + mAssignment.getSubmission().getEnteredScore() + " / " + pointsPossible;
+                }
             } else {
                 return null;
             }
@@ -347,6 +428,11 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
                 }
                 RubricCriterionRating r1 = ((RubricRatingItem)o1).getRating();
                 RubricCriterionRating r2 = ((RubricRatingItem)o2).getRating();
+                if (r2.getId() != null && r2.getId().contains("null")) {
+                    return -1;
+                } else if (r1.getId() != null && r1.getId().contains("null")) {
+                    return -1;
+                }
                 return Double.compare(r2.getPoints(), r1.getPoints());
             }
 
@@ -368,19 +454,34 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
             public boolean areItemsTheSame(RubricItem item1, RubricItem item2) {
                 if (item1 instanceof RubricCommentItem ^ item2 instanceof RubricCommentItem) {
                     return false;
+                } else if ((item1 instanceof RubricCommentItem && ((RubricCommentItem) item1).getComment() == null) &&  (((RubricCommentItem) item2).getComment() == null)) {
+                    return true;
                 } else if (item1 instanceof RubricCommentItem) {
-                    return ((RubricCommentItem) item1).getComment().equals(((RubricCommentItem) item2).getComment());
+                    return (((RubricCommentItem) item1).getComment() != null &&
+                            ((RubricCommentItem) item2).getComment() != null) &&
+                        ((RubricCommentItem) item1).getComment().equals(((RubricCommentItem) item2).getComment());
+
                 } else {
-                    return ((RubricRatingItem) item1).getRating().getId().equals(((RubricRatingItem) item2).getRating().getId());
+                    return (((RubricRatingItem) item1).getRating().getId() != null &&
+                            ((RubricRatingItem) item2).getRating().getId() != null) &&
+                         ((RubricRatingItem) item1).getRating().getId().equals(((RubricRatingItem) item2).getRating().getId());
                 }
             }
 
             @Override
             public long getUniqueItemId(RubricItem item) {
                 if (item instanceof RubricCommentItem) {
-                    return ((RubricCommentItem) item).getComment().hashCode();
+                    if (!TextUtils.isEmpty(((RubricCommentItem) item).getComment())) {
+                        return (((RubricCommentItem) item).getComment() + UUID.randomUUID().toString().hashCode()).hashCode();
+                    } else {
+                        return UUID.randomUUID().toString().hashCode();
+                    }
                 } else {
-                    return ((RubricRatingItem)item).getRating().getId().hashCode();
+                    if (!TextUtils.isEmpty(((RubricRatingItem)item).getRating().getId())) {
+                        return (((RubricRatingItem) item).getRating().getId() + ((RubricRatingItem)item).getRating().getDescription()).hashCode();
+                    } else {
+                        return UUID.randomUUID().toString().hashCode();
+                    }
                 }
             }
 

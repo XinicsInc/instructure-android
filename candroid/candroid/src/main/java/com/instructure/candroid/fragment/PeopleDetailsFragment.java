@@ -17,10 +17,9 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
-import android.os.Build;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -32,28 +31,36 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.instructure.candroid.R;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.Param;
 import com.instructure.candroid.view.AutoResizeTextView;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.UserManager;
+import com.instructure.canvasapi2.models.BasicUser;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.Enrollment;
-import com.instructure.canvasapi2.models.Recipient;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiType;
+import com.instructure.canvasapi2.utils.pageview.BeforePageView;
 import com.instructure.canvasapi2.utils.LinkHeaders;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.pandautils.utils.ProfileUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Response;
 
-public class PeopleDetailsFragment extends OrientationChangeFragment {
+@PageView(url = "{canvasContext}/users/{userId}")
+public class PeopleDetailsFragment extends ParentFragment {
 
     private View rootView;
     private AutoResizeTextView name;
@@ -62,38 +69,27 @@ public class PeopleDetailsFragment extends OrientationChangeFragment {
     private TextView userRole;
     private FrameLayout userBackground;
     private FloatingActionButton composeButton;
-
     private CardView cardView;
     private RelativeLayout clickContainer;
 
     private User user;
+
+    @PageViewUrlParam(name = "userId")
     private long userId = -1; // used for routing from a url
 
     private StatusCallback<User> getCourseUserByIdCallback;
 
     @Override
-    public String getFragmentTitle() {
-        return null;
-    }
-
-    @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {
-        if (isTablet(context)) {
-            return FRAGMENT_PLACEMENT.DIALOG;
-        }
-        return FRAGMENT_PLACEMENT.DETAIL;
-    }
-
-    @Nullable
-    @Override
-    protected String getActionbarTitle() {
+    @NonNull
+    public String title() {
         return "";
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // LifeCycle
-    ///////////////////////////////////////////////////////////////////////////
-
+    @Override
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {
+        return FragmentInteractions.Placement.DETAIL;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,52 +98,37 @@ public class PeopleDetailsFragment extends OrientationChangeFragment {
     }
 
     @Override
-    public View populateView(LayoutInflater inflater, ViewGroup container) {
-        rootView = getLayoutInflater().inflate(R.layout.people_details_fragment_layout, container, false);
-        setupDialogToolbar(rootView);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            if(getDialogToolbar() != null && getFragmentPlacement(getContext()) == FRAGMENT_PLACEMENT.DIALOG) {
-                getDialogToolbar().setElevation(0);
-            } else if(getFragmentPlacement(getContext()) == FRAGMENT_PLACEMENT.DETAIL) {
-                getSupportActionBar().setElevation(0);
-            }
-        }
-        clickContainer = (RelativeLayout)rootView.findViewById(R.id.clickContainer);
-        name = (AutoResizeTextView) rootView.findViewById(R.id.userName);
-        userAvatar = (CircleImageView)rootView.findViewById(R.id.avatar);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = getLayoutInflater().inflate(R.layout.fragment_people_details, container, false);
+        clickContainer = rootView.findViewById(R.id.clickContainer);
+        name = rootView.findViewById(R.id.userName);
+        userAvatar = rootView.findViewById(R.id.avatar);
         //bio
-        bioText = (TextView) rootView.findViewById(R.id.bioText);
-        userRole = (TextView) rootView.findViewById(R.id.userRole);
-        userBackground = (FrameLayout) rootView.findViewById(R.id.userBackground);
+        bioText = rootView.findViewById(R.id.bioText);
+        userRole = rootView.findViewById(R.id.userRole);
+        userBackground = rootView.findViewById(R.id.userBackground);
 
-        composeButton = (FloatingActionButton) rootView.findViewById(R.id.compose);
+        composeButton = rootView.findViewById(R.id.compose);
 
-        int[] colors = CanvasContextColor.getCachedColors(getContext(), getCanvasContext());
-        composeButton.setColorNormal(colors[0]);
-        composeButton.setColorPressed(colors[1]);
+        int color = ColorKeeper.getOrGenerateColor(getCanvasContext());
+        composeButton.setColorNormal(color);
+        composeButton.setColorPressed(color);
 
-        composeButton.setIconDrawable(getResources().getDrawable(R.drawable.ic_cv_send_thin_white_fill));
+        composeButton.setIconDrawable(ColorKeeper.getColoredDrawable(getContext(), R.drawable.vd_send, Color.WHITE));
         composeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ChooseMessageRecipientsFragment.allRecipients.clear();
-
-                Recipient recipient = new Recipient(Long.toString(user.getId()), user.getShortName(), 0, 0, Recipient.recipientTypeToInt(Recipient.Type.person));
-                recipient.setCommonCourses(user.getEnrollmentsHash());
-                recipient.setAvatarURL(user.getAvatarUrl());
-                ChooseMessageRecipientsFragment.allRecipients.add(recipient);
-
-                ChooseMessageRecipientsFragment.canvasContext = getCanvasContext();
-
+                ArrayList<BasicUser> participants = new ArrayList<>();
+                participants.add(BasicUser.userToBasicUser(user));
                 Navigation navigation = getNavigation();
                 if (navigation != null) {
-                    navigation.addFragment(FragUtils.getFrag(ComposeNewMessageFragment.class, ComposeNewMessageFragment.createBundle(getCanvasContext(), true)));
+                    Bundle args = InboxComposeMessageFragment.createBundleNewConversation(participants, getCanvasContext());
+                    navigation.addFragment(FragUtils.getFrag(InboxComposeMessageFragment.class, args));
                 }
             }
         });
         setupCallbacks();
-        if (userId != -1) {
+        if (user == null) {
             UserManager.getUserForContextId(getCanvasContext(), userId, getCourseUserByIdCallback, true);
         } else {
             setupUserViews();
@@ -157,18 +138,15 @@ public class PeopleDetailsFragment extends OrientationChangeFragment {
     }
 
     @Override
-    public void onDestroyView() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            getSupportActionBar().setElevation(Const.ACTIONBAR_ELEVATION);
-        }
-        super.onDestroyView();
+    public void applyTheme() {
+        ViewStyler.setStatusBarDark(getActivity(), ColorKeeper.getOrGenerateColor(getCanvasContext()));
     }
 
     private void setupUserViews() {
         if(user != null){
             name.setText(user.getName());
 
-            ProfileUtils.configureAvatarView(getContext(), user, userAvatar);
+            ProfileUtils.loadAvatarForUser(userAvatar, user);
 
             //show the bio if one exists
             if(!TextUtils.isEmpty(user.getBio()) && !user.getBio().equals("null")) {
@@ -182,7 +160,7 @@ public class PeopleDetailsFragment extends OrientationChangeFragment {
             }
             userRole.setText(roles);
 
-            userBackground.setBackgroundColor(CanvasContextColor.getCachedColor(getActivity(), getCanvasContext()));
+            userBackground.setBackgroundColor(ColorKeeper.getOrGenerateColor(getCanvasContext()));
         }
 
     }
@@ -191,20 +169,21 @@ public class PeopleDetailsFragment extends OrientationChangeFragment {
 
         getCourseUserByIdCallback = new StatusCallback<User>() {
             @Override
-            public void onResponse(retrofit2.Response<User> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<User> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 PeopleDetailsFragment.this.user = user;
-                setupTitle(getActionbarTitle());
                 setupUserViews();
             }
         };
     }
 
+    @BeforePageView
     @Override
     public void handleIntentExtras(Bundle extras) {
         super.handleIntentExtras(extras);
 
         if (extras.containsKey(Const.USER)) {
             user = (User) extras.getParcelable(Const.USER);
+            userId = user.getId();
         } else if (getUrlParams() != null) {
             userId = parseLong(getUrlParams().get(Param.USER_ID), -1);
         }
@@ -217,8 +196,9 @@ public class PeopleDetailsFragment extends OrientationChangeFragment {
     }
 
     @Override
+    @NonNull
     public HashMap<String, String> getParamForBookmark() {
-        HashMap<String, String> map = getCanvasContextParams();
+        HashMap<String, String> map = super.getParamForBookmark();
         if(user != null) {
             map.put(Param.USER_ID, Long.toString(user.getId()));
         } else if(userId != -1) {

@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -29,8 +29,9 @@
     <string name="tab_discussions">Дискуссии</string>
     <string name="tab_announcements">Объявления</string>
     <string name="tab_attendance">Посещаемость</string>
+    <string name="tab_pages">Страницы</string>
+    <string name="tab_todo">Задачи</string>
     <string name="content_description_school_logo">Логотип учебного заведения</string>
-    <string name="content_description_avatar">Аватар</string>
     <string name="search_guides">Поиск в руководствах Canvas</string>
     <string name="canvas_guides">Руководства Canvas</string>
     <string name="search_guides_icon">Значок для руководств Canvas</string>
@@ -43,7 +44,7 @@
     <string name="request_feature_details">Расскажите нам, как можно улучшить приложение</string>
     <string name="share_your_love">Поделитесь своей любовью к приложению</string>
     <string name="share_your_love_details">Расскажите нам о своих любимых моментах приложения</string>
-    <string name="masquerade">Выполнить подмену</string>
+    <string name="masquerade">Подмена</string>
     <string name="issue_with_teacher_app">Проблема с приложением для преподавателей [Android]</string>
     <string name="no_items_to_display_short">Нет элементов</string>
     <string name="rate_the_app">Оценить приложение</string>
@@ -84,7 +85,7 @@
     <!-- Feature Request -->
     <string name="feature_subject">Идея для приложения для преподавателей [Android]</string>
     <string name="understand_request">Следующая информация поможет нам лучше понять вашу идею:</string>
-    <string name="send_mail">Отправить эл. сообщение&#8230;</string>
+    <string name="send_mail">Отправить Email&#8230;</string>
 
     <string name="color_1">Красный</string>
     <string name="color_2">Ярко-розовый</string>
@@ -130,7 +131,7 @@
 
     <string name="add_attachment">Добавить вложение</string>
     <string name="content_description_files">Иконка файла</string>
-    <string name="next">Дальше</string>
+    <string name="next">Далее</string>
     <string name="upload_to_cnavas">Загрузить на Canvas</string>
     <string name="upload_my_files">Мои файлы</string>
     <string name="upload_course_files">Файлы курса</string>
@@ -139,10 +140,10 @@
     <string name="with">с</string>
     <string name="discussion_attachment">Прикрепить файл</string>
     <string name="select_files_or_photos">Выбрать файлы или фотографии</string>
-    <string name="uploading_files">Отправка файлов&#8230;</string>
+    <string name="uploading_files">Выполняется отправка файлов&#8230;</string>
     <string name="no_attachment">(без вложений)</string>
     <string name="remove_attachment">Удалить вложение</string>
-    <string name="creating_announcement">Создание объявления&#8230;</string>
+    <string name="creating_announcement">Выполняется создание объявления&#8230;</string>
 
     <string name="copy_email">Копировать адрес эл. почты</string>
     <string name="all_grading_periods">Все академические периоды</string>
@@ -150,10 +151,10 @@
     <string name="all_submissions_graded">Все отправки оценены</string>
     <string name="icon">значок</string>
     <plurals name="grading_status_assignment">
-        <item quantity="one">%d необходимо выставить оценку отправке</item>
-        <item quantity="few">%d необходимо выставить оценку отправкам</item>
-        <item quantity="many">%d необходимо выставить оценку отправкам</item>
-        <item quantity="other">%d необходимо выставить оценку отправкам</item>
+        <item quantity="one">При отправке %d требуется оценка</item>
+        <item quantity="few">При отправке %d требуются оценки</item>
+        <item quantity="many">При отправке %d требуются оценки</item>
+        <item quantity="other">При отправке %d требуются оценки</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
@@ -165,7 +166,7 @@
 
     <string name="inbox_empty_title">Нет сообщений</string>
     <string name="inbox_empty_starred_title">Нет сообщений, помеченных звездочкой</string>
-    <string name="inbox_empty_message">Прикоснитесь к \"+\" для создания новой дискуссии.</string>
+    <string name="inbox_empty_message">Нажмите на \"+\" для создания нового разговора.</string>
     <string name="inbox_empty_starred_message">Отметьте сообщения звездочкой касанием к звездочке в сообщении.</string>
 
     <string name="download_attachment">Загрузить вложение</string>
@@ -190,10 +191,10 @@
     <string name="entire_group_selected">Выбрана вся группа</string>
     <string name="no_users_in_group">Нет пользователей в группе</string>
 
-    <string name="published">Опубликовано</string>
+    <string name="published">Размещено</string>
     <string name="not_published">Не опубликовано</string>
     <string name="published_content_description">Опубликованная контрольная метка</string>
-    <string name="points_with_value">баллов</string>
+    <string name="points_with_value">баллы</string>
     <string name="point_with_value">точка</string>
     <string name="no_due_date">Срок выполнения не задан</string>
     <string name="due_date">Срок выполнения</string>
@@ -216,10 +217,10 @@
         <item quantity="other">+ %d Сообщения</item>
     </plurals>
     <plurals name="submissionNeedsGrading">
-        <item quantity="one">%d необходимо выставить оценку отправке</item>
-        <item quantity="few">%d необходимо выставить оценку отправкам</item>
-        <item quantity="many">%d необходимо выставить оценку отправкам</item>
-        <item quantity="other">%d необходимо выставить оценку отправкам</item>
+        <item quantity="one">При отправке %d требуется оценка</item>
+        <item quantity="few">При отправке %d требуются оценки</item>
+        <item quantity="many">При отправке %d требуются оценки</item>
+        <item quantity="other">При отправке %d требуются оценки</item>
     </plurals>
 
     <string name="delete_assignment_message">Вы действительно хотите удалить это задание?</string>
@@ -243,7 +244,7 @@
     <string name="turnOnAnonymousGrading">Включить анонимное оценивание</string>
     <string name="turnOffAnonymousGrading">Отключить анонимное оценивание</string>
     <string name="anonymousGradingLabel">Анонимное Оценивание</string>
-    <string name="anonymousStudentLabel">Учащийся</string>
+    <string name="anonymousStudentLabel">Студент</string>
 
     <!-- TODO -->
     <string name="coming_soon">Функция скоро будет доступна</string>
@@ -275,10 +276,10 @@
     <string name="error_occurred">Произошла непредвиденная ошибка.</string>
     <string name="no_assignments_with_file_upload">На этом курсе нет заданий, которые позволяют загрузку файлов.</string>
     <string name="extension_not_allowed">Выбранный тип файла не допускается.</string>
-    <string name="allowed_extensions">Допустимые расширения:&#160;</string>
+    <string name="allowed_extensions">Допустимые расширения: </string>
     <string name="files_uploaded_successfully">Файлы загружены успешно.</string>
     <string name="error_uploading_file">Произошла ошибка при отправке вашего файла. Попробуйте еще раз.</string>
-    <string name="uploading_file">Отправка файла&#8230;</string>
+    <string name="uploading_file">Загрузка файла&#8230;</string>
     <string name="no_apps">На вашем устройстве не установлено приложение, способное работать с этим файлом.</string>
     <string name="turn_in">Включить</string>
     <string name="error_getting_photo">Произошла ошибка при получении фотографии. Попробуйте еще раз.</string>
@@ -300,7 +301,7 @@
     <string name="server_error">Произошла ошибка сервера.</string>
     <string name="error_loading_files">Произошла ошибка при загрузке вашего файла. Проверьте интернет-подключение и попробуйте еще раз.</string>
     <string name="files_submitted_successfully">Файлы успешно отправлены.</string>
-    <string name="no_data_connection"> Проверьте подключение и повторите попытку. </string>
+    <string name="no_data_connection">Проверьте подключение и повторите попытку.</string>
     <string name="teacher_logout_warning">Вы уверены, что вы хотите выйти?</string>
     <string name="teacher_yes">Да</string>
     <string name="teacher_no">Нет</string>
@@ -316,14 +317,14 @@
     <!--Course Settings-->
     <string name="course_settings">Настройки курса</string>
     <string name="course_name">Название курса</string>
-    <string name="set_home_to">Установить \'Домой\' на…</string>
+    <string name="set_home_to">Установить \'Домой\' на&#8230;</string>
     <string name="course_activity_stream">Лента активности курса</string>
     <string name="pages_front_page">Страницы титульной страницы</string>
+    <string name="frontPage">Первая страница</string>
     <string name="course_modules">Модули курса</string>
     <string name="assignments_list">Список заданий</string>
     <string name="syllabus">Содержание курса</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Множественные даты выполнения</string>
     <string name="everyone">Все</string>
@@ -331,8 +332,8 @@
     <string name="unknown_student">Неизвестный студент</string>
     <string name="closed">Закрыто</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">Срок выполнения наступает %s в %s</string>
-    <string name="last_post" formatted="false">Последний пост %s</string>
+    <string name="due_date_at_time" formatted="false">Срок выполнения %1s в %2s</string>
+    <string name="last_post" formatted="false">Последнее размещение %s</string>
     <string name="submission_types">Типы сдаваемых работ</string>
     <string name="full_due_date_details">Полная информация о сроке выполнения</string>
     <string name="availability_label">Доступность:</string>
@@ -369,7 +370,7 @@
     <string name="excused">По уважительной причине</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
     <string name="grade_value_format_talk_back">%1$s из %2$s</string>
-    <string name="publish">Опубликовать</string>
+    <string name="publish">Разместить</string>
     <string name="error_saving_assignment">Произошла ошибка при попытке сохранения задания. Повторить попытку.</string>
     <string name="error_saving_quiz">Произошла ошибка при попытке сохранения теста. Повторить попытку.</string>
     <string name="assignment_name_must_be_set">Необходимо задать название задания.</string>
@@ -394,16 +395,16 @@
     <string name="graded">С оценкой</string>
     <string name="needsGrading">Требует оценки</string>
     <string name="not_submitted">Не отправлено</string>
-    <string name="content_description_submission_donut_graded" formatted="false">Оценка получена, %s из %s</string>
-    <string name="content_description_submission_donut_needs_grading" formatted="false">Требует оценки, %s из %s</string>
-    <string name="content_description_submission_donut_unsubmitted" formatted="false">Не представлено, %s из %s</string>
+    <string name="content_description_submission_donut_graded" formatted="false">С оценкой, %s из %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Требуется оценка, %s из %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Не отправлено, %s из %s</string>
     <string name="display_grade_as">Отображать оценку как&#8230;</string>
     <string name="percentage">Процент</string>
     <string name="complete_incomplete">Завершено/не завершено</string>
     <string name="points">Баллы</string>
     <string name="gpa_scale">Шкала GPA</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -412,7 +413,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -434,8 +435,8 @@
     <string name="havent_been_graded">Оценка еще не поставлена</string>
     <string name="scored_less_than">Оценка ниже&#8230;</string>
     <string name="scored_more_than">Оценка выше&#8230;</string>
-    <string name="scored_less_than_value">Полученная оценка ниже %s</string>
-    <string name="scored_more_than_value">Полученная оценка выше %s</string>
+    <string name="scored_less_than_value">Оценка ниже %s</string>
+    <string name="scored_more_than_value">Оценка выше %s</string>
     <string name="add_comment">Добавить комментарий</string>
     <string name="editComment">Редактировать комментарий</string>
     <string name="deleteComment">Удалить комментарий</string>
@@ -459,7 +460,7 @@
     <string name="rating_button_content_description_custom">Персонализированная оценка %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">"%1$s, %2$s</string>
+    <string name="rating_button_content_description">%1$s, %2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="one">из %s балла</item>
@@ -482,6 +483,8 @@
     <string name="assignments">Задания</string>
     <string name="clear_filter">Очистить фильтр</string>
     <string name="due">Срок %1$s</string>
+    <string name="updated">Обновлено %1$s</string>
+
     <plurals name="needsGradingCount">
         <item quantity="one">%s требует оценки</item>
         <item quantity="few">%s требуют оценки</item>
@@ -496,31 +499,31 @@
     </plurals>
     <string name="at">в</string>
     <plurals name="quantityPointsAbbreviated">
-        <item quantity="one">%s балл</item>
-        <item quantity="few">%s баллы</item>
-        <item quantity="many">%s баллы</item>
-        <item quantity="other">%s баллы</item>
+        <item quantity="one">%s баллов</item>
+        <item quantity="few">%s баллов</item>
+        <item quantity="many">%s баллов</item>
+        <item quantity="other">%s баллов</item>
     </plurals>
     <plurals name="quantityPointsFull">
-        <item quantity="one">%s точка</item>
+        <item quantity="one">%s балл</item>
         <item quantity="few">%s баллов</item>
         <item quantity="many">%s баллов</item>
         <item quantity="other">%s баллов</item>
     </plurals>
     <plurals name="people_count">
-        <item quantity="one">%d лицо</item>
-        <item quantity="few">%d люди</item>
-        <item quantity="many">%d люди</item>
-        <item quantity="other">%d люди</item>
+        <item quantity="one">%d человек</item>
+        <item quantity="few">%d человека</item>
+        <item quantity="many">%d человека</item>
+        <item quantity="other">%d человека</item>
     </plurals>
     <plurals name="group_count">
         <item quantity="one">%d группа</item>
-        <item quantity="few">%d группы</item>
-        <item quantity="many">%d группы</item>
-        <item quantity="other">%d группы</item>
+        <item quantity="few">%d групп</item>
+        <item quantity="many">%d групп</item>
+        <item quantity="other">%d групп</item>
     </plurals>
     <string name="cmp_closed">Закрыто</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022  </string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">предпочтительный</string>
     <string name="content_description_not_favorite">не предпочтительный</string>
@@ -552,10 +555,9 @@
     <string name="contentDescriptionFileIcon">Иконка файла</string>
     <string name="contentDescriptionExpandPage">Развернуть страницу</string>
     <string name="contentDescriptionCollapsePage">Свернуть страницу</string>
-
     <string name="noInternetConnectionTitle">Нет интернет-соединения</string>
     <string name="noInternetConnectionMessage">Для выполнения этого действия необходимо интернет-соединение.</string>
-  
+
     <string name="emptyDetailsMessage">Прикоснитесь к элементу в списке для просмотра подробностей</string>
 
     <string name="assignmentQuizzes">Тесты задания</string>
@@ -575,7 +577,7 @@
     <string name="gradedSurvey">Оцененный опрос</string>
     <string name="ungradedSurvey">Опрос без оценки</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -633,17 +635,17 @@
     <string name="filterPointsMustBeSet">Ввести значение.</string>
 
     <plurals name="quantityQuestions">
-        <item quantity="one">%d вопрос</item>
-        <item quantity="few">%d вопросы</item>
-        <item quantity="many">%d вопросы</item>
-        <item quantity="other">%d вопросы</item>
+        <item quantity="one">Вопрос %d</item>
+        <item quantity="few">Вопросы %d</item>
+        <item quantity="many">Вопросы %d</item>
+        <item quantity="other">Вопросы %d</item>
     </plurals>
 
     <plurals name="minutes">
-        <item quantity="one">%s Минута</item>
-        <item quantity="few">%s мин.</item>
-        <item quantity="many">%s мин.</item>
-        <item quantity="other">%s мин.</item>
+        <item quantity="one">%s минута</item>
+        <item quantity="few">%s минут</item>
+        <item quantity="many">%s минут</item>
+        <item quantity="other">%s минут</item>
     </plurals>
 
     <string name="discussion_details">Сведения об обсуждении</string>
@@ -655,8 +657,8 @@
     <string name="discussions_unpin">Отменить привязку</string>
     <string name="contentDescriptionDiscussionsOverflow">Дополнительные опции</string>
     <string name="discussions_options">Опции</string>
-    <string name="discussions_replies" formatted="false">%s Ответы</string>
-    <string name="discussions_unread" formatted="false">%s Не прочитано</string>
+    <string name="discussions_replies" formatted="false">%s ответов</string>
+    <string name="discussions_unread" formatted="false">%s не прочитано</string>
     <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
     <string name="discussions_delete_warning">Вы действительно хотите удалить этот ответ?</string>
     <string name="discussions_replies_title">Ответы</string>
@@ -676,8 +678,8 @@
     <string name="submissionIsMediaFile">Эта отправка является медиа-файлом</string>
     <string name="tryAgain">Попробуйте еще раз</string>
     <string name="couldNotPlayFormat">Этот формат медиа-формат не поддерживается</string>
-    <string name="openWithAnotherApp">Открыть с помощью…</string>
-    
+    <string name="openWithAnotherApp">Открыть с помощью&#8230;</string>
+
     <string name="speedgraderCommentAddedSubmission">Задание отправлено. Прикоснуться для просмотра.</string>
     <string name="speedgraderCommentSubmittedFiles">Отправленные файлы</string>
     <string name="no_submission_comments">Комментарии к отправке отсутствуют</string>
@@ -687,7 +689,7 @@
     <string name="speedGraderTextSubmission">Текстовая отправка</string>
     <string name="speedGraderExternalToolSubmission">Отправка внешнего инструмента</string>
     <string name="speedGraderDiscussionSubmission">Отправка обсуждения</string>
-    <string name="speedGraderQuizSubmission">Отправка контрольной работы</string>
+    <string name="speedGraderQuizSubmission">Отправка теста</string>
     <string name="speedGraderMediaFile">Медиафайл</string>
     <string name="submissionTypeAudio">Аудио</string>
     <string name="submissionTypeVideo">Видео</string>
@@ -772,7 +774,7 @@
     <string name="canvasGuides">Руководства Canvas</string>
     <string name="featureSubject">Идея для преподавателей Canvas [Android]</string>
     <string name="understandRequest">Следующая информация поможет нам лучше понять вашу идею:</string>
-    <string name="sendMail">Отправить эл. сообщение&#8230;</string>
+    <string name="sendMail">Отправить Email&#8230;</string>
     <string name="editProfile">Редактировать профиль</string>
     <string name="name">Имя</string>
     <string name="bio">Биография</string>
@@ -816,7 +818,7 @@
     <string name="sectionFormatted">Раздел: %s</string>
     <string name="errorLoadingStudentContextCard">Невозможно загрузить детали для данного пользователя.</string>
     <string name="enrollmentTypeStudent">Студент</string>
-    <string name="enrollmentTypeTeacher">Учитель</string>
+    <string name="enrollmentTypeTeacher">Преподаватель</string>
     <string name="enrollmentTypeObserver">Наблюдатель</string>
     <string name="enrollmentTypeTeachingAssistant">TA</string>
     <string name="enrollmentTypeDesigner">Дизайнер</string>
@@ -826,4 +828,96 @@
     <string name="markAllAsPresent">Отметить всех как присутствующих</string>
     <string name="calendar">Календарь</string>
     <string name="filterSections">Фильтрация разделов</string>
+    <string name="addVideoComment">Добавить видеокомментарий</string>
+    <string name="addAudioComment">Добавить аудиокомментарий</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d часов, %2$d минут и %3$d секунд</string>
+    <string name="recordingTimerSpeechDivider">%1$s из %2$s</string>
+    <string name="replay">Воспроизведение</string>
+    <string name="stop">Стоп</string>
+    <string name="startRecordingAudio">Начать запись аудио</string>
+    <string name="stopRecordingAudio">Остановить запись аудио</string>
+    <string name="startRecordingVideo">Начать запись видео</string>
+    <string name="stopRecordingVideo">Остановить запись видео</string>
+    <string name="closeRecordingView">Закрыть окно записи</string>
+    <string name="deleteRecording">Удалить запись</string>
+    <string name="videoCommentReplay">Воспроизведение видеокомментария</string>
+    <string name="addMediaComment">Добавить медиа-комментарий</string>
+    <string name="copyrightHolder">Владелец авторских прав</string>
+    <string name="access">Доступ</string>
+    <string name="usageRights">Права на использование</string>
+    <string name="deleteFile">Удалить файл</string>
+    <string name="holdCopyright">Я являюсь правообладателем</string>
+    <string name="havePermission">У меня есть разрешение на использование файла</string>
+    <string name="publicDomain">Общедоступный файл</string>
+    <string name="fairUse">Исключение правомерного использования</string>
+    <string name="creativeCommons">Файл творческого сообщества</string>
+    <string name="editFile">Редактировать файл</string>
+    <string name="deleteFolder">Удалить папку</string>
+    <string name="editFolder">Редактировать папку</string>
+    <string name="deleteFileMessage">Удалить этот файл?</string>
+    <string name="deleteFolderMessage">Удалить эту папку? Все содержимое этой папки будет также удалено.</string>
+    <string name="newFolder">Новая папка</string>
+    <string name="createAFolder">Создать папку</string>
+    <string name="createFolder">Создать папку</string>
+    <string name="createAFile">Создать файл</string>
+    <string name="createFileFolderFabContentDesc">Показать кнопки создания файла и создания папки</string>
+    <string name="unpublish">Отменить публикацию</string>
+    <string name="restrictedAccess">Ограниченный доступ</string>
+    <string name="restricted">Доступ ограничен</string>
+    <string name="hidden">Скрыто, внутренние файлы будут доступны по ссылкам.</string>
+    <string name="studentsWithLink">Доступно только студентам по ссылке. Не доступно в файлах студентов.</string>
+    <string name="scheduleAvailability">График доступности студентов</string>
+    <string name="folderCreationError">При создании папки произошла ошибка.</string>
+
+    <string name="setAsFrontPage">Установить в качестве титульной страницы</string>
+    <string name="canEdit">Можно редактировать</string>
+    <string name="pageDetails">Данные страницы</string>
+    <string name="pageSuccessfullyUpdated">Страница успешно обновлена.</string>
+    <string name="pageSuccessfullyCreated">Страница успешно создана.</string>
+    <string name="editPageTitle">Редактировать страницу</string>
+    <string name="createPageTitle">Создать страницу</string>
+    <string name="pageTitleMustBeSet">Необходимо задать заголовок страницы.</string>
+    <string name="pageDeleteTitle">Удалить страницу?</string>
+    <string name="pageDelete">Удалить страницу</string>
+    <string name="pageDeleteMessage">Это приведет к удалению страницы. Это действие невозможно отменить.</string>
+    <string name="errorSavingPage">Произошла ошибка при попытке сохранения этой страницы. Повторить попытку.</string>
+    <string name="frontPageUnpublishedError">Страница не может быть неопубликованной титульной страницей.</string>
+
+    <string name="onlyTeachers">Только учителя</string>
+    <string name="teachersAndStudents">Преподаватели и студенты</string>
+    <string name="anyone">Все</string>
+    <string name="groupMembers">Только члены</string>
+    <string name="license">Лицензия</string>
+    <string name="availableFromAfterTo">Конечная дата доступности должна быть после даты начала</string>
+    <string name="errorDeletingFile">При удалении этого файла произошла ошибка</string>
+    <string name="errorDeletingFolder">При удалении этой папки произошла ошибка</string>
+    <string name="errorUpdatingFile">При обновлении этого файла произошла ошибка</string>
+    <string name="errorUpdatingFolder">При обновлении этой папки произошла ошибка</string>
+
+    <string name="toDoEmpty">Все задания выполнены!\n Хорошего дня.</string>
+    <string name="toDoNoSubmissions">Для этого задания отсутствуют объекты для оценки.</string>
+    <string name="errorToDoRouteFailed">Произошла ошибка при попытке просмотра этого элемента списка текущих дел.</string>
+    <string name="errorIsDesigner">Это не доступно для просмотра при зачислении дизайнеров.</string>
+
+    <string name="sections">Разделы</string>
+    <string name="filterBy">Фильтровать по&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">для %s</string>
+    <string name="filterBySection">Фильтр по разделу</string>
+    <string name="filterSubmissionsLowercase">Фильтр отправок</string>
+
+    <string name="latePenalty">Снижение оценки за опоздание</string>
+    <string name="finalGrade">Итоговая оценка</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s балл</item>
+        <item quantity="few">-%s балла/баллов</item>
+        <item quantity="many">-%s балла/баллов</item>
+        <item quantity="other">-%s балла/баллов</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s балл</item>
+        <item quantity="few">-%s балла/баллов</item>
+        <item quantity="many">-%s балла/баллов</item>
+        <item quantity="other">-%s балла/баллов</item>
+    </plurals>
 </resources>

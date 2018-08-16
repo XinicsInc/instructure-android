@@ -1,99 +1,134 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="hello_world">Bonjou tout moun!</string>
-  <string name="action_settings">Reglaj</string>
-  <string name="mobileVerifyGeneral">App sa a pa gen ototrizasyon pou li itilize</string>
-  <string name="mobileVerifyDomainUnauthorized">Sèvè ou antre a pa gen ototrizasyon pou app sa a.</string>
-  <string name="mobileVerifyUserAgentUnauthorized">Ajan itilizatè app sa a pa otorize.</string>
-  <string name="mobileVerifyUnknownError">Nou pa t kapab verifye sèvè a pou itilize li ak app sa a.</string>
-  <string name="unknownDevice">UnknownDevice</string>
-  <string name="errorOccurred">Yon erè fèt sanzatann.</string>
-  <string name="pageNotFound">Paj entwouvab.</string>
-  <string name="confirm">Konfime</string>
-  <string name="cancel">Anile</string>
-  <string name="help">Èd</string>
-  <string name="enterURL">Antre URL Canvas ou a:</string>
-  <string name="signIntoCanvasNetwork">W ap eseye konekte sou Canvas Network?</string>
-  <string name="remove">Elimine</string>
-  <string name="exampleURLSimple">myschool.instructure.com</string>
-  <string name="masquerade">Degizman</string>
-  <string name="userId">Non Itilizatè</string>
-  <string name="domain">Domèn</string>
-  <string name="masqueradingUserId">Non Itilizatè pou Degize</string>
-  <string name="masqueradingUserDomain">Degize Domèn</string>
-  <string name="masqueradingBegin">Kòmanse Degizman</string>
-  <string name="masqueradingStop">Kanpe Degizman</string>
-  <!--Multiple User Sign in-->
-  <string name="removeUser">Elimine itilizatè sa a?</string>
-  <string name="removedForever">W ap konekte sou itilizatè sa a ankò pou gen aksè a kontni yo.</string>
-  <!--Content Descriptions-->
-  <string name="canvasLogo">Logo Canvas</string>
-  <string name="canvasLoginOn">Canvas_Login: AKTIVE</string>
-  <string name="canvasLoginOff">Canvas_Login: DEZAKTIVE</string>
-  <string name="siteAdminLogin">Administratè Koneksyon Site: ON</string>
-  <string name="username">Itilizatè</string>
-  <string name="password">Modpas</string>
-  <string name="authenticationRequired">Otantifikasyon Obligatwa</string>
-  <string name="invalidEmailPassword">Imèl oswa modpas envalid</string>
-  <string name="login">Koneksyon</string>
-  <string name="logout">Dekoneksyon</string>
-  <!--Logout Warning Dialog-->
-  <string name="logout_warning">Ou kwè vrèman ou vle dekonekte?</string>
-  <string name="logout_yes">Wi</string>
-  <string name="logout_no">Non</string>
-  <!--Smart Login-->
-  <string name="loginNearYou">Tou Prè ou</string>
-  <string name="loginCanvasNetwork">Canvas Network</string>
-  <string name="loginRightBehindYou">Dèyè w</string>
-  <string name="loginMiles">%1$s miles de la a</string>
-  <string name="loginCanvasHelp">Ou pa wè lekòl ou a? Antre URL lekòl la oswa tale la pou jwenn èd.</string>
-  <string name="loginCanvasHelpWithUser">Antre URL lekòl la oswa tale la pou jwenn èd.</string>
-  <string name="loginHint">Jwenn lekòl oswa distri ou a</string>
-  <!--Zendesk Dialog-->
-  <string name="zendesk_reportAProblem">Rapòte yon Pwoblèm</string>
-  <string name="zendesk_subject">Sijè</string>
-  <string name="zendesk_description">Deskripsyon</string>
-  <string name="zendesk_writeSomething">Ekri yon Bagay...</string>
-  <string name="zendesk_send">Voye</string>
-  <string name="zendesk_feedbackThankyou">Mèsi paske w rapòte pwoblèm ou jwenn nan bay Ekip Sipò nou an. W ap resevwa verifikasyon ak aktyalizasyon sou imèl ou.</string>
-  <string name="zendesk_severityText">Nan ki sans sa afekte w?</string>
-  <string name="zendesk_casualQuestion">Sèlman yon kesyon, yon kòmantè, yon ide... enfòmèl</string>
-  <string name="zendesk_casualQuestion_tag">just_a_comment</string>
-  <string name="zendesk_needHelp">Mwen bezwen èd men se pa ijan.</string>
-  <string name="zendesk_needHelp_tag">not_urgent</string>
-  <string name="zendesk_somethingsBroken">Gen yon entèripsyon men mwen ka kontounen li pou mwen jwenn sa mwen bezwen an.</string>
-  <string name="zendesk_somethingsBroken_tag">workaround_possible</string>
-  <string name="zendesk_cantGetThingsDone">Mwen paka fè bagay yo jiskaske mwen tounen tande w.</string>
-  <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
-  <string name="zendesk_extremelyCritical">IJANS KRITIK EKSTRÈM!!</string>
-  <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
-  <string name="zendesk_emailAddress">Adrès Imèl</string>
-  <string name="zendesk_enterEmail">Antre adrès imèl ou...</string>
-  <string name="zendesk_unknown">Enkoni</string>
-  <!--Distance Strings-->
-  <string name="lessThanOne">&lt; 1 mile (1.6 km)</string>
-  <string name="oneMile">1 mile (1.6 km)</string>
-  <string name="miles">mile</string>
-  <string name="kilometers">km</string>
-  <!--String for submitting tickets-->
-  <string name="device">Aparèy</string>
-  <string name="osVersion">Vèsyon OS</string>
-  <string name="previousLoginTitle">Ansyen Koneksyon</string>
-  <string name="canvasNetworks">Rezo Canvas</string>
-  <string name="findMySchool">Jwenn lekòl mwen an</string>
-  <string name="appTypeTeacher">Pwofesè</string>
-  <string name="appTypeStudent">Elèv</string>
-  <string name="appTypeParent">Paran</string>
-  <string name="canvasLowerCase">canvas</string>
-  <string name="whatsYourSchoolName">Kijan lekòl ou a rele?</string>
-  <string name="next">Pwochen</string>
-  <string name="schoolInstructureCom">school.instructure.com</string>
-  <string name="contentDescription_removePreviousUser">Elimine Ansyen Itilizatè</string>
-  <string name="accountDomainFooter">Ou paka jwenn lekòl ou a? Eseye tape tout URL lekòl la</string>
-  <string name="accountDomainFooterLink">Tape la pou èd.</string>
-  <string name="login_noInternetConnectionTitle">Pa gen Koneksyon Internet</string>
-  <string name="login_noInternetConnectionMessage">Pou aksyon sa a ou bezwen konekte sou entènèt.</string>
-  <string name="empty_feedback">Ou dwe gen yon sijè ak yon deskripsyon pou soumèt kòmantè sa a.</string>
-  <string name="versionNum">Nimewo Vèsyon</string>
-  <string name="scrollInstructions">Desann pou wè tout detay yo</string>
+
+    <string name="hello_world">Bonjou tout moun!</string>
+    <string name="action_settings">Paramèt</string>
+    <string name="mobileVerifyGeneral">App sa a pa gen ototrizasyon pou li itilize</string>
+    <string name="mobileVerifyDomainUnauthorized">Sèvè w antre a pa otorize pou app sa a.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Ajan itilizatè app sa a pa otorize.</string>
+    <string name="mobileVerifyUnknownError">Nou pa kapab verifye sèvè a pou li ka itilize ak app sa a.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Yon erè fèt sanzatann.</string>
+    <string name="pageNotFound">Paj entwouvab.</string>
+    <string name="confirm">Konfime</string>
+    <string name="cancel">Anile</string>
+    <string name="help">Èd</string>
+    <string name="enterURL">Antre URL Canvas ou a:</string>
+    <string name="signIntoCanvasNetwork">W ap eseye konekte sou Canvas Network?</string>
+    <string name="remove">Elimine</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="masquerade">Degizman</string>
+    <string name="userId">ID Itilizatè</string>
+    <string name="domain">Domèn</string>
+
+    <string name="masqueradingUserId">Non Itilizatè pou Degize</string>
+    <string name="masqueradingUserDomain">Degize Domèn</string>
+    <string name="masqueradingBegin">Kòmanse Degizman</string>
+    <string name="masqueradingStop">Kanpe Degizman</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Elimine itilizatè sa a?</string>
+    <string name="removedForever">W ap gen pou konekte sou itilizatè sa a ankò pou w ka gen aksè a kontni yo.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Logo Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: OUVÈ</string>
+    <string name="canvasLoginOff">Canvas_Login: FÈMEN</string>
+    <string name="siteAdminLogin">Koneksyon Admin Sit: OUVÈ</string>
+
+    <string name="username">Non Itilizatè</string>
+    <string name="password">Modpas</string>
+    <string name="authenticationRequired">Otantifikasyon Obligatwa</string>
+    <string name="invalidEmailPassword">Imèl oswa modpas envalid</string>
+    <string name="login">Konekte</string>
+    <string name="logout">Dekonekte</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Ou kwè vrèman ou vle dekonekte?</string>
+    <string name="logout_yes">Wi</string>
+    <string name="logout_no">Non</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">Tou Prè ou</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">Dèyè w</string>
+    <string name="loginMiles">%1$s kilomèt distans</string>
+    <string name="loginCanvasHelp">Ou pa wè lekòl ou a? Antre URL lekòl la oswa tale la pou jwenn èd.</string>
+    <string name="loginCanvasHelpWithUser">Antre URL lekòl la oswa tale la pou jwenn èd.</string>
+    <string name="loginHint">Jwenn lekòl oswa distri ou a</string>
+
+    <!-- Zendesk Dialog -->
+    <string name="zendesk_reportAProblem">Rapòte yon Pwoblèm</string>
+    <string name="zendesk_subject">Sijè</string>
+    <string name="zendesk_description">Deskripsyon</string>
+    <string name="zendesk_writeSomething">Ekri yon Bagay&#8230;</string>
+    <string name="zendesk_send">Voye</string>
+    <string name="zendesk_feedbackThankyou">Mèsi paske w rapòte pwoblèm ou an bay Epik Sipò nou an.  W ap resevwa yon verifikasyon ak yon aktyalizasyon sou imèl ou.</string>
+    <string name="zendesk_severityText">Nan ki sans sa afekte w?</string>
+    <string name="zendesk_casualQuestion">Sèlman yon kesyon, yon kòmantè, yon ide&#8230; enfòmèl</string>
+    <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+    <string name="zendesk_needHelp">Mwen bezwen èd men se pa ijan.</string>
+    <string name="zendesk_needHelp_tag">not_urgent</string>
+    <string name="zendesk_somethingsBroken">Gen yon bagay ki pa pase, men mwen ka rezoud sa pou m fè sa m bezwen an.</string>
+    <string name="zendesk_somethingsBroken_tag">workaround_possible</string>
+    <string name="zendesk_cantGetThingsDone">Mwen paka fè anyen toutotan mwen pa tande w ankò.</string>
+    <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+    <string name="zendesk_extremelyCritical">IJANS KRITIK EKSTRÈM!!</string>
+    <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+    <string name="zendesk_emailAddress">Adrès Imèl</string>
+    <string name="zendesk_enterEmail">Antre adrès imèl ou&#8230;</string>
+    <string name="zendesk_unknown">Enkoni</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 mile (1.6 km)</string>
+    <string name="oneMile">1 mile (1.6 km)</string>
+    <string name="miles">mile</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Aparèy</string>
+    <string name="osVersion">Vèsyon OS</string>
+
+    <string name="previousLoginTitle">Ansyen Koneksyon</string>
+    <string name="canvasNetworks">Canvas Network</string>
+    <string name="findMySchool">Jwenn lekòl mwen an</string>
+    <string name="appTypeTeacher">Pwofesè</string>
+    <string name="appTypeStudent">Elèv</string>
+    <string name="appTypeParent">Paran</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">Kijan lekòl ou a rele?</string>
+    <string name="next">Pwochen</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Elimine Ansyen Itilizatè</string>
+    <string name="accountDomainFooter">Ou paka jwenn lekòl ou a? Eseye tape tout URL lekòl la</string>
+    <string name="accountDomainFooterLink">Tape la pou èd.</string>
+
+    <string name="login_noInternetConnectionTitle">Pa gen Koneksyon Internet</string>
+    <string name="login_noInternetConnectionMessage">Pou aksyon sa a ou bezwen konekte sou entènèt.</string>
+    <string name="empty_feedback">Ou dwe gen yon sijè ak yon deskripsyon pou soumèt kòmantè sa a.</string>
+    <string name="versionNum">Nimewo Vèsyon</string>
+    <string name="scrollInstructions">Desann pou wè tout detay yo</string>
+
+    <string name="masqueradeErrorUserId">Ou dwe antre yon ID itilizatè.</string>
+    <string name="masqueradeErrorDomain">Ou dwe antre yon domèn.</string>
+    <string name="masqueradeError">Erè pandan w ap eseye degize a.</string>
 </resources>

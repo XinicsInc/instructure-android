@@ -17,16 +17,19 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,21 +37,28 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.instructure.candroid.R;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.DiscussionManager;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.DiscussionTopicHeader;
+import com.instructure.canvasapi2.models.Group;
 import com.instructure.canvasapi2.utils.APIHelper;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.ViewStyler;
+
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class ComposeNewDiscussionFragment extends ParentFragment {
 
 	private boolean isAnnouncement, isEditing;
 
+	private Toolbar toolbar;
 	private EditText title;
 	private EditText message;
 	private CheckBox threaded;
@@ -59,47 +69,39 @@ public class ComposeNewDiscussionFragment extends ParentFragment {
     StatusCallback<DiscussionTopicHeader> discussionTopicHeaderCanvasCallback;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {
-        if (isTablet(context)) {
-            return FRAGMENT_PLACEMENT.DIALOG;
-        }
-        return FRAGMENT_PLACEMENT.DETAIL;
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {
+        return Placement.DIALOG;
     }
 
     @Override
-    public String getFragmentTitle() {
-        if (isAnnouncement) {
-            return getString(R.string.composeAnnouncement);
-        } else {
-            return getString(R.string.composeDiscussion);
-        }
+    @NonNull
+    public String title() {
+        return isAnnouncement ? getString(R.string.composeAnnouncement) : getString(R.string.composeDiscussion);
     }
 
-    @Nullable
     @Override
-    protected String getActionbarTitle() {
-        return getFragmentTitle();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!isTablet(getContext())) setStyle(DialogFragment.STYLE_NORMAL, R.style.LightStatusBarDialog);
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // LifeCycle
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = getLayoutInflater().inflate(R.layout.compose_discussion, container, false);
-        setupDialogToolbar(rootView);
-        message = (EditText) rootView.findViewById(R.id.message);
-        threaded = (CheckBox) rootView.findViewById(R.id.threadedCheckbox);
-        publish = (CheckBox) rootView.findViewById(R.id.publishCheckbox);
-        title = (EditText) rootView.findViewById(R.id.title);
+        View rootView = getLayoutInflater().inflate(R.layout.fragment_compose_discussion, container, false);
+        toolbar = rootView.findViewById(R.id.toolbar);
+        message = rootView.findViewById(R.id.message);
+        threaded = rootView.findViewById(R.id.threadedCheckbox);
+        publish = rootView.findViewById(R.id.publishCheckbox);
+        title = rootView.findViewById(R.id.title);
         return rootView;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        applyTheme();
         if (isAnnouncement) {
             threaded.setVisibility(View.GONE);
             publish.setVisibility(View.GONE);
@@ -116,6 +118,10 @@ public class ComposeNewDiscussionFragment extends ParentFragment {
                 publish.setChecked(true);
                 publish.setVisibility(View.GONE);
             }
+        } else if (getCanvasContext() instanceof Group) {
+            // Always publish for groups
+            publish.setChecked(true);
+            publish.setVisibility(View.GONE);
         }
 
         setUpCallback();
@@ -125,6 +131,24 @@ public class ComposeNewDiscussionFragment extends ParentFragment {
         } else {
             //clear out views
             initViews();
+        }
+    }
+
+    @Override
+    public void applyTheme() {
+        toolbar.setTitle(title());
+        setupToolbarMenu(toolbar, isAnnouncement ? R.menu.menu_post_announcement : R.menu.menu_post_discussion);
+        PandaViewUtils.setupToolbarCloseButton(toolbar, this);
+        ViewStyler.themeToolbar(getActivity(), toolbar, Color.WHITE, Color.BLACK, false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if(dialog != null && dialog.getWindow() != null && !isTablet(getActivity())) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
     }
 
@@ -170,7 +194,7 @@ public class ComposeNewDiscussionFragment extends ParentFragment {
     public void setUpCallback(){
         discussionTopicHeaderCanvasCallback = new StatusCallback<DiscussionTopicHeader>() {
             @Override
-            public void onResponse(retrofit2.Response<DiscussionTopicHeader> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<DiscussionTopicHeader> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(!apiCheck()) {
                     return;
                 }
@@ -222,7 +246,7 @@ public class ComposeNewDiscussionFragment extends ParentFragment {
             }
 
             @Override
-            public void onFail(Call<DiscussionTopicHeader> response, Throwable error) {
+            public void onFail(@Nullable Call<DiscussionTopicHeader> call, @NonNull Throwable error, @Nullable Response response) {
                 String message;
                 if(isAnnouncement){
                     message = getResources().getString(R.string.errorPostingAnnouncement);
@@ -235,23 +259,8 @@ public class ComposeNewDiscussionFragment extends ParentFragment {
         };
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // ActionBar
-    ///////////////////////////////////////////////////////////////////////////
-
     @Override
-    public void createOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.createOptionsMenu(menu, inflater);
-
-        if(isAnnouncement) {
-            inflater.inflate(R.menu.menu_post_announcement, menu);
-        } else {
-            inflater.inflate(R.menu.menu_post_discussion, menu);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (item.getItemId() == R.id.menu_post_announcement || item.getItemId() == R.id.menu_post_discussion) {
             if(!APIHelper.hasNetworkConnection()) {
@@ -291,10 +300,6 @@ public class ComposeNewDiscussionFragment extends ParentFragment {
 
         return super.onOptionsItemSelected(item);
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void handleIntentExtras(Bundle extras) {

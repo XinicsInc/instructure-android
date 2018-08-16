@@ -36,7 +36,7 @@ public class PeopleBinder extends BaseBinder {
             final boolean isFirstItem,
             final boolean isLastItem) {
 
-        ProfileUtils.configureAvatarView(context, item, holder.icon);
+        ProfileUtils.loadAvatarForUser(holder.icon, item);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

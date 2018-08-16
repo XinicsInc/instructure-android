@@ -17,8 +17,9 @@
   -->
 
 <resources>
-    <item type="id" name="pulse" />
     <item type="id" name="videoFullScreenView"/>
     <item type="id" name="formatLoaderID"/>
     <item type="id" name="appBarLayout"/>
+    <item type="id" name="nestedIcon" />
+    <item type="id" name="primaryIcon" />
 </resources>

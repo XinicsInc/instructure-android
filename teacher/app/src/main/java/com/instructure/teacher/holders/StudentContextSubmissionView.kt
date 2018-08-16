@@ -22,7 +22,8 @@ import android.support.v4.content.ContextCompat
 import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
-import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.StudentContextCardQuery
+import com.instructure.canvasapi2.type.AssignmentState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -35,7 +36,7 @@ import kotlinx.android.synthetic.main.adapter_student_context_submission.view.*
 
 
 @SuppressLint("ViewConstructor")
-class StudentContextSubmissionView(context: Context, submission: Submission, courseColor: Int) : FrameLayout(context) {
+class StudentContextSubmissionView(context: Context, submission: StudentContextCardQuery.Submission, courseColor: Int) : FrameLayout(context) {
 
     val assignment = requireNotNull(submission.assignment)
 
@@ -44,12 +45,14 @@ class StudentContextSubmissionView(context: Context, submission: Submission, cou
 
         // Title, icon, and publish status
         assignmentTitle.text = assignment.name
-        assignmentIcon.setIcon(assignment.getAssignmentIcon(), courseColor)
-        assignmentIcon.setPublishedStatus(assignment.isPublished)
-        publishedBar.visibility = if (assignment.isPublished) View.VISIBLE else View.INVISIBLE
+        assignmentIcon.setIcon(assignment.submissionTypes.getAssignmentIcon(), courseColor)
+
+        val isPublished = assignment.state == AssignmentState.published
+        assignmentIcon.setPublishedStatus(isPublished)
+        publishedBar.setVisible(isPublished)
 
         // Submission status
-        val (stringRes, colorRes) = assignment.getResForSubmission(submission)
+        val (stringRes, colorRes) = getResForSubmission(submission.submissionStatus)
         if (stringRes == -1 || colorRes == -1) {
             submissionStatus.setGone()
         } else {
@@ -58,13 +61,25 @@ class StudentContextSubmissionView(context: Context, submission: Submission, cou
         }
 
         // Submission grade
-        if (submission.isGraded || submission.isExcused) {
-            val grade = assignment.getGradeText(submission, context, false)
+        if (submission.gradingStatus == "excused" || submission.gradingStatus == "graded") {
+            val pointsPossible = submission.assignment?.pointsPossible ?: 0.0
+            val grade = getGradeText(
+                context = context,
+                gradingStatus = submission.gradingStatus,
+                gradingType = submission.assignment?.gradingType?.name.orEmpty(),
+                grade = submission.grade,
+                enteredGrade = "",
+                score = submission.score,
+                enteredScore = 0.0,
+                pointsPossible = pointsPossible,
+                includePointsPossible = false,
+                includeLatePenalty = false
+            )
             submissionGradeView.text = grade.takeUnless { it == "null" } ?: ""
-            scoreBar.progress = (submission.score / assignment.pointsPossible).toFloat()
+            scoreBar.progress = ((submission.score ?: 0.0) / pointsPossible).toFloat()
         } else {
             submissionGradeContainer.setGone()
-            if (submission.workflowState != "unsubmitted") {
+            if (submission.gradingStatus != "unsubmitted") {
                 val submissionGradeDrawable = ContextCompat.getDrawable(context, R.drawable.bg_generic_pill)
                 val strokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics)
                 (submissionGradeDrawable as GradientDrawable).setStroke(strokeWidth.toInt(), ThemePrefs.brandColor)

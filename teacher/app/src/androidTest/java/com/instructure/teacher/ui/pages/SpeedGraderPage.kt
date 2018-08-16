@@ -18,10 +18,14 @@ package com.instructure.teacher.ui.pages
 import android.support.annotation.StringRes
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso
+import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.matcher.ViewMatchers
+import android.support.test.espresso.matcher.ViewMatchers.*
+import com.instructure.espresso.ClickUntilMethod
+import com.instructure.soseedy.CanvasUser
+import com.instructure.soseedy.CourseAssignmentSubmission
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.CanvasUser
 import com.instructure.teacher.ui.models.Submission
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
@@ -34,7 +38,6 @@ class SpeedGraderPage : BasePage(), PageAssert by SimplePageAssert() {
 
     private val speedGraderActivityToolbar by OnViewWithId(R.id.speedGraderToolbar)
     private val slidingUpPanelLayout by OnViewWithId(R.id.slidingUpPanelLayout)
-    private val slidingPanelDragView by OnViewWithId(R.id.dragView)
     private val submissionPager by OnViewWithId(R.id.submissionContentPager)
 
     private val gradeTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_grade).toUpperCase())
@@ -58,7 +61,10 @@ class SpeedGraderPage : BasePage(), PageAssert by SimplePageAssert() {
     }
 
     fun openSubmissionsDialog() {
-        submissionDropDown.click()
+        ClickUntilMethod.run(
+                onView(withId(R.id.submissionVersionsButton)),
+                onView(withText(R.string.submission_versions))
+        )
     }
 
     fun selectSubmissionFromDialog(submission: Submission) {
@@ -102,11 +108,11 @@ class SpeedGraderPage : BasePage(), PageAssert by SimplePageAssert() {
         waitForViewWithId(R.id.textSubmissionWebView).assertVisible()
     }
 
-    fun  assertDisplaysEmptyState(@StringRes stringRes: Int) {
+    fun assertDisplaysEmptyState(@StringRes stringRes: Int) {
         waitForViewWithText(stringRes).assertCompletelyDisplayed()
     }
 
-    fun assertDisplaysUrlSubmissionLink(submission: Submission) {
+    fun assertDisplaysUrlSubmissionLink(submission: CourseAssignmentSubmission) {
         waitForViewWithId(R.id.urlTextView).assertCompletelyDisplayed().assertHasText(submission.url)
     }
 

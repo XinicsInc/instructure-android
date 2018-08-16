@@ -29,7 +29,7 @@ import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
 import com.instructure.canvasapi2.models.Assignment;
 import com.instructure.canvasapi2.models.ScheduleItem;
 import com.instructure.canvasapi2.utils.DateHelper;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.Date;
 
@@ -55,12 +55,12 @@ public class ScheduleItemBinder extends BaseBinder {
             case TYPE_SYLLABUS: {
                 holder.title.setText(context.getString(R.string.syllabus));
 
-                Drawable drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_syllabus_fill, courseColor);
+                Drawable drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_syllabus, courseColor);
                 holder.icon.setImageDrawable(drawable);
                 break;
             }
             case TYPE_CALENDAR: {
-                Drawable drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_calendar_fill, courseColor);
+                Drawable drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_calendar, courseColor);
                 holder.icon.setImageDrawable(drawable);
 
                 holder.title.setText(item.getTitle());
@@ -81,7 +81,7 @@ public class ScheduleItemBinder extends BaseBinder {
                 if(assignment != null) {
 
                     final int drawableResId = getAssignmentIcon(assignment);
-                    drawable = CanvasContextColor.getColoredDrawable(context, drawableResId, courseColor);
+                    drawable = ColorKeeper.getColoredDrawable(context, drawableResId, courseColor);
                     holder.icon.setImageDrawable(drawable);
 
                     Date dueDate = assignment.getDueAt();
@@ -101,7 +101,7 @@ public class ScheduleItemBinder extends BaseBinder {
 
                 } else {
 
-                    drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_calendar_fill, courseColor);
+                    drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_calendar, courseColor);
                     holder.icon.setImageDrawable(drawable);
 
                     holder.date.setText(item.getStartString(context));

@@ -19,6 +19,8 @@ package com.instructure.candroid.util;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.instructure.candroid.R;
@@ -35,10 +37,11 @@ import com.instructure.candroid.fragment.ParentFragment;
 import com.instructure.candroid.fragment.PeopleListFragment;
 import com.instructure.candroid.fragment.QuizListFragment;
 import com.instructure.candroid.fragment.ScheduleListFragment;
-import com.instructure.candroid.fragment.SettingsFragment;
+import com.instructure.candroid.fragment.CourseSettingsFragment;
 import com.instructure.candroid.fragment.UnSupportedTabFragment;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Tab;
+import com.instructure.canvasapi2.utils.ContextKeeper;
 
 public class TabHelper {
 
@@ -89,6 +92,22 @@ public class TabHelper {
         }
     }
 
+    @Nullable
+    public static String getHomePageDisplayString(@NonNull CanvasContext canvasContext, @NonNull Tab tab) {
+        switch (canvasContext.getHomePageID()) {
+            case Tab.NOTIFICATIONS_ID: return ContextKeeper.appContext.getString(R.string.homePageIdForNotifications);
+            case Tab.PAGES_ID: return "";
+            case Tab.MODULES_ID: return ContextKeeper.appContext.getString(R.string.homePageIdForModules);
+            case Tab.ASSIGNMENTS_ID: return ContextKeeper.appContext.getString(R.string.homePageIdForAssignments);
+            case Tab.SYLLABUS_ID: return ContextKeeper.appContext.getString(R.string.homePageIdForSyllabus);
+            default: return null;
+        }
+    }
+
+    public static boolean isHomeTabAPage(@NonNull CanvasContext canvasContext) {
+        return Tab.PAGES_ID.equals(canvasContext.getHomePageID());
+    }
+
     /**
      * Check if the tab is the home tab. This will allow us to display "Home"
      * in the actionbar instead of the actual tab name
@@ -96,12 +115,16 @@ public class TabHelper {
      * @param canvasContext Used to get the home tab id for the course/group
      * @return True if the tab is the home page, false otherwise
      */
-    public static boolean isHomeTab(Tab tab, CanvasContext canvasContext) {
+    public static boolean isHomeTab(@NonNull Tab tab, @NonNull CanvasContext canvasContext) {
         return isHomeTab(tab.getTabId(), canvasContext);
     }
 
-    public static boolean isHomeTab(String tabId, CanvasContext canvasContext) {
-        return canvasContext.getHomePageID().equals(tabId);
+    public static boolean isHomeTab(@NonNull String tabId, @NonNull CanvasContext canvasContext) {
+        return canvasContext.getHomePageID().equals(tabId) || "home".equalsIgnoreCase(tabId);
+    }
+
+    public static boolean isHomeTab(@NonNull Tab tab) {
+        return "home".equalsIgnoreCase(tab.getTabId());
     }
 
     public static ParentFragment getFragmentByTab(Tab tab, CanvasContext canvasContext) {
@@ -127,9 +150,7 @@ public class TabHelper {
             tabId = canvasContext.getHomePageID();
         }
 
-        boolean isHome = false;
         if(tabId.equalsIgnoreCase(canvasContext.getHomePageID()) || "home".equalsIgnoreCase(tabId)) {
-            isHome = true;
             tabId = canvasContext.getHomePageID();
         }
 
@@ -140,7 +161,7 @@ public class TabHelper {
         } else if(tabId.equalsIgnoreCase(Tab.DISCUSSIONS_ID)) {
             fragment = ParentFragment.createFragment(DiscussionListFragment.class, standardTabBundle);
         } else if(tabId.equalsIgnoreCase(Tab.PAGES_ID)) {
-            fragment = ParentFragment.createFragment(PageListFragment.class, PageListFragment.createBundle(canvasContext, isHome, tab));
+            fragment = ParentFragment.createFragment(PageListFragment.class, PageListFragment.createBundle(canvasContext, false, tab));
         } else if(tabId.equalsIgnoreCase(Tab.PEOPLE_ID)) {
             fragment = ParentFragment.createFragment(PeopleListFragment.class, standardTabBundle);
         } else if(tabId.equalsIgnoreCase(Tab.FILES_ID)) {
@@ -150,9 +171,9 @@ public class TabHelper {
         } else if(tabId.equalsIgnoreCase(Tab.QUIZZES_ID)) {
             fragment = ParentFragment.createFragment(QuizListFragment.class, standardTabBundle);
         } else if(tabId.equalsIgnoreCase(Tab.OUTCOMES_ID)) {
-            fragment = ParentFragment.createFragment(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(canvasContext, "", "", tab));
+            fragment = UnSupportedTabFragment.createFragment(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(canvasContext, tab.getTabId(), R.string.outcomes));
         } else if(tabId.equalsIgnoreCase(Tab.CONFERENCES_ID)) {
-            fragment = ParentFragment.createFragment(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(canvasContext, "", "", tab));
+            fragment = UnSupportedTabFragment.createFragment(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(canvasContext, tab.getTabId(), R.string.conferences));
         } else if(tabId.equalsIgnoreCase(Tab.ANNOUNCEMENTS_ID)) {
             fragment = ParentFragment.createFragment(AnnouncementListFragment.class, standardTabBundle);
         } else if(tabId.equalsIgnoreCase(Tab.ASSIGNMENTS_ID)) {
@@ -160,16 +181,16 @@ public class TabHelper {
         } else if(tabId.equalsIgnoreCase(Tab.GRADES_ID)) {
             fragment = ParentFragment.createFragment(GradesListFragment.class, standardTabBundle);
         } else if(tabId.equalsIgnoreCase(Tab.COLLABORATIONS_ID)) {
-            fragment = ParentFragment.createFragment(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(canvasContext, "", "", tab));
+            fragment = UnSupportedTabFragment.createFragment(UnSupportedTabFragment.class, UnSupportedTabFragment.createBundle(canvasContext, tab.getTabId(), R.string.collaborations));
         } else if(tabId.equalsIgnoreCase(Tab.SETTINGS_ID)) {
-            fragment = ParentFragment.createFragment(SettingsFragment.class, standardTabBundle);
+            fragment = ParentFragment.createFragment(CourseSettingsFragment.class, standardTabBundle);
         } else if(tabId.equalsIgnoreCase(Tab.NOTIFICATIONS_ID)) {
             fragment = ParentFragment.createFragment(NotificationListFragment.class, standardTabBundle);
         }
         //we just care if it's external, some external tabs (Attendance) have an id after "external"
         else if(tabId.contains(Tab.TYPE_EXTERNAL)) {
             //Assumes we are not routing from a link, if so use LTIWebViewRoutingFragment.class
-            fragment = ParentFragment.createFragment(LTIWebViewFragment.class, LTIWebViewFragment.createBundle(canvasContext, tab));
+            fragment = ParentFragment.createFragment(LTIWebViewFragment.class, LTIWebViewFragment.Companion.createBundle(canvasContext, tab));
         }
 
         return fragment;

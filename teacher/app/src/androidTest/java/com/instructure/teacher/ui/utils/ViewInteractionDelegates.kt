@@ -25,9 +25,8 @@ import android.support.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.WaitForViewMatcher
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
-import org.hamcrest.Matchers.equalToIgnoringCase
-
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.equalToIgnoringCase
 import java.lang.RuntimeException
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty

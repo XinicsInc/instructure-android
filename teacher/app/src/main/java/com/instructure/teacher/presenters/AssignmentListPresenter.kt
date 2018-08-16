@@ -63,10 +63,13 @@ class AssignmentListPresenter(private val mCanvasContext: CanvasContext) :
             CourseManager.getGradingPeriodsForCourse(object : StatusCallback<GradingPeriodResponse>() {
                 override fun onResponse(response: Response<GradingPeriodResponse>, linkHeaders: LinkHeaders, type: ApiType) {
                     mGradingPeriods.clear()
-                    if (!response.body().gradingPeriodList.isEmpty()) {
-                        mGradingPeriods.add(mDefaultGradingPeriod!!)
-                        mGradingPeriods.addAll(response.body().gradingPeriodList)
+                    response.body()?.let {
+                        if (!it.gradingPeriodList.isEmpty()) {
+                            mGradingPeriods.add(mDefaultGradingPeriod!!)
+                            mGradingPeriods.addAll(it.gradingPeriodList)
+                        }
                     }
+
                 }
 
                 override fun onFinished(type: ApiType) {

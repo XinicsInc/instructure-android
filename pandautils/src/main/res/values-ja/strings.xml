@@ -1,167 +1,193 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="chooseMedia">メディアを選択</string>
-  <string name="takeVideo">動画を撮影する</string>
-  <string name="noCameraOnDevice">カメラが使用出来ません</string>
-  <!--NotoriousPicker/uploadService-->
-  <string name="notificationTitle">Canvasにアップロードする</string>
-  <string name="preparingUpload">アップロードを準備</string>
-  <string name="loadingFilesIndeterminate">ファイルをロード中...</string>
-  <string name="fileUploadSuccess">アップロードできました</string>
-  <string name="noNetwork">ネットワークは利用できません― 後ほどやり直してください</string>
-  <string name="uploadMessage">「アップロード中です。アップロード状況の通知を確認してください。</string>
-  <string name="mediaUpload">メディアをアップロード</string>
-  <string name="uploadingFile">ファイルをアップロード中...</string>
-  <string name="errorUploadingFile">ファイルのアップロード中にエラーが発生しました。やり直してください。</string>
-  <string name="fileSubmission">ファイル(複数可)を送信</string>
-  <string name="uploadFiles">ファイル(複数可)をアップロード</string>
-  <string name="upload">アップロード</string>
-  <string name="errorSendingMessage">メッセージを送信中にエラーが発生しました。やり直してください。</string>
-  <!--Turn in Files-->
-  <string name="chooseFileSource">ファイルを以下から選択...</string>
-  <string name="addFile">ファイルを追加</string>
-  <string name="choose_a_file">ファイルの選択</string>
-  <string name="fromCamera">カメラ</string>
-  <string name="fromGallery">ギャラリー</string>
-  <string name="fromDevice">デバイス</string>
-  <string name="fromOtherApplication">その他</string>
-  <string name="Domain">ドメイン</string>
-  <string name="files">ファイル</string>
-  <string name="file">ファイル</string>
-  <string name="addItem">アイテムを追加</string>
-  <string name="assignment">課題</string>
-  <string name="attachedFiles">添付されたファイル</string>
-  <string name="turnIn">提出する</string>
-  <string name="course">コース</string>
-  <string name="sending">送信...</string>
-  <!--rating dialog-->
-  <string name="star1">一つ星評価</string>
-  <string name="star2">二つ星評価</string>
-  <string name="star3">三つ星評価</string>
-  <string name="star4">四つ星評価</string>
-  <string name="star5">五つ星評価</string>
-  <!--Submitting files-->
-  <string name="fileQuotaExceeded">現在、ファイルの保存容量を超えています。</string>
-  <string name="errorSubmittingFiles">ファイルの提出中にエラーが発生しました。やり直してください。</string>
-  <string name="errorLoadingFiles">ファイルをロード中にエラーが発生しました。接続されているかを確認し、やり直してください。</string>
-  <string name="filesUploadedSuccessfully">ファイルがアップロードされました。</string>
-  <string name="filesSubmittedSuccessfully">ファイルが提出されました。</string>
-  <string name="messageSentSuccessfully">メッセージが送信されました。</string>
-  <string name="shareWithCanvas">その他のアプリはCanvasとファイルを共有することができます！アプリの中の下部にあるアイコンを見つけ、Canvasをタップしてください。</string>
-  <string name="shareWithCanvas2">それによってこのアプリが開きます。そして、ファイルを提出したコースと課題を選んでください。</string>
-  <string name="contentDescriptionSocialShare">アイコンを共有</string>
-  <string name="submitAssignment">課題を提出</string>
-  <string name="assignmentHeader">課題:</string>
-  <string name="submittingAssignment">課題を提出...</string>
-  <string name="conversations">会話</string>
-  <string name="inbox">インボックス</string>
-  <string name="divider">配信</string>
-  <string name="legal">法律の</string>
-  <string name="completeHomework">宿題を終わらせて下さい</string>
-  <string name="takeExam">テストを受ける</string>
-  <string name="fileIcon">ファイルアイコン</string>
-  <string name="uploadingFileNum" formatted="false"> %d の %dをアップロード</string>
-  <string name="fileLocked" formatted="false">%s はロックされています。</string>
-  <string name="filePermissionGranted">ファイルはダウンロードの用意が出来ています、再度試して下さい。</string>
-  <string name="filePermissionDenied">採点許可なしに、ファイルはダウンロードできません。</string>
-  <string name="pleaseTryAgain">許可されました。再試行してください。</string>
-  <string name="pickVideo">ビデオを選択</string>
-  <!--Errors-->
-  <string name="errorOccurred">予期しないエラーが発生しました。</string>
-  <string name="serverError">サーバーエラーが発生しました。</string>
-  <string name="unauthorized">これにアクセスすることを許可されていません。きゃかを得ていない、またはアクセスをまだ得ていない(コースがまだ開始されていない等で)かのどちらかです</string>
-  <string name="fileNoLongerExists">ファイルはすでに存在しません。</string>
-  <string name="invalidAccessToken">セッションの期限が切れています。ログインして新しいセッションを開始してください。</string>
-  <string name="uploadingFromSourceFailed">このソースからのファイルのアップロードができませんでした。</string>
-  <string name="errorGettingPhoto">画像の取り込み中にエラーが発生しました。やり直してください。</string>
-  <string name="errorTextMissing">テキストを追加してメッセージを送信する</string>
-  <string name="fileUploadNotSupported">選択した課題にファイルをアップロードすることができません。</string>
-  <string name="noCourseSelected">コースを選択してください</string>
-  <string name="selectCourse">コースを選択</string>
-  <string name="selectAssignment">課題を選択</string>
-  <string name="loadingAssignments">課題をロード中...</string>
-  <string name="noAssignmentSelected">課題を選択してください</string>
-  <string name="noAssignmentsWithFileUpload">このコースには、ファイルのアップロードが可能な課題がありません。</string>
-  <string name="teacherNotAllowedFileSubmission">このコースの講師として、あなたはファイルを提出できません</string>
-  <string name="noFilesUploaded">ファイルを選択していません。</string>
-  <string name="oneOrMoreExtensionNotAllowed">一つ以上のファイルが、許可されていないファイル拡張子を有しています</string>
-  <string name="extensionNotAllowed">選択されたファイルタイプは許可されていません。</string>
-  <string name="allowedExtensions">許可された拡張子:</string>
-  <!--Media Task Loader-->
-  <string name="noDataConnection">データの接続を確認し、やり直してください。</string>
-  <string name="noApps">あなたのデバイスには、このファイルを処理できるアプリケーションがインストールされていません。</string>
-  <string name="noAppsShort">開くことができません</string>
-  <string name="unexpectedErrorOpeningFile">ファイルを開く時に、予期していないエラーが発生しました。</string>
-  <string name="unexpectedErrorDownloadingFile">ファイルのダウンロード中に、予期していないエラーが発生しました。</string>
-  <string name="done">完了</string>
-  <!--Tutorial Messages-->
-  <string name="tutorial_tipColorPickerTitle">コースカラーを選択</string>
-  <string name="tutorial_tipColorPickerMessage">様々な色から選択し、コースをカスタマイズすることができます。</string>
-  <string name="tutorial_tipCourseGradesTitle">素早く採点を表示</string>
-  <string name="tutorial_tipCourseGradesMessage">コースの採点をクリックし、採点へジャンプする。</string>
-  <string name="tutorial_tipLandingPageTitle">ランディングページを選択</string>
-  <string name="tutorial_tipLandingPageMessage">ランディングページを選択することで、アプリの開始時にCanvasが自動的にロードします。</string>
-  <string name="tutorial_tipLockSlideTitle">画面をロック、またはロック解除</string>
-  <string name="tutorial_tipLockSlideMessage">画面をロックすることは、ナビゲーションメニューを開かずに画面をスクロールすることが可能になります。</string>
-  <string name="tutorial_tipHideStudentNames">採点設定中、名前を非表示にする</string>
-  <string name="tutorial_tipHideStudentNamesMessage">受講生の名前を非表示にすることで、バイアスを削除する。</string>
-  <string name="tutorial_tipMyCoursesTitle">マイコース</string>
-  <string name="tutorial_tipMyCoursesMessage">瞬時に「マイコース」と「すべてのコース」を切り替えます！</string>
-  <string name="tutorial_tipSwitchUsers">ユーザーを切り替える</string>
-  <string name="tutorial_tipSwitchUsersMessage">簡単にユーザーを切り替え、追加します。</string>
-  <string name="tutorial_tipViewProfile">あなたのプロファイル</string>
-  <string name="tutorial_tipViewProfileMessage">プロファイルアバター、またはバックドロップを表示、または変更します。あなたの個人ファイルを表示することも可能です。</string>
-  <string name="tutorial_tipNotificationPreferences">通知の設定</string>
-  <string name="tutorial_tipNotificationPreferencesMessage">あなたの好みを分類し、ボックスをチェックして特定の通知のタイプを有効、または無効にしてください。</string>
-  <string name="tutorial_tipNavigationShortcuts">コースを素早く切り替える</string>
-  <string name="tutorial_tipNavigationShortcutsMessage">瞬時にお気に入りのコースを切り替えます！</string>
-  <!--Permissions-->
-  <string name="permissionDenied">この機能を使用するには、まず許可を得ることが必要です。</string>
-  <string name="noConnection">接続していません</string>
-  <!--General-->
-  <string name="yes">はい</string>
-  <string name="no">いいえ</string>
-  <string name="inbox_all">受信トレイ</string>
-  <string name="inbox_unread">未読</string>
-  <string name="inbox_starred">スターあり</string>
-  <string name="inbox_sent">送信済み</string>
-  <string name="inbox_archived">アーカイブ済み</string>
-  <string name="forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
-  <string name="like">いいね！</string>
-  <string name="likes">いいね！</string>
-  <string name="lockedAssignmentNotModule">この課題はロックされています。</string>
-  <string name="deletedEntryNoChildren">この消去されたディスカッションエントリに返信はありません。</string>
-  <string name="deleted">[消去しました]</string>
-  <string name="deleted_by">[%1$sにより消去されました]</string>
-  <string name="lockedDiscussionDesc">このディスカッションは、%sモジュールの一部であり、まだアンロックされていません。</string>
-  <string name="gradedDiscussion">採点されたディスカッション</string>
-  <string name="pointsPossible">可能なポイント</string>
-  <string name="sideCommentEntry">このタイプのディスカッションでは、あなたはこのレベルのどのエントリにもコメントできません。</string>
-  <string name="accessibility_overflow">オーバーフロー</string>
-  <string name="discussion_response">コメント</string>
-  <string name="discussion_responses">コメント</string>
-  <string name="discussion_unread">未読</string>
-  <string name="discussion_reply">返信</string>
-  <string name="close">閉じる</string>
-  <!--App Names-->
-  <string name="utils_canvas">Canvas</string>
-  <string name="utils_canvasTeacher">Canvas 講師</string>
-  <string name="utils_canvasParent">Canvas Parent</string>
-  <string name="utils_polls">Canvas サーベイ</string>
-  <string name="utils_speedgrader">Speedgrader</string>
-  <!--Rating Dialog-->
-  <string name="utils_howAreWeDoing">私たちはどうですか？</string>
-  <string name="utils_rateUs">どのように私たちを評価しますか？</string>
-  <string name="utils_doBetter">改善する余地はどこにあるでしょう？</string>
-  <string name="utils_sendFeedback">フィードバックを送る</string>
-  <string name="utils_suggestions">Androidへの提案</string>
-  <string name="utils_domain">ドメイン</string>
-  <string name="utils_versionNum">バージョン:</string>
-  <string name="utils_userId">ユーザーID</string>
-  <string name="utils_email">メールアドレス</string>
-  <string name="utils_dontShowAgain">これ以上表示しないでください</string>
-  <string name="utils_installDate">インストール日:</string>
-  <string name="utils_device">デバイス</string>
-  <string name="utils_osVersion">OS バージョン</string>
-  <string name="loading">読み込み中</string>
+    <string name="chooseMedia">メディアを選択</string>
+    <string name="takeVideo">動画を撮影する</string>
+    <string name="noCameraOnDevice">カメラが使用出来ません</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Canvasにアップロードする</string>
+    <string name="preparingUpload">アップロードを準備</string>
+    <string name="loadingFilesIndeterminate">ファイルをロード中&#8230;</string>
+    <string name="fileUploadSuccess">アップロードできました</string>
+    <string name="noNetwork">ネットワークが利用できません - 後で試してください。</string>
+    <string name="uploadMessage">"アップロード進行中アップロードステータスの通知をチェックしてください。</string>
+    <string name="mediaUpload">メディアをアップロード</string>
+    <string name="uploadingFile">ファイルをアップロード中&#8230;</string>
+    <string name="errorUploadingFile">あなたのファイルをアップロードする際にエラーが発生しました。再度試してください。</string>
+    <string name="fileSubmission">ファイル(複数可)を送信</string>
+    <string name="uploadFiles">ファイル(複数可)をアップロード</string>
+    <string name="upload">アップロード</string>
+    <string name="errorSendingMessage">あなたのメッセージを送信する際にエラーが発生しました。再度試してください。</string>
+
+    <string name="notificationChannelNameFileUploadsName">ファイルアップロード通知</string>
+    <string name="notificationChannelNameFileUploadsDescription">現在進行中のファイルアップロード Canvas 通知。</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">ファイルを以下から選択&#8230;</string>
+    <string name="addFile">ファイルを追加</string>
+    <string name="choose_a_file">ファイルの選択</string>
+
+    <string name="fromCamera">カメラ</string>
+    <string name="fromGallery">ギャラリー</string>
+    <string name="fromDevice">デバイス</string>
+    <string name="fromOtherApplication">その他</string>
+    <string name="Domain">ドメイン</string>
+    <string name="files">ファイル</string>
+    <string name="file">ファイル</string>
+    <string name="addItem">アイテム</string>
+    <string name="assignment">課題</string>
+    <string name="attachedFiles">添付されたファイル</string>
+    <string name="turnIn">提出する</string>
+    <string name="course">コース</string>
+    <string name="sending">送信&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">一つ星評価</string>
+    <string name="star2">二つ星評価</string>
+    <string name="star3">三つ星評価</string>
+    <string name="star4">四つ星評価</string>
+    <string name="star5">五つ星評価</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">現在、ファイルの保存容量を超えています。</string>
+    <string name="errorSubmittingFiles">あなたのファイルを読み込む際にエラーが発生しました。再度試してください。</string>
+    <string name="errorLoadingFiles">あなたのファイルを読み込む際にエラーが発生しました。インテーネット接続を確認して、もう一度お試しください。</string>
+    <string name="filesUploadedSuccessfully">ファイルがアップロードされました。</string>
+    <string name="filesSubmittedSuccessfully">ファイルが提出されました。</string>
+    <string name="messageSentSuccessfully">メッセージが送信されました。</string>
+    <string name="shareWithCanvas">他のアプリは Canvas とファイルを共有できます！下のアイコンをアプリで探し、 Canvas をタップします。</string>
+    <string name="shareWithCanvas2">それにより、このアプリが開きます。次に、ファイルをウップロードしたいコースと課題を選択します。</string>
+    <string name="contentDescriptionSocialShare">アイコンを共有</string>
+    <string name="submitAssignment">課題を提出する</string>
+    <string name="assignmentHeader">課題:</string>
+    <string name="submittingAssignment">課題を提出&#8230;</string>
+    <string name="conversations">会話</string>
+    <string name="inbox">受信トレイ</string>
+    <string name="divider">配信</string>
+    <string name="legal">法務</string>
+    <string name="completeHomework">宿題を終わらせて下さい</string>
+    <string name="takeExam">テストを受ける</string>
+    <string name="fileIcon">ファイルアイコン</string>
+    <string name="uploadingFileNum" formatted="false">%d / %d をアップロード中</string>
+    <string name="fileLocked" formatted="false">%s はロックされています。</string>
+    <string name="filePermissionGranted">ファイルはダウンロードの用意が出来ています、再度試して下さい。</string>
+    <string name="filePermissionDenied">採点許可なしに、ファイルはダウンロードできません。</string>
+    <string name="pleaseTryAgain">許可されました。再試行してください。</string>
+    <string name="pickVideo">ビデオを選択</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">予期しないエラーが発生しました。</string>
+    <string name="serverError">サーバーエラーが発生しました。</string>
+    <string name="unauthorized">あなたにはこれにアクセスする権限がありませんあなたに許可されていないか、まだアクセスがありません（あなたのコースはまだ始まっていません）</string>
+    <string name="fileNoLongerExists">ファイルはすでに存在しません。</string>
+    <string name="invalidAccessToken">あなたのセッションの有効期限が切れました。ログインして新しいセッションを開始してください。</string>
+    <string name="uploadingFromSourceFailed">このソースからのファイルのアップロードができませんでした。</string>
+    <string name="errorGettingPhoto">画像取得中にエラーがありました。再度試してください。</string>
+    <string name="errorTextMissing">テキストを追加してメッセージを送信する</string>
+
+    <string name="fileUploadNotSupported">選択した課題にファイルをアップロードすることはできません。</string>
+    <string name="noCourseSelected">コースを選択してください</string>
+    <string name="selectCourse">コースを選択する</string>
+    <string name="selectAssignment">課題を選択する</string>
+    <string name="loadingAssignments">課題をロード中&#8230;</string>
+    <string name="noAssignmentSelected">課題を選択してください</string>
+    <string name="noAssignmentsWithFileUpload">このコースには、ファイルのアップロードが可能な課題がありません。</string>
+    <string name="teacherNotAllowedFileSubmission">このコースの講師として、ファイルを提出することはできません</string>
+    <string name="noFilesUploaded">あなたはどのファイルも選択していません。</string>
+    <string name="oneOrMoreExtensionNotAllowed">1つ以上のファイルのファイル拡張子が許可されていません</string>
+    <string name="extensionNotAllowed">選択されたファイルタイプは許可されていません。</string>
+    <string name="allowedExtensions">許可された拡張子:</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> データの接続を確認し、やり直してください。</string>
+    <string name="noApps">お使いのデバイスには、このファイルを処理できるアプリケーションがインストールされていません。</string>
+    <string name="noAppsShort">開くことができません</string>
+    <string name="unexpectedErrorOpeningFile">ファイルを開く時に、予期していないエラーが発生しました。</string>
+    <string name="unexpectedErrorDownloadingFile">ファイルのダウンロード中に、予期していないエラーが発生しました。</string>
+
+    <string name="done">完了</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">この機能を使用するには、まず許可を得ることが必要です。</string>
+    <string name="noConnection">接続していません</string>
+
+    <!--General-->
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+
+    <string name="inbox_all">受信トレイ</string>
+    <string name="inbox_unread">未読</string>
+    <string name="inbox_starred">スターあり</string>
+    <string name="inbox_sent">送信済み</string>
+    <string name="inbox_archived">アーカイブ済み</string>
+
+    <string name="forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
+
+    <string name="like">いいね！</string>
+    <string name="likes">いいね！</string>
+    <string name="lockedAssignmentNotModule">この課題はロックされています。</string>
+    <string name="deletedEntryNoChildren">この消去されたディスカッションエントリに返信はありません。</string>
+    <string name="deleted">[消去しました]</string>
+    <string name="deleted_by">[%1$sにより消去されました]</string>
+    <string name="lockedDiscussionDesc">このディスカッションは、%sモジュールの一部であり、まだアンロックされていません。</string>
+    <string name="gradedDiscussion">採点されたディスカッション</string>
+    <string name="pointsPossible">可能なポイント</string>
+    <string name="sideCommentEntry">このタイプのディスカッションでは、あなたはこのレベルのどのエントリにもコメントできません。</string>
+
+    <string name="accessibility_overflow">オーバーフロー</string>
+
+    <string name="discussion_response">コメント</string>
+    <string name="discussion_responses">コメント</string>
+    <string name="discussion_unread">未読</string>
+    <string name="discussion_reply">返信</string>
+    <string name="close">閉じる</string>
+
+    <string name="noInternetConnectionTitle">インターネット接続なし</string>
+    <string name="noInternetConnectionMessage">この操作にはインターネット接続が必要です。</string>
+    <string name="content_description_avatar">アバター</string>
+    <string name="formattedAvatarAction">%sの予約詳細を表示。</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas 講師</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas サーベイ</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">私たちはどうですか？</string>
+    <string name="utils_rateUs">どのように私たちを評価しますか？</string>
+    <string name="utils_doBetter">改善する余地はどこにあるでしょう？</string>
+    <string name="utils_sendFeedback">フィードバックを送る</string>
+    <string name="utils_suggestions">Androidへの提案</string>
+    <string name="utils_domain">ドメイン</string>
+    <string name="utils_versionNum">バージョン:</string>
+    <string name="utils_userId">ユーザーID</string>
+    <string name="utils_email">メールアドレス</string>
+    <string name="utils_dontShowAgain">再び表示しない</string>
+    <string name="utils_installDate">インストール日:</string>
+    <string name="utils_device">デバイス</string>
+    <string name="utils_osVersion">OS バージョン</string>
+    <string name="loading">読み込み中</string>
+    <string name="save">保存</string>
+    <string name="cropInstructions">ピンチ＆ドラッグで画像を調整してください。</string>
+
 </resources>

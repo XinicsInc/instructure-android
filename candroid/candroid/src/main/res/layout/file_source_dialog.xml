@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -17,9 +16,12 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingTop="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,27 +31,27 @@
 
         <Button
             android:id="@+id/fromCamera"
+            style="@style/TextStyle.Secondary.Dark"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/borderless_item_selector"
-            android:drawableTop="@drawable/ic_cv_camera"
-            android:text="@string/fromCamera"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
-            style="@style/TextStyle.Secondary.Dark"/>
+            android:text="@string/fromCamera"
+            tools:drawableTop="@drawable/vd_camera" />
 
         <Button
             android:id="@+id/fromPhotoGallery"
+            style="@style/TextStyle.Secondary.Dark"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/borderless_item_selector"
-            android:drawableTop="@drawable/ic_cv_image"
-            android:text="@string/fromGallery"
-            android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            style="@style/TextStyle.Secondary.Dark"/>
+            android:paddingTop="8dp"
+            android:text="@string/fromGallery"
+            tools:drawableTop="@drawable/vd_image" />
     </LinearLayout>
 
     <LinearLayout
@@ -59,27 +61,27 @@
 
         <Button
             android:id="@+id/fromDevice"
+            style="@style/TextStyle.Secondary.Dark"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/borderless_item_selector"
-            android:drawableTop="@drawable/ic_cv_folder"
-            android:text="@string/fromDevice"
-            android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            style="@style/TextStyle.Secondary.Dark"/>
+            android:paddingTop="8dp"
+            android:text="@string/fromDevice"
+            tools:drawableTop="@drawable/vd_files" />
 
         <Button
             android:id="@+id/fromOtherApplication"
+            style="@style/TextStyle.Secondary.Dark"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/borderless_item_selector"
-            android:drawableTop="@drawable/ic_cv_share"
-            android:text="@string/fromOtherApplication"
-            android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            style="@style/TextStyle.Secondary.Dark"/>
+            android:paddingTop="8dp"
+            android:text="@string/fromOtherApplication"
+            tools:drawableTop="@drawable/vd_share" />
     </LinearLayout>
 
 </LinearLayout>

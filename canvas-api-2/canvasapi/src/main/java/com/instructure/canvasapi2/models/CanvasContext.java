@@ -17,6 +17,7 @@
 
 package com.instructure.canvasapi2.models;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.Date;
@@ -78,12 +79,14 @@ public abstract class CanvasContext extends CanvasModel<CanvasContext> {
 
     protected String default_view;
 
+    @Nullable
     protected CanvasContextPermission permissions;
 
-    public void setPermissions(CanvasContextPermission permissions) {
+    public void setPermissions(@Nullable CanvasContextPermission permissions) {
         this.permissions = permissions;
     }
 
+    @Nullable
     public CanvasContextPermission getPermissions() {
         return permissions;
     }
@@ -302,5 +305,7 @@ public abstract class CanvasContext extends CanvasModel<CanvasContext> {
         return getGenericContext(Type.USER, 0, "");
     }
 
-
+    public static CanvasContext currentUserContext(@NonNull User user) {
+        return getGenericContext(Type.USER, user.getId(), user.getName());
+    }
 }

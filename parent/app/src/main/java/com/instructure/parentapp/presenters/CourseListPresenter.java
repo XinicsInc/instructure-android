@@ -17,6 +17,7 @@
 
 package com.instructure.parentapp.presenters;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.instructure.canvasapi2.StatusCallback;
@@ -78,7 +79,7 @@ public class CourseListPresenter extends SyncPresenter<Course, CourseListView> {
 
     private StatusCallback<List<Course>> mCoursesCallback = new StatusCallback<List<Course>>(){
         @Override
-        public void onResponse(Response<List<Course>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<Course>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             for(Course course : response.body()) {
                 if(!TextUtils.isEmpty(course.getName())) {
                     getData().addOrUpdate(course);

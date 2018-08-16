@@ -22,14 +22,11 @@
 package com.antonyt.infiniteviewpager;
 
 import android.content.Context;
-import android.os.Parcel;
+import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.os.ParcelableCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -44,23 +41,25 @@ import hirondelle.date4j.DateTime;
  */
 public class InfiniteViewPager extends ViewPager {
 
+	private static final String ROW_HEIGHT_KEY = "rowheight";
+	private static final String CALENDAR_SAVE_STATE = "CALENDAR_SAVE_STATE";
 
     @Override
     public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        CalendarPagerState ss = new CalendarPagerState(superState);
-        if(rowHeight != 0){
-            ss.rowHeight = rowHeight;
-        }
-        return ss;
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(CALENDAR_SAVE_STATE, super.onSaveInstanceState());
+        bundle.putInt(ROW_HEIGHT_KEY, rowHeight);
+        return bundle;
     }
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        CalendarPagerState cps = new CalendarPagerState(state);
-        super.onRestoreInstanceState(((CalendarPagerState)state).getSuperState());
-
-        rowHeight = ((CalendarPagerState)cps.getSuperState()).rowHeight;
+        if(state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            this.rowHeight = bundle.getInt(ROW_HEIGHT_KEY);
+            state = bundle.getParcelable(CALENDAR_SAVE_STATE);
+        }
+        super.onRestoreInstanceState(state);
     }
 
     // ******* Declaration *********
@@ -216,45 +215,4 @@ public class InfiniteViewPager extends ViewPager {
 
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
-
-    public static class CalendarPagerState extends BaseSavedState {
-
-        private int rowHeight;
-
-        public CalendarPagerState(Parcelable superState) {
-            super(superState);
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeInt(rowHeight);
-        }
-
-
-        public static final Parcelable.Creator<CalendarPagerState> CREATOR
-                = ParcelableCompat.newCreator(new ParcelableCompatCreatorCallbacks<CalendarPagerState>() {
-            @Override
-            public CalendarPagerState createFromParcel(Parcel in, ClassLoader loader) {
-                try{
-                    return new CalendarPagerState(in, loader);
-                } catch (Exception e){
-                    Log.d("abcde", "Known bug: " + e);
-                    return null;
-                }
-            }
-
-            @Override
-            public CalendarPagerState[] newArray(int size) {
-                return new CalendarPagerState[size];
-            }
-        });
-
-        CalendarPagerState(Parcel in, ClassLoader loader) throws Exception{
-            super(in);
-            rowHeight = in.readInt();
-        }
-
-    }
-
 }

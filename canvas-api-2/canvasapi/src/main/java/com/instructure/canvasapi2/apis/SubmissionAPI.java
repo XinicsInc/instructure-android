@@ -73,7 +73,8 @@ public class SubmissionAPI {
                 @Path("assignmentId") long assignmentId,
                 @Path("userId") long userId,
                 @Query("comment[text_comment]") String comment,
-                @Query("comment[group_comment]") boolean isGroupComment
+                @Query("comment[group_comment]") boolean isGroupComment,
+                @Query("comment[file_ids][]") List<Long> attachments
         );
 
         @POST("{contextId}/assignments/{assignmentId}/submissions")
@@ -162,8 +163,8 @@ public class SubmissionAPI {
         callback.addCall(adapter.build(SubmissionInterface.class, params).postSubmissionGrade(courseId, assignmentId, userId, assignmentScore, isExcused)).enqueue(callback);
     }
 
-    public static void postSubmissionComment(long courseId, long assignmentID, long userID, String comment, boolean isGroupMessage, @NonNull RestBuilder adapter, @NonNull StatusCallback<Submission> callback, @NonNull RestParams params) {
-        callback.addCall(adapter.build(SubmissionInterface.class, params).postSubmissionComment(courseId, assignmentID, userID, comment, isGroupMessage)).enqueue(callback);
+    public static void postSubmissionComment(long courseId, long assignmentID, long userID, String comment, boolean isGroupMessage, List<Long> attachmentsIds, @NonNull RestBuilder adapter, @NonNull StatusCallback<Submission> callback, @NonNull RestParams params) {
+        callback.addCall(adapter.build(SubmissionInterface.class, params).postSubmissionComment(courseId, assignmentID, userID, comment, isGroupMessage, attachmentsIds)).enqueue(callback);
     }
 
     public static void postMediaSubmissionComment(long canvasContextId, long assignmentId, long studentId, String mediaId, String mediaType, boolean isGroupComment, RestBuilder adapter, RestParams params, StatusCallback<Submission> callback) {

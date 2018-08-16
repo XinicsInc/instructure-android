@@ -42,7 +42,7 @@ class FileFolderUnitTest : Assert() {
             Assert.assertNotNull(file.url)
             Assert.assertNotNull(file.displayName)
             Assert.assertNotNull(file.thumbnailUrl)
-            Assert.assertNotNull(file.lockInfo.unlockAt)
+            Assert.assertNotNull(file.lockInfo?.unlockAt)
         }
     }
 
@@ -182,7 +182,7 @@ class FileFolderUnitTest : Assert() {
           "name": "First Day of Class",
           "parent_folder_id": 7151579,
           "position": 1,
-          "unlock_at": "2012-13-06T00:05:33Z",
+          "unlock_at": "2012-12-06T00:05:33Z",
           "updated_at": "2014-06-29T18:27:35Z",
           "locked": false,
           "folders_url": "https://panda.instructure.com/api/v1/folders/12345/folders",
@@ -199,7 +199,7 @@ class FileFolderUnitTest : Assert() {
           "created_at": "2013-08-28T23:13:03Z",
           "full_name": "course files/unfiled/Level 2",
           "id": 5703450,
-          "lock_at": "2012-13-06T00:05:33Z",
+          "lock_at": "2012-12-06T00:05:33Z",
           "name": "Level 2",
           "parent_folder_id": 4815146,
           "position": 1,

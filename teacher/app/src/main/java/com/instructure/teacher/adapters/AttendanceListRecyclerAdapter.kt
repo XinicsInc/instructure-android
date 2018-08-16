@@ -27,13 +27,13 @@ import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class AttendanceListRecyclerAdapter(
-        val mContext: Context,
+        mContext: Context,
         presenter: SyncPresenter<*, *>,
         private val mCallback: AttendanceToFragmentCallback<Attendance>
 ) : SyncRecyclerAdapter<Attendance, AttendanceViewHolder>(mContext, presenter) {
 
     override fun bindHolder(attendance: Attendance, holder: AttendanceViewHolder, position: Int) {
-        holder.bind(mContext, attendance, mCallback, holder, position)
+        holder.bind(attendance, mCallback, position)
     }
 
     override fun createViewHolder(v: View, viewType: Int): AttendanceViewHolder {

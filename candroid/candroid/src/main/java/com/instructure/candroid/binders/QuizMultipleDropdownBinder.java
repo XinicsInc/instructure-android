@@ -36,7 +36,7 @@ import com.instructure.candroid.interfaces.QuizPostMultipleDropdown;
 import com.instructure.candroid.interfaces.QuizToggleFlagState;
 import com.instructure.canvasapi2.models.QuizSubmissionAnswer;
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.views.CanvasWebView;
 
 import java.util.ArrayList;
@@ -107,11 +107,12 @@ public class QuizMultipleDropdownBinder {
                 setPreviouslySelectedAnswer(quizSubmissionQuestion, blankId, spinner, list);
             }
 
-            final Drawable courseColorFlag = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_bookmark_fill_grey, courseColor);
+            final Drawable courseColorFlag = ColorKeeper.getColoredDrawable(context, R.drawable.vd_bookmark_filled, courseColor);
+
             if(quizSubmissionQuestion.isFlagged()) {
                 holder.flag.setImageDrawable(courseColorFlag);
             } else {
-                holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+                holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
             }
 
 
@@ -140,8 +141,7 @@ public class QuizMultipleDropdownBinder {
                     public void onClick(View view) {
                         if (quizSubmissionQuestion.isFlagged()) {
                             //unflag it
-
-                            holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+                            holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
                             flagStateCallback.toggleFlagged(false, quizSubmissionQuestion.getId());
                             quizSubmissionQuestion.setFlagged(false);
                         } else {

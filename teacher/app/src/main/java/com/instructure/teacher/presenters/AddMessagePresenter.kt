@@ -18,12 +18,13 @@ package com.instructure.teacher.presenters
 
 import com.android.ex.chips.RecipientEntry
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.ConversationManager
+import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.mapToRemoteFile
 import com.instructure.canvasapi2.utils.weave.inParallel
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.teacher.viewinterface.AddMessageView
@@ -74,14 +75,12 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
 
     private val mCreateConversationCallback = object : StatusCallback<List<Conversation>>() {
         override fun onResponse(response: Response<List<Conversation>>, linkHeaders: LinkHeaders, type: ApiType) {
-            super.onResponse(response, linkHeaders, type)
             if (viewCallback != null) {
                 viewCallback?.messageSuccess()
             }
         }
 
-        override fun onFail(data: Call<List<Conversation>>, t: Throwable) {
-            super.onFail(data, t)
+        override fun onFail(call: Call<List<Conversation>>?, error: Throwable, response: Response<*>?) {
             if (viewCallback != null) {
                 viewCallback?.messageFailure()
             }
@@ -100,7 +99,7 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
             recipientIds.add(entry.destination)
         }
 
-        ConversationManager.createConversation(recipientIds, message, subject, contextId, attachmentIDs, isBulk, mCreateConversationCallback)
+        InboxManager.createConversation(recipientIds, message, subject, contextId, attachmentIDs, isBulk, mCreateConversationCallback)
     }
 
     fun sendMessage(selectedRecipients: List<RecipientEntry>, message: String) {
@@ -126,19 +125,17 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
         }
 
         // Send message
-        ConversationManager.addMessage(conversation?.id ?: 0, message, recipientIds, messageIds, attachmentIDs, mAddConversationCallback)
+        InboxManager.addMessage(conversation?.id ?: 0, message, recipientIds, messageIds, attachmentIDs, mAddConversationCallback)
     }
 
     private val mAddConversationCallback = object : StatusCallback<Conversation>() {
         override fun onResponse(response: Response<Conversation>, linkHeaders: LinkHeaders, type: ApiType) {
-            super.onResponse(response, linkHeaders, type)
             if (viewCallback != null) {
                 viewCallback!!.messageSuccess()
             }
         }
 
-        override fun onFail(response: Call<Conversation>, error: Throwable) {
-            super.onFail(response, error)
+        override fun onFail(call: Call<Conversation>?, error: Throwable, response: Response<*>?) {
             if (viewCallback != null) {
                 viewCallback!!.messageFailure()
             }
@@ -148,8 +145,15 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
     val attachments: List<RemoteFile>
         get() = mAttachments
 
-    fun addAttachments(attachments: List<RemoteFile>) {
+    fun addRemoteFileAttachments(attachments: List<RemoteFile>) {
         mAttachments.addAll(attachments)
+        if (viewCallback != null) {
+            viewCallback!!.refreshAttachments()
+        }
+    }
+
+    fun addAttachments(attachments: List<Attachment>) {
+        attachments.forEach { mAttachments.add(it.mapToRemoteFile()) }
         if (viewCallback != null) {
             viewCallback!!.refreshAttachments()
         }

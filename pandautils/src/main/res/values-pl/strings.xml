@@ -1,167 +1,193 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="chooseMedia">Wybierz media</string>
-  <string name="takeVideo">Nagraj wideo</string>
-  <string name="noCameraOnDevice">Brak kamery</string>
-  <!--NotoriousPicker/uploadService-->
-  <string name="notificationTitle">Ładowanie do Canvas</string>
-  <string name="preparingUpload">Przygotowanie do przesyłania</string>
-  <string name="loadingFilesIndeterminate">Ładowanie plików...</string>
-  <string name="fileUploadSuccess">Ładowanie zakończyło się pomyślnie</string>
-  <string name="noNetwork">Sieć niedostępna - spróbuj ponownie później</string>
-  <string name="uploadMessage">\"Ładowanie w toku. Sprawdź powiadomienia dotyczące statusu ładowania.</string>
-  <string name="mediaUpload">Ładowanie mediów</string>
-  <string name="uploadingFile">Ładowanie pliku...</string>
-  <string name="errorUploadingFile">Wystąpił błąd podczas ładowania pliku. Spróbuj ponownie później.</string>
-  <string name="fileSubmission">Prześlij plik(i)</string>
-  <string name="uploadFiles">Załaduj plik(i)</string>
-  <string name="upload">Załaduj</string>
-  <string name="errorSendingMessage">Wystąpił błąd podczas wysyłania twojej wiadomości. Spróbuj ponownie później.</string>
-  <!--Turn in Files-->
-  <string name="chooseFileSource">Wybierz plik z...</string>
-  <string name="addFile">Dodaj plik</string>
-  <string name="choose_a_file">Wybierz plik</string>
-  <string name="fromCamera">Kamera</string>
-  <string name="fromGallery">Galeria</string>
-  <string name="fromDevice">Urządzenie</string>
-  <string name="fromOtherApplication">Inne</string>
-  <string name="Domain">Domena</string>
-  <string name="files">Pliki</string>
-  <string name="file">Plik</string>
-  <string name="addItem">Dodaj pozycję</string>
-  <string name="assignment">Zadanie</string>
-  <string name="attachedFiles">Załączone pliki</string>
-  <string name="turnIn">Oddaj</string>
-  <string name="course">Kurs</string>
-  <string name="sending">Wysyłanie...</string>
-  <!--rating dialog-->
-  <string name="star1">Ilość gwiazdek Jedna</string>
-  <string name="star2">Ilość gwiazdek Dwie</string>
-  <string name="star3">Ilość gwiazdek Trzy</string>
-  <string name="star4">Ilość gwiazdek Cztery</string>
-  <string name="star5">Ilość gwiazdek Pięć</string>
-  <!--Submitting files-->
-  <string name="fileQuotaExceeded">Obecnie przekroczyłeś swoją ilość dozwolonych plków do przechowania.</string>
-  <string name="errorSubmittingFiles">Wystąpił błąd podczas oddawania plików. Spróbuj ponownie później.</string>
-  <string name="errorLoadingFiles">Wystąpił błąd podczas ładowania pliku. Sprawdź połączenie sieciowe i spróbuj ponownie.</string>
-  <string name="filesUploadedSuccessfully">Pliki załadowane pomyślnie.</string>
-  <string name="filesSubmittedSuccessfully">Pliki zgłoszone pomyślnie.</string>
-  <string name="messageSentSuccessfully">Wiadomość wysłana pomyślnie.</string>
-  <string name="shareWithCanvas">Inne aplikacje mogą udostępniać pliki w systemie Canvas! Szukaj poniższej ikony w aplikacjach i dotknij znaku Canvas.</string>
-  <string name="shareWithCanvas2">To otworzy tą aplikację. Potem wybierz do którego kursu i zadania chcesz zgłosić plik.</string>
-  <string name="contentDescriptionSocialShare">Udostępnij ikonę</string>
-  <string name="submitAssignment">Zgłoś zadanie</string>
-  <string name="assignmentHeader">Zadanie:</string>
-  <string name="submittingAssignment">Zgłaszanie zadania...</string>
-  <string name="conversations">Rozmowy</string>
-  <string name="inbox">Skrzynka odbiorcza</string>
-  <string name="divider">Separator</string>
-  <string name="legal">Prawny</string>
-  <string name="completeHomework">UZUPEŁNIJ pracę domową</string>
-  <string name="takeExam">Przystąp do egzaminu</string>
-  <string name="fileIcon">Ikona pliku</string>
-  <string name="uploadingFileNum" formatted="false">Ładowanie %d z %d</string>
-  <string name="fileLocked" formatted="false">%s zostało zablokowane.</string>
-  <string name="filePermissionGranted">Plik jest gotowy do pobrania, prosimy spróbować ponownie.</string>
-  <string name="filePermissionDenied">Ten plik nie może być pobrany bez udzielonej zgody.</string>
-  <string name="pleaseTryAgain">Udzielono zezwolenia, spróbuj ponownie.</string>
-  <string name="pickVideo">Wybierz film</string>
-  <!--Errors-->
-  <string name="errorOccurred">Wystąpił nieoczekiwany błąd.</string>
-  <string name="serverError">Wystąpił błąd serwera.</string>
-  <string name="unauthorized">Nie posiadasz autoryzacji dostępu. Albo nie masz uprawnień albo nie posiadasz dostępu (ponieważ twój kurs jeszcze się nie zaczął)</string>
-  <string name="fileNoLongerExists">Ten plik został usunięty.</string>
-  <string name="invalidAccessToken">Twoja sesja wygasła. Zaloguj się aby rozpocząć nową sesję.</string>
-  <string name="uploadingFromSourceFailed">Nie udało się załadować pliku z tego źródła.</string>
-  <string name="errorGettingPhoto">Wystąpił błąd podczas ładowania zdjęcia. Spróbuj ponownie później.</string>
-  <string name="errorTextMissing">Dodaj tekst, aby wysłać wiadomość</string>
-  <string name="fileUploadNotSupported">Nie możesz załadować plików do wybranego zadania.</string>
-  <string name="noCourseSelected">Proszę wybrać kurs</string>
-  <string name="selectCourse">Wybierz kurs</string>
-  <string name="selectAssignment">Wybierz zadanie</string>
-  <string name="loadingAssignments">Ładowanie zadań...</string>
-  <string name="noAssignmentSelected">Proszę wybrać zadanie</string>
-  <string name="noAssignmentsWithFileUpload">Dany kurs nie ma przypisanych zadań zezwalających na przesyłanie plików.</string>
-  <string name="teacherNotAllowedFileSubmission">Jako nauczyciel danego kursu, nie możesz zgłaszać plików</string>
-  <string name="noFilesUploaded">Nie wybrałeś żadnego pliku.</string>
-  <string name="oneOrMoreExtensionNotAllowed">Jeden lub więcej plików posiada niedozwolone rozszerzenie</string>
-  <string name="extensionNotAllowed">Wybrany rodzaj pliku jest niedozwolony.</string>
-  <string name="allowedExtensions">Dozwolone rozszerzenia:</string>
-  <!--Media Task Loader-->
-  <string name="noDataConnection">Sprawdź połączenie transmisji danych i spróbuj ponownie.</string>
-  <string name="noApps">Twoje urządzenie nie ma zainstalowanych aplikacji, które obsługują dany plik.</string>
-  <string name="noAppsShort">Nie można otworzyć</string>
-  <string name="unexpectedErrorOpeningFile">Wystąpił nieoczekiwany błąd podczas otwierania danego pliku.</string>
-  <string name="unexpectedErrorDownloadingFile">Wystąpił nieoczekiwany błąd podczas pobierania danego pliku.</string>
-  <string name="done">Gotowe</string>
-  <!--Tutorial Messages-->
-  <string name="tutorial_tipColorPickerTitle">Wybierz kolor kursu</string>
-  <string name="tutorial_tipColorPickerMessage">Możesz wybrać spośród wielu kolorów w celu dopasowania swojego kursu.</string>
-  <string name="tutorial_tipCourseGradesTitle">Szybki podgląd ocen</string>
-  <string name="tutorial_tipCourseGradesMessage">Przejdź do ocen kiikając na ocenę kursu.</string>
-  <string name="tutorial_tipLandingPageTitle">Wybierz stronę docelową</string>
-  <string name="tutorial_tipLandingPageMessage">Wybierając stronę docelową, system Canvas będzie ładował tą stronę automatycznie gdy aplikacja będzie uruchamiana.</string>
-  <string name="tutorial_tipLockSlideTitle">Zablokuj lub odblokuj ekran</string>
-  <string name="tutorial_tipLockSlideMessage">Zablokowanie ekranu umożliwia przewijanie po ekranie bez konieczności otwierania menu nawigacji.</string>
-  <string name="tutorial_tipHideStudentNames">Ustawienie Ukryj imiona i nazwiska podczas wystawiania ocen</string>
-  <string name="tutorial_tipHideStudentNamesMessage">Usuń stronniczość poprzez ukrycie imion i nazwisk uczniów.</string>
-  <string name="tutorial_tipMyCoursesTitle">Moje kursy</string>
-  <string name="tutorial_tipMyCoursesMessage">Przełączaj między \"Moje kursy\" a \"Wszystkie kursy\" w mgnieniu oka!</string>
-  <string name="tutorial_tipSwitchUsers">Przełącz użytkownika</string>
-  <string name="tutorial_tipSwitchUsersMessage">Z łatwością przełączaj i dodawaj użytkowników.</string>
-  <string name="tutorial_tipViewProfile">Twój profil</string>
-  <string name="tutorial_tipViewProfileMessage">Wyświetl i zmieniaj swój awatar profilowy lub tło. Możesz również wyświetlać pliki osobiste.</string>
-  <string name="tutorial_tipNotificationPreferences">Preferencje powiadomień</string>
-  <string name="tutorial_tipNotificationPreferencesMessage">Filtruj preferencje i zaznacz pola wyboru aby włączyć lub wyłączyć poszczególne rodzaje powiadomień.</string>
-  <string name="tutorial_tipNavigationShortcuts">Szybkie przełączanie kursów</string>
-  <string name="tutorial_tipNavigationShortcutsMessage">Przełączaj między swoimi ulubionymi kursami.</string>
-  <!--Permissions-->
-  <string name="permissionDenied">Aby skorzystać z tej funkcji, najpierw musisz uzyskać pozwolenie.</string>
-  <string name="noConnection">Brak połączenia</string>
-  <!--General-->
-  <string name="yes">Tak</string>
-  <string name="no">Nie</string>
-  <string name="inbox_all">Skrzynka odbiorcza</string>
-  <string name="inbox_unread">Nieprzeczytane</string>
-  <string name="inbox_starred">Oznaczone gwiazdką</string>
-  <string name="inbox_sent">Wysłane</string>
-  <string name="inbox_archived">Zarchiwizowane</string>
-  <string name="forbidden">Odpowiedzi są widoczne tylko dla tych osób, które opublikowały co najmniej jedną odpowiedź.</string>
-  <string name="like">Polubienie</string>
-  <string name="likes">Polubienia</string>
-  <string name="lockedAssignmentNotModule">Niniejsze zadanie jest zablokowane.</string>
-  <string name="deletedEntryNoChildren">Niniejsza usunięta rozmowa nie ma żadnych odpowiedzi.</string>
-  <string name="deleted">[Usunięto]</string>
-  <string name="deleted_by">[Usunięte przez %1$s]</string>
-  <string name="lockedDiscussionDesc">Ta dyskusja jest częścią modułu %s i nie została jeszcze zablokowana.</string>
-  <string name="gradedDiscussion">Oceniona dyskusja</string>
-  <string name="pointsPossible">Możliwe do uzyskania punkty</string>
-  <string name="sideCommentEntry">W tego rodzaju dyskusji nie można komentować wpisów na tym poziomie.</string>
-  <string name="accessibility_overflow">Przepełnienie</string>
-  <string name="discussion_response">Komentarz</string>
-  <string name="discussion_responses">Komentarze</string>
-  <string name="discussion_unread">Nieprzeczytane</string>
-  <string name="discussion_reply">Odpowiedź</string>
-  <string name="close">Zamknij</string>
-  <!--App Names-->
-  <string name="utils_canvas">Canvas</string>
-  <string name="utils_canvasTeacher">Canvas Teacher</string>
-  <string name="utils_canvasParent">Canvas Parent</string>
-  <string name="utils_polls">Canvas Polls</string>
-  <string name="utils_speedgrader">Speedgrader</string>
-  <!--Rating Dialog-->
-  <string name="utils_howAreWeDoing">Jak się czujemy?</string>
-  <string name="utils_rateUs">Jak nas oceniasz?</string>
-  <string name="utils_doBetter">Co możemy ulepszyć?</string>
-  <string name="utils_sendFeedback">Wyślij informację zwrotną</string>
-  <string name="utils_suggestions">Sugestie dla systemu Android</string>
-  <string name="utils_domain">Domena</string>
-  <string name="utils_versionNum">Wersja:</string>
-  <string name="utils_userId">ID użytkownika</string>
-  <string name="utils_email">E-mail</string>
-  <string name="utils_dontShowAgain">Nie pokazuj więcej</string>
-  <string name="utils_installDate">Data instalacji:</string>
-  <string name="utils_device">Urządzenie</string>
-  <string name="utils_osVersion">Wersja OS</string>
-  <string name="loading">Wczytywanie</string>
+    <string name="chooseMedia">Wybierz media</string>
+    <string name="takeVideo">Nagraj wideo</string>
+    <string name="noCameraOnDevice">Brak kamery</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Ładowanie do Canvas</string>
+    <string name="preparingUpload">Przygotowanie do przesyłania</string>
+    <string name="loadingFilesIndeterminate">Ładowanie plików&#8230;</string>
+    <string name="fileUploadSuccess">Ładowanie zakończyło się pomyślnie</string>
+    <string name="noNetwork">Sieć niedostępna – spróbuj ponownie później.</string>
+    <string name="uploadMessage">Przesyłanie w toku. Sprawdź stan przesłania w powiadomieniach.</string>
+    <string name="mediaUpload">Ładowanie mediów</string>
+    <string name="uploadingFile">Ładowanie pliku&#8230;</string>
+    <string name="errorUploadingFile">Podczas wysyłania pliku wystąpił błąd. Spróbuj ponownie.</string>
+    <string name="fileSubmission">Prześlij plik(i)</string>
+    <string name="uploadFiles">Załaduj plik(i)</string>
+    <string name="upload">Prześlij</string>
+    <string name="errorSendingMessage">Podczas wysyłania wiadomości wystąpił błąd. Spróbuj ponownie.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Powiadomienia dotyczące przesyłania plików</string>
+    <string name="notificationChannelNameFileUploadsDescription">Powiadomienia Canvas dla przesyłanych obecnie plików.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Wybierz plik z&#8230;</string>
+    <string name="addFile">Dodaj plik</string>
+    <string name="choose_a_file">Wybierz plik</string>
+
+    <string name="fromCamera">Kamera</string>
+    <string name="fromGallery">Galeria</string>
+    <string name="fromDevice">Urządzenie</string>
+    <string name="fromOtherApplication">Inne</string>
+    <string name="Domain">Domena</string>
+    <string name="files">Pliki</string>
+    <string name="file">Plik</string>
+    <string name="addItem">Dodaj element</string>
+    <string name="assignment">Zadanie</string>
+    <string name="attachedFiles">Załączone pliki</string>
+    <string name="turnIn">Oddaj</string>
+    <string name="course">Kurs</string>
+    <string name="sending">Wysyłanie&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Ilość gwiazdek Jedna</string>
+    <string name="star2">Ilość gwiazdek Dwie</string>
+    <string name="star3">Ilość gwiazdek Trzy</string>
+    <string name="star4">Ilość gwiazdek Cztery</string>
+    <string name="star5">Ilość gwiazdek Pięć</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Obecnie przekroczyłeś swoją ilość dozwolonych plków do przechowania.</string>
+    <string name="errorSubmittingFiles">Podczas przekazywania pliku wystąpił błąd. Spróbuj ponownie.</string>
+    <string name="errorLoadingFiles">Podczas wysyłania pliku wystąpił błąd. Sprawdź połączenie internetowe i spróbuj ponownie.</string>
+    <string name="filesUploadedSuccessfully">Pliki załadowane pomyślnie.</string>
+    <string name="filesSubmittedSuccessfully">Pliki zgłoszone pomyślnie.</string>
+    <string name="messageSentSuccessfully">Wiadomość wysłana pomyślnie.</string>
+    <string name="shareWithCanvas">Inne aplikacje mogą współdzielić pliki z Canvas! Poszukaj ikony poniżej w aplikacjach i stuknij Canvas.</string>
+    <string name="shareWithCanvas2">To spowoduje otwarcie tej aplikacji. Następnie określ kurs i zadanie, które chcesz przekazać do pliku.</string>
+    <string name="contentDescriptionSocialShare">Udostępnij ikonę</string>
+    <string name="submitAssignment">Prześlij test</string>
+    <string name="assignmentHeader">Zadanie:</string>
+    <string name="submittingAssignment">Zgłaszanie zadania&#8230;</string>
+    <string name="conversations">Rozmowy </string>
+    <string name="inbox">Skrzynka odbiorcza </string>
+    <string name="divider">Separator</string>
+    <string name="legal">Informacje prawne</string>
+    <string name="completeHomework">UZUPEŁNIJ pracę domową</string>
+    <string name="takeExam">Przystąp do egzaminu</string>
+    <string name="fileIcon">Ikona pliku</string>
+    <string name="uploadingFileNum" formatted="false">Wysyłanie %d z %d</string>
+    <string name="fileLocked" formatted="false">%s została zablokowana.</string>
+    <string name="filePermissionGranted">Plik jest gotowy do pobrania, prosimy spróbować ponownie.</string>
+    <string name="filePermissionDenied">Ten plik nie może być pobrany bez udzielonej zgody.</string>
+    <string name="pleaseTryAgain">Udzielono zezwolenia, spróbuj ponownie.</string>
+    <string name="pickVideo">Wybierz film</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Wystąpił nieoczekiwany błąd.</string>
+    <string name="serverError">Wystąpił błąd serwera.</string>
+    <string name="unauthorized">Nie masz uprawnień do wyświetlania tej zawartości. Nie masz uprawnień do wyświetlania tej zawartości lub nie przyznano Ci jeszcze do niej dostępu (np. kurs jeszcze się nie rozpoczął)</string>
+    <string name="fileNoLongerExists">Ten plik został usunięty.</string>
+    <string name="invalidAccessToken">Twoja sesja uległa wygaśnięciu. Zaloguj się, aby rozpocząć nową sesję.</string>
+    <string name="uploadingFromSourceFailed">Nie udało się załadować pliku z tego źródła.</string>
+    <string name="errorGettingPhoto">Wystąpił błąd podczas pobierania zdjęcia. Spróbuj ponownie.</string>
+    <string name="errorTextMissing">Dodaj tekst, aby wysłać wiadomość</string>
+
+    <string name="fileUploadNotSupported">Nie można przesłać plików do wybranego zadania.</string>
+    <string name="noCourseSelected">Proszę wybrać kurs</string>
+    <string name="selectCourse">Wybierz kurs</string>
+    <string name="selectAssignment">Wybierz zadanie</string>
+    <string name="loadingAssignments">Ładowanie zadań&#8230;</string>
+    <string name="noAssignmentSelected">Proszę wybrać zadanie</string>
+    <string name="noAssignmentsWithFileUpload">Dany kurs nie ma przypisanych zadań zezwalających na przesyłanie plików.</string>
+    <string name="teacherNotAllowedFileSubmission">Jako nauczyciel w tym kursie, nie możesz przesyłać plików</string>
+    <string name="noFilesUploaded">Nie wybrano żadnych plików.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Rozszerzenie jednego lub więcej plików nie jest dozwolone.</string>
+    <string name="extensionNotAllowed">Wybrany rodzaj pliku jest niedozwolony.</string>
+    <string name="allowedExtensions">Dozwolone rozszerzenia: </string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Sprawdź połączenie transmisji danych i spróbuj ponownie. </string>
+    <string name="noApps">Urządzenie nie ma zainstalowanych aplikacji, które obsługują ten typ pliku.</string>
+    <string name="noAppsShort">Nie można otworzyć</string>
+    <string name="unexpectedErrorOpeningFile">Wystąpił nieoczekiwany błąd podczas otwierania danego pliku.</string>
+    <string name="unexpectedErrorDownloadingFile">Wystąpił nieoczekiwany błąd podczas pobierania danego pliku.</string>
+
+    <string name="done">Gotowe</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Aby skorzystać z tej funkcji, najpierw musisz uzyskać pozwolenie.</string>
+    <string name="noConnection">Brak połączenia</string>
+
+    <!--General-->
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+
+    <string name="inbox_all">Skrzynka odbiorcza</string>
+    <string name="inbox_unread">Nieprzeczytane</string>
+    <string name="inbox_starred">Oznaczone gwiazdką</string>
+    <string name="inbox_sent">Wysłane</string>
+    <string name="inbox_archived">Zarchiwizowane</string>
+
+    <string name="forbidden">Odpowiedzi są widoczne tylko dla tych osób, które opublikowały co najmniej jedną odpowiedź.</string>
+
+    <string name="like">Polubienie</string>
+    <string name="likes">Polubienia</string>
+    <string name="lockedAssignmentNotModule">Niniejsze zadanie jest zablokowane.</string>
+    <string name="deletedEntryNoChildren">Niniejsza usunięta rozmowa nie ma żadnych odpowiedzi.</string>
+    <string name="deleted">[Usunięto]</string>
+    <string name="deleted_by">[Usunięte przez %1$s]</string>
+    <string name="lockedDiscussionDesc">Ta dyskusja jest częścią modułu %s i nie została jeszcze zablokowana.</string>
+    <string name="gradedDiscussion">Oceniona dyskusja</string>
+    <string name="pointsPossible">Możliwe do uzyskania punkty</string>
+    <string name="sideCommentEntry">W tego rodzaju dyskusji nie można komentować wpisów na tym poziomie.</string>
+
+    <string name="accessibility_overflow">Przepełnienie</string>
+
+    <string name="discussion_response">Komentarz</string>
+    <string name="discussion_responses">Komentarze</string>
+    <string name="discussion_unread">Nieprzeczytane</string>
+    <string name="discussion_reply">Odpowiedz</string>
+    <string name="close">Zamknij</string>
+
+    <string name="noInternetConnectionTitle">Brak połączenia internetowego</string>
+    <string name="noInternetConnectionMessage">To działanie wymaga połączenia internetowego.</string>
+    <string name="content_description_avatar">Awatar</string>
+    <string name="formattedAvatarAction">Wyświetl szczegóły użytkownika dla %s</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Jak się czujemy?</string>
+    <string name="utils_rateUs">Jak nas oceniasz?</string>
+    <string name="utils_doBetter">Co możemy ulepszyć?</string>
+    <string name="utils_sendFeedback">Wyślij informację zwrotną</string>
+    <string name="utils_suggestions">Sugestie dla systemu Android</string>
+    <string name="utils_domain">Domena</string>
+    <string name="utils_versionNum">Wersja:</string>
+    <string name="utils_userId">ID użytkownika</string>
+    <string name="utils_email">E-mail</string>
+    <string name="utils_dontShowAgain">Nie pokazuj ponownie</string>
+    <string name="utils_installDate">Data instalacji:</string>
+    <string name="utils_device">Urządzenie</string>
+    <string name="utils_osVersion">Wersja OS</string>
+    <string name="loading">Wczytywanie</string>
+    <string name="save">Zapisz</string>
+    <string name="cropInstructions">Uszczypnij i przeciągnij obraz, aby go dostosować.</string>
+
 </resources>

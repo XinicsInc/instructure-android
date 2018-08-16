@@ -228,7 +228,7 @@ class ProfileEditFragment : BasePresenterFragment<
 
         if (presenter?.capturedImageUri != null) {
             //save the intent information in case we get booted from memory.
-            TeacherPrefs.tempCaptureUri = presenter?.capturedImageUri.toString()
+            FilePrefs.tempCaptureUri = presenter?.capturedImageUri.toString()
         }
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, presenter?.capturedImageUri)
@@ -256,7 +256,7 @@ class ProfileEditFragment : BasePresenterFragment<
 
         } else if (requestCode == RequestCodes.CAMERA_PIC_REQUEST && resultCode == Activity.RESULT_OK) {
             if (presenter?.capturedImageUri == null) {
-                presenter?.capturedImageUri = Uri.parse(TeacherPrefs.tempCaptureUri)
+                presenter?.capturedImageUri = Uri.parse(FilePrefs.tempCaptureUri)
             }
 
             if (presenter?.capturedImageUri == null) {
@@ -393,14 +393,13 @@ class ProfileEditFragment : BasePresenterFragment<
     }
 
     private val mAvatarPostedCallback = object: StatusCallback<User>() {
-        override fun onResponse(response: Response<User>?, linkHeaders: LinkHeaders?, type: ApiType) {
-            if(response?.body() != null) {
-                ApiPrefs.user = response.body()
-                updateAvatarImage(response.body().avatarUrl)
+        override fun onResponse(response: Response<User>, linkHeaders: LinkHeaders, type: ApiType) {
+            response.body()?.let {
+                ApiPrefs.user = it
+                updateAvatarImage(it.avatarUrl)
             }
         }
     }
-
     //endregion
 }
 

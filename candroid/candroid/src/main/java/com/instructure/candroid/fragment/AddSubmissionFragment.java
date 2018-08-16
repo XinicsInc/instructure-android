@@ -18,15 +18,17 @@
 package com.instructure.candroid.fragment;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -42,58 +44,70 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.delegate.Navigation;
-import com.instructure.candroid.dialog.FileUploadDialog;
 import com.instructure.candroid.util.Analytics;
 import com.instructure.candroid.util.VisibilityAnimator;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.ExternalToolManager;
 import com.instructure.canvasapi2.managers.SubmissionManager;
 import com.instructure.canvasapi2.models.Assignment;
+import com.instructure.canvasapi2.models.Attachment;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.LTITool;
 import com.instructure.canvasapi2.models.Submission;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.interactions.FragmentInteractions;
+import com.instructure.interactions.Navigation;
 import com.instructure.pandautils.activities.NotoriousMediaUploadPicker;
+import com.instructure.pandautils.dialogs.UploadFilesDialog;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.FileUploadEvent;
+import com.instructure.pandautils.utils.FileUploadNotification;
+import com.instructure.pandautils.utils.PandaViewUtils;
 import com.instructure.pandautils.utils.RequestCodes;
+import com.instructure.pandautils.utils.ThemePrefs;
+import com.instructure.pandautils.utils.ViewStyler;
+import com.instructure.pandautils.views.CanvasWebView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class AddSubmissionFragment extends ParentFragment {
 
-	//TODO: make sure they're a student!
-
 	//View
 	private ScrollView scrollView;
-
+    private Toolbar toolbar;
 	private LinearLayout textEntryContainer;
 	private LinearLayout urlEntryContainer;
     private LinearLayout mArcEntryContainer;
 
-	private WebView webView;
+	private CanvasWebView webView;
 
 	private TextView textEntry;
-	private EditText textSubmission;
+	private AppCompatEditText textSubmission;
 	private Button submitTextEntry;
 
 	private TextView urlEntry;
-	private EditText urlSubmission;
+	private AppCompatEditText urlSubmission;
 	private Button submitURLEntry;
 
 	private TextView fileEntry;
@@ -101,7 +115,7 @@ public class AddSubmissionFragment extends ParentFragment {
     private TextView mediaUpload;
 
     private TextView mArcUpload;
-    private EditText mArcSubmission;
+    private AppCompatEditText mArcSubmission;
     private Button mSubmitArcEntry;
 
 	//Passed In Assignment and course
@@ -123,7 +137,6 @@ public class AddSubmissionFragment extends ParentFragment {
 	private Handler mHandler;
 
     private boolean isFileUploadCanceled = false;
-    private FileUploadDialog.DialogLifecycleCallback uploadDialogLifecycleCallback;
 
     private StatusCallback<Submission> canvasCallbackSubmission;
     private StatusCallback<List<LTITool>> mLTIToolCallback;
@@ -131,16 +144,14 @@ public class AddSubmissionFragment extends ParentFragment {
     private LTITool mArcLTITool;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.DETAIL; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.DETAIL; }
 
     @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.assignmentTabSubmission);
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-	// LifeCycle
-	///////////////////////////////////////////////////////////////////////////
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -148,38 +159,50 @@ public class AddSubmissionFragment extends ParentFragment {
 
 		mHandler = new Handler();
 
-		View rootView = getLayoutInflater().inflate(R.layout.add_submission_fragment, container, false);
+		View rootView = getLayoutInflater().inflate(R.layout.fragment_add_submission, container, false);
+        toolbar = rootView.findViewById(R.id.toolbar);
+		scrollView = rootView.findViewById(R.id.scrollView);
 
-		scrollView = (ScrollView)rootView.findViewById(R.id.activity_root);
+		textEntryContainer = rootView.findViewById(R.id.textEntryContainer);
+		urlEntryContainer = rootView.findViewById(R.id.urlEntryContainer);
 
-		textEntryContainer = (LinearLayout)rootView.findViewById(R.id.textEntryContainer);
-		urlEntryContainer = (LinearLayout)rootView.findViewById(R.id.urlEntryContainer);
-
-		webView = (WebView)rootView.findViewById(R.id.webView);
+		webView = rootView.findViewById(R.id.webView);
 		webView.getSettings().setJavaScriptEnabled(true);
 
-		textEntry = (TextView)rootView.findViewById(R.id.textEntryHeader);
-		textSubmission = (EditText)rootView.findViewById(R.id.textEntry);
-		submitTextEntry = (Button)rootView.findViewById(R.id.submitTextEntry);
+		textEntry = rootView.findViewById(R.id.textEntryHeader);
+		textSubmission = rootView.findViewById(R.id.textEntry);
+		submitTextEntry = rootView.findViewById(R.id.submitTextEntry);
 
-		urlEntry = (TextView)rootView.findViewById(R.id.onlineURLHeader);
-		urlSubmission = (EditText)rootView.findViewById(R.id.onlineURL);
-		submitURLEntry = (Button)rootView.findViewById(R.id.submitURLEntry);
+		urlEntry = rootView.findViewById(R.id.onlineURLHeader);
+		urlSubmission = rootView.findViewById(R.id.onlineURL);
+		submitURLEntry = rootView.findViewById(R.id.submitURLEntry);
 
-		fileEntry = (TextView)rootView.findViewById(R.id.fileUpload);
+		fileEntry = rootView.findViewById(R.id.fileUpload);
 
-        mediaUpload = (TextView)rootView.findViewById(R.id.mediaSubmission);
+        mediaUpload = rootView.findViewById(R.id.mediaSubmission);
 
-        mArcUpload = (TextView)rootView.findViewById(R.id.arcSubmission);
-        mArcSubmission = (EditText) rootView.findViewById(R.id.arcEntry);
-        mSubmitArcEntry = (Button) rootView.findViewById(R.id.submitArcEntry);
-        mArcEntryContainer = (LinearLayout)rootView.findViewById(R.id.arcEntryContainer);
+        mArcUpload = rootView.findViewById(R.id.arcSubmission);
+        mArcSubmission = rootView.findViewById(R.id.arcEntry);
+        mSubmitArcEntry = rootView.findViewById(R.id.submitArcEntry);
+        mArcEntryContainer = rootView.findViewById(R.id.arcEntryContainer);
 
 		timer = new Timer();
 		isPageDone = new Timer();
 
 		return rootView;
 	}
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ViewStyler.themeButton(submitTextEntry);
+        ViewStyler.themeButton(submitURLEntry);
+        ViewStyler.themeButton(mSubmitArcEntry);
+
+        ViewStyler.themeEditText(getContext(), textSubmission, ThemePrefs.getBrandColor());
+        ViewStyler.themeEditText(getContext(), urlSubmission, ThemePrefs.getBrandColor());
+        ViewStyler.themeEditText(getContext(), mArcSubmission, ThemePrefs.getBrandColor());
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -200,20 +223,24 @@ public class AddSubmissionFragment extends ParentFragment {
                 startActivityForResult(intent, RequestCodes.NOTORIOUS_REQUEST);
             }
         }
+    }
 
+    @Override
+    public void applyTheme() {
+        setupToolbarMenu(toolbar);
+        toolbar.setTitle(title());
+        PandaViewUtils.setupToolbarBackButton(toolbar, this);
+        ViewStyler.themeToolbar(getActivity(), toolbar, getCanvasContext());
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Fragment fileUploadDialog =  getChildFragmentManager().findFragmentByTag(FileUploadDialog.TAG);
         if (resultCode == Activity.RESULT_OK && requestCode == RequestCodes.NOTORIOUS_REQUEST) {
             // When its a Notorious request, just dismiss the fragment, and the user can look at the notification to see progress.
             getActivity().onBackPressed();
         } else if (resultCode == Activity.RESULT_CANCELED && requestCode == RequestCodes.NOTORIOUS_REQUEST) {
             isFileUploadCanceled = true;
-        } else if(fileUploadDialog != null && fileUploadDialog instanceof FileUploadDialog){
-            fileUploadDialog.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -257,35 +284,38 @@ public class AddSubmissionFragment extends ParentFragment {
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mArcSubmissionReceiver, new IntentFilter(Const.ARC_SUBMISSION));
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        EventBus.getDefault().unregister(this);
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mArcSubmissionReceiver);
     }
 
-	///////////////////////////////////////////////////////////////////////////
-	// View
-	///////////////////////////////////////////////////////////////////////////
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(final FileUploadEvent event) {
+        event.once(FileUploadNotification.class.getSimpleName(), new Function1<FileUploadNotification, Unit>() {
+            @Override
+            public Unit invoke(FileUploadNotification fileUploadNotification) {
+                EventBus.getDefault().post(event); //Repost for SubmissionDetailsFragment
+                if(getNavigation() != null) getNavigation().popCurrentFragment();
+                return null;
+            }
+        });
+    }
 
 	/*
 	 * Useful for 2 reasons.
 	 * 1.) The WebView won't load without a scheme
 	 * 2.) The API automatically puts http or https at the front if it's not there anyways.
 	 */
-	public String getHttpURLSubmission()
-	{
+	public String getHttpURLSubmission() {
 		String url = urlSubmission.getText().toString();
-		if(!url.startsWith("http://") && !url.startsWith("https://"))
-		{
-			return "http://"+url;
-		}
-		else
-		{
-			return url;
-		}
+		if(!url.startsWith("http://") && !url.startsWith("https://")) return "http://"+url;
+        else return url;
 	}
 
     private void setupViews() {
@@ -328,23 +358,6 @@ public class AddSubmissionFragment extends ParentFragment {
     private void setupWebview() {
         //Give it a default.
         webView.loadUrl("");
-
-        //Clicking links in a webview doesn't always trigger onPageFinished.
-        isPageDone.schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                mHandler.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if(webView.getProgress() == 100) {
-                            hideProgressBar();
-                        }
-                    }
-                });
-            }
-        }, TimeUnit.SECONDS.toMillis(1), 2500);
 
         //Start off by hiding webview box.
         webView.setVisibility(View.GONE);
@@ -393,13 +406,11 @@ public class AddSubmissionFragment extends ParentFragment {
                             urlSubmission.setText(url);
                             urlSubmission.setSelection(urlSubmission.getText().length());
                         }
-                        hideProgressBar();
                     }
                 });
             }
         });
     }
-
 
     private void showFileUploadDialog() {
         if(!isMediaRecordingAllowed && isFileEntryAllowed && mArcLTITool == null){
@@ -407,9 +418,15 @@ public class AddSubmissionFragment extends ParentFragment {
                 getActivity().onBackPressed();
             } else {
                 isFileUploadCanceled = true;
-                FileUploadDialog fileUploadDialog = FileUploadDialog.newInstance(getChildFragmentManager(), FileUploadDialog.createAssignmentBundle(null, course, assignment));
-                fileUploadDialog.setDialogLifecycleCallback(uploadDialogLifecycleCallback);
-                fileUploadDialog.show(getFragmentManager(), FileUploadDialog.TAG);
+                UploadFilesDialog.show(getFragmentManager(), UploadFilesDialog.createAssignmentBundle(null, course, assignment), new Function1<Integer, Unit>() {
+                    @Override
+                    public Unit invoke(Integer event) {
+                        if(event == UploadFilesDialog.EVENT_ON_UPLOAD_BEGIN) {
+                            if(getNavigation() != null) getNavigation().popCurrentFragment();
+                        }
+                        return null;
+                    }
+                });
             }
         }
     }
@@ -429,30 +446,15 @@ public class AddSubmissionFragment extends ParentFragment {
     };
 
     private void setupListeners() {
-        uploadDialogLifecycleCallback = new FileUploadDialog.DialogLifecycleCallback() {
-            @Override
-            public void onCancel(Dialog dialog) {
-
-            }
-
-            @Override
-            public void onAllUploadsComplete(Dialog dialog) {
-                // Send broadcast so list is updated.
-                Intent intent = new Intent(Const.SUBMISSION_COMMENT_SUBMITTED);
-                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
-                getActivity().onBackPressed();
-            }
-        };
-
         fileEntry.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
-            Bundle bundle = FileUploadDialog.createAssignmentBundle(null, course, assignment);
-            FileUploadDialog fileUploadDialog = FileUploadDialog.newInstance(getChildFragmentManager(), bundle);
-            fileUploadDialog.setDialogLifecycleCallback(uploadDialogLifecycleCallback);
-            fileUploadDialog.show(getFragmentManager(), FileUploadDialog.TAG);
+                UploadFilesDialog.show(getFragmentManager(), UploadFilesDialog.createAssignmentBundle(null, course, assignment), new Function1<Integer, Unit>() {
+                    @Override
+                    public Unit invoke(Integer integer) {
+                        return null;
+                    }
+                });
             }
         });
 
@@ -555,7 +557,6 @@ public class AddSubmissionFragment extends ParentFragment {
             public void afterTextChanged(final Editable string) {
                 timer.cancel();
                 timer = new Timer();
-                showProgressBar();
                 timer.schedule(new TimerTask() {
 
                     @Override
@@ -621,7 +622,7 @@ public class AddSubmissionFragment extends ParentFragment {
             @Override
             public void onClick(View view) {
                 String url = String.format(Locale.getDefault(), "%s/%s/external_tools/%d/resource_selection?launch_type=homework_submission&assignment_id=%d", ApiPrefs.getFullDomain(), getCanvasContext().toAPIString(), mArcLTITool.getId(), assignment.getId());
-                ArcWebviewFragment.loadInternalWebView(getActivity(), ((Navigation)getActivity()), InternalWebviewFragment.createBundle(getCanvasContext(), url, mArcLTITool.getName(), true));
+                ArcWebviewFragment.loadInternalWebView(getActivity(), ((Navigation)getActivity()), InternalWebviewFragment.Companion.createBundle(getCanvasContext(), url, mArcLTITool.getName(), true));
             }
         });
 
@@ -688,7 +689,7 @@ public class AddSubmissionFragment extends ParentFragment {
 
         canvasCallbackSubmission = new StatusCallback<Submission>() {
             @Override
-            public void onResponse(retrofit2.Response<Submission> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Submission> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(!apiCheck()){
                     return;
                 }
@@ -700,17 +701,9 @@ public class AddSubmissionFragment extends ParentFragment {
                     textSubmission.setText("");
                     urlSubmission.setText("");
                     // Send broadcast so list is updated.
-                    Intent intent = new Intent(Const.SUBMISSION_COMMENT_SUBMITTED);
-                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
-
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(getActivity() != null) {
-                                getActivity().onBackPressed();
-                            }
-                        }
-                    }, TimeUnit.SECONDS.toMillis(1));
+                    EventBus.getDefault().post(new FileUploadEvent(new FileUploadNotification(null, new ArrayList<Attachment>())));
+                    Navigation navigation = getNavigation();
+                    if(navigation != null) navigation.popCurrentFragment();
                 } else {
                     Toast.makeText(getActivity(), R.string.errorPostingSubmission, Toast.LENGTH_LONG).show();
                 }
@@ -720,7 +713,7 @@ public class AddSubmissionFragment extends ParentFragment {
         mLTIToolCallback = new StatusCallback<List<LTITool>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<LTITool>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<LTITool>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 for (LTITool ltiTool : response.body()) {
                     final String url = ltiTool.getUrl();
                     if (url != null && url.contains("instructuremedia.com/lti/launch")) {
@@ -734,15 +727,14 @@ public class AddSubmissionFragment extends ParentFragment {
             }
 
             @Override
-            public void onFail(Call<List<LTITool>> callResponse, Throwable error, retrofit2.Response response) {
+            public void onFail(@Nullable Call<List<LTITool>> call, @NonNull Throwable error, @Nullable Response response) {
                 //check to see if we should automatically show the file upload dialog
                 //we don't want to show it if this failed due to there being no cache
-                if (response.code() != 504) {
+                if (response != null && response.code() != 504) {
                     showFileUploadDialog();
                 }
             }
-
-        };
+        };                                  
     }
 
 	///////////////////////////////////////////////////////////////////////////

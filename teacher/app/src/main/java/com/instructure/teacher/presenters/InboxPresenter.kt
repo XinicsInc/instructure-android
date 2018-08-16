@@ -15,8 +15,8 @@
  */
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.apis.ConversationAPI
-import com.instructure.canvasapi2.managers.ConversationManager
+import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.managers.InboxManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.weave.WeaveJob
@@ -26,7 +26,7 @@ import instructure.androidblueprint.SyncPresenter
 
 class InboxPresenter : SyncPresenter<Conversation, InboxView>(Conversation::class.java) {
 
-    var scope: ConversationAPI.ConversationScope = ConversationAPI.ConversationScope.ALL
+    var scope: InboxApi.Scope = InboxApi.Scope.ALL
         set(scope) {
             field = scope
             refresh(true)
@@ -41,8 +41,8 @@ class InboxPresenter : SyncPresenter<Conversation, InboxView>(Conversation::clas
         apiCall = weavePaginated<List<Conversation>> {
             onRequest { callback ->
                 viewCallback?.onRefreshStarted()
-                canvasContext?.let { ConversationManager.getConversationsFiltered(scope, it.contextId, forceNetwork, callback) }
-                        ?: ConversationManager.getConversations(scope, forceNetwork, callback)
+                canvasContext?.let { InboxManager.getConversationsFiltered(scope, it.contextId, forceNetwork, callback) }
+                        ?: InboxManager.getConversations(scope, forceNetwork, callback)
             }
             onResponse { response ->
                 data.addOrUpdate(response)

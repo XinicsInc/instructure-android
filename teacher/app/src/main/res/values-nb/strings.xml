@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -29,11 +29,12 @@
     <string name="tab_discussions">Diskusjoner</string>
     <string name="tab_announcements">Kunngjøringer</string>
     <string name="tab_attendance">Oppmøte</string>
+    <string name="tab_pages">Sider</string>
+    <string name="tab_todo">Å gjøre</string>
     <string name="content_description_school_logo">Skolens Logo</string>
-    <string name="content_description_avatar">Avatar</string>
     <string name="search_guides">Søk i Canvas-guidene</string>
     <string name="canvas_guides">Canvas-guider</string>
-    <string name="search_guides_icon">Ikonet for  Canvas-guider</string>
+    <string name="search_guides_icon">Ikonet for Canvas-guider</string>
     <string name="search_guides_details">Svar på vanlige spørsmål</string>
     <string name="report_problem">Rapporter et problem</string>
     <string name="report_problem_icon"> Ikonet for å rapportere et problem</string>
@@ -48,7 +49,7 @@
     <string name="no_items_to_display_short">Ingen elementer</string>
     <string name="rate_the_app">Vurdere appen</string>
     <string name="rate_the_app_icon">Ikonet for å vurdere programmet</string>
-    <string name="teacher_log_out">Logg ut</string>
+    <string name="teacher_log_out">Logg Ut</string>
     <string name="teacher_switch_user">Bytt bruker</string>
     <string name="under_construction">Under bygging</string>
     <string name="toolbar_event">Hendelse</string>
@@ -57,10 +58,10 @@
     <string name="course">Emne</string>
     <string name="profile">Profil</string>
     <string name="share">Dele</string>
-    <string name="share_with">Dele med&#8230;</string>
+    <string name="share_with">Del med&#8230;</string>
 
     <!-- Compose Message -->
-    <string name="no_subject">(uten emne)</string>
+    <string name="no_subject">(uten tittel)</string>
     <string name="compose_message">Skriv melding</string>
     <string name="newMessage">Ny melding</string>
     <string name="courses">Emner</string>
@@ -76,7 +77,7 @@
     <string name="forward_message">Videresend melding</string>
     <string name="label_to">Til</string>
     <string name="label_course">Emne</string>
-    <string name="label_subject">Emne</string>
+    <string name="label_subject">Tittel</string>
 
     <string name="common_send">Send</string>
     <string name="common_edit">Rediger</string>
@@ -150,8 +151,8 @@
     <string name="all_submissions_graded">Alle innleveringer karaktersatt</string>
     <string name="icon">ikonet</string>
     <plurals name="grading_status_assignment">
-        <item quantity="one">%d innlevering må karaktersettes</item>
-        <item quantity="other">%d innleveringer trenger karaktersetting</item>
+        <item quantity="one">%d  innlevering trenger vurdering</item>
+        <item quantity="other">%d  innleveringer trenger vurdering</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
@@ -161,7 +162,7 @@
 
     <string name="inbox_empty_title">Ingen meldinger</string>
     <string name="inbox_empty_starred_title">Ingen stjernemerkede meldinger</string>
-    <string name="inbox_empty_message">Trykk \"+\" for å lage en ny samtale.</string>
+    <string name="inbox_empty_message">Klill \"+\" for å lage en ny samtale.</string>
     <string name="inbox_empty_starred_message">Sett stjerne på meldinger ved å klikke på stjernen i meldingen.</string>
 
     <string name="download_attachment">Laste ned vedlegg</string>
@@ -210,8 +211,8 @@
         <item quantity="other">+ %d Meldinger</item>
     </plurals>
     <plurals name="submissionNeedsGrading">
-        <item quantity="one">%d innlevering må karaktersettes</item>
-        <item quantity="other">%d innleveringer trenger karaktersetting</item>
+        <item quantity="one">%d  innlevering trenger vurdering</item>
+        <item quantity="other">%d  innleveringer trenger vurdering</item>
     </plurals>
 
     <string name="delete_assignment_message">Er du sikker på at du vil slette denne oppgaven?</string>
@@ -267,14 +268,14 @@
     <string name="error_occurred">Det oppsto et uventet avvik.</string>
     <string name="no_assignments_with_file_upload">Dette emnet har ingen oppgaver som tillater filopplasting.</string>
     <string name="extension_not_allowed">Den valgte filtypen er ikke tillatt.</string>
-    <string name="allowed_extensions">Tillatte filtyper:&#160;</string>
+    <string name="allowed_extensions">Tillatte filtyper: </string>
     <string name="files_uploaded_successfully">Vellykket opplasting av filene.</string>
-    <string name="error_uploading_file">Avvik ved opplasting av filen. Prøv igjen.</string>
+    <string name="error_uploading_file">Avvik ved opplasting av filen. Vennligst prøv igjen.</string>
     <string name="uploading_file">Laster opp fil&#8230;</string>
     <string name="no_apps">Din enhet har ikke installert programmer som kan håndtere denne filen.</string>
     <string name="turn_in">Innlevere</string>
-    <string name="error_getting_photo">Det oppstod et avvik ved henting av bildet. Prøv igjen.</string>
-    <string name="loading_files_indeterminate">Laster filer&#8230;</string>
+    <string name="error_getting_photo">Det oppstod et avvik ved henting av bildet. Vennligst prøv igjen.</string>
+    <string name="loading_files_indeterminate">Laster filer:</string>
     <string name="no_files_uploaded">Du har ikke valgt filer.</string>
     <string name="file_upload_not_supported">Du kan ikke laste opp filer til den valgte oppgaven.</string>
     <string name="one_or_more_extension_not_allowed">Én eller flere filer har filtype som ikke er tillatt</string>
@@ -292,11 +293,11 @@
     <string name="server_error">En serverfeil har oppstått.</string>
     <string name="error_loading_files">Avvik ved lasting av filen. Kontroller internett-tilkoblingen og prøv på nytt.</string>
     <string name="files_submitted_successfully">Vellykket innsending av filene.</string>
-    <string name="no_data_connection"> Kontroller dataforbindelsen din og prøv igjen. </string>
+    <string name="no_data_connection">Kontroller dataforbindelsen din og prøv igjen.</string>
     <string name="teacher_logout_warning">Er du sikker på at du vil logge ut?</string>
     <string name="teacher_yes">Ja</string>
     <string name="teacher_no">Nei</string>
-    <string name="teacher_sending">Sender&#8230;</string>
+    <string name="teacher_sending">Sender &#8230;</string>
     <string name="teacher_cancel">Avbryt</string>
     <string name="teacher_okay">OK</string>
     <string name="teacher_upload">Last opp</string>
@@ -308,14 +309,14 @@
     <!--Course Settings-->
     <string name="course_settings">Innstillinger for emne</string>
     <string name="course_name">Emnenavn</string>
-    <string name="set_home_to">Sett \'Home\ "til...</string>
+    <string name="set_home_to">Sett \'Home\' til&#8230;</string>
     <string name="course_activity_stream">Aktivitetsstrøm for emner</string>
     <string name="pages_front_page">Sider forside</string>
+    <string name="frontPage">Forside</string>
     <string name="course_modules">Moduler for emne</string>
     <string name="assignments_list">Oppgaveliste</string>
-    <string name="syllabus">Kursoversikt</string>
+    <string name="syllabus">Emneoversikt</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flere forfallsdatoer</string>
     <string name="everyone">Alle</string>
@@ -323,7 +324,7 @@
     <string name="unknown_student">Ukjent Student</string>
     <string name="closed">Lukket</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">Leveres %s den %s</string>
+    <string name="due_date_at_time" formatted="false">Skal leveres %1s til %2s</string>
     <string name="last_post" formatted="false">Siste innlegg %s</string>
     <string name="submission_types">Innleveringstyper</string>
     <string name="full_due_date_details">Fulle forfallsdato detaljer</string>
@@ -350,7 +351,7 @@
     <string name="grade">Karakter</string>
     <string name="calculated_by_rubric">Beregnet ved rubrikk</string>
     <string name="customize_grade">Tilpass karakter</string>
-    <string name="out_of_points">Ut av %1$s</string>
+    <string name="out_of_points">Av %1$s</string>
     <string name="gpa">GPA</string>
     <string name="letter_grade">Bokstavkarakter</string>
     <string name="excuse_student">Frita student</string>
@@ -360,7 +361,7 @@
     <string name="not_graded">Ikke karaktersatt</string>
     <string name="excused">Fritatt</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
-    <string name="grade_value_format_talk_back">%1$s ut av %2$s</string>
+    <string name="grade_value_format_talk_back">%1$s av %2$s</string>
     <string name="publish">Publiser</string>
     <string name="error_saving_assignment">Feil ved forsøk på å lagre oppgaven. Prøv igjen.</string>
     <string name="error_saving_quiz">Feil ved forsøk på å lagre testen. Prøv igjen.</string>
@@ -391,11 +392,11 @@
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Ikke sendt inn, %s av %s</string>
     <string name="display_grade_as">Vis karakter som&#8230;</string>
     <string name="percentage">Prosent</string>
-    <string name="complete_incomplete">Fullført/ufullstendig</string>
+    <string name="complete_incomplete">Godkjent/Ikke godkjent</string>
     <string name="points">Poeng</string>
     <string name="gpa_scale">Tallkarakter (GPA)-skala</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -404,7 +405,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -424,10 +425,10 @@
     <string name="submitted_late">Levert etter fristen</string>
     <string name="havent_submitted_yet">Ikke sendt inn ennå</string>
     <string name="havent_been_graded">Ikke karaktersatt</string>
-    <string name="scored_less_than">Resultat mindre enn&#8230;</string>
-    <string name="scored_more_than">Scoret flere enn&#8230;</string>
-    <string name="scored_less_than_value">Scoret mindre enn %s</string>
-    <string name="scored_more_than_value">Scoret mer enn %s</string>
+    <string name="scored_less_than">Dårligere karakter enn&#8230;.</string>
+    <string name="scored_more_than">Bedre karakter enn&#8230;</string>
+    <string name="scored_less_than_value">Dårligere karakter enn %s</string>
+    <string name="scored_more_than_value">Bedre karakter enn %s</string>
     <string name="add_comment">Legg til kommentar</string>
     <string name="editComment">Rediger kommentar</string>
     <string name="deleteComment">Slett kommentar</string>
@@ -438,20 +439,20 @@
     <string name="rubric">Rubrikk</string>
     <string name="enter_custom_value">Angi en egendefinert verdi</string>
     <string name="success_saving_rubric_assessment">Rubrikk vurdering lagret</string>
-    <string name="error_saving_rubric_assessment">Det oppstod en feil under lagring av rubrikk vurdering. Prøv igjen.</string>
-    <string name="rubric_assessment_score_out_of_total">%1$s ut av %2$s</string>
+    <string name="error_saving_rubric_assessment">Det oppstod en feil under lagring av rubrikk vurdering. Vennligst prøv igjen.</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s av %2$s</string>
     <string name="criterion_rating_customize_score">Tilpass karakter</string>
     <string name="edit_criterion_comment">Redigere kriterium kommentar</string>
-    <string name="sendMessageToHint">Melding %s</string>
+    <string name="sendMessageToHint">Melding til %s</string>
     <string name="save_comment">Rediger kommentar</string>
     <string name="cancel_editing_comment">Avbryte redigering av kommentar</string>
     <string name="skip">Hopp over</string>
 
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
-    <string name="rating_button_content_description_custom">Egendefinert resultat %1$s</string>
+    <string name="rating_button_content_description_custom">Egendefinert karakter %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">"%1$s, %2$s</string>
+    <string name="rating_button_content_description">%1$s, %2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="one">ut av %s poeng</item>
@@ -471,9 +472,11 @@
     <string name="grading_periods_filter">Filter for vurderingsperioder</string>
     <string name="assignments">Oppgaver</string>
     <string name="clear_filter">Slett filter</string>
-    <string name="due">Forfall %1$s</string>
+    <string name="due">Forfall: %1$s</string>
+    <string name="updated">Oppdatert %1$s</string>
+
     <plurals name="needsGradingCount">
-        <item quantity="one">%s må karaktersettes</item>
+        <item quantity="one">%s trenger karaktersetting</item>
         <item quantity="other">%s trenger karaktersetting</item>
     </plurals>
     <plurals name="needsGradingNoQuantity">
@@ -491,14 +494,14 @@
     </plurals>
     <plurals name="people_count">
         <item quantity="one">%d person</item>
-        <item quantity="other">%d Folk</item>
+        <item quantity="other">%d personer</item>
     </plurals>
     <plurals name="group_count">
         <item quantity="one">%d gruppe</item>
-        <item quantity="other">%d Grupper</item>
+        <item quantity="other">%d grupper</item>
     </plurals>
     <string name="cmp_closed">Lukket</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022  </string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">favoritt</string>
     <string name="content_description_not_favorite">ikke favoritt</string>
@@ -530,10 +533,9 @@
     <string name="contentDescriptionFileIcon">Filikon</string>
     <string name="contentDescriptionExpandPage">Utvid siden</string>
     <string name="contentDescriptionCollapsePage">Kollaps side</string>
-
     <string name="noInternetConnectionTitle">Ingen Internett-tilkobling</string>
     <string name="noInternetConnectionMessage">Denne handlingen krever Internett-tilkobling.</string>
-  
+
     <string name="emptyDetailsMessage">Trykk på et element i listen for å vise detaljer</string>
 
     <string name="assignmentQuizzes">Oppgavetester</string>
@@ -553,7 +555,7 @@
     <string name="gradedSurvey">Karaktersatt undersøkelse</string>
     <string name="ungradedSurvey">Ikke vurdert undersøkelse</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -601,7 +603,7 @@
 
     <string name="quiz_details_from_to">Fra %1$s til %2$s</string>
     <string name="quiz_details_after">Etter %1$s</string>
-    <string name="quiz_details_until">Inntil %1$s</string>
+    <string name="quiz_details_until">Til %1$s</string>
     <string name="continueWithoutSavingTitle">Fortsette uten å lagre?</string>
     <string name="continueWithoutSavingMessage">Er du sikker på at du vil fortsette uten å lagre?</string>
     <string name="continueUnsaved">Fortsett</string>
@@ -616,8 +618,8 @@
     </plurals>
 
     <plurals name="minutes">
-        <item quantity="one">%s Minutt</item>
-        <item quantity="other">%s Minutter</item>
+        <item quantity="one">%s minutt</item>
+        <item quantity="other">%s minutter</item>
     </plurals>
 
     <string name="discussion_details">Diskusjonsdetaljer</string>
@@ -636,7 +638,7 @@
     <string name="discussions_replies_title">Svar</string>
     <string name="discussions_reply">Svar</string>
     <string name="discussions_edit">Rediger</string>
-    <string name="discussions_deleted" formatted="false">Slettet dette svaret %s</string>
+    <string name="discussions_deleted" formatted="false">Slett dette svaret %s</string>
     <string name="discussions_forbidden">Svarene er kun synlige for dem som har postet minst ett svar.</string>
     <string name="discussions_unknown_author">Ukjent forfatter</string>
     <string name="discussions_delete">Slett diskusjon</string>
@@ -650,8 +652,8 @@
     <string name="submissionIsMediaFile">Innleveringen er en mediefil</string>
     <string name="tryAgain">Prøv igjen</string>
     <string name="couldNotPlayFormat">Medieformatet støttes ikke</string>
-    <string name="openWithAnotherApp">Åpne med...</string>
-    
+    <string name="openWithAnotherApp">Åpne med&#8230;</string>
+
     <string name="speedgraderCommentAddedSubmission">Oppgaven er levert. Trykk for å vise.</string>
     <string name="speedgraderCommentSubmittedFiles">Innleverte filer:</string>
     <string name="no_submission_comments">Det er ingen innleveringskommentarer</string>
@@ -800,4 +802,92 @@
     <string name="markAllAsPresent">Merk alle som nåværende</string>
     <string name="calendar">Kalender</string>
     <string name="filterSections">Filtrer seksjoner</string>
+    <string name="addVideoComment">Legg til en videokommentar</string>
+    <string name="addAudioComment">Legg til en lydkommentar</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d timer, %2$d minutter, og %3$d sekunder</string>
+    <string name="recordingTimerSpeechDivider">%1$s av %2$s</string>
+    <string name="replay">Spill på nytt</string>
+    <string name="stop">Stopp</string>
+    <string name="startRecordingAudio">Start lydopptak</string>
+    <string name="stopRecordingAudio">Stopp lydopptak</string>
+    <string name="startRecordingVideo">Start videoopptak</string>
+    <string name="stopRecordingVideo">Stopp videoopptak</string>
+    <string name="closeRecordingView">Lukk opptaksvisning</string>
+    <string name="deleteRecording">Slett opptak</string>
+    <string name="videoCommentReplay">Videokommentargjenspilling</string>
+    <string name="addMediaComment">Legg til en mediakommentar</string>
+    <string name="copyrightHolder">Innehaver av opphavsrett</string>
+    <string name="access">Tilgang</string>
+    <string name="usageRights">Brukerrettigheter:</string>
+    <string name="deleteFile">Slett fil</string>
+    <string name="holdCopyright">Jeg har opphavsretten</string>
+    <string name="havePermission">Jeg har rettigheter til å bruke filen</string>
+    <string name="publicDomain">Filen er åpent domene</string>
+    <string name="fairUse">Unntak for rimelig bruk</string>
+    <string name="creativeCommons">Creative Commons-fil</string>
+    <string name="editFile">Endre fil</string>
+    <string name="deleteFolder">Slett mappe</string>
+    <string name="editFolder">Endre mappe</string>
+    <string name="deleteFileMessage">Er du sikker på at du vil slette denne filen?</string>
+    <string name="deleteFolderMessage">Er du sikker på at du vil slette denne mappen? Alt innhold i mappen vil også bli slettet.</string>
+    <string name="newFolder">Ny Mappe</string>
+    <string name="createAFolder">Opprett en mappe</string>
+    <string name="createFolder">Opprett mappe</string>
+    <string name="createAFile">Opprett en fil</string>
+    <string name="createFileFolderFabContentDesc">Vis knapper for opprett fil og opprett mappe</string>
+    <string name="unpublish">Avpubliser</string>
+    <string name="restrictedAccess">Begrenset tilgang</string>
+    <string name="restricted">Begrenset</string>
+    <string name="hidden">Skjult, filer inni vil være tilgjengelig med linker.</string>
+    <string name="studentsWithLink">Kun tilgjengelig for studenter med lenken. Ikke tilgjengelig i studentfilene.</string>
+    <string name="scheduleAvailability">Planlegg studenttilgjengelighet</string>
+    <string name="folderCreationError">En fil oppsto under opprettelse av mappe.</string>
+
+    <string name="setAsFrontPage">Sett som forside</string>
+    <string name="canEdit">Kan redigere</string>
+    <string name="pageDetails">Sidedetaljer</string>
+    <string name="pageSuccessfullyUpdated">Side oppdatert.</string>
+    <string name="pageSuccessfullyCreated">Side opprettet.</string>
+    <string name="editPageTitle">Endre side</string>
+    <string name="createPageTitle">Opprett side</string>
+    <string name="pageTitleMustBeSet">Sidetittel må være satt.</string>
+    <string name="pageDeleteTitle">Slett side?</string>
+    <string name="pageDelete">Slett side</string>
+    <string name="pageDeleteMessage">Dette vil slette siden. Denne handlingen kan ikke angres.</string>
+    <string name="errorSavingPage">En feil oppsto under lagringen av siden. Prøv igjen.</string>
+    <string name="frontPageUnpublishedError">En side kan ikke samtidig være forsiden og samtidig være upublisert.</string>
+
+    <string name="onlyTeachers">Kun lærere</string>
+    <string name="teachersAndStudents">Lærere og studenter</string>
+    <string name="anyone">Hvem som helst</string>
+    <string name="groupMembers">Kun medlemmer</string>
+    <string name="license">Lisens</string>
+    <string name="availableFromAfterTo">Sluttdato for tilgjengelighet må være etter startdato</string>
+    <string name="errorDeletingFile">En feil oppsto under sletting av denne filen</string>
+    <string name="errorDeletingFolder">En feil oppsto under sletting av denne mappen</string>
+    <string name="errorUpdatingFile">En feil oppsto under oppdateringen av denne filen</string>
+    <string name="errorUpdatingFolder">En feil oppsto under oppdateringen av denne mappen</string>
+
+    <string name="toDoEmpty">Ingen flere oppgaver!\n Ha en fin dag.</string>
+    <string name="toDoNoSubmissions">Det finnes ingen innleveringer å gi karakterer til for denne oppgaven.</string>
+    <string name="errorToDoRouteFailed">En feil oppsto under visning av dette gjøremålselementet.</string>
+    <string name="errorIsDesigner">Designer påmelding kan ikke vise dette.</string>
+
+    <string name="sections">Seksjoner</string>
+    <string name="filterBy">Filtrer etter &#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">for %s</string>
+    <string name="filterBySection">Filtrer etter seksjon</string>
+    <string name="filterSubmissionsLowercase">Filtrer innleveringer</string>
+
+    <string name="latePenalty">Forsinkelsesstraff</string>
+    <string name="finalGrade">Sluttkarakter</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s poeng</item>
+        <item quantity="other">-%s poeng</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s poeng</item>
+        <item quantity="other">-%s poeng</item>
+    </plurals>
 </resources>

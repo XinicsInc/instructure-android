@@ -170,9 +170,6 @@ public class Utils {
             else if(appType == AppType.POLLING) {
 
             }
-            else if(appType == AppType.SPEEDGRADER) {
-
-            }
             Intent goToAppstore = new Intent(Intent.ACTION_VIEW);
             goToAppstore.setData(Uri.parse(marketURL));
             context.startActivity(goToAppstore);
@@ -183,8 +180,6 @@ public class Utils {
                 packageName = "com.instructure.candroid";
             } else if (appType == AppType.POLLING) {
                 packageName = "com.instructure.androidpolling";
-            } else if (appType == AppType.SPEEDGRADER) {
-
             } else if (appType == AppType.PARENT) {
                 packageName = "com.instructure.parentapp";
             } else if (appType == AppType.TEACHER) {

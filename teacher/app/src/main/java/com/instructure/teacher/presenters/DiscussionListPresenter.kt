@@ -43,10 +43,18 @@ class DiscussionListPresenter(private val mCanvasContext: CanvasContext, private
         discussionsListJob = weave {
             onRefreshStarted()
             try {
-                awaitApi<List<DiscussionTopicHeader>> {
-                    if (mIsAnnouncements) AnnouncementManager.getAllAnnouncements(mCanvasContext.id, forceNetwork, it)
-                    else DiscussionManager.getAllDiscussionTopicHeaders(mCanvasContext.id, forceNetwork, it)
-                }.forEach { data.addOrUpdateItem(getHeaderType(it), it) }
+                val response = awaitApi<List<DiscussionTopicHeader>> {
+                    if (mIsAnnouncements) AnnouncementManager.getAllAnnouncements(mCanvasContext, forceNetwork, it)
+                    else DiscussionManager.getAllDiscussionTopicHeaders(mCanvasContext, forceNetwork, it)
+                }
+
+                if(mIsAnnouncements) {
+                    data.addOrUpdateAllItems(ANNOUNCEMENTS, response)
+                } else {
+                    data.addOrUpdateAllItems(PINNED, response.filter { getHeaderType(it) == PINNED })
+                    data.addOrUpdateAllItems(CLOSED_FOR_COMMENTS, response.filter { getHeaderType(it) == CLOSED_FOR_COMMENTS })
+                    data.addOrUpdateAllItems(UNPINNED, response.filter { getHeaderType(it) == UNPINNED })
+                }
             } catch (e: StatusCallbackError) {
             }
             viewCallback?.onRefreshFinished()
@@ -68,26 +76,27 @@ class DiscussionListPresenter(private val mCanvasContext: CanvasContext, private
 
     private val mDiscussionTopicHeaderPinnedCallback = object : StatusCallback<DiscussionTopicHeader>() {
         override fun onResponse(response: Response<DiscussionTopicHeader>, linkHeaders: LinkHeaders, type: ApiType) {
-            viewCallback?.moveToGroup(PINNED, response.body())
+            response.body()?.let { viewCallback?.moveToGroup(PINNED, it) }
         }
     }
 
     private val mDiscussionTopicHeaderUnpinnedCallback = object : StatusCallback<DiscussionTopicHeader>() {
         override fun onResponse(response: Response<DiscussionTopicHeader>, linkHeaders: LinkHeaders, type: ApiType) {
-            viewCallback?.moveToGroup(UNPINNED, response.body())
+            response.body()?.let { viewCallback?.moveToGroup(UNPINNED, it) }
         }
     }
 
     private val mDiscussionTopicHeaderClosedForCommentsCallback = object : StatusCallback<DiscussionTopicHeader>() {
         override fun onResponse(response: Response<DiscussionTopicHeader>, linkHeaders: LinkHeaders, type: ApiType) {
-            viewCallback?.moveToGroup(CLOSED_FOR_COMMENTS, response.body())
+            // if the discussion is pinned we need to keep it pinned.
+            response.body()?.let { viewCallback?.moveToGroup(if(it.isPinned) PINNED else CLOSED_FOR_COMMENTS, it) }
         }
     }
 
     private val mDiscussionTopicHeaderOpenedForCommentsCallback = object : StatusCallback<DiscussionTopicHeader>() {
         override fun onResponse(response: Response<DiscussionTopicHeader>, linkHeaders: LinkHeaders, type: ApiType) {
             //Check if pinned or unpinned...
-            viewCallback?.moveToGroup(if(response.body().isPinned) PINNED else UNPINNED, response.body())
+            response.body()?.let { viewCallback?.moveToGroup(if(it.isPinned) PINNED else UNPINNED, it) }
         }
     }
 
@@ -103,7 +112,14 @@ class DiscussionListPresenter(private val mCanvasContext: CanvasContext, private
             PINNED -> {
                 when(groupTo) {
                     UNPINNED -> DiscussionManager.unpinDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderUnpinnedCallback)
-                    CLOSED_FOR_COMMENTS -> DiscussionManager.lockDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderClosedForCommentsCallback)
+                    CLOSED_FOR_COMMENTS -> {
+                        // When we're pinned we stay in the same spot, but we need to update the locked status
+                        if(discussionTopicHeader.isLocked) {
+                            DiscussionManager.unlockDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderOpenedForCommentsCallback)
+                        } else {
+                            DiscussionManager.lockDiscussionTopicHeader(mCanvasContext, discussionTopicHeader.id, mDiscussionTopicHeaderClosedForCommentsCallback)
+                        }
+                    }
                     DELETE -> viewCallback?.askToDeleteDiscussionTopicHeader(discussionTopicHeader)
                 }
             }
@@ -135,17 +151,18 @@ class DiscussionListPresenter(private val mCanvasContext: CanvasContext, private
 
     companion object {
         //Named funny to preserve the order.
-        val PINNED = "1_PINNED"
-        val UNPINNED = "2_UNPINNED"
-        val CLOSED_FOR_COMMENTS = "3_CLOSED_FOR_COMMENTS"
-        val DELETE = "delete"
+        const val PINNED = "1_PINNED"
+        const val UNPINNED = "2_UNPINNED"
+        const val CLOSED_FOR_COMMENTS = "3_CLOSED_FOR_COMMENTS"
+        const val ANNOUNCEMENTS = "ANNOUNCEMENTS"
+        const val DELETE = "delete"
     }
 
     override fun compare(group: String?, item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Int {
-        if(PINNED == group) {
-            return item1.position.compareTo(item2.position)
-        } else {
-            return item2.lastReplyAt?.compareTo(item1.lastReplyAt ?: Date(0)) ?: -1
+        return when {
+            PINNED == group -> item1.position.compareTo(item2.position)
+            mIsAnnouncements -> -1 // Keep API order for announcements
+            else -> item2.lastReplyAt?.compareTo(item1.lastReplyAt ?: Date(0)) ?: -1
         }
     }
 

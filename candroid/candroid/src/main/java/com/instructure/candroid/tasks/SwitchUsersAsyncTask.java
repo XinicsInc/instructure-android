@@ -16,16 +16,14 @@
  */
 package com.instructure.candroid.tasks;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.instructure.candroid.activity.LoginActivity;
-import com.instructure.candroid.fragment.ApplicationSettingsFragment;
+import com.instructure.candroid.util.StudentPrefs;
 import com.instructure.candroid.view.CanvasRecipientManager;
-import com.instructure.candroid.widget.CanvasWidgetProvider;
+import com.instructure.candroid.widget.WidgetUpdater;
 import com.instructure.canvasapi2.CanvasRestAdapter;
 import com.instructure.canvasapi2.builders.RestBuilder;
 import com.instructure.canvasapi2.utils.ApiPrefs;
@@ -33,19 +31,13 @@ import com.instructure.canvasapi2.utils.ContextKeeper;
 import com.instructure.canvasapi2.utils.FileUtils;
 import com.instructure.canvasapi2.utils.MasqueradeHelper;
 import com.instructure.loginapi.login.tasks.SwitchUsersTask;
-import com.instructure.pandautils.utils.Const;
-import com.instructure.pandautils.utils.Prefs;
 import com.instructure.pandautils.utils.ThemePrefs;
-import com.instructure.pandautils.utils.TutorialUtils;
 import com.instructure.pandautils.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
 
 import okhttp3.OkHttpClient;
-
-import static android.content.Context.MODE_PRIVATE;
-import static com.instructure.candroid.util.ApplicationManager.PREF_NAME;
 
 public class SwitchUsersAsyncTask extends SwitchUsersTask {
 
@@ -73,7 +65,7 @@ public class SwitchUsersAsyncTask extends SwitchUsersTask {
         }
 
         RestBuilder.clearCacheDirectory();
-        safeClear(ContextKeeper.appContext);
+        safeClear();
     }
 
     @Override
@@ -87,7 +79,7 @@ public class SwitchUsersAsyncTask extends SwitchUsersTask {
 
     @Override
     protected void refreshWidgets() {
-        ContextKeeper.getAppContext().sendBroadcast(new Intent(CanvasWidgetProvider.REFRESH_ALL));
+        WidgetUpdater.updateWidgets();
     }
 
     @Override
@@ -102,71 +94,14 @@ public class SwitchUsersAsyncTask extends SwitchUsersTask {
         ContextKeeper.appContext.startActivity(intent);
     }
 
-    private void safeClear(Context context) {
-        //Get the Shared Preferences
-        SharedPreferences settings = context.getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-
-        //Don't make them redo tutorials
-        boolean doneStreamTutorial = settings.getBoolean("stream_tutorial_v2", false);
-        boolean doneConversationListTutorial = settings.getBoolean("conversation_list_tutorial_v2", false);
-        boolean featureSlides = settings.getBoolean("feature_slides_shown", false);
-        String lastDomain = settings.getString("last-domain", "");
-        String UUID = settings.getString("APID", null);
-        int landingPage = settings.getInt(ApplicationSettingsFragment.LANDING_PAGE, 0);
-        boolean drawerLearned = settings.getBoolean(Const.PREF_USER_LEARNED_DRAWER, false);
-        boolean tutorialViewed = settings.getBoolean(Const.TUTORIAL_VIEWED, false);
-        boolean newGroupsViewed = settings.getBoolean(Const.VIEWED_NEW_FEATURE_BANNER, false);
-        boolean showGrades = settings.getBoolean(Const.SHOW_GRADES_ON_CARD, true);
-        boolean pandasFlying = settings.getBoolean(Const.FUN_MODE, false);
-
-        boolean tutorial_1 = TutorialUtils.hasBeenViewed(getPrefs(context), TutorialUtils.TYPE.STAR_A_COURSE);
-        boolean tutorial_2 = TutorialUtils.hasBeenViewed(getPrefs(context), TutorialUtils.TYPE.COLOR_CHANGING_DIALOG);
-        boolean tutorial_3 = TutorialUtils.hasBeenViewed(getPrefs(context), TutorialUtils.TYPE.LANDING_PAGE);
-        boolean tutorial_5 = TutorialUtils.hasBeenViewed(getPrefs(context), TutorialUtils.TYPE.MY_COURSES);
-        boolean tutorial_6 = TutorialUtils.hasBeenViewed(getPrefs(context), TutorialUtils.TYPE.NOTIFICATION_PREFERENCES);
-        boolean tutorial_9 = TutorialUtils.hasBeenViewed(getPrefs(context), TutorialUtils.TYPE.NAVIGATION_SHORTCUTS);
-        boolean tutorial_10 = TutorialUtils.hasBeenViewed(getPrefs(context), TutorialUtils.TYPE.COURSE_GRADES);
-
-        SharedPreferences.Editor editor = settings.edit();
-        editor.clear();
-        editor.apply();
-
+    private void safeClear() {
+        StudentPrefs.INSTANCE.safeClearPrefs();
         ApiPrefs.clearAllData();
         File exCacheDir = Utils.getAttachmentsDirectory(ContextKeeper.getAppContext());
         File cacheDir = new File(ContextKeeper.getAppContext().getFilesDir(), "cache");
         //need to delete the contents of the internal/external cache folder so previous user's results don't show up on incorrect user
         FileUtils.deleteAllFilesInDirectory(cacheDir);
         FileUtils.deleteAllFilesInDirectory(exCacheDir);
-
-        //Replace the information about tutorials/last domain
-        editor.putBoolean("stream_tutorial_v2", doneStreamTutorial);
-        editor.putBoolean("conversation_list_tutorial_v2", doneConversationListTutorial);
-        editor.putBoolean("feature_slides_shown", featureSlides);
-        editor.putString("last-domain", lastDomain);
-        editor.putInt(ApplicationSettingsFragment.LANDING_PAGE, landingPage);
-        editor.putBoolean(Const.PREF_USER_LEARNED_DRAWER, drawerLearned);
-        editor.putBoolean(Const.TUTORIAL_VIEWED, tutorialViewed);
-        editor.putBoolean(Const.VIEWED_NEW_FEATURE_BANNER, newGroupsViewed);
-        editor.putBoolean(Const.SHOW_GRADES_ON_CARD, showGrades);
-        editor.putBoolean(Const.FUN_MODE, pandasFlying);
-
-        TutorialUtils.setHasBeenViewed(getPrefs(context), TutorialUtils.TYPE.STAR_A_COURSE, tutorial_1);
-        TutorialUtils.setHasBeenViewed(getPrefs(context), TutorialUtils.TYPE.COLOR_CHANGING_DIALOG, tutorial_2);
-        TutorialUtils.setHasBeenViewed(getPrefs(context), TutorialUtils.TYPE.LANDING_PAGE, tutorial_3);
-        TutorialUtils.setHasBeenViewed(getPrefs(context), TutorialUtils.TYPE.MY_COURSES, tutorial_5);
-        TutorialUtils.setHasBeenViewed(getPrefs(context), TutorialUtils.TYPE.NOTIFICATION_PREFERENCES, tutorial_6);
-        TutorialUtils.setHasBeenViewed(getPrefs(context), TutorialUtils.TYPE.NAVIGATION_SHORTCUTS, tutorial_9);
-        TutorialUtils.setHasBeenViewed(getPrefs(context), TutorialUtils.TYPE.COURSE_GRADES, tutorial_10);
-
-
-        if (UUID != null) {
-            editor.putString("APID", UUID);
-        }
-
-        editor.apply();
     }
 
-    public static Prefs getPrefs(Context context){
-        return new Prefs(context, PREF_NAME);
-    }
 }

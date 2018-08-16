@@ -18,6 +18,9 @@
 package com.instructure.candroid.binders;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.View;
 
@@ -26,9 +29,6 @@ import com.instructure.candroid.holders.PeopleHeaderViewHolder;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked;
 import com.instructure.pandautils.utils.ColorUtils;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorInflater;
-import com.nineoldandroids.animation.ObjectAnimator;
 
 public class PeopleHeaderBinder extends BaseBinder {
     public static <MODEL> void bind(
@@ -49,9 +49,6 @@ public class PeopleHeaderBinder extends BaseBinder {
             holder.expandCollapse.setRotation(180);
             setInvisible(holder.divider);
         }
-
-        final int color = context.getResources().getColor(R.color.canvasTextMedium);
-        holder.expandCollapse.setImageDrawable(ColorUtils.colorIt(color, context.getResources().getDrawable(R.drawable.ic_cv_expand_black)));
 
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override

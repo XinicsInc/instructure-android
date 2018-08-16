@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.globalName
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.EditCourseNameDialog

@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
@@ -31,7 +32,6 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.pandautils.utils.StringArg
 import kotlinx.android.synthetic.main.fragment_speed_grader_text_submission.*
 
 class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
@@ -47,24 +47,26 @@ class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
 
     override fun onStart() {
         super.onStart()
-        textSubmissionWebView.setWebChromeClient(object : WebChromeClient() {
+        textSubmissionWebView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
+                if (!isAdded) return
                 if (newProgress >= 100) {
                     progressBar?.setGone()
                     textSubmissionWebView?.setVisible()
+                } else {
+                    progressBar.announceForAccessibility(getString(R.string.loading))
                 }
-                else { progressBar.announceForAccessibility(getString(R.string.loading)) }
             }
-        })
+        }
 
         textSubmissionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) = Unit
             override fun onPageStartedCallback(webView: WebView?, url: String?) = Unit
             override fun onPageFinishedCallback(webView: WebView?, url: String?) = Unit
-            override fun canRouteInternallyDelegate(url: String?) = RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
+            override fun canRouteInternallyDelegate(url: String?) = RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, false)
             override fun routeInternallyCallback(url: String?) {
-                RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)
+                RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, true)
             }
         }
 

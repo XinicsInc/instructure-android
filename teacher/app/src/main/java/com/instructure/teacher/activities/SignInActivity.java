@@ -23,14 +23,19 @@ import android.os.Bundle;
 import android.webkit.CookieManager;
 
 import com.instructure.canvasapi2.models.AccountDomain;
+import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.loginapi.login.activities.BaseLoginSignInActivity;
+import com.instructure.pandautils.services.PushNotificationRegistrationService;
+import com.instructure.teacher.BuildConfig;
 
 public class SignInActivity extends BaseLoginSignInActivity {
 
     @Override
     protected Intent launchApplicationMainActivityIntent() {
+        PushNotificationRegistrationService.Companion.scheduleJob(this, ApiPrefs.isMasquerading(), BuildConfig.PUSH_SERVICE_PROJECT_ID);
+
         CookieManager.getInstance().flush();
-        return SplashActivity.Companion.createIntent(this);
+        return SplashActivity.Companion.createIntent(this, null);
     }
 
     @Override

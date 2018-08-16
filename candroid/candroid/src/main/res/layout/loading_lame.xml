@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (C) 2016 - present Instructure, Inc.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2018 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -13,27 +12,29 @@
   ~
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ~
   -->
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:visibility="gone">
 
-    <ProgressBar
-        android:id="@+id/lameLoading"
+    <com.instructure.candroid.view.CanvasLoading
+        android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminate="true">
-
-    </ProgressBar>
+        android:layout_gravity="center"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/noConnection"
-        style="@style/TextStyle.Primary"
-        android:visibility="gone"
+        style="@style/TextFont.Medium"
         android:layout_width="wrap_content"
-        android:text="@string/noConnection"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_height="wrap_content" />
+        android:text="@string/noConnection"
+        android:textColor="@color/defaultTextGray"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
 </FrameLayout>

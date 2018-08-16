@@ -181,7 +181,7 @@ public class SettingsActivity extends SyncActivity<Student, SettingsPresenter, S
                 student.getStudentId(),
                 new StatusCallback<ResponseBody>() {
                     @Override
-                    public void onResponse(Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {
+                    public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                         dialog.dismiss();
                         Toast.makeText(SettingsActivity.this, getString(R.string.studentRemoved), Toast.LENGTH_SHORT).show();
 

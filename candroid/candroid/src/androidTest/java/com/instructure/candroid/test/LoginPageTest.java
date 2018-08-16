@@ -68,8 +68,5 @@ public class LoginPageTest extends PageObjects {
         domainPickerPage.loadDefaultSchool();
         loginPage.login(STUDENT_1);
         loginPage.authorizeApp();
-
-        // Wait for [RETROFIT] to become idle timed out
-        tutorialPage.tapSkipButton();
     }
 }

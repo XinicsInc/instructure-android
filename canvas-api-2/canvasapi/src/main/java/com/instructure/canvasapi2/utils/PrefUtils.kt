@@ -25,6 +25,7 @@ import android.support.annotation.ColorRes
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty0
 import kotlin.reflect.KProperty
 
@@ -128,7 +129,7 @@ abstract class PrefManager(prefFileName: String) {
      * own list of properties. The list must only contain mutable properties belonging to the
      * PrefManager instance for which this function is being overridden.
      */
-    open internal fun keepBaseProps(): List<KMutableProperty0<out Any?>> = emptyList()
+    open fun keepBaseProps(): List<KMutableProperty0<out Any?>> = emptyList()
 
     /**
      * Clears this PrefManager's backing SharedPreferences file while preserving all properties
@@ -142,6 +143,25 @@ abstract class PrefManager(prefFileName: String) {
         clearPrefs()
         for ((property, value) in keeperMap) property.set(value)
     }
+    
+    private inline fun Editor.save(block: Editor.() -> Unit) { block(); apply() }
+
+    fun getInt(key: String, default: Int = 0): Int = prefs.getInt(key, default)
+    fun putInt(key: String, value: Int) = editor.save { putInt(key, value) }
+
+    fun getBoolean(key: String, default: Boolean = false): Boolean = prefs.getBoolean(key, default)
+    fun putBoolean(key: String, value: Boolean) = editor.save { putBoolean(key, value) }
+
+    fun getString(key: String, default: String? = null): String? = prefs.getString(key, default)
+    fun putString(key: String, value: String) = editor.save { putString(key, value) }
+
+    fun getFloat(key: String, default: Float = 0f): Float = prefs.getFloat(key, default)
+    fun putFloat(key: String, value: Float) = editor.save { putFloat(key, value) }
+
+    fun getLong(key: String, default: Long = 0L): Long = prefs.getLong(key, default)
+    fun putLong(key: String, value: Long) = editor.save { putLong(key, value) }
+
+    fun remove(key: String) = editor.remove(key).apply()
 }
 
 /**
@@ -204,6 +224,21 @@ class NStringPref(defaultValue: String? = null, keyName: String? = null) : Pref<
 }
 
 /**
+ * [Pref] delegate for [String] properties. May only be used in [PrefManager] implementations.
+ *
+ * @param defaultValue The optional value returned for the property when no value has been set
+ * internally. Defaults to an empty String.
+ * @param keyName The optional key name under which the property value will be stored. Defaults
+ * to the property name. This is useful when converting other [SharedPreferences] implementations
+ * to [PrefManager] and the required key name does not match the desired property name.
+ */
+class StringSetPref(defaultValue: Set<String> = setOf(), keyName: String? = null) : Pref<Set<String>>(defaultValue, keyName) {
+    override fun onClear() {}
+    override fun SharedPreferences.getValue(key: String, default: Set<String>): Set<String> = getStringSet(key, default)
+    override fun Editor.setValue(key: String, value: Set<String>): Editor = putStringSet(key, value)
+}
+
+/**
  * [Pref] delegate for [Boolean] properties. May only be used in [PrefManager] implementations.
  *
  * @param defaultValue The optional value returned for the property when no value has been set
@@ -216,6 +251,48 @@ class BooleanPref(defaultValue: Boolean = false, keyName: String? = null) : Pref
     override fun onClear() {}
     override fun SharedPreferences.getValue(key: String, default: Boolean) = getBoolean(key, default)
     override fun Editor.setValue(key: String, value: Boolean): Editor = putBoolean(key, value)
+}
+
+/**
+ * [Pref] delegate for nullable [Boolean] properties. May only be used in [PrefManager] implementations.
+ *
+ * @param defaultValue The optional value returned for the property when no value has been set
+ * internally. Defaults to null.
+ * @param keyName The optional key name under which the property value will be stored. Defaults
+ * to the property name. This is useful when converting other [SharedPreferences] implementations
+ * to [PrefManager] and the required key name does not match the desired property name.
+ */
+class NBooleanPref(defaultValue: Boolean? = null, keyName: String? = null) : Pref<Boolean?>(defaultValue, keyName) {
+    override fun onClear() {}
+    override fun SharedPreferences.getValue(key: String, default: Boolean?): Boolean? {
+        return if (contains(key)) getBoolean(key, false) else null
+    }
+    override fun Editor.setValue(key: String, value: Boolean?): Editor {
+        if (value == null) remove(key) else putBoolean(key, value)
+        return this
+    }
+}
+
+/**
+ * [Pref] delegate for a special type of [Boolean] property which resets every time the getter is called.
+ * May only be used in [PrefManager] implementations.
+ *
+ * @param defaultValue The optional value returned for the property when no value has been set
+ * internally. Defaults to false. This value is what the preference will reset to.
+ * @param keyName The optional key name under which the property value will be stored. Defaults
+ * to the property name. This is useful when converting other [SharedPreferences] implementations
+ * to [PrefManager] and the required key name does not match the desired property name.
+ */
+class BooleanResetPref(private val defaultValue: Boolean = false, keyName: String? = null) : Pref<Boolean>(defaultValue, keyName) {
+    override fun onClear() {}
+    override fun SharedPreferences.getValue(key: String, default: Boolean) = getBoolean(key, default)
+    override fun Editor.setValue(key: String, value: Boolean): Editor = putBoolean(key, value)
+
+    override fun getValue(thisRef: PrefManager, property: KProperty<*>): Boolean {
+        val value = super.getValue(thisRef, property)
+        if(value != defaultValue) setValue(thisRef, property, defaultValue)
+        return value
+    }
 }
 
 /**
@@ -407,6 +484,42 @@ class BooleanMapPref(
     override fun Editor.setValue(key: String, value: HashMap<String, Boolean>): Editor {
         cachedObject = value
         putString(key, Gson().toJson(value) ?: return this)
+        return this
+    }
+}
+
+/**
+ * [Pref] delegate for holding a set of objects to be stored in SharedPreferences as serialized strings using Gson.
+ * This class is only designed to be used with scalar types, and behavior when using other types is undefined. This
+ * class may only be used in [PrefManager] implementations.
+ *
+ * @param klazz The [KClass] of the object type to be held in this [Set]. Behavior of non-scalar types is undefined.
+ * @param defaultValue (Optional) A default value that will be used until this property is assigned a new value.
+ * @param keyName The optional key name under which the property value will be stored. Defaults
+ * to the property name. This is useful when converting other [SharedPreferences] implementations
+ * to [PrefManager] and the required key name does not match the desired property name.
+ */
+class SetPref<T : Any>(
+    private val klazz: KClass<T>,
+    defaultValue: Set<T> = setOf(),
+    keyName: String? = null
+) : Pref<Set<T>>(defaultValue, keyName) {
+
+    private var cachedObject: Set<T>? = null
+
+    override fun onClear() { cachedObject = null }
+
+    override fun SharedPreferences.getValue(key: String, default: Set<T>): Set<T> {
+        if (cachedObject == null) {
+            val type = TypeToken.getParameterized(HashSet::class.java, klazz.javaObjectType).type
+            cachedObject = Gson().fromJson<HashSet<T>>(getString(key, null), type)
+        }
+        return cachedObject ?: default
+    }
+
+    override fun Editor.setValue(key: String, value: Set<T>): SharedPreferences.Editor {
+        cachedObject = value
+        putString(key, Gson().toJson(value))
         return this
     }
 }

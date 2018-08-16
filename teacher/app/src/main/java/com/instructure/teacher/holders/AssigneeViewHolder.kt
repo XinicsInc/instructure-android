@@ -23,9 +23,11 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
+import android.widget.TextView
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
+import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.TextDrawable
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -33,23 +35,25 @@ import com.instructure.teacher.R
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.models.EveryoneAssignee
 import com.instructure.teacher.presenters.AssigneeListPresenter
-import com.instructure.teacher.utils.ProfileUtils
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.adapter_assignee.view.*
 import kotlinx.android.synthetic.main.adapter_assignee_header.view.*
 
 abstract class AssigneeViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
-
 class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
 
     private val SELECTION_TRANSPARENCY_MASK = 0x08FFFFFF
+
+    lateinit var assigneeTitleViewForTest: TextView
 
     companion object {
         val holderResId = R.layout.adapter_assignee
     }
 
     fun bind(item: Any, presenter: AssigneeListPresenter, selectionColor: Int) = with(itemView) {
+
+        assigneeTitleViewForTest = assigneeTitleView
 
         fun setChecked(isChecked: Boolean = true) {
             if (isChecked) {
@@ -80,7 +84,7 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
                 if (item.id in presenter.selectedStudents) {
                     setChecked(true)
                 } else {
-                    ProfileUtils.loadAvatarForUser(context, assigneeAvatarImageView, item.name, item.avatarUrl)
+                    ProfileUtils.loadAvatarForUser(assigneeAvatarImageView, item.name, item.avatarUrl)
                 }
                 assigneeTitleView.text = item.name
                 assigneeSubtitleView.text = item.primaryEmail ?: item.email

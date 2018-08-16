@@ -25,7 +25,7 @@ import android.widget.FrameLayout
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import com.instructure.teacher.utils.ProfileUtils
+import com.instructure.pandautils.utils.ProfileUtils
 import kotlinx.android.synthetic.main.view_comment.view.*
 
 
@@ -47,7 +47,7 @@ class CommentView @JvmOverloads constructor(
     fun setCommentBubbleColor(@ColorInt color: Int) = commentTextView.setBubbleColor(color)
 
     fun setAvatar(avatarUrl: String?, userName: String) {
-        ProfileUtils.loadAvatarForUser(context, avatarView, userName, avatarUrl ?: "")
+        ProfileUtils.loadAvatarForUser(avatarView, userName, avatarUrl ?: "")
     }
 
     var commentTextColor: Int
@@ -57,7 +57,7 @@ class CommentView @JvmOverloads constructor(
     var commentText: String?
         get() = commentTextView.text.toString()
         set(value) {
-            if (value == null) commentTextView.setGone() else commentTextView.setVisible().text = value
+            if (value.isNullOrBlank()) commentTextView.setGone() else commentTextView.setVisible().text = value
         }
 
     var usernameText: String?

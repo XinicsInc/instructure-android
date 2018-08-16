@@ -241,6 +241,16 @@ public abstract class BaseExpandableRecyclerAdapter<GROUP, ITEM, VIEWHOLDER exte
         return mGroupSortedList.removeItem(item);
     }
 
+
+    /**
+     * See {@link GroupSortedList#removeItem}
+     * @param item
+     * @return
+     */
+    public boolean removeItem(ITEM item, boolean removeGroupIfEmpty) {
+        return mGroupSortedList.removeItem(item, removeGroupIfEmpty);
+    }
+
     /**
      * See {@link GroupSortedList#getItem}
      * @param group

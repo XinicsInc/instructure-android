@@ -54,10 +54,10 @@ public class EmptyPandaView extends LinearLayout implements EmptyViewInterface {
     }
 
     private void init(){
-        inflate(getContext(), R.layout.empty_view, this);
-        this.noItemView = (TextView)findViewById(R.id.noItems);
-        this.loadingView = (LinearLayout)findViewById(R.id.loadingView);
-        this.emptyImage = (ImageView) findViewById(R.id.emptyImage);
+        inflate(getContext(), R.layout.empty_panda_view, this);
+        this.noItemView = findViewById(R.id.noItems);
+        this.loadingView = findViewById(R.id.pandaLoadingView);
+        this.emptyImage = findViewById(R.id.emptyImage);
     }
 
     @Override

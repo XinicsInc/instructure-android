@@ -38,7 +38,7 @@ class CourseUnitTest : Assert() {
         Assert.assertFalse(course.isHideFinalGrades)
         Assert.assertFalse(course.isPublic)
         Assert.assertTrue(course.canCreateDiscussion())
-        Assert.assertTrue(course.term.id == 3142L)
+        Assert.assertTrue(course.term?.id == 3142L)
     }
 
     @Test
@@ -55,7 +55,7 @@ class CourseUnitTest : Assert() {
         Assert.assertTrue(course.needsGradingCount == 0L)
         Assert.assertFalse(course.isHideFinalGrades)
         Assert.assertTrue(course.isPublic)
-        Assert.assertTrue(course.term.id == 3142L)
+        Assert.assertTrue(course.term?.id == 3142L)
     }
 
     /**

@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.AccountRole
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.Course
@@ -34,14 +35,16 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setGone
 import com.instructure.teacher.R
 import com.instructure.teacher.fragments.NotATeacherFragment
-import com.instructure.teacher.utils.ColorKeeper
 import com.instructure.teacher.utils.TeacherPrefs
+import com.pspdfkit.framework.i
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.experimental.Job
 import retrofit2.Response
@@ -49,12 +52,16 @@ import retrofit2.Response
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
 class SplashActivity : AppCompatActivity() {
 
-    var startUp: Job? = null
+    private var startUp: Job? = null
 
     companion object {
-        fun createIntent(context: Context): Intent {
-            return Intent(context, SplashActivity::class.java)
-        }
+        fun createIntent(context: Context, intentExtra: Bundle?): Intent =
+                Intent(context, SplashActivity::class.java).apply {
+                    if (intentExtra != null) {
+                        // Used for passing up push notification intent
+                        this.putExtras(intentExtra)
+                    }
+                }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,22 +72,37 @@ class SplashActivity : AppCompatActivity() {
         startUp = weave {
             // Grab user teacher status
             try {
-                if (TeacherPrefs.isConfirmedTeacher) {
-                    CourseManager.getCoursesWithEnrollmentType(true, mUserIsTeacherVerificationCallback, "teacher")
+
+                // Determine if user is a Teacher, TA, or Designer
+                if (!TeacherPrefs.isConfirmedTeacher) {
+                    TeacherPrefs.isConfirmedTeacher =
+                            awaitApi<List<Course>> { CourseManager.getCoursesWithEnrollmentType( true, it, "teacher") }.isNotEmpty() ||
+                            awaitApi<List<Course>> { CourseManager.getCoursesWithEnrollmentType( true, it, "ta") }.isNotEmpty() ||
+                            awaitApi<List<Course>> { CourseManager.getCoursesWithEnrollmentType( true, it, "designer") }.isNotEmpty()
                 } else {
-                    if (awaitApi<List<Course>> { CourseManager.getCoursesWithEnrollmentType(true, it, "teacher") }.isNotEmpty() ||
-                            awaitApi<List<Course>> { CourseManager.getCoursesWithEnrollmentType(true, it, "ta") }.isNotEmpty() ||
-                            awaitApi<List<Course>> { CourseManager.getCoursesWithEnrollmentType(true, it, "designer") }.isNotEmpty()) {
-                        TeacherPrefs.isConfirmedTeacher = true
-                    } else {
-                        // The user doesn't have any courses in which they are a teacher
-                        // The user doesn't have any courses in which they are a TA; Show them the door
-                        canvasLoadingView.setGone()
-                        supportFragmentManager.beginTransaction()
-                                .add(R.id.splashActivityRootView, NotATeacherFragment(), NotATeacherFragment::class.java.simpleName)
-                                .commit()
-                        return@weave
+                    CourseManager.getCoursesWithEnrollmentType(true, mUserIsTeacherVerificationCallback, "teacher")
+                }
+
+                // Determine if user can masquerade
+                if (ApiPrefs.canMasquerade == null) {
+                    if (ApiPrefs.domain.startsWith("siteadmin", true)) {
+                        ApiPrefs.canMasquerade = true
+                    } else try {
+                        val roles = awaitApi<List<AccountRole>> { UserManager.getSelfAccountRoles(true, it) }
+                        ApiPrefs.canMasquerade = roles.any { it.permissions["become_user"]?.enabled == true }
+                    } catch (e: StatusCallbackError) {
+                        if (e.response?.code() == 401) ApiPrefs.canMasquerade = false
                     }
+                }
+
+                if (!TeacherPrefs.isConfirmedTeacher && ApiPrefs.canMasquerade != true) {
+                    CourseManager.getCoursesWithEnrollmentType(true, mUserIsTeacherVerificationCallback, "teacher")
+                    // The user is not a teacher in any course and cannot masquerade; Show them the door
+                    canvasLoadingView.setGone()
+                    supportFragmentManager.beginTransaction()
+                        .add(R.id.splashActivityRootView, NotATeacherFragment(), NotATeacherFragment::class.java.simpleName)
+                        .commit()
+                    return@weave
                 }
 
                 // Grab colors
@@ -95,7 +117,7 @@ class SplashActivity : AppCompatActivity() {
                 if (ThemePrefs.isThemeApplied) {
                     ThemeManager.getTheme(mThemeCallback, true)
                 } else {
-                    ThemePrefs.applyCanvasTheme(awaitApi<CanvasTheme> { ThemeManager.getTheme(it, true) })
+                    ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) })
                 }
             } catch (e: Throwable) {
                 Logger.e(e.message)
@@ -112,7 +134,7 @@ class SplashActivity : AppCompatActivity() {
                 Crashlytics.setString("domain", null)
             }
 
-            startActivity(InitActivity.createIntent(this@SplashActivity))
+            startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))
             canvasLoadingView.announceForAccessibility(getString(R.string.loading))
             finish()
         }
@@ -124,10 +146,11 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private val mThemeCallback = object : StatusCallback<CanvasTheme>() {
-        override fun onResponse(response: Response<CanvasTheme>, linkHeaders: LinkHeaders, type: ApiType, code: Int) {
+        override fun onResponse(response: Response<CanvasTheme>, linkHeaders: LinkHeaders, type: ApiType) {
             //store the theme
-            val theme = response.body()
-            ThemePrefs.applyCanvasTheme(theme)
+            response.body()?.let {
+                ThemePrefs.applyCanvasTheme(it)
+            }
         }
     }
 
@@ -142,7 +165,7 @@ class SplashActivity : AppCompatActivity() {
 
     private val mUserIsTeacherVerificationCallback = object : StatusCallback<List<Course>>() {
         override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-            if (response.body().isNotEmpty()) {
+            if (response.body()?.isNotEmpty() == true) {
                 TeacherPrefs.isConfirmedTeacher = true
             } else {
                 CourseManager.getCoursesWithEnrollmentType(true, mUserIsTAVerificationCallback, "ta")
@@ -152,7 +175,7 @@ class SplashActivity : AppCompatActivity() {
 
     private val mUserIsTAVerificationCallback = object : StatusCallback<List<Course>>() {
         override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-                TeacherPrefs.isConfirmedTeacher = response.body().isNotEmpty()
+                TeacherPrefs.isConfirmedTeacher = response.body()?.isNotEmpty() == true
         }
     }
 }

@@ -21,14 +21,16 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.teacher.events.CourseUpdatedEvent
+import com.instructure.teacher.utils.hasActiveEnrollment
 import com.instructure.teacher.viewinterface.AllCoursesView
 import instructure.androidblueprint.SyncPresenter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import retrofit2.Response
 
-class AllCoursesPresenter(filter: (Course) -> Boolean) : SyncPresenter<Course, AllCoursesView>(Course::class.java) {
+class AllCoursesPresenter : SyncPresenter<Course, AllCoursesView>(Course::class.java) {
 
     init {
         EventBus.getDefault().register(this)
@@ -53,7 +55,11 @@ class AllCoursesPresenter(filter: (Course) -> Boolean) : SyncPresenter<Course, A
 
     private val mFavoriteCoursesCallback = object : StatusCallback<List<Course>>() {
         override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-            data.addOrUpdate(response.body().filter(filter))
+            val courses = response.body() ?: return
+            val validCourses = courses.filter {
+                (it.isTeacher || it.isTA || it.isDesigner) && it.isValidTerm() && it.hasActiveEnrollment()
+            }
+            data.addOrUpdate(validCourses)
         }
 
         override fun onFinished(type: ApiType) {
@@ -62,9 +68,8 @@ class AllCoursesPresenter(filter: (Course) -> Boolean) : SyncPresenter<Course, A
         }
     }
 
-    override fun compare(item1: Course, item2: Course): Int {
-        return item1.name.toLowerCase().compareTo(item2.name.toLowerCase())
-    }
+    override fun compare(item1: Course, item2: Course): Int =
+            item1.name.toLowerCase().compareTo(item2.name.toLowerCase())
 
     override fun onDestroyed() {
         super.onDestroyed()

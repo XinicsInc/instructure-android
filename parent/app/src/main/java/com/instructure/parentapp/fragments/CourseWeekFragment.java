@@ -55,7 +55,7 @@ public class CourseWeekFragment extends WeekFragment {
 
     @Override
     public int layoutResId() {
-        return R.layout.course_week_fragment;
+        return R.layout.fragment_course_week;
     }
 
     @Override

@@ -22,6 +22,7 @@ object ToDoManager : BaseManager() {
             val adapter = RestBuilder(callback)
             val params = RestParams.Builder()
                     .withForceReadFromNetwork(forceNetwork)
+                    .withPerPageQueryParam(true)
                     .build()
             ToDoAPI.getUserTodos(adapter, params, callback)
         }

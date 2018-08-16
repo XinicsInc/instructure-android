@@ -67,8 +67,8 @@ public class DomainPickerPage {
     // Help Menu
     private ViewInteraction helpMenuButton() { return onView(withId(R.id.help_button)); }
     private ViewInteraction helpMenuImageButton() { return onView(withId(R.id.image)); }
-    private ViewInteraction canvasGuidesButton() { return onView(withId(R.id.search_guides)); }
-    private ViewInteraction reportProblemButton() { return onView(withId(R.id.report_problem)); }
+    private ViewInteraction canvasGuidesButton() { return onView(withId(R.id.searchGuides)); }
+    private ViewInteraction reportProblemButton() { return onView(withId(R.id.reportProblem)); }
 
     // Canvas Guides
     private ViewInteraction navigateUpButton() { return onView(withContentDescription("Navigate up")); }

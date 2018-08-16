@@ -17,19 +17,15 @@
 
 package com.instructure.candroid.fragment;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.interfaces.OnEventUpdatedCallback;
 import com.instructure.candroid.util.Param;
 import com.instructure.candroid.util.RouterUtils;
@@ -46,25 +43,32 @@ import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.CalendarEventManager;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.ScheduleItem;
-import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.APIHelper;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.utils.LinkHeaders;
-import com.instructure.pandautils.utils.CanvasContextColor;
 import com.instructure.pandautils.utils.Const;
-import com.instructure.pandautils.video.ActivityContentVideoViewClient;
+import com.instructure.pandautils.utils.OnBackStackChangedEvent;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 import com.instructure.pandautils.views.CanvasWebView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.Date;
-import java.util.List;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import retrofit2.Response;
 
 public class CalendarEventFragment extends ParentFragment {
     // view variables
     private CanvasWebView canvasWebView;
     private View calendarView;
-
+    private Toolbar toolbar;
     private TextView date1;
     private TextView date2;
     private TextView address1;
@@ -80,39 +84,29 @@ public class CalendarEventFragment extends ParentFragment {
     private OnEventUpdatedCallback mOnEventUpdatedCallback;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.DETAIL; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.DETAIL; }
 
     @Override
-    public String getFragmentTitle() {
-        return getString(R.string.Event);
+    @NonNull
+    public String title() {
+        return scheduleItem != null ? scheduleItem.getTitle() : getString(R.string.Event);
     }
-
-    @Nullable
-    @Override
-    protected String getActionbarTitle() {
-        return scheduleItem != null ? scheduleItem.getTitle() : null;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // LifeCycle
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.calendar_event_fragment_layout, container, false);
-        setupDialogToolbar(rootView);
+        View rootView = inflater.inflate(R.layout.fragment_calendar_event, container, false);
         initViews(rootView);
 
         return rootView;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if(activity instanceof OnEventUpdatedCallback){
-            mOnEventUpdatedCallback = (OnEventUpdatedCallback)activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof OnEventUpdatedCallback){
+            mOnEventUpdatedCallback = (OnEventUpdatedCallback)context;
         }
     }
 
@@ -128,16 +122,17 @@ public class CalendarEventFragment extends ParentFragment {
     }
 
     @Override
-    public void createOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.createOptionsMenu(menu, inflater);
-        //If this is an event on the user's personal calendar, give them the option to delete it
-        if(scheduleItem != null && scheduleItem.getContextId() == ApiPrefs.getUser().getId()){
-            inflater.inflate(R.menu.calendar_event_menu, menu);
+    public void applyTheme() {
+        if(scheduleItem != null && scheduleItem.getContextId() == ApiPrefs.getUser().getId()) {
+            setupToolbarMenu(toolbar, R.menu.calendar_event_menu);
         }
+        PandaViewUtils.setupToolbarBackButtonAsBackPressedOnly(toolbar, this);
+
+        ViewStyler.themeToolbar(getActivity(), toolbar, getCanvasContext());
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.menu_delete:
                 if(!APIHelper.hasNetworkConnection()) {
@@ -151,19 +146,20 @@ public class CalendarEventFragment extends ParentFragment {
     }
 
     @Override
-    public void onFragmentActionbarSetupComplete(FRAGMENT_PLACEMENT placement) {
-        super.onFragmentActionbarSetupComplete(placement);
-        setupTitle(getActionbarTitle());
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         Dialog dialog = getDialog();
         if(dialog != null && !isTablet(getActivity())) {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -174,6 +170,7 @@ public class CalendarEventFragment extends ParentFragment {
         }
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -182,39 +179,44 @@ public class CalendarEventFragment extends ParentFragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBackStackChangedEvent(OnBackStackChangedEvent event) {
+        event.get(new Function1<Class<?>, Unit>() {
+            @Override
+            public Unit invoke(Class<?> clazz) {
+                if(clazz != null && clazz.isAssignableFrom(CalendarEventFragment.class)) {
+                    if (canvasWebView != null) {
+                        canvasWebView.onResume();
+                    }
+                } else {
+                    if (canvasWebView != null) {
+                        canvasWebView.onPause();
+                    }
+                }
+                return null;
+            }
+        });
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // View
     ///////////////////////////////////////////////////////////////////////////
 
     void initViews(View rootView) {
-
+        toolbar = rootView.findViewById(R.id.toolbar);
         calendarView = rootView.findViewById(R.id.calendarView);
 
-        date1 = (TextView) rootView.findViewById(R.id.date1);
-        date2 = (TextView) rootView.findViewById(R.id.date2);
-        address1 = (TextView) rootView.findViewById(R.id.address1);
-        address2 = (TextView) rootView.findViewById(R.id.address2);
+        date1 = rootView.findViewById(R.id.date1);
+        date2 = rootView.findViewById(R.id.date2);
+        address1 = rootView.findViewById(R.id.address1);
+        address2 = rootView.findViewById(R.id.address2);
 
-        canvasWebView = (CanvasWebView) rootView.findViewById(R.id.description);
-        canvasWebView.setClient(new ActivityContentVideoViewClient(getActivity(), new ActivityContentVideoViewClient.HostingView() {
-
-            @Nullable
-            @Override
-            public Dialog getDialogFragment() {
-                List<Fragment> fragmentList = getFragmentManager().getFragments();
-
-                if (fragmentList != null) {
-                    if (fragmentList.get(0) instanceof DialogFragment) {
-                        return ((DialogFragment) fragmentList.get(0)).getDialog();
-                    }
-                }
-                return null;
-            }
-        }));
+        canvasWebView = rootView.findViewById(R.id.description);
+        canvasWebView.addVideoClient(getActivity());
         canvasWebView.setCanvasEmbeddedWebViewCallback(new CanvasWebView.CanvasEmbeddedWebViewCallback() {
             @Override
             public void launchInternalWebViewFragment(String url) {
-                InternalWebviewFragment.loadInternalWebView(getActivity(), (Navigation) getActivity(), InternalWebviewFragment.createBundle(getCanvasContext(), url, false));
+                InternalWebviewFragment.Companion.loadInternalWebView(getActivity(), (Navigation) getActivity(), InternalWebviewFragment.Companion.createBundle(getCanvasContext(), url, false));
             }
 
             @Override
@@ -251,7 +253,7 @@ public class CalendarEventFragment extends ParentFragment {
     }
 
     void populateViews() {
-        setupTitle(getActionbarTitle());
+        toolbar.setTitle(title());
         String content = scheduleItem.getDescription();
 
         calendarView.setVisibility(View.VISIBLE);
@@ -294,13 +296,6 @@ public class CalendarEventFragment extends ParentFragment {
             canvasWebView.setBackgroundColor(getResources().getColor(R.color.canvasBackgroundLight));
             canvasWebView.formatHTML(content, scheduleItem.getTitle());
         }
-
-        int color;
-        if(!(getCanvasContext() instanceof User)){
-            color = CanvasContextColor.getCachedColor(getContext(), getCanvasContext());
-        } else {
-            color = getResources().getColor(R.color.defaultPrimary);
-        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -310,7 +305,7 @@ public class CalendarEventFragment extends ParentFragment {
     public void setUpCallback() {
         scheduleItemCallback = new StatusCallback<ScheduleItem>() {
             @Override
-            public void onResponse(retrofit2.Response<ScheduleItem> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<ScheduleItem> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (response.body() != null) {
                     CalendarEventFragment.this.scheduleItem = response.body();
                     populateViews();
@@ -320,7 +315,7 @@ public class CalendarEventFragment extends ParentFragment {
 
         mDeleteItemCallback = new StatusCallback<ScheduleItem>() {
             @Override
-            public void onResponse(retrofit2.Response<ScheduleItem> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<ScheduleItem> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (!apiCheck()) {
                     return;
                 }
@@ -343,6 +338,14 @@ public class CalendarEventFragment extends ParentFragment {
         String dateString = DateHelper.getFormattedDate(getContext(), date);
 
         return dayOfWeek + " " + dateString;
+    }
+
+    @Override
+    public boolean handleBackPressed() {
+        if(canvasWebView != null) {
+            return canvasWebView.handleGoBack();
+        }
+        return super.handleBackPressed();
     }
 
     ///////////////////////////////////////////////////////////////////////////

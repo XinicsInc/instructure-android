@@ -23,7 +23,8 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.CourseBrowserView
 import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.experimental.Job
@@ -37,7 +38,7 @@ class CourseBrowserPresenter(val course: Course, val filter: (Tab, Int) -> Boole
 
         onRefreshStarted()
 
-        mApiCalls = weave {
+        mApiCalls = tryWeave {
             val tabs = awaitApi<List<Tab>> { TabManager.getTabs(course, it, forceNetwork) }.filter { !(it.isExternal && it.isHidden) } //we don't want to list external tools that are hidden
             val launchDefinitions = awaitApi<List<LaunchDefinition>> {
                 LaunchDefinitionsManager.getLaunchDefinitionsForCourse(course.id, it, forceNetwork)
@@ -59,6 +60,12 @@ class CourseBrowserPresenter(val course: Course, val filter: (Tab, Int) -> Boole
                 filter(it, attendanceId)
             })
 
+            viewCallback?.let {
+                it.onRefreshFinished()
+                it.checkIfEmpty()
+            }
+        } catch {
+            it.cause?.printStackTrace()
             viewCallback?.let {
                 it.onRefreshFinished()
                 it.checkIfEmpty()

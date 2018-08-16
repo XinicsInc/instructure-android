@@ -33,9 +33,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.teacher.R
 
 typealias OnRadioButtonSelected = ((selectedIdx: Int) -> Unit)?
@@ -102,10 +99,10 @@ class RadioButtonDialog : AppCompatDialogFragment() {
             activity.windowManager.defaultDisplay.getMetrics(metrics)
             params.height = typedValues.getDimension(metrics).toInt()
             radioButton.layoutParams = params
-
-            if (currentSelectionIdx == index) radioGroup.check(radioButton.id)
-
         }
+
+        // Setting it afterwards so the onCheckChangedListener get triggered after all the radio buttons are added
+        radioGroup.check(currentSelectionIdx + 1)
 
         val dialog = AlertDialog.Builder(activity)
                 .setCancelable(true)

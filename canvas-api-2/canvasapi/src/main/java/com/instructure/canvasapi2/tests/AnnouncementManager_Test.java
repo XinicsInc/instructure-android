@@ -18,7 +18,7 @@
 package com.instructure.canvasapi2.tests;
 
 import com.instructure.canvasapi2.StatusCallback;
-import com.instructure.canvasapi2.builders.RestParams;
+import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.DiscussionTopicHeader;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
@@ -34,7 +34,7 @@ import okhttp3.ResponseBody;
 
 public class AnnouncementManager_Test {
 
-    public static void getAnnouncements(long courseId, StatusCallback<List<DiscussionTopicHeader>> callback) {
+    public static void getAnnouncements(CanvasContext canvasContext, StatusCallback<List<DiscussionTopicHeader>> callback) {
         //TODO:
         Response response = new Response.Builder()
                 .code(200)
@@ -50,7 +50,7 @@ public class AnnouncementManager_Test {
         callback.onResponse(response1, new LinkHeaders(), ApiType.CACHE);
     }
 
-    public static void getAnnouncements(List<String> contextCodes, String startDate, String endDate, StatusCallback<List<DiscussionTopicHeader>> callback, RestParams params) {
+    public static void getAnnouncements(List<String> contextCodes, String startDate, String endDate, StatusCallback<List<DiscussionTopicHeader>> callback) {
         //TODO:
         Response response = new Response.Builder()
                 .code(200)

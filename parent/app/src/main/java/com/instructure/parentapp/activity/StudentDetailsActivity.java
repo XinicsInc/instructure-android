@@ -309,7 +309,7 @@ public class StudentDetailsActivity extends BaseParentActivity implements Studen
         //cleanup the threshold string
         final String threshold = getCleanThresholdValue(currentThreshold);
 
-        StudentThresholdDialog.newInstance(title, threshold, thresholdType)
+        StudentThresholdDialog.Companion.newInstance(title, threshold, thresholdType)
                 .show(getSupportFragmentManager(), StudentThresholdDialog.class.getSimpleName());
     }
 
@@ -486,7 +486,7 @@ public class StudentDetailsActivity extends BaseParentActivity implements Studen
                     thresholdId,
                     new StatusCallback<ResponseBody>() {
                         @Override
-                        public void onResponse(Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {
+                        public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                             if (!APIHelper.isCachedResponse(response)) {
                                 switch (alertType) {
                                     case COURSE_GRADE_LOW:
@@ -517,7 +517,7 @@ public class StudentDetailsActivity extends BaseParentActivity implements Studen
                         }
 
                         @Override
-                        public void onFail(Call<ResponseBody> response, Throwable error) {
+                        public void onFail(@Nullable Call<ResponseBody> call, @NonNull Throwable error, @Nullable Response response) {
                             enableSwitches(alertType);
                             Toast.makeText(StudentDetailsActivity.this, getString(R.string.errorOccurred), Toast.LENGTH_SHORT).show();
                         }
@@ -569,14 +569,14 @@ public class StudentDetailsActivity extends BaseParentActivity implements Studen
                     Alert.alertTypeToAPIString(alertType),
                     new StatusCallback<AlertThreshold>() {
                         @Override
-                        public void onResponse(Response<AlertThreshold> response, LinkHeaders linkHeaders, ApiType type) {
+                        public void onResponse(@NonNull Response<AlertThreshold> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                             if (!APIHelper.isCachedResponse(response)) {
                                 enableSwitches(alertType);
                             }
                         }
 
                         @Override
-                        public void onFail(Call<AlertThreshold> response, Throwable error) {
+                        public void onFail(@Nullable Call<AlertThreshold> call, @NonNull Throwable error, @Nullable Response response) {
                             enableSwitches(alertType);
                             Toast.makeText(StudentDetailsActivity.this, getString(R.string.errorOccurred), Toast.LENGTH_SHORT).show();
                         }
@@ -596,7 +596,7 @@ public class StudentDetailsActivity extends BaseParentActivity implements Studen
                 Alert.alertTypeToAPIString(alertType),
                 new StatusCallback<AlertThreshold>() {
                     @Override
-                    public void onResponse(Response<AlertThreshold> response, LinkHeaders linkHeaders, ApiType type) {
+                    public void onResponse(@NonNull Response<AlertThreshold> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                         if (!APIHelper.isCachedResponse(response)) {
                             mAlertThresholds.add(response.body());
                             enableSwitches(alertType);
@@ -604,7 +604,7 @@ public class StudentDetailsActivity extends BaseParentActivity implements Studen
                     }
 
                     @Override
-                    public void onFail(Call<AlertThreshold> response, Throwable error) {
+                    public void onFail(@Nullable Call<AlertThreshold> call, @NonNull Throwable error, @Nullable Response response) {
                         enableSwitches(alertType);
                         Toast.makeText(StudentDetailsActivity.this, getString(R.string.errorOccurred), Toast.LENGTH_SHORT).show();
                     }
@@ -624,7 +624,7 @@ public class StudentDetailsActivity extends BaseParentActivity implements Studen
                 threshold,
                 new StatusCallback<AlertThreshold>() {
                     @Override
-                    public void onResponse(Response<AlertThreshold> response, LinkHeaders linkHeaders, ApiType type) {
+                    public void onResponse(@NonNull Response<AlertThreshold> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                         mAlertThresholds.add(response.body());
                     }
                 }
@@ -650,7 +650,7 @@ public class StudentDetailsActivity extends BaseParentActivity implements Studen
     private void setupCallbacks() {
         mAlertThresholdCallback = new StatusCallback<List<AlertThreshold>>(){
             @Override
-            public void onResponse(retrofit2.Response<List<AlertThreshold>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<AlertThreshold>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 mAlertThresholds.clear();
                 mAlertThresholds.addAll(response.body());
 

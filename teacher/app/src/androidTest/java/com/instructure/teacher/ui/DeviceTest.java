@@ -17,7 +17,6 @@
 
 package com.instructure.teacher.ui;
 
-import com.instructure.espresso.Device;
 import com.instructure.espresso.filters.P0;
 import com.instructure.teacher.ui.utils.TeacherTest;
 
@@ -28,7 +27,7 @@ public class DeviceTest extends TeacherTest {
     @Test
     @P0
     public void checkAnimationsOff() {
-        Device.verifyAnimationsDisabled();
+//        Device.verifyAnimationsDisabled();
     }
 
     @Override

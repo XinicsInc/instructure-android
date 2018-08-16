@@ -15,7 +15,14 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.models.Assignment
+import com.instructure.dataseeding.util.ago
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
+import com.instructure.soseedy.Assignment
+import com.instructure.soseedy.SubmissionSeed
+import com.instructure.soseedy.SubmissionType.*
+import com.instructure.soseedy.*
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
@@ -24,7 +31,15 @@ class AssignmentDetailsPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3109579")
     override fun displaysPageObjects() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(
+                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
+                students = 1,
+                submissions = listOf(
+                        SubmissionSeed.newBuilder()
+                                .setSubmissionType(ONLINE_TEXT_ENTRY)
+                                .setAmount(1)
+                                .build()
+                        ))
         assignmentDetailsPage.assertPageObjects()
     }
 
@@ -38,7 +53,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3109579")
     fun displaysInstructions() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(withDescription = true)
         assignmentDetailsPage.assertDisplaysInstructions()
     }
 
@@ -52,72 +67,109 @@ class AssignmentDetailsPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3134481")
     fun displaysClosedAvailability() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(lockAt = 7.days.ago.iso8601)
         assignmentDetailsPage.assertAssignmentClosed()
     }
 
     @Test
     @TestRail(ID = "C3134482")
     fun displaysNoFromDate() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(lockAt = 7.days.fromNow.iso8601)
         assignmentDetailsPage.assertToFilledAndFromEmpty()
     }
 
     @Test
     @TestRail(ID = "C3134483")
     fun displaysNoToDate() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(unlockAt = 7.days.ago.iso8601)
         assignmentDetailsPage.assertFromFilledAndToEmpty()
     }
 
     @Test
     fun displaysSubmissionTypeNone() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(submissionTypes = listOf(NO_TYPE))
         assignmentDetailsPage.assertSubmissionTypeNone()
     }
 
     @Test
     fun displaysSubmissionTypeOnPaper() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(submissionTypes = listOf(ON_PAPER))
         assignmentDetailsPage.assertSubmissionTypeOnPaper()
     }
 
     @Test
     fun displaysSubmissionTypeOnlineTextEntry() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(submissionTypes = listOf(ONLINE_TEXT_ENTRY))
         assignmentDetailsPage.assertSubmissionTypeOnlineTextEntry()
     }
 
     @Test
     fun displaysSubmissionTypeOnlineUrl() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(submissionTypes = listOf(ONLINE_URL))
         assignmentDetailsPage.assertSubmissionTypeOnlineUrl()
     }
 
     @Test
     fun displaysSubmissionTypeOnlineUpload() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(submissionTypes = listOf(ONLINE_UPLOAD))
         assignmentDetailsPage.assertSubmissionTypeOnlineUpload()
     }
 
     @Test
     fun displaysSubmittedDonut() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(
+                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
+                students = 1,
+                submissions = listOf(
+                        SubmissionSeed.newBuilder()
+                                .setSubmissionType(ONLINE_TEXT_ENTRY)
+                                .setAmount(1)
+                                .build()
+                ))
         assignmentDetailsPage.assertHasSubmitted()
     }
 
     @Test
     fun displaysNotSubmittedDonut() {
-        getToAssignmentDetailsPage()
+        getToAssignmentDetailsPage(students = 1)
         assignmentDetailsPage.assertNotSubmitted()
     }
 
-    private fun getToAssignmentDetailsPage(): Assignment {
-        logIn()
-        val assignment = getNextAssignment()
-        coursesListPage.openCourse(getNextCourse())
+    private fun getToAssignmentDetailsPage(
+            assignments: Int = 1,
+            withDescription: Boolean = false,
+            lockAt: String = "",
+            unlockAt: String = "",
+            submissionTypes: List<SubmissionType> = emptyList(),
+            students: Int = 0,
+            submissions: List<SubmissionSeed> = emptyList()): Assignment {
+
+        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val assignment = seedAssignments(
+                assignments = assignments,
+                courseId = course.id,
+                withDescription = withDescription,
+                lockAt = lockAt,
+                unlockAt = unlockAt,
+                submissionTypes = submissionTypes,
+                teacherToken = teacher.token)
+
+        if (!submissions.isEmpty()) {
+            seedAssignmentSubmission(
+                    submissionSeeds = submissions,
+                    assignmentId = assignment.assignmentsList[0].id,
+                    courseId = course.id,
+                    studentToken = if (data.studentsList.isEmpty()) "" else data.studentsList[0].token
+            )
+        }
+
+        tokenLogin(teacher)
+
+        coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(assignment)
-        return assignment
+        assignmentListPage.clickAssignment(assignment.assignmentsList[0])
+        return assignment.assignmentsList[0]
     }
 }

@@ -20,8 +20,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.instructure.canvasapi2.StatusCallback;
-import com.instructure.canvasapi2.apis.ConversationAPI;
-import com.instructure.canvasapi2.managers.ConversationManager;
+import com.instructure.canvasapi2.apis.InboxApi;
+import com.instructure.canvasapi2.managers.InboxManager;
 import com.instructure.canvasapi2.models.BasicUser;
 import com.instructure.canvasapi2.models.Conversation;
 import com.instructure.canvasapi2.models.Message;
@@ -43,30 +43,35 @@ public class MessageThreadPresenter extends SyncPresenter<Message, MessageThread
     private Conversation mConversation;
     private int mPosition;
 
+    private long conversationId;
+
     private HashMap<Long, BasicUser> mParticipants = new HashMap<>();
 
     private boolean mSkipCacheForRefresh = false;
+
+    private boolean forceNetwork;
 
     public MessageThreadPresenter(@NonNull Conversation conversation, int position) {
         super(Message.class);
         mConversation = conversation;
         mPosition = position;
+        conversationId = mConversation.getId();
+    }
+
+    // Used for when coing from a push notification and all we have is the conversation id
+    public MessageThreadPresenter(long conversationId) {
+        super(Message.class);
+        this.conversationId = conversationId;
     }
 
     @Override
     public void loadData(boolean forceNetwork) {
+        this.forceNetwork = forceNetwork;
         if (getData().size() == 0) {
-            ConversationManager.getConversation(mConversation.getId(), forceNetwork, mConversationCallback);
+            InboxManager.getConversation(conversationId, forceNetwork, mConversationCallback);
         } else if (getViewCallback() != null) {
             getViewCallback().onRefreshFinished();
             getViewCallback().checkIfEmpty();
-        }
-
-        if (mConversation.getWorkflowState() == Conversation.WorkflowState.UNREAD && forceNetwork) {
-            //we need to update this for our event
-            mConversation.setWorkflowState("read");
-            //we need to inform the inbox fragment to update this to read
-            getViewCallback().onConversationRead(mPosition);
         }
     }
 
@@ -82,7 +87,25 @@ public class MessageThreadPresenter extends SyncPresenter<Message, MessageThread
     private StatusCallback<Conversation> mConversationCallback = new StatusCallback<Conversation>() {
 
         @Override
-        public void onResponse(Response<Conversation> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<Conversation> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
+
+            if (mConversation == null) {
+                // Happens when coming from a push notification; No initial conversation object passed in, so we get it here
+                mConversation = response.body();
+            }
+
+            if (mConversation.getWorkflowState() == Conversation.WorkflowState.UNREAD && forceNetwork) {
+                //we need to update this for our event
+                mConversation.setWorkflowState("read");
+                //we need to inform the inbox fragment to update this to read
+                if (getViewCallback() != null) {
+                    getViewCallback().onConversationRead(mPosition);
+                }
+            }
+
+            if (getViewCallback() != null) {
+                getViewCallback().setupConversationDetails();
+            }
 
             // Skip cache if we're refreshing
             if (type == ApiType.CACHE && mSkipCacheForRefresh) {
@@ -131,10 +154,9 @@ public class MessageThreadPresenter extends SyncPresenter<Message, MessageThread
 
     public void toggleArchived() {
         final boolean archive = mConversation.getWorkflowState() != Conversation.WorkflowState.ARCHIVED;
-        ConversationManager.archiveConversation(mConversation.getId(), archive, new StatusCallback<Conversation>() {
+        InboxManager.archiveConversation(mConversation.getId(), archive, new StatusCallback<Conversation>() {
             @Override
-            public void onResponse(Response<Conversation> response, LinkHeaders linkHeaders, ApiType type) {
-                super.onResponse(response, linkHeaders, type);
+            public void onResponse(@NonNull Response<Conversation> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type.isAPI()) {
                     showUserMessage(archive ? R.string.message_archived : R.string.message_unarchived);
                     if (getViewCallback() != null) {
@@ -150,17 +172,16 @@ public class MessageThreadPresenter extends SyncPresenter<Message, MessageThread
             }
 
             @Override
-            public void onFail(Call<Conversation> response, Throwable error) {
-                super.onFail(response, error);
+            public void onFail(@Nullable Call<Conversation> call, @NonNull Throwable error, @Nullable Response response) {
                 showUserMessage(R.string.error_conversation_generic);
             }
         });
     }
 
     public void toggleStarred() {
-        ConversationManager.starConversation(mConversation.getId(), !mConversation.isStarred(), mConversation.getWorkflowState(), new StatusCallback<Conversation>() {
+        InboxManager.starConversation(mConversation.getId(), !mConversation.isStarred(), mConversation.getWorkflowState(), new StatusCallback<Conversation>() {
             @Override
-            public void onResponse(Response<Conversation> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Conversation> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type.isAPI()) {
                     if (getViewCallback() != null) {
                         if(mConversation.isStarred()) {
@@ -175,26 +196,23 @@ public class MessageThreadPresenter extends SyncPresenter<Message, MessageThread
             }
 
             @Override
-            public void onFail(Call<Conversation> response, Throwable error) {
-                super.onFail(response, error);
+            public void onFail(@Nullable Call<Conversation> call, @NonNull Throwable error, @Nullable Response response) {
                 showUserMessage(R.string.error_conversation_generic);
             }
         });
     }
 
     public void deleteConversation() {
-        ConversationManager.deleteConversation(mConversation.getId(), new StatusCallback<Conversation>() {
+        InboxManager.deleteConversation(mConversation.getId(), new StatusCallback<Conversation>() {
             @Override
-            public void onResponse(Response<Conversation> response, LinkHeaders linkHeaders, ApiType type) {
-                super.onResponse(response, linkHeaders, type);
+            public void onResponse(@NonNull Response<Conversation> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (getViewCallback() != null && type.isAPI()) {
                     getViewCallback().onConversationDeleted(mPosition);
                 }
             }
 
             @Override
-            public void onFail(Call<Conversation> response, Throwable error) {
-                super.onFail(response, error);
+            public void onFail(@Nullable Call<Conversation> call, @NonNull Throwable error, @Nullable Response response) {
                 showUserMessage(R.string.error_conversation_generic);
             }
         });
@@ -203,10 +221,9 @@ public class MessageThreadPresenter extends SyncPresenter<Message, MessageThread
     public void deleteMessage(final Message message) {
         List<Long> messageIds = new ArrayList<>(1);
         messageIds.add(message.getId());
-        ConversationManager.deleteMessages(mConversation.getId(), messageIds, new StatusCallback<Conversation>() {
+        InboxManager.deleteMessages(mConversation.getId(), messageIds, new StatusCallback<Conversation>() {
             @Override
-            public void onResponse(Response<Conversation> response, LinkHeaders linkHeaders, ApiType type) {
-                super.onResponse(response, linkHeaders, type);
+            public void onResponse(@NonNull Response<Conversation> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type.isAPI()) {
                     boolean needsUpdate = false;
                     if(getData().indexOf(message) == 0) {
@@ -227,18 +244,16 @@ public class MessageThreadPresenter extends SyncPresenter<Message, MessageThread
             }
 
             @Override
-            public void onFail(Call<Conversation> response, Throwable error) {
-                super.onFail(response, error);
+            public void onFail(@Nullable Call<Conversation> call, @NonNull Throwable error, @Nullable Response response) {
                 showUserMessage(R.string.error_conversation_generic);
             }
         });
     }
 
     public void markConversationUnread() {
-        ConversationManager.markConversationAsUnread(mConversation.getId(), ConversationAPI.CONVERSATION_MARK_UNREAD, new StatusCallback<Void>() {
+        InboxManager.markConversationAsUnread(mConversation.getId(), InboxApi.CONVERSATION_MARK_UNREAD, new StatusCallback<Void>() {
             @Override
-            public void onResponse(Response<Void> response, LinkHeaders linkHeaders, ApiType type) {
-                super.onResponse(response, linkHeaders, type);
+            public void onResponse(@NonNull Response<Void> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(response.isSuccessful()) {
                     if(getViewCallback() != null) {
                         //we need to update this item since the api returns nothing

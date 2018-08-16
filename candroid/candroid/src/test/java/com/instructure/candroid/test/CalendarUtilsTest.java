@@ -31,7 +31,7 @@ import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class CalendarUtilsTest extends Assert {
 

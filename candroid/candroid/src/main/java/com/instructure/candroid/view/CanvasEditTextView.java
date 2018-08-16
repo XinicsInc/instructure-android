@@ -24,12 +24,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -39,10 +38,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Scroller;
 
 import com.instructure.candroid.R;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 /**
  * By Default, this will appear as a single line edit text with:
@@ -102,7 +100,7 @@ public class CanvasEditTextView extends RelativeLayout {
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CanvasEditText, 0, 0);
 
         try {
-            mColorTint = a.getColor(R.styleable.CanvasEditText_tintColor, context.getResources().getColor(R.color.courseGrey));
+            mColorTint = a.getColor(R.styleable.CanvasEditText_tintColor, context.getResources().getColor(R.color.defaultTextGray));
             mHintText = a.getString(R.styleable.CanvasEditText_hintText);
             mTextSize = a.getDimensionPixelSize(R.styleable.CanvasEditText_textSize, (int) ViewUtils.convertDipsToPixels(14, context));
             mShowTopBorder = a.getBoolean(R.styleable.CanvasEditText_hasTopBorder, false);
@@ -161,7 +159,7 @@ public class CanvasEditTextView extends RelativeLayout {
     //region View Layout Helpers
     ////////////////////////////////////////////////////////////////////////////////////////////////
     public static EditText initEditText(Context context, String hint, int hintColor, float textSize, int maxLines){
-        final EditText editText = new EditText(context);
+        final AppCompatEditText editText = new AppCompatEditText(context);
         editText.setId(R.id.canvasEditText);
         editText.setEnabled(true);
         editText.setHint(hint);
@@ -169,11 +167,9 @@ public class CanvasEditTextView extends RelativeLayout {
         editText.setSingleLine(false);
         editText.setMaxLines(maxLines);
         editText.setVerticalScrollBarEnabled(true);
-        editText.setScroller(new Scroller(context));
-        editText.setMovementMethod(new ScrollingMovementMethod());
         editText.setTextColor(context.getResources().getColor(R.color.canvasTextDark));
         editText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        editText.setRawInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        editText.setRawInputType(editText.getInputType() | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
         final int padding = context.getResources().getDimensionPixelOffset(R.dimen.canvas_edit_text_view_padding);
         editText.setPadding(padding, 0, padding, 0);
@@ -182,13 +178,8 @@ public class CanvasEditTextView extends RelativeLayout {
         editText.setBackgroundDrawable(colorDrawable);
 
         RelativeLayout.LayoutParams editTextParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            editTextParams.addRule(RelativeLayout.END_OF, R.id.leftLayout);
-            editTextParams.addRule(RelativeLayout.START_OF, R.id.rightLayout);
-        } else {
-            editTextParams.addRule(RelativeLayout.RIGHT_OF, R.id.leftLayout);
-            editTextParams.addRule(RelativeLayout.LEFT_OF, R.id.rightLayout);
-        }
+        editTextParams.addRule(RelativeLayout.END_OF, R.id.leftLayout);
+        editTextParams.addRule(RelativeLayout.START_OF, R.id.rightLayout);
         editTextParams.addRule(RelativeLayout.CENTER_VERTICAL);
         editText.setLayoutParams(editTextParams);
 
@@ -199,11 +190,7 @@ public class CanvasEditTextView extends RelativeLayout {
         int size = (int) context.getResources().getDimension(R.dimen.conversation_attachment_indicator_size);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(size, size);
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        } else {
-            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        }
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
         layoutParams.addRule(RelativeLayout.ABOVE);
         IndicatorCircleView indicatorCircleView = new IndicatorCircleView(context);
         indicatorCircleView.setLayoutParams(layoutParams);
@@ -215,15 +202,11 @@ public class CanvasEditTextView extends RelativeLayout {
     public RelativeLayout initRightButtonLayout(final Context context, ImageView rightImage, ProgressBar progressBar){
         RelativeLayout layout = new RelativeLayout(context);
         RelativeLayout.LayoutParams rightButtonLayoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            rightButtonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-        } else {
-            rightButtonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        }
+        rightButtonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
         rightButtonLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
         layout.setId(R.id.rightLayout);
-        layout.setBackgroundDrawable(getSelectionIndicator(context));
+        layout.setBackground(getSelectionIndicator(context));
         layout.setLayoutParams(rightButtonLayoutParams);
 
         layout.setOnClickListener(new OnClickListener() {
@@ -245,15 +228,11 @@ public class CanvasEditTextView extends RelativeLayout {
         RelativeLayout layout = new RelativeLayout(context);
 
         RelativeLayout.LayoutParams leftButtonParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            leftButtonParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        } else {
-            leftButtonParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        }
+        leftButtonParams.addRule(RelativeLayout.ALIGN_PARENT_START);
         leftButtonParams.addRule(RelativeLayout.CENTER_VERTICAL);
 
         layout.setId(R.id.leftLayout);
-        layout.setBackgroundDrawable(getSelectionIndicator(context));
+        layout.setBackground(getSelectionIndicator(context));
         layout.setLayoutParams(leftButtonParams);
         layout.setVisibility(VISIBLE);
         layout.setOnClickListener(new OnClickListener() {
@@ -295,7 +274,7 @@ public class CanvasEditTextView extends RelativeLayout {
         buttonImageLayoutParams.addRule(CENTER_VERTICAL);
         buttonImageLayoutParams.setMargins(margins, margins, margins, margins);
 
-        imageView.setImageResource(R.drawable.ic_cv_check);
+        imageView.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_check_white_24dp, Color.BLACK));
         imageView.setLayoutParams(buttonImageLayoutParams);
         return imageView;
     }
@@ -317,8 +296,7 @@ public class CanvasEditTextView extends RelativeLayout {
     public static Drawable getSelectionIndicator(Context context){
         int[] attrs = { android.R.attr.selectableItemBackground };
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs);
-        Drawable indicator = ta.getDrawable(0);
-        return indicator;
+        return ta.getDrawable(0);
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //endregion
@@ -332,11 +310,11 @@ public class CanvasEditTextView extends RelativeLayout {
 
         if(showKeyboard){
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(mEditText, InputMethodManager.SHOW_IMPLICIT);
+            if (imm != null) imm.showSoftInput(mEditText, InputMethodManager.SHOW_IMPLICIT);
             mEditText.setSelection(mEditText.getText().length());
         }else{
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+            if (imm != null) imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
         }
     }
 
@@ -391,7 +369,7 @@ public class CanvasEditTextView extends RelativeLayout {
     }
 
     private Drawable getTintedDrawable( int resourceId){
-        return CanvasContextColor.getColoredDrawable(mLeftImage.getContext().getApplicationContext(), resourceId, mColorTint);
+        return ColorKeeper.getColoredDrawable(mLeftImage.getContext().getApplicationContext(), resourceId, mColorTint);
     }
 
     public void showLeftImage(){

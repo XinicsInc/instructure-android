@@ -19,7 +19,7 @@ import android.support.annotation.IdRes
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.ViewInteraction
 import android.support.test.espresso.matcher.ViewMatchers
-import com.instructure.teacher.ui.utils.*
+import com.instructure.teacher.ui.utils.assertDisplayed
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 

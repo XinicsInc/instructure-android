@@ -50,7 +50,7 @@
     <dimen name="card_outer_margin">12dp</dimen>
     <dimen name="card_header_margins">16dp</dimen>
     <dimen name="card_header_checkbox_margins">24dp</dimen>
-    <dimen name="card_header_indicator_size">38dp</dimen>
+    <dimen name="card_header_indicator_size">28dp</dimen>
 
     <dimen name="conversation_card_min_width">260dp</dimen>
 

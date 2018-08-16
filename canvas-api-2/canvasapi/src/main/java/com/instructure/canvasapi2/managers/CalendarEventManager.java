@@ -99,19 +99,20 @@ public class CalendarEventManager extends BaseManager {
         }
     }
 
-    public static List<ScheduleItem> getUpcomingEventsSynchronous(boolean forceNetwork) {
+    @NonNull
+    public static List<ScheduleItem> getUpcomingEventsSynchronous(boolean forceNetwork) throws IOException {
         if (isTesting() || mTesting) {
             // TODO
-            return null;
+            return new ArrayList();
         } else {
             final RestBuilder adapter = new RestBuilder();
-            final RestParams params = new RestParams.Builder().build();
-            try {
-                Response<List<ScheduleItem>> response = CalendarEventAPI.getUpcomingEventsSynchronous(adapter, params);
-                return response.isSuccessful() ? response.body() : null;
-            } catch (IOException e) {
-                return null;
-            }
+            final RestParams params = new RestParams.Builder()
+                    .withForceReadFromNetwork(forceNetwork)
+                    .withPerPageQueryParam(true)
+                    .build();
+
+            Response<List<ScheduleItem>> response = CalendarEventAPI.getUpcomingEventsSynchronous(adapter, params);
+            return (response != null && response.isSuccessful() && response.body() != null) ? response.body() : new ArrayList();
         }
     }
 

@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -29,9 +29,10 @@
     <string name="tab_discussions">Discussions</string>
     <string name="tab_announcements">Annonces</string>
     <string name="tab_attendance">Présence</string>
+    <string name="tab_pages">Pages</string>
+    <string name="tab_todo">À faire</string>
     <string name="content_description_school_logo">Logo de l’école</string>
-    <string name="content_description_avatar">Avatar</string>
-    <string name="search_guides">Rechercher dans les guides canvas</string>
+    <string name="search_guides">Rechercher dans les guides de Canvas</string>
     <string name="canvas_guides">Guides de Canvas</string>
     <string name="search_guides_icon">Icône des guides Canvas</string>
     <string name="search_guides_details">Réponses aux questions fréquemment posées</string>
@@ -57,7 +58,7 @@
     <string name="course">Cours</string>
     <string name="profile">Profil</string>
     <string name="share">Partager</string>
-    <string name="share_with">Partager avec &#8230;</string>
+    <string name="share_with">Partager avec&#8230;</string>
 
     <!-- Compose Message -->
     <string name="no_subject">(pas de sujet)</string>
@@ -115,7 +116,7 @@
 
     <string name="no_title">Sans titre</string>
     <string name="announcement_create_success">Annonce créée !</string>
-    <string name="announcement_create_fail">Impossible de créer l’annonce. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="announcement_create_fail">Impossible de créer l’annonce. Veuillez vérifier votre et réessayer.</string>
     <string name="create_announcement_delay_posting">Retarder publication</string>
 
     <string name="discussion">Discussion</string>
@@ -142,7 +143,7 @@
     <string name="uploading_files">Envoi des fichiers en cours&#8230;</string>
     <string name="no_attachment">(Aucune pièce jointe)</string>
     <string name="remove_attachment">Supprimer les pièces jointes</string>
-    <string name="creating_announcement">Création d\'annonces en cours&#8230;</string>
+    <string name="creating_announcement">Création des annonces en cours&#8230;</string>
 
     <string name="copy_email">Copier adresse email</string>
     <string name="all_grading_periods">Toutes les périodes de notation</string>
@@ -150,8 +151,8 @@
     <string name="all_submissions_graded">Toutes les soumissions ont été notées</string>
     <string name="icon">icône</string>
     <plurals name="grading_status_assignment">
-        <item quantity="one">%d soumission a besoin d’être notée</item>
-        <item quantity="other">%d soumissions ont besoin d’être notées</item>
+        <item quantity="one">%d soumission doit être notée</item>
+        <item quantity="other">%d soumissions doivent être notées</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
@@ -161,7 +162,7 @@
 
     <string name="inbox_empty_title">Aucun message</string>
     <string name="inbox_empty_starred_title">Aucun message partagé</string>
-    <string name="inbox_empty_message">Appuyez sur le symbole « +  » pour créer une nouvelle conversation.</string>
+    <string name="inbox_empty_message">Appuyez sur le \"+\" pour créer une nouvelle conversation.</string>
     <string name="inbox_empty_starred_message">Marquez des messages d\'une étoile en appuyant sur l\'icône étoile située dans le message.</string>
 
     <string name="download_attachment">Télécharger la pièce jointe</string>
@@ -210,8 +211,8 @@
         <item quantity="other">+ %d Messages</item>
     </plurals>
     <plurals name="submissionNeedsGrading">
-        <item quantity="one">%d soumission a besoin d’être notée</item>
-        <item quantity="other">%d soumissions ont besoin d’être notées</item>
+        <item quantity="one">%d soumission doit être notée</item>
+        <item quantity="other">%d soumissions doivent être notées</item>
     </plurals>
 
     <string name="delete_assignment_message">Voulez-vous vraiment supprimer cette tâche ?</string>
@@ -267,14 +268,14 @@
     <string name="error_occurred">Une erreur inattendue est survenue.</string>
     <string name="no_assignments_with_file_upload">Ce cours n\'a pas de devoirs qui permettent de télécharger des fichiers.</string>
     <string name="extension_not_allowed">Le type de fichier sélectionné n\'est pas autorisé.</string>
-    <string name="allowed_extensions">Extensions autorisées :&#160;</string>
+    <string name="allowed_extensions">Extensions autorisées : </string>
     <string name="files_uploaded_successfully">Fichiers téléchargés avec succès.</string>
     <string name="error_uploading_file">Une erreur est survenue lors de l’envoi de votre fichier. Veuillez réessayer.</string>
-    <string name="uploading_file">Envoi du fichier en cours&#8230;</string>
+    <string name="uploading_file">Téléchargement du fichier&#8230;</string>
     <string name="no_apps">Aucune application installée sur votre appareil n’est capable de prendre en charge de fichier.</string>
     <string name="turn_in">Rendre</string>
     <string name="error_getting_photo">Une erreur est survenue lors de l’obtention de la photo. Veuillez réessayer.</string>
-    <string name="loading_files_indeterminate">Chargement des fichiers&#8230;</string>
+    <string name="loading_files_indeterminate">Fichiers en cours de chargement&#8230;</string>
     <string name="no_files_uploaded">Vous n\'avez pas sélectionné de fichier.</string>
     <string name="file_upload_not_supported">Vous ne pouvez pas envoyer de fichiers vers le devoir sélectionné.</string>
     <string name="one_or_more_extension_not_allowed">Un ou plusieurs fichiers possèdent une extension non autorisée.</string>
@@ -285,14 +286,14 @@
     <string name="inbox_sent">Envoyé</string>
     <string name="inbox_archived">Archivé</string>
     <string name="inbox_all_messages">Tous les messages</string>
-    <string name="uploading_file_num" formatted="false">Envoi de %d sur %d</string>
+    <string name="uploading_file_num" formatted="false">Envoi %d sur %d en cours</string>
     <string name="page_not_found">Page non trouvée</string>
     <string name="no_connection">Aucune connexion</string>
     <string name="unauthorized_access">Vous n’êtes pas autorisé à accéder à ceci. Soit vous n’avez pas les autorisations requises, soit vous n’avez pas encore accès à ce contenu (par ex., le cours n’a pas encore commencé)</string>
     <string name="server_error">Une erreur de serveur est survenue.</string>
     <string name="error_loading_files">Une erreur est survenue lors du chargement de votre fichier Veuillez vérifier votre connexion internet et réessayer.</string>
     <string name="files_submitted_successfully">Fichiers soumis avec succès.</string>
-    <string name="no_data_connection"> Veuillez vérifier votre connexion de données et réessayer. </string>
+    <string name="no_data_connection">Veuillez vérifier votre connexion de données et réessayer.</string>
     <string name="teacher_logout_warning">Voulez-vous vraiment vous déconnecter ?</string>
     <string name="teacher_yes">Oui</string>
     <string name="teacher_no">Non</string>
@@ -308,23 +309,23 @@
     <!--Course Settings-->
     <string name="course_settings">Paramètres du cours</string>
     <string name="course_name">Nom du cours</string>
-    <string name="set_home_to">Définir l’ « Accueil » sur...</string>
+    <string name="set_home_to">Définir l’ « Accueil » sur&#8230;</string>
     <string name="course_activity_stream">Flux d’activités du cours</string>
     <string name="pages_front_page">Première page</string>
+    <string name="frontPage">Première page</string>
     <string name="course_modules">Modules du cours</string>
     <string name="assignments_list">Liste des tâches</string>
     <string name="syllabus">Programme</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Dates limites multiples</string>
     <string name="everyone">Tout le monde</string>
     <string name="everyone_else">Tous les autres</string>
     <string name="unknown_student">Élève inconnu</string>
     <string name="closed">Fermé</string>
-    <string name="no_date_filler">–</string>
-    <string name="due_date_at_time" formatted="false">À rendre le %s à %s</string>
-    <string name="last_post" formatted="false">Dernière publication %s</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">Dû le %1s à %2s</string>
+    <string name="last_post" formatted="false">Dernière publication le %s</string>
     <string name="submission_types">Types de soumission</string>
     <string name="full_due_date_details">Détails complets de la date limite de rendu</string>
     <string name="availability_label">Disponibilité :</string>
@@ -381,21 +382,21 @@
     <string name="lock_after_unlock_error">La date de verrouillage ne peut pas être antérieure à la date de déverrouillage.</string>
     <string name="assignee_blank_error">Vous devez déclarer une ou des personnes à qui assigner</string>
     <string name="remove">Supprimer</string>
-    <string name="add_due_date">Ajouter une date d\'échéance</string>
+    <string name="add_due_date">Ajouter une date d’échéance</string>
     <string name="full_submission_details">Détails complets de la soumission</string>
     <string name="graded">Noté</string>
     <string name="needsGrading">Doit être noté</string>
     <string name="not_submitted">Non soumis</string>
     <string name="content_description_submission_donut_graded" formatted="false">Noté, %s sur %s</string>
-    <string name="content_description_submission_donut_needs_grading" formatted="false">À noter, %s sur %s</string>
-    <string name="content_description_submission_donut_unsubmitted" formatted="false">Non soumis, %s sur %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Est à noter, %s sur %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Pas soumis, %s sur %s</string>
     <string name="display_grade_as">Afficher la note en tant que&#8230;</string>
     <string name="percentage">Pourcentage</string>
     <string name="complete_incomplete">Complet / Incomplet</string>
     <string name="points">Points</string>
     <string name="gpa_scale">Échelle du GPA</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -404,7 +405,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -427,7 +428,7 @@
     <string name="scored_less_than">A obtenu une note inférieure à&#8230;</string>
     <string name="scored_more_than">A obtenu une note supérieure à&#8230;</string>
     <string name="scored_less_than_value">A obtenu une note inférieure à %s</string>
-    <string name="scored_more_than_value">À obtenu une note supérieure à %s</string>
+    <string name="scored_more_than_value">A obtenu une note supérieure à %s</string>
     <string name="add_comment">Ajouter un commentaire</string>
     <string name="editComment">Modifier un commentaire</string>
     <string name="deleteComment">Supprimer le commentaire</string>
@@ -442,7 +443,7 @@
     <string name="rubric_assessment_score_out_of_total">%1$s sur %2$s</string>
     <string name="criterion_rating_customize_score">Personnaliser score</string>
     <string name="edit_criterion_comment">Modifier le commentaire de critère</string>
-    <string name="sendMessageToHint">Message %s</string>
+    <string name="sendMessageToHint">Envoyer un message à %s</string>
     <string name="save_comment">Enregistrer commentaire</string>
     <string name="cancel_editing_comment">Annuler l’édition de commentaire</string>
     <string name="skip">Omettre</string>
@@ -451,7 +452,7 @@
     <string name="rating_button_content_description_custom">Score personnalisé %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">« %1$s, %2$s</string>
+    <string name="rating_button_content_description">%1$s, %2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="one">sur %s pt</item>
@@ -471,10 +472,12 @@
     <string name="grading_periods_filter">Filtre de périodes de notation</string>
     <string name="assignments">Devoirs</string>
     <string name="clear_filter">Effacer le filtre</string>
-    <string name="due">Dû %1$s</string>
+    <string name="due">Dû le %1$s</string>
+    <string name="updated">Mis à jour à %1$s</string>
+
     <plurals name="needsGradingCount">
-        <item quantity="one">%s requiert une notation</item>
-        <item quantity="other">%s requièrent une notation</item>
+        <item quantity="one">%s doit être noté</item>
+        <item quantity="other">%s doivent être notés</item>
     </plurals>
     <plurals name="needsGradingNoQuantity">
         <item quantity="one">Doit être noté</item>
@@ -498,7 +501,7 @@
         <item quantity="other">%d groupes</item>
     </plurals>
     <string name="cmp_closed">Fermé</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022  </string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">favoris</string>
     <string name="content_description_not_favorite">pas favoris</string>
@@ -530,10 +533,9 @@
     <string name="contentDescriptionFileIcon">Icône de fichier</string>
     <string name="contentDescriptionExpandPage">Étendre page</string>
     <string name="contentDescriptionCollapsePage">Réduire page</string>
-
     <string name="noInternetConnectionTitle">Aucune connexion internet</string>
     <string name="noInternetConnectionMessage">Cette action nécessite une connexion Internet.</string>
-  
+
     <string name="emptyDetailsMessage">Appuyez sur un élément de la liste pour en voir les détails</string>
 
     <string name="assignmentQuizzes">Quiz sous forme de devoir</string>
@@ -553,7 +555,7 @@
     <string name="gradedSurvey">Enquête notée</string>
     <string name="ungradedSurvey">Enquête non notée</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -599,9 +601,9 @@
     <string name="immediately">Immédiatement</string>
     <string name="quiz_details_no_points_assigned">Aucun point assigné.</string>
 
-    <string name="quiz_details_from_to">De %1$s à %2$s</string>
+    <string name="quiz_details_from_to">Du %1$s au %2$s</string>
     <string name="quiz_details_after">Après %1$s</string>
-    <string name="quiz_details_until">Jusqu’au %1$s</string>
+    <string name="quiz_details_until">Jusqu’à %1$s</string>
     <string name="continueWithoutSavingTitle">Continuer sans enregistrer ?</string>
     <string name="continueWithoutSavingMessage">Voulez-vous vraiment continuer sans enregistrer ?</string>
     <string name="continueUnsaved">Continuer</string>
@@ -650,8 +652,8 @@
     <string name="submissionIsMediaFile">Cette soumission est un fichier média.</string>
     <string name="tryAgain">Veuillez réessayer</string>
     <string name="couldNotPlayFormat">Ce format de média n’est pas pris en charge</string>
-    <string name="openWithAnotherApp">Ouvrir avec...</string>
-    
+    <string name="openWithAnotherApp">Ouvrir avec&#8230;</string>
+
     <string name="speedgraderCommentAddedSubmission">Tâche envoyée. Appuyez pour voir.</string>
     <string name="speedgraderCommentSubmittedFiles">Fichiers envoyés :</string>
     <string name="no_submission_comments">Il n’y a aucun commentaire de soumission</string>
@@ -699,7 +701,7 @@
     <string name="viewQuizSubmission">Voir la soumission</string>
     <string name="gradeQuizSubmission">Soumission de note</string>
     <string name="comment">Commenter</string>
-    <string name="messageStudentsWho">Envoyer un message aux élèves qui&#8230;</string>
+    <string name="messageStudentsWho">Envoyer un message aux étudiants qui&#8230;</string>
 
     <string name="on">sur</string>
 
@@ -798,6 +800,94 @@
     <string name="unableToLoadAttendance">Impossible de charger la fréquentation pour le moment</string>
     <string name="markRemainingAsPresent">Marquer les personnes restantes comme présentes</string>
     <string name="markAllAsPresent">Marquer tout le monde comme présent</string>
-    <string name="calendar">Calendrier</string>
+    <string name="calendar">Agenda</string>
     <string name="filterSections">Filtrer les sections</string>
+    <string name="addVideoComment">Ajouter un commentaire vidéo</string>
+    <string name="addAudioComment">Ajouter un commentaire audio</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d heures, %2$d minutes, et %3$d secondes</string>
+    <string name="recordingTimerSpeechDivider">%1$s sur %2$s</string>
+    <string name="replay">Rejouer</string>
+    <string name="stop">Stop</string>
+    <string name="startRecordingAudio">Démarrer l’enregistrement audio</string>
+    <string name="stopRecordingAudio">Arrêter l’enregistrement audio</string>
+    <string name="startRecordingVideo">Démarrer l’enregistrement vidéo</string>
+    <string name="stopRecordingVideo">Arrêter l’enregistrement vidéo</string>
+    <string name="closeRecordingView">Fermer la vue enregistrement</string>
+    <string name="deleteRecording">Supprimer l’enregistrement</string>
+    <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
+    <string name="addMediaComment">Ajouter un commentaire multimédia</string>
+    <string name="copyrightHolder">Titulaire des droits d’auteur</string>
+    <string name="access">Accès</string>
+    <string name="usageRights">Droits d’utilisation</string>
+    <string name="deleteFile">Supprimer le fichier</string>
+    <string name="holdCopyright">Je détiens les droits d’auteur</string>
+    <string name="havePermission">Je dispose de l’autorisation d’utiliser ce fichier</string>
+    <string name="publicDomain">Fichier dans le domaine public</string>
+    <string name="fairUse">Exception d’usage raisonnable</string>
+    <string name="creativeCommons">Fichier sous licence Creative Commons</string>
+    <string name="editFile">Modifier le fichier</string>
+    <string name="deleteFolder">Supprimer le dossier</string>
+    <string name="editFolder">Modifier le dossier</string>
+    <string name="deleteFileMessage">Êtes-vous sûr de vouloir supprimer ce fichier ?</string>
+    <string name="deleteFolderMessage">Êtes-vous sûr de vouloir supprimer ce dossier ? Tout le contenu du dossier sera également supprimé.</string>
+    <string name="newFolder">Nouveau dossier</string>
+    <string name="createAFolder">Créer un dossier</string>
+    <string name="createFolder">Créer un dossier</string>
+    <string name="createAFile">Créer un fichier</string>
+    <string name="createFileFolderFabContentDesc">Afficher les boutons « Créer un fichier » et « Créer un dossier »</string>
+    <string name="unpublish">Ne pas publier</string>
+    <string name="restrictedAccess">Accès restreint</string>
+    <string name="restricted">Restreint</string>
+    <string name="hidden">Masqués. Les fichiers à l’intérieur sont disponibles via un lien.</string>
+    <string name="studentsWithLink">Disponible aux élèves uniquement par un lien. Indisponible dans les fichiers des élèves.</string>
+    <string name="scheduleAvailability">Calendrier de disponibilités de l\'étudiant</string>
+    <string name="folderCreationError">Une erreur est survenue durant la création du dossier.</string>
+
+    <string name="setAsFrontPage">Utiliser comme première page</string>
+    <string name="canEdit">Peut éditer</string>
+    <string name="pageDetails">Détails de la page</string>
+    <string name="pageSuccessfullyUpdated">Page envoyée avec succès.</string>
+    <string name="pageSuccessfullyCreated">Page créée avec succès.</string>
+    <string name="editPageTitle">Modifier la page</string>
+    <string name="createPageTitle">Créer une page</string>
+    <string name="pageTitleMustBeSet">Vous devez indiquer un titre de page.</string>
+    <string name="pageDeleteTitle">Supprimer la page ?</string>
+    <string name="pageDelete">Supprimer la page</string>
+    <string name="pageDeleteMessage">Cela supprimera la page. Cette action ne peut être annulée.</string>
+    <string name="errorSavingPage">Une erreur est survenue lors de la tentative d’enregistrement de cette page. Veuillez réessayer.</string>
+    <string name="frontPageUnpublishedError">Une page ne peut être paramétrée en tant que page d’accueil tout en état non publiée.</string>
+
+    <string name="onlyTeachers">Uniquement les enseignants</string>
+    <string name="teachersAndStudents">Enseignants et élèves</string>
+    <string name="anyone">Tous</string>
+    <string name="groupMembers">Membres uniquement</string>
+    <string name="license">Licence</string>
+    <string name="availableFromAfterTo">La date de fin de disponibilité doit être plus tardive que celle de début</string>
+    <string name="errorDeletingFile">Une erreur est survenue lors de la suppression de ce fichier</string>
+    <string name="errorDeletingFolder">Une erreur est survenue lors de la suppression de ce dossier</string>
+    <string name="errorUpdatingFile">Une erreur est survenue lors de la mise à jour de ce fichier</string>
+    <string name="errorUpdatingFolder">Une erreur est survenue lors de la mise à jour de ce dossier</string>
+
+    <string name="toDoEmpty">Rien d’autre à faire !\n Bonne journée.</string>
+    <string name="toDoNoSubmissions">Il n’y a aucune soumission à noter pour ce devoir.</string>
+    <string name="errorToDoRouteFailed">Une erreur est survenue lors de la tentative d’affichage de cet élément de la liste des choses à faire.</string>
+    <string name="errorIsDesigner">L’inscription en tant que concepteur ne permet pas d’afficher ceci.</string>
+
+    <string name="sections">Sections</string>
+    <string name="filterBy">Filtrer par&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">pour %s</string>
+    <string name="filterBySection">Filtrer par section</string>
+    <string name="filterSubmissionsLowercase">Filtrer les soumissions</string>
+
+    <string name="latePenalty">Pénalité de retard</string>
+    <string name="finalGrade">Note Finale</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s pt</item>
+        <item quantity="other">-%s pts</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s point</item>
+        <item quantity="other">-%s points</item>
+    </plurals>
 </resources>

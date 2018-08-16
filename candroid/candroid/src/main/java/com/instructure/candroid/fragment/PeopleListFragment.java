@@ -17,34 +17,43 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.PeopleListRecyclerAdapter;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.Param;
 import com.instructure.canvasapi2.models.Tab;
 import com.instructure.canvasapi2.models.User;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 
+@PageView(url="{canvasContext}/users")
 public class PeopleListFragment extends ParentFragment {
 
     private View mRootView;
+    private Toolbar mToolbar;
     private PeopleListRecyclerAdapter mRecyclerAdapter;
     private AdapterToFragmentCallback<User> mAdapterToFragmentCallback;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.MASTER; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.MASTER; }
 
     @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.coursePeople);
     }
 
@@ -76,8 +85,9 @@ public class PeopleListFragment extends ParentFragment {
             }
         };
 
-        mRootView = getLayoutInflater().inflate(R.layout.course_people, container, false);
-        CardView cardView = (CardView)mRootView.findViewById(R.id.cardView);
+        mRootView = getLayoutInflater().inflate(R.layout.fragment_people_list, container, false);
+        mToolbar = mRootView.findViewById(R.id.toolbar);
+        CardView cardView = mRootView.findViewById(R.id.cardView);
         if(cardView != null) {
             cardView.setCardBackgroundColor(Color.WHITE);
         }
@@ -85,6 +95,13 @@ public class PeopleListFragment extends ParentFragment {
         configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
 
         return mRootView;
+    }
+
+    @Override
+    public void applyTheme() {
+        mToolbar.setTitle(title());
+        PandaViewUtils.setupToolbarBackButton(mToolbar, this);
+        ViewStyler.themeToolbar(getActivity(), mToolbar, getCanvasContext());
     }
 
     @Override

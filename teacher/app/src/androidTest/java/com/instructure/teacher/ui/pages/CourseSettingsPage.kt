@@ -17,15 +17,11 @@
 package com.instructure.teacher.ui.pages
 
 import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.action.ViewActions.replaceText
-import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
 
 class CourseSettingsPage : BasePage(), PageAssert by SimplePageAssert() {

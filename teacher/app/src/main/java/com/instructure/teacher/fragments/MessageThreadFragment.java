@@ -33,7 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.instructure.canvasapi2.apis.ConversationAPI;
+import com.instructure.canvasapi2.apis.InboxApi;
 import com.instructure.canvasapi2.models.Attachment;
 import com.instructure.canvasapi2.models.BasicUser;
 import com.instructure.canvasapi2.models.CanvasContext;
@@ -49,6 +49,7 @@ import com.instructure.pandautils.utils.RequestCodes;
 import com.instructure.pandautils.utils.ThemePrefs;
 import com.instructure.pandautils.utils.ToolbarColorizeHelper;
 import com.instructure.pandautils.utils.ViewStyler;
+import com.instructure.pandautils.views.AttachmentView;
 import com.instructure.teacher.R;
 import com.instructure.teacher.activities.InitActivity;
 import com.instructure.teacher.adapters.MessageAdapter;
@@ -59,16 +60,15 @@ import com.instructure.teacher.events.ConversationUpdatedEventTablet;
 import com.instructure.teacher.events.MessageAddedEvent;
 import com.instructure.teacher.factory.MessageThreadPresenterFactory;
 import com.instructure.teacher.holders.MessageHolder;
-import com.instructure.teacher.interfaces.Identity;
+import com.instructure.interactions.Identity;
 import com.instructure.teacher.interfaces.MessageAdapterCallback;
 import com.instructure.teacher.presenters.MessageThreadPresenter;
-import com.instructure.teacher.router.Route;
+import com.instructure.interactions.router.Route;
 import com.instructure.teacher.router.RouteMatcher;
 import com.instructure.teacher.utils.MediaDownloader;
 import com.instructure.teacher.utils.ModelExtensions;
 import com.instructure.teacher.utils.RecyclerViewUtils;
 import com.instructure.teacher.utils.ViewUtils;
-import com.instructure.teacher.view.AttachmentView;
 import com.instructure.teacher.view.EmptyPandaView;
 import com.instructure.teacher.viewinterface.MessageThreadView;
 
@@ -139,7 +139,7 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
 
     @Override
     protected void onReadySetGo(MessageThreadPresenter presenter) {
-        if(mRecyclerView.getAdapter() == null) {
+        if(mRecyclerView.getAdapter() == null && getConversation() != null) {
             mRecyclerView.setAdapter(getAdapter());
         }
 
@@ -150,6 +150,11 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
 
     @Override
     protected PresenterFactory<MessageThreadPresenter> getPresenterFactory() {
+        if (getArguments() != null && getArguments().containsKey(Const.CONVERSATION_ID)) {
+            // We are coming from a push notification
+            return new MessageThreadPresenterFactory(getArguments().getLong(Const.CONVERSATION_ID, 0)); // No way to know from the push notification where in the conversation we should be; position = 0
+        }
+
         return new MessageThreadPresenterFactory((Conversation) getArguments().getParcelable(Const.CONVERSATION), getArguments().getInt(Const.POSITION));
     }
 
@@ -158,14 +163,22 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
         conversationScope = getArguments().getString(Const.SCOPE);
 
         initToolbar();
-        initConversationDetails();
+
+        // We may not have the conversation yet (we don't when coming from a push notification)
+        if (getConversation() != null) {
+            setupConversationDetails();
+            setupRecyclerView();
+        }
+    }
+
+    private void setupRecyclerView() {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(getActivity().getWindow().getDecorView().getRootView(), getContext(), getAdapter(),
-                presenter, R.id.swipeRefreshLayout, recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short));
+                getPresenter(), R.id.swipeRefreshLayout, recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
-                ((LinearLayoutManager)mRecyclerView.getLayoutManager()).getOrientation());
+                ((LinearLayoutManager) mRecyclerView.getLayoutManager()).getOrientation());
         dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getContext(),
                 R.drawable.item_decorator_gray));
         mRecyclerView.addItemDecoration(dividerItemDecoration);
@@ -197,9 +210,16 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
         mToolbar.setOnMenuItemClickListener(mMenuListener);
     }
 
-
-    private void initConversationDetails() {
+    @Override
+    public void setupConversationDetails() {
         Conversation conversation = getConversation();
+
+        if(mRecyclerView.getAdapter() == null) {
+            // If we didn't setup the adapter initially (we didn't start off with the conversation), then do it now
+            mRecyclerView.setAdapter(getAdapter());
+        }
+
+        setupRecyclerView();
 
         if (conversation.getSubject() == null || conversation.getSubject().trim().isEmpty()) {
             mSubject.setText(R.string.no_subject);
@@ -290,6 +310,7 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
         if (mAdapter == null) {
             mAdapter = new MessageAdapter(getContext(), getPresenter(), getConversation(), mAdapterCallback);
         }
+
         return mAdapter;
     }
 
@@ -412,7 +433,7 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
 
     @Override
     public void refreshConversationData() {
-        initConversationDetails();
+        setupConversationDetails();
     }
 
     @Override
@@ -432,9 +453,9 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
     @Override
     public void onConversationMarkedAsUnread(int position) {
         if(!getResources().getBoolean(R.bool.is_device_tablet)) {
-            EventBus.getDefault().postSticky(new ConversationUpdatedEvent(getPresenter().getConversation(), ConversationAPI.ConversationScope.UNREAD, null));
+            EventBus.getDefault().postSticky(new ConversationUpdatedEvent(getPresenter().getConversation(), InboxApi.Scope.UNREAD, null));
         } else {
-            EventBus.getDefault().postSticky(new ConversationUpdatedEventTablet(position, ConversationAPI.ConversationScope.UNREAD, null));
+            EventBus.getDefault().postSticky(new ConversationUpdatedEventTablet(position, InboxApi.Scope.UNREAD, null));
         }
 
         //only go back a screen on phones
@@ -446,9 +467,9 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
     @Override
     public void onConversationRead(int position) {
         if(!getResources().getBoolean(R.bool.is_device_tablet)) {
-            EventBus.getDefault().postSticky(new ConversationUpdatedEvent(getPresenter().getConversation(), ConversationAPI.ConversationScope.UNREAD, null));
+            EventBus.getDefault().postSticky(new ConversationUpdatedEvent(getPresenter().getConversation(), InboxApi.Scope.UNREAD, null));
         } else {
-            EventBus.getDefault().postSticky(new ConversationUpdatedEventTablet(position, ConversationAPI.ConversationScope.UNREAD, null));
+            EventBus.getDefault().postSticky(new ConversationUpdatedEventTablet(position, InboxApi.Scope.UNREAD, null));
         }
     }
 
@@ -461,9 +482,9 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
     @Override
     public void onConversationArchived(int position) {
         if(!getResources().getBoolean(R.bool.is_device_tablet)) {
-            EventBus.getDefault().postSticky(new ConversationUpdatedEvent(getPresenter().getConversation(), ConversationAPI.ConversationScope.ARCHIVED, null));
+            EventBus.getDefault().postSticky(new ConversationUpdatedEvent(getPresenter().getConversation(), InboxApi.Scope.ARCHIVED, null));
         } else {
-            EventBus.getDefault().postSticky(new ConversationUpdatedEventTablet(position, ConversationAPI.ConversationScope.ARCHIVED, null));
+            EventBus.getDefault().postSticky(new ConversationUpdatedEventTablet(position, InboxApi.Scope.ARCHIVED, null));
         }
 
         //only go back a screen on phones
@@ -475,9 +496,9 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
     @Override
     public void onConversationStarred(int position) {
         if(!getResources().getBoolean(R.bool.is_device_tablet)) {
-            EventBus.getDefault().postSticky(new ConversationUpdatedEvent(getPresenter().getConversation(), ConversationAPI.ConversationScope.STARRED, null));
+            EventBus.getDefault().postSticky(new ConversationUpdatedEvent(getPresenter().getConversation(), InboxApi.Scope.STARRED, null));
         } else {
-            EventBus.getDefault().postSticky(new ConversationUpdatedEventTablet(position, ConversationAPI.ConversationScope.STARRED, null));
+            EventBus.getDefault().postSticky(new ConversationUpdatedEventTablet(position, InboxApi.Scope.STARRED, null));
         }
     }
 
@@ -518,12 +539,18 @@ public class MessageThreadFragment extends BaseSyncFragment<Message, MessageThre
         return ApiPrefs.getPerPageCount();
     }
 
-
     public static Bundle createBundle(Conversation conversation, int position, String scope) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Const.CONVERSATION, conversation);
         bundle.putInt(Const.POSITION, position);
         bundle.putString(Const.SCOPE, scope);
+        return bundle;
+    }
+
+    public static Bundle createBundle(long conversationId) {
+        // For when we get a push notification for a new message in a conversation
+        Bundle bundle = new Bundle();
+        bundle.putLong(Const.CONVERSATION_ID, conversationId);
         return bundle;
     }
 

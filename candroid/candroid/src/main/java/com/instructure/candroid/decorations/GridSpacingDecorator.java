@@ -22,9 +22,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.instructure.candroid.adapter.CourseRecyclerAdapter;
-import com.instructure.pandarecycler.BaseExpandableRecyclerAdapter;
-
 public class GridSpacingDecorator extends RecyclerView.ItemDecoration {
 
     private int spacing;

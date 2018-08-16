@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.models.Assignment;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Submission;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 public class AssignmentBinder extends BaseBinder {
 
@@ -50,7 +50,7 @@ public class AssignmentBinder extends BaseBinder {
         });
 
         long courseId = assignment.getCourseId();
-        int color = CanvasContextColor.getCachedColor(context, CanvasContext.makeContextId(CanvasContext.Type.COURSE, courseId));
+        int color = ColorKeeper.getOrGenerateColor(CanvasContext.makeContextId(CanvasContext.Type.COURSE, courseId));
 
         Submission submission = assignment.getSubmission();
 
@@ -64,7 +64,7 @@ public class AssignmentBinder extends BaseBinder {
 
 
         final int drawable = getAssignmentIcon(assignment);
-        holder.icon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, drawable, color));
+        holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, drawable, color));
 
         if (assignment.getDueAt() != null) {
             holder.date.setText(DateHelper.createPrefixedDateTimeString(context, R.string.toDoDue, assignment.getDueAt()));

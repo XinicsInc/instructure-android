@@ -23,6 +23,7 @@ import android.view.View
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.*
 import kotlinx.android.synthetic.main.adapter_courses.view.*

@@ -17,8 +17,16 @@
 
 package com.instructure.canvasapi2;
 
-import android.support.multidex.MultiDexApplication;
+import android.app.Application;
 
+import io.paperdb.Paper;
 
-public abstract class AppManager extends MultiDexApplication {
+public abstract class AppManager extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Paper.init(this);
+    }
+
 }

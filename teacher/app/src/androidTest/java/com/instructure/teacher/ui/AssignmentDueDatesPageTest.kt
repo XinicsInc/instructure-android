@@ -15,7 +15,11 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.models.Assignment
+import com.instructure.dataseeding.util.ago
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
+import com.instructure.soseedy.Assignment
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
@@ -38,24 +42,36 @@ class AssignmentDueDatesPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3134485")
     fun displaysSingleDueDate() {
-        getToDueDatesPage()
+        getToDueDatesPage(dueAt = 7.days.fromNow.iso8601)
         assignmentDueDatesPage.assertDisplaysSingleDueDate()
     }
 
     @Test
     @TestRail(ID = "C3134486")
     fun displaysAvailabilityDates() {
-        getToDueDatesPage()
+        getToDueDatesPage(lockAt = 7.days.fromNow.iso8601, unlockAt = 7.days.ago.iso8601)
         assignmentDueDatesPage.assertDisplaysAvailabilityDates()
     }
 
-    private fun getToDueDatesPage(): Assignment {
-        logIn()
-        val assignment = getNextAssignment()
-        coursesListPage.openCourse(getNextCourse())
+    private fun getToDueDatesPage(dueAt: String = "", lockAt: String = "", unlockAt: String = ""): Assignment {
+        val data = seedData(teachers = 1, favoriteCourses = 1)
+        val course = data.coursesList[0]
+        val teacher = data.teachersList[0]
+        val assignments = seedAssignments(
+                courseId = course.id,
+                assignments = 1,
+                dueAt = dueAt,
+                lockAt = lockAt,
+                unlockAt = unlockAt,
+                teacherToken = teacher.token)
+        val assignment = assignments.assignmentsList[0]
+
+        tokenLogin(teacher)
+        coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openAllDatesPage()
+
         return assignment
     }
 }

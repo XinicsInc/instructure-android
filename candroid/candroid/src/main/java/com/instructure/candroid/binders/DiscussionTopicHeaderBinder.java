@@ -27,12 +27,13 @@ import com.instructure.candroid.holders.DiscussionTopicHeaderViewHolder;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
 import com.instructure.canvasapi2.models.DiscussionTopicHeader;
 import com.instructure.canvasapi2.utils.DateHelper;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.ColorUtils;
 
 import java.util.Calendar;
 import java.util.Date;
 
+@Deprecated
 public class DiscussionTopicHeaderBinder extends BaseBinder {
 
     public static void bind(
@@ -63,12 +64,12 @@ public class DiscussionTopicHeaderBinder extends BaseBinder {
             if(item.isLockedForUser()) {
                 Drawable pinIcon = ColorUtils.colorIt(
                         context.getResources().getColor(R.color.canvasTextMedium),
-                        context.getResources().getDrawable(R.drawable.ic_cv_locked_fill));
+                        context.getResources().getDrawable(R.drawable.vd_lock));
                 holder.pin.setImageDrawable(pinIcon);
             } else {
                 Drawable pinIcon = ColorUtils.colorIt(
                         context.getResources().getColor(R.color.canvasTextMedium),
-                        context.getResources().getDrawable(R.drawable.ic_pin));
+                        context.getResources().getDrawable(R.drawable.vd_pin));
                 holder.pin.setImageDrawable(pinIcon);
             }
             setVisible(holder.pin);
@@ -78,20 +79,14 @@ public class DiscussionTopicHeaderBinder extends BaseBinder {
 
         //only show the box if there are unread discussions
         if(item.getUnreadCount() == 0 && item.getStatus() == DiscussionTopicHeader.ReadState.READ) {
-            setGone(holder.unread);
             holder.title.setTypeface(Typeface.DEFAULT);
         } else if(item.getStatus() == DiscussionTopicHeader.ReadState.UNREAD) {
             //if there are no replies but the item is unread, we want to indicate that by making the title bold
-            setGone(holder.unread);
             holder.title.setTypeface(Typeface.DEFAULT_BOLD);
         } else if(!item.isPublished()) {
             //if the item isn't published, there is a chance that there are unread teacher replies that will make the draft label look
             //bad because it is under the unread count. A teacher can't unpublish a discussion with student replies
-            setGone(holder.unread);
         } else {
-            String unreadCount = ((item.getUnreadCount() > 99) ? "99+" : Integer.toString(item.getUnreadCount()));
-            holder.unread.setText(unreadCount);
-            setVisible(holder.unread);
             holder.title.setTypeface(Typeface.DEFAULT_BOLD);
         }
 
@@ -127,17 +122,16 @@ public class DiscussionTopicHeaderBinder extends BaseBinder {
         }
 
         if(isDiscussions) {
-            if (holder.unread.getVisibility() == View.VISIBLE) {
-                Drawable drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_speech_fill, courseColor);
+            if (item.getUnreadCount() > 0) {
+                Drawable drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_discussion_fill, courseColor);
                 holder.icon.setImageDrawable(drawable);
             } else {
-                Drawable drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_discussions_fill, courseColor);
+                Drawable drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_discussion, courseColor);
                 holder.icon.setImageDrawable(drawable);
             }
         } else {
-            Drawable drawable = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_announcements_fill, courseColor);
+            Drawable drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_announcement, courseColor);
             holder.icon.setImageDrawable(drawable);
-            setGone(holder.unread);
         }
     }
 }

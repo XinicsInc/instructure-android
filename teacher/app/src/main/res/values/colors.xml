@@ -55,16 +55,6 @@
     <color name="message_text_color">#333333</color>
     <color name="message_text_secondary">#9B9B9B</color>
 
-    <color name="attachment_color_doc">#2ca3de</color>
-    <color name="attachment_color_pdf">#f2422e</color>
-    <color name="attachment_color_video">#f2422e</color>
-    <color name="attachment_color_image">#AAAAAA</color>
-    <color name="attachment_color_txt">#1682c7</color>
-    <color name="attachment_color_xls">#48af49</color>
-    <color name="attachment_color_zip">#903a99</color>
-    <color name="attachment_color_audio">#4452a6</color>
-    <color name="attachment_color_misc">#00bcd5</color>
-
     <color name="submission_status_color_late">#F68508</color>
     <color name="submission_status_color_missing">#C30016</color>
     <color name="submission_status_color_submitted">#00AC18</color>
@@ -93,47 +83,8 @@
     <color name="textLightGray">#8B969E</color>
     <color name="semiTransparentDark">#50000000</color>
     <color name="messageBackgroundGray">#F5F5F5</color>
-
-    <!-- Course Colors - Primary -->
-    <color name="colorCottonCandy">#FFF26090</color>
-    <color name="colorBarbie">#FFEA1661</color>
-    <color name="colorBarneyPurple">#FF903A99</color>
-    <color name="colorEggplant">#FF65469F</color>
-    <color name="colorUltramarine">#FF4452A6</color>
-    <color name="colorOcean11">#FF1482C8</color>
-    <color name="colorCyan">#FF2CA3DE</color>
-    <color name="colorAquaMarine">#FF00BCD5</color>
-    <color name="colorEmeraldGreen">#FF009788</color>
-    <color name="colorFreshCutLawn">#FF3FA142</color>
-    <color name="colorChartreuse">#FF89C540</color>
-    <color name="colorSunFlower">#FFFFC100</color>
-    <color name="colorTangerine">#FFFA9800</color>
-    <color name="colorBloodOrange">#FFF2581B</color>
-    <color name="colorSriracha">#FFF2422E</color>
     <color name="comment_bubble_outgoing">#178FDF</color>
     <color name="comment_bubble_incoming">#F5F5F5</color>
-
-    <!-- Annotation Colors -->
-    <color name="redAnnotation">#EE0612</color>
-    <color name="orangeAnnotation">#FC5E13</color>
-    <color name="yellowAnnotation">#FCB900</color>
-    <color name="brownAnnotation">#8D6437</color>
-    <color name="greenAnnotation">#00AC18</color>
-    <color name="darkBlueAnnotation">#234C9F</color>
-    <color name="blueAnnotation">#008EE2</color>
-    <color name="pinkAnnotation">#C31FA8</color>
-    <color name="purpleAnnotation">#741865</color>
-    <color name="darkGrayAnnotation">#363636</color>
-
-    <!-- Annotation Colors -->
-    <color name="redHighlightAnnotation">#FF9999</color>
-    <color name="orangeHighlightAnnotation">#FFC166</color>
-    <color name="yellowHighlightAnnotation">#FCE680</color>
-    <color name="greenHighlightAnnotation">#99EBA4</color>
-    <color name="blueHighlightAnnotation">#80D0FF</color>
-    <color name="pinkHighlightAnnotation">#FFB9F1</color>
-    <color name="transparentWhite">#88FFFFFF</color>
-    <color name="annotationToolbarBackground">#556572</color>
 
     <color name="discussion_liking">#8b969e</color>
     <color name="profileBorderColor">#d8dcdf</color>

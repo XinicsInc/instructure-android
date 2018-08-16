@@ -343,7 +343,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
     StatusCallback<DomainVerificationResult> mMobileVerifyCallback = new StatusCallback<DomainVerificationResult>() {
 
         @Override
-        public void onResponse(Response<DomainVerificationResult> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<DomainVerificationResult> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             if(type.isCache()) return;
             DomainVerificationResult domainVerificationResult = response.body();
 
@@ -500,7 +500,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         final SignedInUser user = new SignedInUser();
 
         @Override
-        public void onResponse(Response<OAuthToken> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<OAuthToken> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             if(type.isCache()) return;
 
             OAuthToken token = response.body();
@@ -511,7 +511,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
             UserManager.getSelf(new StatusCallback<User>() {
 
                 @Override
-                public void onResponse(retrofit2.Response<User> response, LinkHeaders linkHeaders, ApiType type) {
+                public void onResponse(@NonNull Response<User> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                     if(type.isAPI()) {
                         ApiPrefs.setUser(response.body());
                         user.user = response.body();
@@ -528,8 +528,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         }
 
         @Override
-        public void onFail(Call<OAuthToken> response, Throwable error) {
-            super.onFail(response, error);
+        public void onFail(@Nullable Call<OAuthToken> call, @NonNull Throwable error, @Nullable Response response) {
             if (!mSpecialCase) {
                 Toast.makeText(BaseLoginSignInActivity.this, R.string.errorOccurred, Toast.LENGTH_SHORT).show();
             } else {

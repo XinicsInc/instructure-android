@@ -45,11 +45,11 @@ public class TeacherActivityTestRule<T extends Activity> extends FinishingActivi
     }
 
     private void loopMainThreadUntilIdle() {
-        if (UiControllerSingleton.exists()) {
+        if (UiControllerSingleton.INSTANCE.exists()) {
             getInstrumentation().runOnMainSync(new Runnable() {
                 @Override
                 public void run() {
-                    UiControllerSingleton.get().loopMainThreadUntilIdle();
+                    UiControllerSingleton.INSTANCE.get().loopMainThreadUntilIdle();
                 }
             });
         }

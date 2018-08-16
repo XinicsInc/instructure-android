@@ -19,8 +19,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="45dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_vertical"
-    android:minHeight="45dp">
+    android:minHeight="45dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="8dp">
 
     <TextView
         android:id="@+id/periodName"
@@ -28,29 +32,24 @@
         android:textColor="@color/canvasTextDark"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:paddingLeft="20dp"
-        android:paddingRight="8dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:gravity="center_vertical"
         android:singleLine="true"
         android:maxLines="1"
-        android:ellipsize="end"/>
+        android:ellipsize="end"
+        tools:text="Grading Period 1"/>
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="20dp"
-        android:paddingEnd="20dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true">
 
         <ImageView
             android:id="@+id/dropDownArrow"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_cv_expand_black" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/vd_expand" />
 
         <ProgressBar
             android:id="@+id/progressBar"

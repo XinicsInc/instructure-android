@@ -16,17 +16,16 @@
  */
 package com.instructure.candroid.tasks;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.activity.LoginActivity;
+import com.instructure.candroid.util.StudentPrefs;
 import com.instructure.candroid.view.CanvasRecipientManager;
-import com.instructure.candroid.widget.CanvasWidgetProvider;
+import com.instructure.candroid.widget.WidgetUpdater;
 import com.instructure.canvasapi2.CanvasRestAdapter;
 import com.instructure.canvasapi2.builders.RestBuilder;
 import com.instructure.canvasapi2.managers.OAuthManager;
@@ -43,7 +42,6 @@ import java.io.IOException;
 
 import okhttp3.OkHttpClient;
 
-import static com.instructure.candroid.util.ApplicationManager.PREF_FILE_NAME;
 
 public class LogoutAsyncTask extends LogoutTask {
 
@@ -77,14 +75,8 @@ public class LogoutAsyncTask extends LogoutTask {
 
         RestBuilder.clearCacheDirectory();
 
-        //Clear shared preferences,
-        //Get the Shared Preferences
-        SharedPreferences settings = ContextKeeper.getAppContext().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.clear();
-        editor.apply();
-
-        //Clear all Shared Preferences.
+        // Clear shared preferences
+        StudentPrefs.INSTANCE.safeClearPrefs();
         ApiPrefs.clearAllData();
 
         File cacheDir = new File(ContextKeeper.getAppContext().getFilesDir(), "cache");
@@ -119,7 +111,7 @@ public class LogoutAsyncTask extends LogoutTask {
 
     @Override
     protected void refreshWidgets() {
-        ContextKeeper.getAppContext().sendBroadcast(new Intent(CanvasWidgetProvider.REFRESH_ALL));
+        WidgetUpdater.updateWidgets();
     }
 
     @Override

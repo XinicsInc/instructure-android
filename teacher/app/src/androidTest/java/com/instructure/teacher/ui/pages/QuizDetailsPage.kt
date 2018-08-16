@@ -16,8 +16,8 @@
 package com.instructure.teacher.ui.pages
 
 import android.support.test.InstrumentationRegistry
+import com.instructure.soseedy.Quiz
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.Quiz
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.PageWithIdAssert
@@ -42,9 +42,9 @@ class QuizDetailsPage : BasePage(), PageAssert by PageWithIdAssert(R.id.quizDeta
     private val availabilityLayout by OnViewWithId(R.id.availabilityLayout, autoAssert = false)
     private val availableFromTextView by OnViewWithId(R.id.availableFromTextView, autoAssert = false)
     private val availableToTextView by OnViewWithId(R.id.availableToTextView, autoAssert = false)
-    private val gradedDonut by OnViewWithId(R.id.gradedChart)
-    private val ungradedDonut by OnViewWithId(R.id.ungradedChart)
-    private val notSubmittedDonut by OnViewWithId(R.id.notSubmittedChart)
+    private val gradedDonut by OnViewWithId(R.id.gradedWrapper)
+    private val ungradedDonut by OnViewWithId(R.id.ungradedWrapper)
+    private val notSubmittedDonut by OnViewWithId(R.id.notSubmittedWrapper)
 
     fun assertDisplaysInstructions() {
         instructionsWebView.scrollTo()
@@ -64,6 +64,7 @@ class QuizDetailsPage : BasePage(), PageAssert by PageWithIdAssert(R.id.quizDeta
     }
 
     fun openSubmissionsPage() {
+        viewAllSubmissions.scrollTo()
         viewAllSubmissions.click()
     }
 
@@ -103,7 +104,7 @@ class QuizDetailsPage : BasePage(), PageAssert by PageWithIdAssert(R.id.quizDeta
 
     fun assertHasSubmitted() {
         val resources = InstrumentationRegistry.getTargetContext()
-        ungradedDonut.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_needs_grading).format(1, 1))
+        gradedDonut.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_graded).format(1, 1))
     }
 
     fun assertNotSubmitted() {

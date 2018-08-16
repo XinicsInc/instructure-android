@@ -17,15 +17,28 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:clickable="true">
+    android:background="@color/canvasBackgroundWhite">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/defaultPrimary"
+        android:elevation="6dp"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:targetApi="lollipop" />
 
     <RelativeLayout
         android:id="@+id/dueDateWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/dueDate"
             style="@style/TextStyle.Secondary.SingleLine"
@@ -43,6 +56,7 @@
             android:background="@color/canvasSectionDivider"
             android:layout_marginTop="@dimen/med_padding"
             android:layout_marginBottom="@dimen/med_padding"/>
+
     </RelativeLayout>
 
     <com.instructure.pandautils.views.CanvasWebView

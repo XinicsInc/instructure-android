@@ -21,7 +21,9 @@ import android.content.Context
 import android.net.Uri
 import android.os.Parcel
 import android.webkit.MimeTypeMap
+import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.pandautils.utils.nonNullArgs
@@ -32,11 +34,10 @@ import com.instructure.teacher.fragments.ViewImageFragment
 import com.instructure.teacher.fragments.ViewPdfFragment
 import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
 import com.instructure.teacher.models.EditableFile
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.teacher.router.RouteMatcher
 import com.pspdfkit.ui.PdfFragment
-
-val CanvasContext.color: Int get() = ColorKeeper.getOrGenerateColor(this)
 
 fun Parcel.writeBoolean(bool: Boolean) = writeByte((if (bool) 1 else 0).toByte())
 fun Parcel.readBoolean() = readByte() != 0.toByte()
@@ -56,8 +57,8 @@ val Attachment.iconRes: Int
             "rtf" -> R.drawable.vd_document
             "pdf" -> R.drawable.vd_pdf
             "xls" -> R.drawable.vd_document
-            "zip","tar", "7z", "apk", "jar", "rar" -> R.drawable.vd_attachment
-            else -> R.drawable.vd_attachment
+            "zip","tar", "7z", "apk", "jar", "rar" -> R.drawable.vd_utils_attachment
+            else -> R.drawable.vd_utils_attachment
         }
     }
 
@@ -96,7 +97,7 @@ fun viewMedia(context: Context, filename: String, contentType: String, url: Stri
     // Audio/Video
         contentType.startsWith("video") || contentType.startsWith("audio") -> {
             val bundle = ViewMediaActivity.makeBundle(url.orEmpty(), thumbnailUrl, contentType, displayName, true, editableFile)
-            RouteMatcher.route(context, Route(bundle, Route.RouteContext.MEDIA))
+            RouteMatcher.route(context, Route(bundle, RouteContext.MEDIA))
         }
     // Image
         contentType.startsWith("image") -> {
@@ -129,21 +130,6 @@ fun viewMedia(context: Context, filename: String, contentType: String, url: Stri
     }
 }
 
-@JvmName("mapToAttachmentRemoteFile")
-fun RemoteFile.mapToAttachment(): Attachment {
-    val attachment = Attachment()
-    attachment.id = this.id
-    attachment.contentType = this.contentType
-    attachment.filename = this.fileName
-    attachment.displayName = this.displayName
-    attachment.createdAt = this.createdAt
-    attachment.size = this.size
-    attachment.previewUrl = this.previewUrl
-    attachment.thumbnailUrl = this.thumbnailUrl
-    attachment.url = this.url
-    return attachment
-}
-
 // endregion
 
 @Suppress("unused")
@@ -157,3 +143,17 @@ val Enrollment.displayType: CharSequence get() = ContextKeeper.appContext.getTex
     isDesigner -> R.string.enrollmentTypeDesigner
     else -> R.string.enrollmentTypeUnknown
 })
+
+val EnrollmentType?.displayText: CharSequence
+    get() = ContextKeeper.appContext.getText(
+        when (this) {
+            EnrollmentType.StudentEnrollment -> R.string.enrollmentTypeStudent
+            EnrollmentType.TeacherEnrollment -> R.string.enrollmentTypeTeacher
+            EnrollmentType.ObserverEnrollment -> R.string.enrollmentTypeObserver
+            EnrollmentType.TaEnrollment -> R.string.enrollmentTypeTeachingAssistant
+            EnrollmentType.DesignerEnrollment -> R.string.enrollmentTypeDesigner
+            else -> R.string.enrollmentTypeUnknown
+        }
+    )
+
+fun Course.hasActiveEnrollment(): Boolean = enrollments.any { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }

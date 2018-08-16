@@ -31,7 +31,7 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 import java.util.HashMap;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class RouteTest extends Assert {
 

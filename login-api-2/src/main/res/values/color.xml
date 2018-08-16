@@ -28,4 +28,5 @@
     <color name="login_mediumText">#78848c</color>
     <color name="login_dividerColor">#E0E0E0</color>
     <color name="login_textButton">#73818C</color>
+    <color name="login_masqueradeHighlight">#BE32A3</color>
 </resources>

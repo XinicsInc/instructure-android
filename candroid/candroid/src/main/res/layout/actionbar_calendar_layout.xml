@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -17,45 +16,48 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@android:style/Widget.ActionButton"
     android:layout_width="wrap_content"
     android:layout_height="?attr/actionBarSize"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
     android:layout_marginStart="2dp"
-    android:layout_marginLeft="2dp">
+    android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/textContainer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
-        android:paddingRight="6dp">
+        android:orientation="vertical"
+        android:paddingEnd="6dp"
+        tools:ignore="RtlSymmetry">
 
-    <TextView
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        <TextView
             android:id="@+id/monthText"
-            android:textSize="20sp"
-            android:textColor="@color/white"
-            android:gravity="center_vertical"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:maxLength="48"/>
+            android:gravity="center_vertical"
+            android:maxLength="48"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            tools:text="January 2018"/>
 
     </LinearLayout>
 
     <ImageView
         android:id="@+id/indicator"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginLeft="4dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginBottom="4dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:importantForAccessibility="no"
         android:rotation="180"
-        android:src="@drawable/ic_cv_expand_white"
-        android:layout_gravity="right|center_vertical"/>
+        android:tint="@color/white"
+        app:srcCompat="@drawable/vd_expand" />
 
 </LinearLayout>

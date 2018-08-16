@@ -24,6 +24,23 @@
     <color name="canvas_default_button">#0096DB</color>
     <color name="canvas_default_button_text">#FFFFFF</color>
 
+    <!-- Course Colors - Primary -->
+    <color name="colorCottonCandy">#FFF26090</color>
+    <color name="colorBarbie">#FFEA1661</color>
+    <color name="colorBarneyPurple">#FF903A99</color>
+    <color name="colorEggplant">#FF65469F</color>
+    <color name="colorUltramarine">#FF4452A6</color>
+    <color name="colorOcean11">#FF1482C8</color>
+    <color name="colorCyan">#FF2CA3DE</color>
+    <color name="colorAquaMarine">#FF00BCD5</color>
+    <color name="colorEmeraldGreen">#FF009788</color>
+    <color name="colorFreshCutLawn">#FF3FA142</color>
+    <color name="colorChartreuse">#FF89C540</color>
+    <color name="colorSunFlower">#FFFFC100</color>
+    <color name="colorTangerine">#FFFA9800</color>
+    <color name="colorBloodOrange">#FFF2581B</color>
+    <color name="colorSriracha">#FFF2422E</color>
+
     <color name="white">#FFFFFFFF</color>
     <color name="glassWhite">#77FFFFFF</color>
     <color name="whiteNoAlpha">#FFFFFF</color>
@@ -73,7 +90,7 @@
     <color name="canvasBackgroundMediumDark">#2D2D2D</color>
     <color name="canvasBackgroundMedium">#FFE3E3E3</color>
     <color name="canvasBackgroundLight">#FFF9F9F9</color>
-    <color name="canvasBackgroundOffWhite">#FAFAFA</color>
+    <color name="canvasBackgroundWhite">#FFFFFF</color>
     <color name="canvasRowDivider">#CBCBCB</color>
     <color name="canvasSectionDivider">#A4A4A4</color>
     <color name="canvasRowGrip">#393939</color>
@@ -88,6 +105,7 @@
     <color name="secondaryText">#777777</color>
     <color name="dividerColor">#E0E0E0</color>
     <color name="moduleItemBackground">#FFF9F9F9</color>
+    <color name="expandCollapseArrow">#73818C</color>
 
     <color name="navigationTextColor">#202020</color>
     <color name="navigationImageColor">#737373</color>
@@ -105,57 +123,6 @@
     <color name="listview_default">#00000000</color>
     <color name="listview_focused">#00000000</color>
     <color name="listview_pressed">#FFE3E3E3</color>
-
-    <!-- course colors - Primary -->
-    <color name="courseRed">#EF4437</color>
-    <color name="courseOrange">#F0592B</color>
-    <color name="courseGold">#F8971C</color>
-    <color name="courseGreen">#009688</color>
-    <color name="courseChartreuse">#4CAE4E</color>
-    <color name="courseCyan">#09BCD3</color>
-    <color name="courseSlate">#35A4DC</color>
-    <color name="courseBlue">#2083C5</color>
-    <color name="coursePurple">#4554A4</color>
-    <color name="courseViolet">#65499D</color>
-    <color name="coursePink">#F06291</color>
-    <color name="courseHotPink">#E71F63</color>
-    <color name="courseGrey">#9D9E9E</color>
-    <color name="courseYellow">#FDC010</color>
-    <color name="courseLavender">#8F3E97</color>
-
-    <!--course dark colors - PrimaryDark-->
-    <color name="courseRedDark">#A22021</color>
-    <color name="courseOrangeDark">#B22F26</color>
-    <color name="courseGoldDark">#F7851E</color>
-    <color name="courseGreenDark">#074943</color>
-    <color name="courseChartreuseDark">#246331</color>
-    <color name="courseCyanDark">#107F99</color>
-    <color name="courseSlateDark">#0D7199</color>
-    <color name="courseBlueDark">#054C79</color>
-    <color name="coursePurpleDark">#1F2757</color>
-    <color name="courseVioletDark">#3F3266</color>
-    <color name="coursePinkDark">#DD3073</color>
-    <color name="courseHotPinkDark">#AA1850</color>
-    <color name="courseGreyDark">#6B6B6B</color>
-    <color name="courseYellowDark">#FCAC0B</color>
-    <color name="courseLavenderDark">#46174B</color>
-
-    <!-- course colors - Light -->
-    <color name="courseRedLight">#ffdd5952</color>
-    <color name="courseOrangeLight">#ffffb661</color>
-    <color name="courseGoldLight">#ffffd934</color>
-    <color name="courseGreenLight">#ff86e17e</color>
-    <color name="courseChartreuseLight">#ff73d68d</color>
-    <color name="courseCyanLight">#ff47d2dd</color>
-    <color name="courseSlateLight">#ff69a0fa</color>
-    <color name="courseBlueLight">#ff80adf9</color>
-    <color name="coursePurpleLight">#ffb183db</color>
-    <color name="courseVioletLight">#ffb56cc9</color>
-    <color name="coursePinkLight">#fff486cb</color>
-    <color name="courseHotPinkLight">#FFF06292</color>
-    <color name="courseGreyLight">#FFBDBDBD</color>
-    <color name="courseYellowLight">#ffead605</color>
-    <color name="courseLavenderLight">#FFBA68C8</color>
 
     <!-- Content -->
     <color name="tablet_content_bg">#FFFFFF</color>
@@ -199,14 +166,6 @@
 
     <color name="userEmailColor">#DBDBDB</color>
 
-    <color name="tutorialTextColor">#08242F</color>
-    <color name="tutorialPage1">#FDE098</color>
-    <color name="tutorialPage2">#94D7E3</color>
-    <color name="tutorialPage3">#F5B2CA</color>
-    <color name="tutorialPage4">#89CCC4</color>
-    <color name="tutorialIndicator">#99C3C3C3</color>
-    <color name="tutorialIndicatorSolid">#C3C3C3</color>
-
     <!-- Override these colors to change the text colors of the date picker -->
     <color name="blue">@color/defaultPrimary</color>
     <color name="darker_blue">@color/defaultPrimaryDark</color>
@@ -228,4 +187,24 @@
     <color name="utils_defaultTrackColor">#C7CDD1</color>
 
     <color name="toolbarColor">#a3000000</color>
+
+    <color name="avatarGray">#8b969e</color>
+
+    <!--Discussions-->
+    <color name="utils_discussion_liking">#8b969e</color>
+    <color name="utils_defaultTextDark">#2d3b45</color>
+    <color name="utils_defaultTextGray">#8b969e</color>
+    <color name="utils_profileBorderColor">#d8dcdf</color>
+
+    <!--Attachment View-->
+    <color name="utils_attachmentColorDoc">#2ca3de</color>
+    <color name="utils_attachmentColorPdf">#f2422e</color>
+    <color name="utils_attachmentColorVideo">#f2422e</color>
+    <color name="utils_attachmentColorImage">#AAAAAA</color>
+    <color name="utils_attachmentColorTxt">#1682c7</color>
+    <color name="utils_attachmentColorXls">#48af49</color>
+    <color name="utils_attachmentColorZip">#903a99</color>
+    <color name="utils_attachmentColorAudio">#4452a6</color>
+    <color name="utils_attachmentColorMisc">#00bcd5</color>
+
 </resources>

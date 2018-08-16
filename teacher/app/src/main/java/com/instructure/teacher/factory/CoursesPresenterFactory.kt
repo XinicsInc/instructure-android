@@ -17,10 +17,9 @@
 package com.instructure.teacher.factory
 
 
-import com.instructure.canvasapi2.models.Course
 import com.instructure.teacher.presenters.CoursesPresenter
 import instructure.androidblueprint.PresenterFactory
 
-class CoursesPresenterFactory(val filter: (Course) -> Boolean) : PresenterFactory<CoursesPresenter> {
-    override fun create() = CoursesPresenter(filter)
+class CoursesPresenterFactory : PresenterFactory<CoursesPresenter> {
+    override fun create() = CoursesPresenter()
 }

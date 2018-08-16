@@ -18,6 +18,7 @@
 package com.instructure.candroid.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,10 +37,12 @@ import com.instructure.canvasapi2.models.Tab;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Response;
 
 public class CourseNavigationAdapter extends BaseAdapter {
 
@@ -115,7 +118,7 @@ public class CourseNavigationAdapter extends BaseAdapter {
         ImageView image = (ImageView)view.findViewById(R.id.icon);
 
         text.setText(tab.getLabel());
-        image.setImageDrawable(CanvasContextColor.getColoredDrawable(mContext, getIconResIdForTab(tab), color));
+        image.setImageDrawable(ColorKeeper.getColoredDrawable(mContext, getIconResIdForTab(tab), color));
 
         return view;
     }
@@ -160,41 +163,41 @@ public class CourseNavigationAdapter extends BaseAdapter {
 
         switch (id) {
             case Tab.HOME_ID:
-                return R.drawable.ic_cv_home_fill;
+                return R.drawable.vd_home;
             case Tab.GRADES_ID:
-                return R.drawable.ic_cv_grades_fill;
+                return R.drawable.vd_grades;
             case Tab.SYLLABUS_ID:
-                return R.drawable.ic_cv_syllabus_fill;
+                return R.drawable.vd_syllabus;
             case Tab.MODULES_ID:
-                return R.drawable.ic_cv_modules_fill;
+                return R.drawable.vd_modules;
             case Tab.ASSIGNMENTS_ID:
-                return R.drawable.ic_cv_assignments_fill;
+                return R.drawable.vd_assignment;
             case Tab.QUIZZES_ID:
-                return R.drawable.ic_cv_quizzes_fill;
+                return R.drawable.vd_quiz;
             case Tab.PAGES_ID:
-                return R.drawable.ic_cv_pages_fill;
+                return R.drawable.vd_pages;
             case Tab.ANNOUNCEMENTS_ID:
-                return R.drawable.ic_cv_announcements_fill;
+                return R.drawable.vd_announcement;
             case Tab.PEOPLE_ID:
-                return R.drawable.ic_cv_user_fill;
+                return R.drawable.vd_user;
             case Tab.COLLABORATIONS_ID:
-                return R.drawable.ic_cv_collaboration_fill;
+                return R.drawable.vd_collaborations;
             case Tab.CONFERENCES_ID:
-                return R.drawable.ic_cv_conference_fill;
+                return R.drawable.vd_conferences;
             case Tab.DISCUSSIONS_ID:
-                return R.drawable.ic_cv_discussions_fill;
+                return R.drawable.vd_discussion;
             case Tab.OUTCOMES_ID:
-                return R.drawable.ic_cv_outcomes_fill;
+                return R.drawable.vd_outcomes;
             case Tab.FILES_ID:
-                return R.drawable.ic_cv_folder_fill;
+                return R.drawable.vd_files;
             case Tab.NOTIFICATIONS_ID:
-                return R.drawable.ic_cv_notifications_fill;
+                return R.drawable.vd_notifications;
             case Tab.SETTINGS_ID:
-                return R.drawable.ic_cv_settings_fill;
+                return R.drawable.vd_settings;
             case Tab.TYPE_EXTERNAL:
-                return R.drawable.ic_cv_application_fill;
+                return R.drawable.vd_lti;
             default:
-                return R.drawable.ic_cv_courses_fill;
+                return R.drawable.vd_courses;
         }
     }
 
@@ -236,18 +239,18 @@ public class CourseNavigationAdapter extends BaseAdapter {
 
             this.canvasContext = canvasContext;
             setupCallbacks(mContext);
-            color = CanvasContextColor.getCachedColor(mContext, canvasContext);
+            color = ColorKeeper.getOrGenerateColor(canvasContext);
             TabManager.getTabs(canvasContext, tabCallback, false);
 
         } else if (canvasContext != null) {
-            color = CanvasContextColor.getCachedColor(mContext, canvasContext);
+            color = ColorKeeper.getOrGenerateColor(canvasContext);
         }
     }
 
     public void setupCallbacks(final Context context) {
         tabCallback = new StatusCallback<List<Tab>>() {
             @Override
-            public void onResponse(retrofit2.Response<List<Tab>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<Tab>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 List<Tab> tabs = response.body();
                 if(canvasContext != null){
                     LoggingUtility.Log(context, Log.DEBUG, "Course/Group: " + canvasContext.getName() + "(" + canvasContext.getId() + ")");

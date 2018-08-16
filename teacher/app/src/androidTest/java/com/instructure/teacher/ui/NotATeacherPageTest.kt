@@ -16,7 +16,7 @@
 package com.instructure.teacher.ui
 
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.logInAsStudent
+import com.instructure.teacher.ui.utils.slowLogInAsStudent
 import org.junit.Test
 
 
@@ -24,7 +24,7 @@ class NotATeacherPageTest : TeacherTest() {
 
     @Test
     override fun displaysPageObjects() {
-        logInAsStudent()
+        slowLogInAsStudent()
         notATeacherPage.assertPageObjects()
     }
 }

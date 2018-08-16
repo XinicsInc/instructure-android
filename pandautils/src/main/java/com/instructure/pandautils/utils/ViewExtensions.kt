@@ -18,6 +18,7 @@
 
 package com.instructure.pandautils.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -25,18 +26,18 @@ import android.content.res.TypedArray
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.support.annotation.IdRes
+import android.support.annotation.*
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewParent
+import android.view.*
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityNodeInfo
@@ -100,6 +101,8 @@ fun Context.PX(px: Int) = (px / resources.displayMetrics.density).toInt()
 /** Converts float Pixel value to DIP value */
 fun Context.PX(px: Float) = (px / resources.displayMetrics.density).toInt()
 
+fun Context.toast(@StringRes resId: Int) = Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+
 fun EditText.onTextChanged(listener: (String) -> Unit) {
     addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -119,19 +122,21 @@ fun View.isRTL() = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRE
 val Int.specSize get() = View.MeasureSpec.getSize(this)
 /** Convenience extension property for getting the MeasureSpec mode */
 val Int.specMode get() = View.MeasureSpec.getMode(this)
+
 /** Returns a list of all immediate child views in this ViewGroup */
-val ViewGroup.children: List<View> get() = (0 until childCount).map { getChildAt(it) }
+val View.children: List<View>
+    get() = (this as? ViewGroup)?.let { (0 until childCount).map { getChildAt(it) } } ?: emptyList()
 
 /** Returns a list of all immediate child views of the specified type in this ViewGroup */
-inline fun <reified T : View> ViewGroup.children(): List<T> = children.filterIsInstance<T>()
+inline fun <reified T : View> View.children(): List<T> = children.filterIsInstance<T>()
 
 /** Returns a list of all views in this ViewGroup */
-val ViewGroup.descendants: List<View> get() = children + children<ViewGroup>().flatMap { it.descendants }
+val View.descendants: List<View> get() = children + children<ViewGroup>().flatMap { it.descendants }
 
 /** Returns a list of all views of the specified type in this ViewGroup */
-inline fun <reified T : View> ViewGroup.descendants(): List<T> = descendants.filterIsInstance<T>()
+inline fun <reified T : View> View.descendants(): List<T> = descendants.filterIsInstance<T>()
 
-/** Returns the firstAncestor of the specified type, or null if there are no matches */
+/** Returns the closest Ancestor of the specified type, or null if there are no matches */
 inline fun <reified V : View> View.firstAncestorOrNull(): V? {
     var p: ViewParent? = parent
     while (p != null) {
@@ -143,6 +148,20 @@ inline fun <reified V : View> View.firstAncestorOrNull(): V? {
     }
     return null
 }
+
+/** Returns the most distant ancestor of the specified type, or null if there are no matches */
+inline fun <reified V : View> View.lastAncestorOrNull(): V? {
+    var p: ViewParent? = parent
+    var ancestor: V? = null
+    while (p != null) {
+        if (p is V) ancestor = p
+        p = p.parent
+    }
+    return ancestor
+}
+
+/** Returns a list of all non-null [MenuItem]s currently in this menu */
+val Menu.items: List<MenuItem> get() = (0 until size()).mapNotNull { getItem(it) }
 
 /**
  * Returns the vertical pixel offset of the top of this view inside the specified ViewGroup.
@@ -363,11 +382,25 @@ fun ImageView?.loadUri(imageUri: Uri?, errorImageResourceId: Int = 0) {
         if (path.contains(".svg", ignoreCase = true)) {
             SvgUtils.loadSVGImage(this, imageUri, errorImageResourceId)
         } else {
+            // There was an issue with some png images not being shown correctly when coming back to an activity. Clearing the image gave a smoother
+            // experience than adding a signature to force a reload. We currently use this in only a few places, this could affect performance
+            // if it was used in a recycler view
+            Glide.with(context).clear(this)
             Glide.with(context).load(imageUri).apply(RequestOptions.errorOf(errorImageResourceId)).into(this)
         }
         return
     }
     if (errorImageResourceId > 0) setImageResource(errorImageResourceId)
+}
+
+/**
+ * Sets the specified drawable resource on this [ImageView] and tints it using the speficied [color]
+ */
+@JvmName("setColoredImageResource")
+fun ImageView?.setColoredResource(@DrawableRes resId: Int, @ColorInt color: Int) {
+    if (this == null) return
+    val drawable = ColorKeeper.getColoredDrawable(context, resId, color)
+    setImageDrawable(drawable)
 }
 
 /**
@@ -386,6 +419,12 @@ fun View.setupAvatarA11y(userName: String?) {
     })
 }
 
+/** Clears the view's content description and click action description. */
+fun View.clearAvatarA11y() {
+    contentDescription = ""
+    setAccessibilityDelegate(null)
+}
+
 @JvmName("setUserAvatarImage")
 fun CircleImageView.setAvatarImage(context: Context, userName: String?) {
     val initials = ProfileUtils.getUserInitials(userName)
@@ -398,8 +437,111 @@ fun CircleImageView.setAvatarImage(context: Context, userName: String?) {
             .useFont(Typeface.DEFAULT_BOLD)
             .textColor(color)
             .endConfig()
-            .buildRound(initials, Color.TRANSPARENT)
+            .buildRound(initials, Color.WHITE)
     this.borderColor = color
     this.borderWidth = context.DP(0.5f).toInt()
     this.setImageDrawable(drawable)
+}
+
+/**
+ * Loads the given resource as this Toolbar's icon, assigns it the given content description, and
+ * propagates its clicks to the provided function.
+ */
+@JvmName("setupToolbarNavButtonWithCallback")
+fun Toolbar?.setupAsNavButtonWithCallback(
+        @DrawableRes iconResId: Int,
+        @StringRes contentDescriptionResId: Int,
+        onClick: () -> Unit) {
+    if (this == null) return
+    setNavigationIcon(iconResId)
+    setNavigationContentDescription(contentDescriptionResId)
+    setNavigationOnClickListener { onClick() }
+    requestAccessibilityFocus()
+}
+
+/**
+ * Loads the given resource as this Toolbar's icon, assigns it the given content description, and
+ * propagates its clicks to the provided function.
+ */
+@JvmName("setupToolbarNavButtonWithoutCallback")
+fun Toolbar?.setupAsNavButtonIcon(
+        @DrawableRes iconResId: Int,
+        @StringRes contentDescriptionResId: Int) {
+    if (this == null) return
+    setNavigationIcon(iconResId)
+    setNavigationContentDescription(contentDescriptionResId)
+    requestAccessibilityFocus()
+}
+
+/**
+ * Changes this Toolbar's icon to a back arrow. Click events on this icon are propagated to the
+ * provided function
+ */
+@SuppressLint("PrivateResource")
+@JvmName("setupToolbarBackButton")
+fun Toolbar?.setupAsBackButton(onClick: () -> Unit) = setupAsNavButtonWithCallback(
+        android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material,
+        android.support.v7.appcompat.R.string.abc_action_bar_up_description,
+        onClick
+)
+
+/**
+ * Changes this Toolbar's icon to a back arrow. Click events will attempt to call onBackPressed()
+ * on the given fragment's activity
+ */
+@JvmName("setupToolbarBackButton")
+fun Toolbar?.setupAsBackButton(fragment: Fragment?) = setupAsBackButton {
+    fragment?.activity?.onBackPressed()
+}
+
+/**
+ * Changes this Toolbar's icon to a back arrow. Click events will attempt to call onBackPressed()
+ * on the given fragment's activity
+ */
+@JvmName("setupToolbarBackButtonAsBackPressedOnly")
+fun Toolbar?.setupAsBackButtonAsBackPressedOnly(fragment: Fragment?) = setupAsBackButton {
+    fragment?.activity?.onBackPressed()
+}
+
+/**
+ * Changes this Toolbar's icon to a close (X) icon. Click events on this icon are propagated to the
+ * provided function.
+ */
+@SuppressLint("PrivateResource")
+@JvmName("setupToolbarCloseButton")
+fun Toolbar?.setupAsCloseButton(onClick: () -> Unit) = setupAsNavButtonWithCallback(
+        android.support.v7.appcompat.R.drawable.abc_ic_clear_material, R.string.close,
+        onClick
+)
+
+
+/**
+ * Changes this Toolbar's icon to a close (X) icon. Click events will attempt to call onBackPressed()
+ * on the given fragment's activity
+ */
+@JvmName("setupToolbarCloseButton")
+fun Toolbar?.setupAsCloseButton(fragment: Fragment?) = setupAsCloseButton { fragment?.activity?.onBackPressed() }
+
+/**
+ * Inflates the provided menu resource into this Toolbar and propagates menu item click events
+ * to the provided callback
+ *
+ * Note: This clears any existing menu items. It is safe to call multiple times throughout
+ * the Activity/Fragment lifecycle, but should probably not be used when it is expected that
+ * the menu will also be populated by other sources.
+ */
+@JvmName("setupToolbarMenu")
+fun Toolbar?.setMenu(@MenuRes menuResId: Int, callback: (MenuItem) -> Unit) {
+    if (this == null) return
+    menu.clear()
+    inflateMenu(menuResId)
+    setOnMenuItemClickListener { callback(it); true }
+}
+
+fun RecyclerView.removeAllItemDecorations() {
+    generateSequence(0) { it + 1 }
+            .map { getItemDecorationAt(it) }
+            .takeWhile { it != null }
+            .toList()
+            .forEach { removeItemDecoration(it) }
 }

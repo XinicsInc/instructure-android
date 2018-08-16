@@ -23,6 +23,7 @@ import android.os.Handler
 import android.webkit.WebView
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView

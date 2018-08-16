@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +43,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.FileUploadAssignmentsAdapter;
 import com.instructure.candroid.adapter.FileUploadCoursesAdapter;
@@ -57,10 +56,14 @@ import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.pandautils.dialogs.UploadFilesDialog;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.ThemePrefs;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Response;
 
 public class ShareFileDestinationDialog extends DialogFragment implements UploadCheckboxManager.OnOptionCheckedListener{
 
@@ -68,9 +71,9 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
 
     // Dismiss interface
     public interface DialogCloseListener{
-        public void onDismiss(DialogInterface dialog);
-        public void onCancel(DialogInterface dialog);
-        public void onNext(Bundle bundle);
+        void onDismiss(DialogInterface dialog);
+        void onCancel(DialogInterface dialog);
+        void onNext(Bundle bundle);
     }
 
     private View rootView;
@@ -95,19 +98,12 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
 
     private FileUploadCoursesAdapter studentEnrollmentsAdapter;
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Constructor
-    ///////////////////////////////////////////////////////////////////////////
-
     public static ShareFileDestinationDialog newInstance(Bundle bundle) {
         ShareFileDestinationDialog uploadFileSourceFragment = new ShareFileDestinationDialog();
         uploadFileSourceFragment.setArguments(bundle);
         return uploadFileSourceFragment;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // LifeCycle
-    ///////////////////////////////////////////////////////////////////////////
     @Override public void onStart() {
         super.onStart();
         // Don't dim the background when the dialog is created.
@@ -135,30 +131,34 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         loadBundleData();
 
-        MaterialDialog.Builder builder= new MaterialDialog.Builder(getActivity());
-        builder .positiveText(getString(R.string.next))
-                .negativeText(getActivity().getString(R.string.cancel))
-                .backgroundColorRes(R.color.white)
-                .positiveColorRes(R.color.courseGreen)
-                .negativeColorRes(R.color.canvasTextMedium)
-                .cancelable(true)
-                .autoDismiss(false)
-                .customView(initViews(), false)
-                .callback(new MaterialDialog.ButtonCallback() {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                .setView(initViews())
+                .setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onPositive(MaterialDialog dialog) {
+                    public void onClick(DialogInterface dialog, int which) {
                         validateAndShowNext();
                     }
-
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onNegative(MaterialDialog dialog) {
-                        super.onNegative(dialog);
-                        onCancel(dialog);
-                        dismiss();
+                    public void onClick(DialogInterface dialog, int which) {
+                        dismissAllowingStateLoss();
                     }
-                });
+                })
+                .setCancelable(true)
+                .create();
 
-        return builder.build();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                if(alertDialog != null) {
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.getButtonColor());
+                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.getButtonColor());
+                }
+            }
+        });
+
+        return alertDialog;
     }
 
     public void onDismiss(DialogInterface dialog){
@@ -201,10 +201,10 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
      */
     private String validateForm(){
         //make sure the user has selected a course and an assignment
-        FileUploadDialog.FileUploadType uploadType = checkboxManager.getSelectedType();
+        UploadFilesDialog.FileUploadType uploadType = checkboxManager.getSelectedType();
 
         // Make sure an assignment & course was selected if FileUploadType.Assignment
-        if (uploadType == FileUploadDialog.FileUploadType.ASSIGNMENT){
+        if (uploadType == UploadFilesDialog.FileUploadType.ASSIGNMENT){
             if(studentCoursesSpinner.getSelectedItem() == null){
                 return  getString(R.string.noCourseSelected);
             }
@@ -216,17 +216,18 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
         return "";
     }
 
+    @NonNull
     private Bundle getUploadBundle(){
         Bundle bundle;
         switch (checkboxManager.getSelectedCheckBox().getId()){
             case R.id.myFilesCheckBox:
-                bundle = FileUploadDialog.createFilesBundle(uri, null);
+                bundle = UploadFilesDialog.createFilesBundle(uri, null);
                 break;
             case R.id.assignmentCheckBox:
-                bundle = FileUploadDialog.createAssignmentBundle(uri, (Course)studentCoursesSpinner.getSelectedItem(), (Assignment)assignmentSpinner.getSelectedItem());
+                bundle = UploadFilesDialog.createAssignmentBundle(uri, (Course)studentCoursesSpinner.getSelectedItem(), (Assignment)assignmentSpinner.getSelectedItem());
                 break;
             default:
-                bundle = FileUploadDialog.createFilesBundle(uri, null);
+                bundle = UploadFilesDialog.createFilesBundle(uri, null);
                 break;
         }
         return bundle;
@@ -237,13 +238,13 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
 
         contentView = rootView.findViewById(R.id.dialogContents);
 
-        studentCoursesSpinner = (Spinner) rootView.findViewById(R.id.studentCourseSpinner);
-        assignmentSpinner = (Spinner) rootView.findViewById(R.id.assignmentSpinner);
+        studentCoursesSpinner = rootView.findViewById(R.id.studentCourseSpinner);
+        assignmentSpinner = rootView.findViewById(R.id.assignmentSpinner);
 
         // animated header views
-        title = (TextView) rootView.findViewById(R.id.dialogTitle);
-        avatar = (ImageView) rootView.findViewById(R.id.avatar);
-        userName = (TextView) rootView.findViewById(R.id.userName);
+        title = rootView.findViewById(R.id.dialogTitle);
+        avatar = rootView.findViewById(R.id.avatar);
+        userName = rootView.findViewById(R.id.userName);
         userName.setText(user.getName());
 
         initCheckBoxes(rootView);
@@ -255,9 +256,9 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
     }
 
     private void initCheckBoxes(View view){
-        CheckedTextView assignmentCheckBox = (CheckedTextView) view.findViewById(R.id.assignmentCheckBox);
-        CheckedTextView myFilesCheckBox = (CheckedTextView) view.findViewById(R.id.myFilesCheckBox);
-        CardView selectionIndicator = (CardView) view.findViewById(R.id.selectionIndicator);
+        CheckedTextView assignmentCheckBox = view.findViewById(R.id.assignmentCheckBox);
+        CheckedTextView myFilesCheckBox = view.findViewById(R.id.myFilesCheckBox);
+        CardView selectionIndicator = view.findViewById(R.id.selectionIndicator);
 
         checkboxManager = new UploadCheckboxManager(this, selectionIndicator);
         checkboxManager.add(myFilesCheckBox);
@@ -276,12 +277,14 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
     private void setupCallbacks() {
         canvasCallbackAssignments = new StatusCallback<List<Assignment>>() {
             @Override
-            public void onResponse(retrofit2.Response<List<Assignment>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<Assignment>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (!isAdded()) {
                     return;
                 }
 
                 List<Assignment> assignments = response.body();
+
+                if(assignments == null) return;
 
                 if (assignments.size() > 0 && courseSelectionChanged(assignments.get(0).getCourseId())) {
                     return;
@@ -354,9 +357,6 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
         return false;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // View Helpers
-    ///////////////////////////////////////////////////////////////////////////
     private void setRevealContentsListener(){
         final Animation avatarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.ease_in_shrink);
         final Animation titleAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.ease_in_bottom);
@@ -365,8 +365,6 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
             @Override
             public void onGlobalLayout() {
                 AnimationHelpers.removeGlobalLayoutListeners(avatar, this);
-                ((MaterialDialog)getDialog()).getActionButton(DialogAction.POSITIVE).startAnimation(titleAnimation);
-                ((MaterialDialog)getDialog()).getActionButton(DialogAction.NEGATIVE).startAnimation(titleAnimation);
                 avatar.startAnimation(avatarAnimation);
                 userName.startAnimation(titleAnimation);
                 title.startAnimation(titleAnimation);
@@ -402,9 +400,6 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
         studentCoursesSpinner.setEnabled(isEnabled);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // UploadCheckboxManager overrides
-    ///////////////////////////////////////////////////////////////////////////
     @Override
     public void onUserFilesSelected() {
         enableStudentSpinners(false);
@@ -420,14 +415,11 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
         enableStudentSpinners(true);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Data
-    ///////////////////////////////////////////////////////////////////////////
     private void loadBundleData(){
         Bundle bundle = getArguments();
-        courses   = bundle.getParcelableArrayList(Const.COURSES);
-        user      = ApiPrefs.getUser();
-        uri       = bundle.getParcelable(Const.URI);
+        courses = bundle.getParcelableArrayList(Const.COURSES);
+        user = ApiPrefs.getUser();
+        uri = bundle.getParcelable(Const.URI);
     }
 
     public static Bundle createBundle(Uri uri, ArrayList<Course> courses){

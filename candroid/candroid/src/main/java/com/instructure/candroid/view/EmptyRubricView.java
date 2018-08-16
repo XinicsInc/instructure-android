@@ -60,7 +60,7 @@ public class EmptyRubricView extends RelativeLayout implements EmptyViewInterfac
         mCurrentGrade = (TextView)findViewById(R.id.currentGrade);
         mCurrentPoints = (TextView)findViewById(R.id.currentPoints);
         mNoRubricText = (TextView)findViewById(R.id.noRubricText);
-        mLoadingView = (RelativeLayout)findViewById(R.id.loadingView);
+        mLoadingView = (RelativeLayout)findViewById(R.id.loadingContainer);
         mContentView = (LinearLayout) findViewById(R.id.topHeader);
     }
 

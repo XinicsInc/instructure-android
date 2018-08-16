@@ -1,0 +1,5 @@
+.idea
+build
+out
+src/main/java/com/instructure/soseedy
+*.html

@@ -101,6 +101,7 @@ object ModuleManager : BaseManager() {
         } else {
             val adapter = RestBuilder(callback)
             val params = RestParams.Builder()
+                    .withCanvasContext(canvasContext)
                     .withPerPageQueryParam(true)
                     .withForceReadFromNetwork(forceNetwork)
                     .build()

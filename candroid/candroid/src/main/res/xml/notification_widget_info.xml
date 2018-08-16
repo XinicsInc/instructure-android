@@ -20,7 +20,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:configure="com.instructure.candroid.activity.WidgetSetupActivity"
     android:minWidth="200dp"
-    android:minHeight="110dip"
+    android:minHeight="110dp"
     android:updatePeriodMillis="1440000"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="keyguard|home_screen"

@@ -31,11 +31,11 @@ public class AssignmentViewHolder extends RecyclerView.ViewHolder {
 
     public AssignmentViewHolder(View itemView) {
         super(itemView);
-        title = (TextView) itemView.findViewById(R.id.title);
-        description = (TextView) itemView.findViewById(R.id.description);
-        date = (TextView) itemView.findViewById(R.id.date);
-        points = (TextView) itemView.findViewById(R.id.points);
-        icon = (ImageView) itemView.findViewById(R.id.icon);
+        title = itemView.findViewById(R.id.title);
+        description = itemView.findViewById(R.id.description);
+        date = itemView.findViewById(R.id.date);
+        points = itemView.findViewById(R.id.points);
+        icon = itemView.findViewById(R.id.icon);
     }
 
     public static int holderResId() {

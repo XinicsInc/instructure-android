@@ -1,0 +1,125 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'com.google.protobuf'
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath Plugins.KOTLIN
+        // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.google.protobuf%22%20a%3A%22protobuf-gradle-plugin%22
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.3'
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    /* Kotlin */
+    implementation Libs.KOTLIN_STD_LIB
+
+    /* Networking */
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+
+    /* Serialization */
+    implementation 'com.google.code.gson:gson:2.8.0'
+
+    implementation 'org.jsoup:jsoup:1.10.3'
+    implementation 'com.github.javafaker:javafaker:0.14'
+
+    /* Test Dependencies */
+    testImplementation 'junit:junit:4.12'
+
+    /** gRPC **/
+    compile 'io.grpc:grpc-protobuf-lite:1.6.1'
+    compile 'io.grpc:grpc-stub:1.6.1'
+
+}
+
+// generate protobuf before trying to compile Kotlin
+// https://github.com/google/protobuf-gradle-plugin/issues/100
+compileKotlin {
+    dependsOn {
+        project.tasks.findAll {
+            it.name.startsWith('generateProto')
+        }
+    }
+}
+
+task addPrivateData {
+    doLast { // execution phase
+        PrivateData.merge(project, "dataseeding")
+    }
+}
+
+compileKotlin.dependsOn(addPrivateData)
+
+protobuf {
+    // Configure the protoc executable
+    protoc {
+        // Download from repositories
+        // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.google.protobuf%22%20a%3A%22protoc%22
+        artifact = 'com.google.protobuf:protoc:3.4.0'
+    }
+
+    generatedFilesBaseDir = "$projectDir/src"
+
+    // Configure the codegen plugins
+    plugins {
+        // Define a plugin with name 'grpc'
+        grpc {
+            // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.grpc%22%20a%3A%22protoc-gen-grpc-java%22
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.6.1'
+        }
+
+        javalite {
+            // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.google.protobuf%22%20a%3A%22protoc-gen-javalite%22
+            // The codegen for lite comes as a separate artifact
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+    }
+
+    generateProtoTasks {
+        // all() = all proto tasks
+        all().each { task ->
+            task.builtins {
+                remove java
+            }
+            task.plugins {
+                javalite {
+                    outputSubDir = 'java/'
+                }
+                // Add grpc output without any option.  grpc must have been defined in the
+                // protobuf.plugins block.
+                grpc {
+                    // Options added to --grpc_out
+                    option 'lite'
+                    outputSubDir = 'java/'
+                }
+            }
+        }
+
+    }
+}
+
+task customClean {
+    doLast {
+        delete "${protobuf.generatedFilesBaseDir}/main/java/com/instructure/soseedy"
+        addPrivateData.execute()
+    }
+}
+
+clean.dependsOn(customClean)

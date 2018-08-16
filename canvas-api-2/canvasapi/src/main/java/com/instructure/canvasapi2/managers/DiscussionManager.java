@@ -45,7 +45,7 @@ public class DiscussionManager extends BaseManager {
 
     private static boolean mTesting = false;
 
-    public static void getDiscussions(final boolean forceNetwork, final long contextId, StatusCallback<List<DiscussionTopicHeader>> callback) {
+    public static void getDiscussions(final boolean forceNetwork, CanvasContext canvasContext, StatusCallback<List<DiscussionTopicHeader>> callback) {
         if (isTesting() || mTesting) {
             //TODO:
         } else {
@@ -55,7 +55,7 @@ public class DiscussionManager extends BaseManager {
                     .withPerPageQueryParam(true)
                     .build();
 
-            DiscussionAPI.getDiscussions(contextId, adapter, callback, params);
+            DiscussionAPI.getDiscussions(canvasContext, adapter, callback, params);
         }
     }
 
@@ -84,6 +84,20 @@ public class DiscussionManager extends BaseManager {
         }
     }
 
+    public static void createStudentDiscussion(CanvasContext canvasContext, DiscussionTopicHeader newDiscussionHeader, @Nullable MultipartBody.Part attachment, StatusCallback<DiscussionTopicHeader> callback) {
+        if (isTesting() || mTesting) {
+            // TODO
+        } else {
+            RestBuilder adapter = new RestBuilder(callback);
+            RestParams params = new RestParams.Builder()
+                    .withPerPageQueryParam(false)
+                    .withShouldIgnoreToken(false)
+                    .build();
+
+            DiscussionAPI.createStudentDiscussion(adapter, params, canvasContext, newDiscussionHeader, attachment, callback);
+        }
+    }
+
     public static void editDiscussionTopic(CanvasContext canvasContext, long discussionHeaderId, DiscussionTopicPostBody discussionTopicPostBody, StatusCallback<DiscussionTopicHeader> callback) {
         if (isTesting() || mTesting) {
             // TODO
@@ -98,7 +112,7 @@ public class DiscussionManager extends BaseManager {
         }
     }
 
-    public static void getAllDiscussionTopicHeaders(final long contextId, final boolean forceNetwork, StatusCallback<List<DiscussionTopicHeader>> callback) {
+    public static void getAllDiscussionTopicHeaders(@NonNull CanvasContext canvasContext, final boolean forceNetwork, StatusCallback<List<DiscussionTopicHeader>> callback) {
         if(isTesting() || mTesting) {
             //TODO:
         } else {
@@ -115,7 +129,7 @@ public class DiscussionManager extends BaseManager {
                 }
             };
             adapter.setStatusCallback(depaginatedCallback);
-            DiscussionAPI.getFirstPageDiscussionTopicHeaders(contextId, adapter, depaginatedCallback, params);
+            DiscussionAPI.getFirstPageDiscussionTopicHeaders(canvasContext, adapter, depaginatedCallback, params);
         }
     }
 
@@ -227,14 +241,14 @@ public class DiscussionManager extends BaseManager {
         }
     }
 
-    public static void replyToDiscussionEntry(CanvasContext canvasContext, long topicId, long entryId, String message, File attachment, StatusCallback<DiscussionEntry> callback) {
+    public static void replyToDiscussionEntry(CanvasContext canvasContext, long topicId, long entryId, String message, File attachment, String mimeType, StatusCallback<DiscussionEntry> callback) {
         if(isTesting() || mTesting) {
             //TODO:
         } else {
             RestBuilder adapter = new RestBuilder(callback);
             RestParams params = new RestParams.Builder().build();
 
-            DiscussionAPI.replyToDiscussionEntryWithAttachment(adapter, canvasContext, topicId, entryId, message, attachment, callback, params);
+            DiscussionAPI.replyToDiscussionEntryWithAttachment(adapter, canvasContext, topicId, entryId, message, attachment, mimeType, callback, params);
         }
     }
 
@@ -260,14 +274,14 @@ public class DiscussionManager extends BaseManager {
         }
     }
 
-    public static void postToDiscussionTopic(CanvasContext canvasContext, long topicId, String message, File attachment, StatusCallback<DiscussionEntry> callback) {
+    public static void postToDiscussionTopic(CanvasContext canvasContext, long topicId, String message, File attachment, String mimeType, StatusCallback<DiscussionEntry> callback) {
         if(isTesting() || mTesting) {
             //TODO:
         } else {
             RestBuilder adapter = new RestBuilder(callback);
             RestParams params = new RestParams.Builder().build();
 
-            DiscussionAPI.postToDiscussionTopicWithAttachment(adapter, canvasContext, topicId, message, attachment, callback, params);
+            DiscussionAPI.postToDiscussionTopicWithAttachment(adapter, canvasContext, topicId, message, attachment, mimeType, callback, params);
         }
     }
 

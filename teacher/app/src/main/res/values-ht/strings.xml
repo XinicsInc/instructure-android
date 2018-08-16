@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -29,8 +29,9 @@
     <string name="tab_discussions">Diskisyon</string>
     <string name="tab_announcements">Anons</string>
     <string name="tab_attendance">Prezans</string>
+    <string name="tab_pages">Paj</string>
+    <string name="tab_todo">Pou Fè</string>
     <string name="content_description_school_logo">moun</string>
-    <string name="content_description_avatar">Avata</string>
     <string name="search_guides">Chèche nan Gid Canvas</string>
     <string name="canvas_guides">Gid Canvas</string>
     <string name="search_guides_icon">Ikòn Gid Canvas</string>
@@ -150,8 +151,8 @@
     <string name="all_submissions_graded">Tout soumisyon klase</string>
     <string name="icon">ikòn</string>
     <plurals name="grading_status_assignment">
-        <item quantity="one">%d soumisyon an bezwen klasman</item>
-        <item quantity="other">%d soumisyon yo bezwen klasman</item>
+        <item quantity="one">%d soumisyon bezwen klasman</item>
+        <item quantity="other">%d soumisyon bezwen klasman</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
@@ -161,7 +162,7 @@
 
     <string name="inbox_empty_title">Pa gen mesaj</string>
     <string name="inbox_empty_starred_title">Pa gen Mesaj ki Make</string>
-    <string name="inbox_empty_message">Tape sou \"+\" pou ka kreye yon nouvo konvèsasyon</string>
+    <string name="inbox_empty_message">Tape sou \"+\" pou kreye yon nouvo konvèsasyon.</string>
     <string name="inbox_empty_starred_message">Tape sou etwal nan mesaj yo pou ka make yo</string>
 
     <string name="download_attachment">Telechaje Atachman</string>
@@ -210,8 +211,8 @@
         <item quantity="other">+ %d Mesaj</item>
     </plurals>
     <plurals name="submissionNeedsGrading">
-        <item quantity="one">%d soumisyon an bezwen klasman</item>
-        <item quantity="other">%d soumisyon yo bezwen klasman</item>
+        <item quantity="one">%d soumisyon bezwen klasman</item>
+        <item quantity="other">%d soumisyon bezwen klasman</item>
     </plurals>
 
     <string name="delete_assignment_message">Ou kwè vrèman ou vle efase Sesyon sa a?</string>
@@ -267,14 +268,14 @@
     <string name="error_occurred">Yon erè fèt sanzatann.</string>
     <string name="no_assignments_with_file_upload">Kou sa a pa gen sesyon ki pèmèt transfè fichye.</string>
     <string name="extension_not_allowed">Tip fichye ou seleksyone a pa otorize.</string>
-    <string name="allowed_extensions">Ekstansyon otorize:&#160;</string>
+    <string name="allowed_extensions">Ekstansyon ki otorize: </string>
     <string name="files_uploaded_successfully">Transfè Fichye yo fèt kòrèkteman.</string>
     <string name="error_uploading_file">Yon erè fèt pandan chajman fichye ou a. Tanpri eseye ankò.</string>
     <string name="uploading_file">Transfè fichye&#8230;</string>
     <string name="no_apps">Aparèy ou a pa gen okenn aplikasyon ki enstale ki ka jere fichye sa a.</string>
     <string name="turn_in">Aktive</string>
     <string name="error_getting_photo">Gen yon erè ki fèt pandan w ap eseye jwenn foto a. Tanpri eseye ankò.</string>
-    <string name="loading_files_indeterminate">Chajman Fichye&#8230;</string>
+    <string name="loading_files_indeterminate">Chajman fichye&#8230;</string>
     <string name="no_files_uploaded">Ou pa seleksyone okenn fichye.</string>
     <string name="file_upload_not_supported">Ou paka transfere fichye nan sesyon ou seleksyone a.</string>
     <string name="one_or_more_extension_not_allowed">Gen yonn oswa plizyè lòit fichye ki gen ekstansyon ki pa otorize</string>
@@ -285,14 +286,14 @@
     <string name="inbox_sent">Voye</string>
     <string name="inbox_archived">Achive</string>
     <string name="inbox_all_messages">Tout Mesaj</string>
-    <string name="uploading_file_num" formatted="false">Transfè %d sou %d</string>
+    <string name="uploading_file_num" formatted="false">Chajman %d sou %d</string>
     <string name="page_not_found">Paj entwouvab.</string>
     <string name="no_connection">Pa gen Koneksyon</string>
     <string name="unauthorized_access">Ou pa gen otorizasyon pou ale la. Swa ou pa gen otorizasyon oswa ou poko gen aksè (ta sanble kou ou a poko kòmanse)</string>
     <string name="server_error">Gen yon erè sèvè ki fèt.</string>
     <string name="error_loading_files">Yon erè fèt pandan chajman fichye ou a. Tanpri verifye koneksyon entènèt ou a epi eseye ankò.</string>
     <string name="files_submitted_successfully">Fichye yo soumèt kòrèkteman.</string>
-    <string name="no_data_connection"> Tanpri verifye koneksyon entènèt ou a epi eseye ankò. </string>
+    <string name="no_data_connection">Tanpri verifye koneksyon entènèt ou a epi eseye ankò.</string>
     <string name="teacher_logout_warning">Ou kwè vrèman ou vle dekonekte?</string>
     <string name="teacher_yes">Wi</string>
     <string name="teacher_no">Non</string>
@@ -311,11 +312,11 @@
     <string name="set_home_to">Defini \'Akèy\' a</string>
     <string name="course_activity_stream">Flux Aktivite Kou</string>
     <string name="pages_front_page">Paj Paj Prensipal</string>
+    <string name="frontPage">Premye Paj</string>
     <string name="course_modules">Modil Kou</string>
     <string name="assignments_list">Lis Sesyon</string>
     <string name="syllabus">Pwogram</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Plizyè Delè</string>
     <string name="everyone">Tout Moun</string>
@@ -323,7 +324,7 @@
     <string name="unknown_student">Elèv Enkoni</string>
     <string name="closed">Fèmen</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">Delè %s a %s</string>
+    <string name="due_date_at_time" formatted="false">Delè %1s a %2s</string>
     <string name="last_post" formatted="false">Dènye piblikasyon %s</string>
     <string name="submission_types">Tip Soumisyon</string>
     <string name="full_due_date_details">Tout detay delè</string>
@@ -395,7 +396,7 @@
     <string name="points">Pwen</string>
     <string name="gpa_scale">Echèl GPA</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -404,7 +405,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -425,9 +426,9 @@
     <string name="havent_submitted_yet">Poko Soumèt</string>
     <string name="havent_been_graded">Poko Klase</string>
     <string name="scored_less_than">Fè Mwens Ke&#8230;</string>
-    <string name="scored_more_than">Fè Plis Ke&#8230;</string>
+    <string name="scored_more_than">Fè Plis ke&#8230;</string>
     <string name="scored_less_than_value">Fè Mwens Ke %s</string>
-    <string name="scored_more_than_value">Fè Plis Ke %s</string>
+    <string name="scored_more_than_value">Fè Plis ke %s</string>
     <string name="add_comment">Ajoute Kòmantè</string>
     <string name="editComment">Modifye Kòmantè</string>
     <string name="deleteComment">Efase Kòmantè</string>
@@ -451,7 +452,7 @@
     <string name="rating_button_content_description_custom">Nòt pèsonalize %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">"%1$s, %2$s</string>
+    <string name="rating_button_content_description">%1$s, %2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="one">sou %s pt</item>
@@ -472,6 +473,8 @@
     <string name="assignments">Sesyon</string>
     <string name="clear_filter">Efase Filtè</string>
     <string name="due">Delè %1$s</string>
+    <string name="updated">Aktyalize %1$s</string>
+
     <plurals name="needsGradingCount">
         <item quantity="one">%s bezwen klasman</item>
         <item quantity="other">%s bezwen klasman</item>
@@ -483,7 +486,7 @@
     <string name="at">nan</string>
     <plurals name="quantityPointsAbbreviated">
         <item quantity="one">%s pwen</item>
-        <item quantity="other">%s pts</item>
+        <item quantity="other">%s pwen</item>
     </plurals>
     <plurals name="quantityPointsFull">
         <item quantity="one">%s pwen</item>
@@ -498,7 +501,7 @@
         <item quantity="other">%d gwoup</item>
     </plurals>
     <string name="cmp_closed">Fèmen</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022  </string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">prefere</string>
     <string name="content_description_not_favorite">pa prefere</string>
@@ -530,10 +533,9 @@
     <string name="contentDescriptionFileIcon">Ikòn Fichye</string>
     <string name="contentDescriptionExpandPage">Elaji Paj</string>
     <string name="contentDescriptionCollapsePage">Diminye Paj</string>
-
     <string name="noInternetConnectionTitle">Pa gen Koneksyon Internet</string>
     <string name="noInternetConnectionMessage">Pou aksyon sa a ou bezwen konekte sou entènèt.</string>
-  
+
     <string name="emptyDetailsMessage">Tape sou yon eleman nan lis la pou afiche detay yo</string>
 
     <string name="assignmentQuizzes">Sesyon Quiz</string>
@@ -553,7 +555,7 @@
     <string name="gradedSurvey">Ankèt Klase</string>
     <string name="ungradedSurvey">Ankèt san Klase</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -599,7 +601,7 @@
     <string name="immediately">Kounye a menm</string>
     <string name="quiz_details_no_points_assigned">Pa gen pwen ki asiyen</string>
 
-    <string name="quiz_details_from_to">De %1$s a %2$s</string>
+    <string name="quiz_details_from_to">De %1$s jiska %2$s</string>
     <string name="quiz_details_after">Aprè %1$s</string>
     <string name="quiz_details_until">Jiska %1$s</string>
     <string name="continueWithoutSavingTitle">Kontinye san sovgade?</string>
@@ -636,7 +638,7 @@
     <string name="discussions_replies_title">Repons</string>
     <string name="discussions_reply">Reponn</string>
     <string name="discussions_edit">Modifye</string>
-    <string name="discussions_deleted" formatted="false">Elimine kòmantè sa a %s</string>
+    <string name="discussions_deleted" formatted="false">Efase repons sa a %s</string>
     <string name="discussions_forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
     <string name="discussions_unknown_author">Otè Enkoni</string>
     <string name="discussions_delete">Efase Diskisyon</string>
@@ -650,14 +652,14 @@
     <string name="submissionIsMediaFile">Soumisyon sa a se yon fichye medya</string>
     <string name="tryAgain">Eseye ankò</string>
     <string name="couldNotPlayFormat">fòma medya sa a  pa sipòte</string>
-    <string name="openWithAnotherApp">Ouvri avèk...</string>
-    
+    <string name="openWithAnotherApp">Ouvri avèk&#8230;</string>
+
     <string name="speedgraderCommentAddedSubmission">Sesyon soumèt. Tape pou afiche.</string>
     <string name="speedgraderCommentSubmittedFiles">Fichye ki soumèt:</string>
     <string name="no_submission_comments">Pa gen kòmantè soumisyon</string>
     <string name="mediaUploadAudio">Transfè Medya - Odyo</string>
     <string name="mediaUploadVideo">Transfè Medya - Videyo</string>
-    <string name="speedgraderCommentQuizAttempt">Tantativ %d</string>
+    <string name="speedgraderCommentQuizAttempt">Tantativ: %d</string>
     <string name="speedGraderTextSubmission">Soumisyon Tèks</string>
     <string name="speedGraderExternalToolSubmission">Soumisyon Zouti Ekstèn</string>
     <string name="speedGraderDiscussionSubmission">Soumisyon Diskisyon</string>
@@ -699,7 +701,7 @@
     <string name="viewQuizSubmission">Afichaj Soumisyon</string>
     <string name="gradeQuizSubmission">Soumisyon Nòt</string>
     <string name="comment">Kòmantè</string>
-    <string name="messageStudentsWho">Voye Mesaj bay Elèv Ki#8230;</string>
+    <string name="messageStudentsWho">Ekri Elèv Ki&#8230;</string>
 
     <string name="on">sou</string>
 
@@ -800,4 +802,92 @@
     <string name="markAllAsPresent">Make Tout kòm Prezan</string>
     <string name="calendar">Kalandriye</string>
     <string name="filterSections">Filtre Seksyon</string>
+    <string name="addVideoComment">Ajoute yon kòmantè videyo</string>
+    <string name="addAudioComment">Ajoute yon kòmantè odyo</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d èdtan, %2$d minit, e %3$d segond</string>
+    <string name="recordingTimerSpeechDivider">%1$s sou %2$s</string>
+    <string name="replay">Rejwe</string>
+    <string name="stop">Kanpe</string>
+    <string name="startRecordingAudio">Kòmanse anrejistreman odyo</string>
+    <string name="stopRecordingAudio">Kanpe anrejistreman odyo</string>
+    <string name="startRecordingVideo">Kòmanse anrejistreman videyo</string>
+    <string name="stopRecordingVideo">Kanpe anrejistreman videyo</string>
+    <string name="closeRecordingView">Fèmen afichaj anrejistreman</string>
+    <string name="deleteRecording">Efase anrejistreman</string>
+    <string name="videoCommentReplay">Rejwe Kòmantè Videyo</string>
+    <string name="addMediaComment">Ajoute kòmantè miltimedya</string>
+    <string name="copyrightHolder">Detantè Copyright</string>
+    <string name="access">Aksè</string>
+    <string name="usageRights">Dwa Itilizasyon</string>
+    <string name="deleteFile">Efase Fichye</string>
+    <string name="holdCopyright">Mwen gen dwa dotè a</string>
+    <string name="havePermission">Mwen gen otorizasyon pou itilize fichye a</string>
+    <string name="publicDomain">Fichye Domèn Piblik</string>
+    <string name="fairUse">Eksepsyon Itilizasyon Ekitab</string>
+    <string name="creativeCommons">Fichye Komen Kreyatif</string>
+    <string name="editFile">Modifye Fichye</string>
+    <string name="deleteFolder">Elimine Dosye</string>
+    <string name="editFolder">Modifye Dosye</string>
+    <string name="deleteFileMessage">Ou kwè vrèman ou vle efase fichye sa a?</string>
+    <string name="deleteFolderMessage">Ou kwè vrèman ou vle efase dosye sa a? Tout kontni ki nan dosye sa a ap efase tou.</string>
+    <string name="newFolder">Nouvo Dosye</string>
+    <string name="createAFolder">Kreye yon Dosye</string>
+    <string name="createFolder">Kreye Dosye</string>
+    <string name="createAFile">Kreye yon Fichye</string>
+    <string name="createFileFolderFabContentDesc">Afiche Bouton  Kreye Fichye epi Kreye Dosye</string>
+    <string name="unpublish">Pa Pibliye</string>
+    <string name="restrictedAccess">Aksè Limite</string>
+    <string name="restricted">Limite</string>
+    <string name="hidden">Kache, fichye andedan yo ap disponib avèk lyen.</string>
+    <string name="studentsWithLink">Disponib sèlman a elèv ak lyen. Pa disponib nan fichye elèv yo.</string>
+    <string name="scheduleAvailability">Orè Disponibilite Elèv</string>
+    <string name="folderCreationError">Gen yon erè ki fèt pandan kreyasyon dosye a.</string>
+
+    <string name="setAsFrontPage">Defini kòm Paj Dakèy</string>
+    <string name="canEdit">Kapab Modifye</string>
+    <string name="pageDetails">Detay Paj</string>
+    <string name="pageSuccessfullyUpdated">Paj aktyalize kòrèkteman.</string>
+    <string name="pageSuccessfullyCreated">Paj kreye kòrèkteman.</string>
+    <string name="editPageTitle">Modifye Paj</string>
+    <string name="createPageTitle">Kreye Paj</string>
+    <string name="pageTitleMustBeSet">Tit paj la dwe defini.</string>
+    <string name="pageDeleteTitle">Elimine Paj?</string>
+    <string name="pageDelete">Elimine Paj</string>
+    <string name="pageDeleteMessage">Sa ap alimine paj la. Aksyon sa a paka defèt.</string>
+    <string name="errorSavingPage">Gen yon erè ki fèt pandan w ap eseye anrejistre paj sa a. Eseye ankò.</string>
+    <string name="frontPageUnpublishedError">Yon paj pa pakab paj dakèy epi san pibliye.</string>
+
+    <string name="onlyTeachers">Pwofesè Sèlman</string>
+    <string name="teachersAndStudents">Pwofesè ak Elèv</string>
+    <string name="anyone">Nenpòt</string>
+    <string name="groupMembers">Manm Sèlman</string>
+    <string name="license">Lisans</string>
+    <string name="availableFromAfterTo">Disponibilite dat finisman dwe aprè dat kòmansman</string>
+    <string name="errorDeletingFile">Yon erè fèt pandan eliminasyon fichye sa a</string>
+    <string name="errorDeletingFolder">Yon erè fèt pandan eliminasyon dosye sa a</string>
+    <string name="errorUpdatingFile">Yon erè fèt pandan aktyalizasyon fichye sa a</string>
+    <string name="errorUpdatingFolder">Yon erè fèt pandan aktyalizasyon dosye sa a</string>
+
+    <string name="toDoEmpty">Pa gen anyen ki pou fèt ankò!\n Pwofite jounen an.</string>
+    <string name="toDoNoSubmissions">Pa gen soumisyon pou evalye pou sesyon sa a.</string>
+    <string name="errorToDoRouteFailed">Gen yon erè ki fèt pandan w ap eseye afiche eleman Tach sa a.</string>
+    <string name="errorIsDesigner">Enskripsyon konseptè paka wè sa a.</string>
+
+    <string name="sections">Seksyon</string>
+    <string name="filterBy">Filtre Pa&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">pou %s</string>
+    <string name="filterBySection">Klase pa seksyon</string>
+    <string name="filterSubmissionsLowercase">Soumisyon filtè</string>
+
+    <string name="latePenalty">Penalite pou Reta</string>
+    <string name="finalGrade">Nòt Final</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s pwen</item>
+        <item quantity="other">-%s pwen yo</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s pwen</item>
+        <item quantity="other">-%s pwen yo</item>
+    </plurals>
 </resources>

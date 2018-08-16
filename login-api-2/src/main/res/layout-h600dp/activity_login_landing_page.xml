@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-8dp"
                 android:fontFamily="sans-serif-black"
-                android:text="@string/appTypeTeacher"
+                android:text="@string/appUserTypeTeacher"
                 android:textAllCaps="true"
                 android:textColor="@color/login_teacherAppTheme"
                 android:textSize="14sp"

@@ -21,20 +21,23 @@ import android.support.v7.widget.PopupMenu
 import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.View
+import android.widget.TextView
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.teacher.R
 import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
-import com.instructure.teacher.utils.ProfileUtils
-import com.instructure.pandautils.utils.setupAvatarA11y
+import com.instructure.teacher.utils.linkifyTextView
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 object MessageBinder : BaseBinder() {
 
@@ -43,7 +46,7 @@ object MessageBinder : BaseBinder() {
         // Set author info
         if (author != null) {
             holder.authorName.text = getAuthorTitle(context, author.id, conversation, message)
-            ProfileUtils.loadAvatarForUser(context, holder.authorAvatar, author)
+            ProfileUtils.loadAvatarForUser(holder.authorAvatar, author)
             holder.authorAvatar.setupAvatarA11y(author.name)
             holder.authorAvatar.setOnClickListener { callback.onAvatarClicked(author) }
         } else {
@@ -61,8 +64,8 @@ object MessageBinder : BaseBinder() {
         }
 
         // Set body
-        holder.body.text = message.body
-
+        holder.body.setText(message.body, TextView.BufferType.SPANNABLE)
+        holder.body.linkifyTextView()
         // Set message date/time
         val messageDate = APIHelper.stringToDate(message.createdAt)
         holder.dateTime.text = dateFormat.format(messageDate)
@@ -91,7 +94,6 @@ object MessageBinder : BaseBinder() {
         holder.reply.setVisible(position == 0)
         holder.reply.setOnClickListener { callback.onMessageAction(MessageAdapterCallback.MessageClickAction.REPLY, message) }
     }
-
 
     private var dateFormat = SimpleDateFormat(if (DateFormat.is24HourFormat(ContextKeeper.appContext)) "MMM d, yyyy, HH:mm" else "MMM d, yyyy, h:mm a",
                     Locale.getDefault())

@@ -20,7 +20,7 @@ package com.instructure.candroid.test.adapter;
 import android.content.Context;
 import android.test.InstrumentationTestCase;
 
-import com.instructure.candroid.adapter.ChooseMessageRecipientRecyclerAdapter;
+import com.instructure.candroid.adapter.InboxRecipientAdapter;
 import com.instructure.canvasapi2.models.Recipient;
 
 import org.junit.Before;
@@ -30,12 +30,12 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class ChooseMessageRecipientRecyclerAdapterTest extends InstrumentationTestCase {
-    private ChooseMessageRecipientRecyclerAdapter mAdapter;
+    private InboxRecipientAdapter mAdapter;
 
-    public static class ChooseMessageRecipientRecyclerAdapterWrapper extends ChooseMessageRecipientRecyclerAdapter {
+    public static class ChooseMessageRecipientRecyclerAdapterWrapper extends InboxRecipientAdapter {
         protected ChooseMessageRecipientRecyclerAdapterWrapper(Context context) { super(context, "", null, null, false ); }
     }
 

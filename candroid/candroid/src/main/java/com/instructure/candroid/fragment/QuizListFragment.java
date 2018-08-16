@@ -17,17 +17,19 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.QuizListRecyclerAdapter;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.Param;
 import com.instructure.canvasapi2.models.CanvasContext;
@@ -35,17 +37,23 @@ import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.Quiz;
 import com.instructure.canvasapi2.models.QuizQuestion;
 import com.instructure.canvasapi2.models.Tab;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 
 import java.util.ArrayList;
 
+@PageView(url = "{canvasContext}/quizzes")
 public class QuizListFragment extends ParentFragment {
 
     private View mRootView;
+    private Toolbar mToolbar;
     private QuizListRecyclerAdapter mRecyclerAdapter;
     private AdapterToFragmentCallback<Quiz> mAdapterToFragmentCallback;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.MASTER; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.MASTER; }
 
     public String getTabId() {
         return Tab.QUIZZES_ID;
@@ -71,21 +79,30 @@ public class QuizListFragment extends ParentFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mRootView = getLayoutInflater().inflate(R.layout.quiz_list_layout, container, false);
-
+        mToolbar = mRootView.findViewById(R.id.toolbar);
         mRecyclerAdapter = new QuizListRecyclerAdapter(getContext(), getCanvasContext(), mAdapterToFragmentCallback);
-        configureRecyclerViewAsGrid(mRootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
 
         return mRootView;
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        configureRecyclerViewAsGrid(mRootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+    public void applyTheme() {
+        setupToolbarMenu(mToolbar);
+        mToolbar.setTitle(title());
+        PandaViewUtils.setupToolbarBackButton(mToolbar, this);
+        ViewStyler.themeToolbar(getActivity(), mToolbar, getCanvasContext());
     }
 
     @Override
-    public String getFragmentTitle() {
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+    }
+
+    @Override
+    @NonNull
+    public String title() {
         return getString(R.string.quizzes);
     }
 
@@ -102,7 +119,7 @@ public class QuizListFragment extends ParentFragment {
             //to a webview. Also, we currently don't support one quiz question at a time quizzes.
             if(!isNativeQuiz(getCanvasContext(), quiz)) {
                 //Log to GA, track if they're a teacher (because teachers currently always get the non native quiz)
-                Bundle bundle = BasicQuizViewFragment.createBundle(getCanvasContext(), quiz.getUrl(), quiz);
+                Bundle bundle = BasicQuizViewFragment.Companion.createBundle(getCanvasContext(), quiz.getUrl(), quiz);
                 navigation.addFragment(
                         FragUtils.getFrag(BasicQuizViewFragment.class, bundle));
             } else {
@@ -113,10 +130,6 @@ public class QuizListFragment extends ParentFragment {
             }
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Helper Methods
-    ///////////////////////////////////////////////////////////////////////////
 
     public static boolean isNativeQuiz(CanvasContext canvasContext, Quiz quiz) {
         return !(containsUnsupportedQuestionType(quiz) || quiz.isHasAccessCode() || quiz.getOneQuestionAtATime() || (canvasContext instanceof Course && ((Course) canvasContext).isTeacher()));
@@ -129,7 +142,7 @@ public class QuizListFragment extends ParentFragment {
             return true;
         }
 
-        //loop through all the quiz question types. If there is one we don't support, return false
+        //loop through all the quiz question types. If there is one we don't support, return true
         for(QuizQuestion.QUESTION_TYPE questionType : questionTypes) {
             switch (questionType) {
                 case CALCULATED:
@@ -141,11 +154,6 @@ public class QuizListFragment extends ParentFragment {
 
         return false;
     }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void handleIntentExtras(Bundle extras) {

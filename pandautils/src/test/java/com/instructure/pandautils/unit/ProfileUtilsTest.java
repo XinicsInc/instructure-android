@@ -22,7 +22,7 @@ import com.instructure.pandautils.utils.ProfileUtils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ProfileUtilsTest {
 
@@ -57,138 +57,23 @@ public class ProfileUtilsTest {
     }
 
     @Test
-    public void getUserHexColorString_case0() throws Exception {
-        String name = "Ivan";
+    public void getUserInitials_various() throws Exception {
+        assertEquals("BB", ProfileUtils.getUserInitials("Billy Bob"));
+        assertEquals("BB", ProfileUtils.getUserInitials("billy bob"));
+        assertEquals("BB", ProfileUtils.getUserInitials("Billy    Bob"));
+        assertEquals("BB", ProfileUtils.getUserInitials("  Billy Bob"));
+        assertEquals("BB", ProfileUtils.getUserInitials("Billy Bob   "));
 
-        String textValue = ProfileUtils.getUserHexColorString(name);
+        assertEquals("B", ProfileUtils.getUserInitials("Billy Bob Joe"));
+        assertEquals("B", ProfileUtils.getUserInitials("Billy"));
+        assertEquals("B", ProfileUtils.getUserInitials("   Billy"));
+        assertEquals("B", ProfileUtils.getUserInitials("Billy   "));
+        assertEquals("B", ProfileUtils.getUserInitials("billy"));
 
-        assertEquals("#EF4437", textValue);
+        assertEquals("?", ProfileUtils.getUserInitials(""));
+        assertEquals("?", ProfileUtils.getUserInitials(" "));
+        assertEquals("?", ProfileUtils.getUserInitials("\t"));
+        assertEquals("?", ProfileUtils.getUserInitials(null));
     }
 
-
-    @Test
-    public void getUserHexColorString_case1() throws Exception {
-        String name = "Jill";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#F0592B", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case2() throws Exception {
-        String name = "Kevin";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#F8971C", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case3() throws Exception {
-        String name = "Lauren";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#009688", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case4() throws Exception {
-        String name = "Mary";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#4CAE4E", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case5() throws Exception {
-        String name = "Nancy";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#09BCD3", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case6() throws Exception {
-        String name = "Oliver";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#35A4DC", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case7() throws Exception {
-        String name = "Alfred";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#2083C5", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case8() throws Exception {
-        String name = "Ben";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#4554A4", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case9() throws Exception {
-        String name = "Cindy";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#65499D", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case10() throws Exception {
-        String name = "David";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#F06291", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case11() throws Exception {
-        String name = "Ethan";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#E71F63", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case12() throws Exception {
-        String name = "Frank";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#9D9E9E", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case13() throws Exception {
-        String name = "Gilbert";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#FDC010", textValue);
-    }
-
-    @Test
-    public void getUserHexColorString_case14() throws Exception {
-        String name = "Hank";
-
-        String textValue = ProfileUtils.getUserHexColorString(name);
-
-        assertEquals("#8F3E97", textValue);
-    }
 }

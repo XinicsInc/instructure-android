@@ -4,8 +4,8 @@ import android.support.test.espresso.web.sugar.Web
 import android.support.test.espresso.web.sugar.Web.onWebView
 import android.support.test.espresso.web.webdriver.DriverAtoms.*
 import android.support.test.espresso.web.webdriver.Locator
+import com.instructure.soseedy.CanvasUser
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.CanvasUser
 import com.instructure.teacher.ui.utils.OnViewWithId
 import com.instructure.teacher.ui.utils.assertDisplayed
 
@@ -18,7 +18,7 @@ class LoginSignInPage: BasePage() {
     private val FORGOT_PASSWORD_BUTTON_CSS = "a[class=\"forgot-password flip-to-back\"]"
     private val AUTHORIZE_BUTTON_CSS = "button[type=\"submit\"]"
 
-    private val drawerLayout by OnViewWithId(R.id.drawerLayout, autoAssert = false)
+    private val signInRoot by OnViewWithId(R.id.signInRoot, autoAssert = false)
     private val toolbar by OnViewWithId(R.id.toolbar, autoAssert = false)
 
     //region UI Element Locator Methods
@@ -49,7 +49,7 @@ class LoginSignInPage: BasePage() {
     //region Assertion Helpers
 
     override fun assertPageObjects() {
-        drawerLayout.assertDisplayed()
+        signInRoot.assertDisplayed()
         toolbar.assertDisplayed()
 
         emailField()

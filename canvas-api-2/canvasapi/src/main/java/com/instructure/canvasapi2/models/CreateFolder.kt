@@ -27,13 +27,13 @@ data class DeleteFolder(
 )
 
 data class UpdateFileFolder(
-        val name: String,
+        val name: String? = null,
         @SerializedName("lock_at")
-        val lockAt: String,
+        val lockAt: String? = null,
         @SerializedName("unlock_at")
-        val unlockAt: String,
-        val locked: Boolean,
-        val hidden: Boolean,
+        val unlockAt: String? = null,
+        val locked: Boolean? = null,
+        val hidden: Boolean? = null,
         @SerializedName("parent_folder_id")
         var parentFolderId: Long? = null,   // Used for Files
         @SerializedName("on_duplicate")

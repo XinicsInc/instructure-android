@@ -19,10 +19,13 @@ package com.instructure.candroid.fragment;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -33,12 +36,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.activity.NavigationActivity;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.Const;
 import com.instructure.candroid.util.ModuleUtility;
 import com.instructure.candroid.util.Param;
@@ -51,17 +55,19 @@ import com.instructure.canvasapi2.models.ModuleObject;
 import com.instructure.canvasapi2.models.Tab;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 public class CourseModuleProgressionFragment extends ParentFragment {
     //View variables
     private TextView moduleName;
+    private ImageView moduleNameIcon;
     private Button prev;
     private Button next;
     private RelativeLayout rootView;
@@ -90,10 +96,12 @@ public class CourseModuleProgressionFragment extends ParentFragment {
     private StatusCallback<List<ModuleItem>> moduleItemsCallback;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.DETAIL; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.DETAIL; }
 
     @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.modules);
     }
 
@@ -112,17 +120,18 @@ public class CourseModuleProgressionFragment extends ParentFragment {
     }
 
     @Override
+    @NonNull
     public HashMap<String, String> getParamForBookmark() {
         ModuleItem item = getCurrentModuleItem(currentPos);
         Uri uri = Uri.parse(item.getUrl());
 
-        if(item != null && uri != null) {
+        if(uri != null) {
             List<String> params = uri.getPathSegments();
             //get the last 2 segments for the type and type_id
             if(params.size() > 2) {
                 String itemType = params.get(params.size() - 2);
                 String itemTypeId = params.get(params.size() - 1);
-                HashMap<String, String> map = getCanvasContextParams();
+                HashMap<String, String> map = super.getParamForBookmark();
 
                 map.put(Param.MODULE_TYPE_SLASH_ID, itemType + "/" + itemTypeId);
                 map.put(Param.MODULE_ITEM_ID, Long.toString(item.getId()));
@@ -135,6 +144,7 @@ public class CourseModuleProgressionFragment extends ParentFragment {
     }
 
     @Override
+    @NonNull
     public HashMap<String, String> getQueryParamForBookmark() {
         ModuleItem item = getCurrentModuleItem(currentPos);
         if(item != null) {
@@ -143,24 +153,6 @@ public class CourseModuleProgressionFragment extends ParentFragment {
             return map;
         }
         return super.getQueryParamForBookmark();
-    }
-
-    @Nullable
-    @Override
-    protected String getActionbarTitle() {
-        //Update actionbar title
-        ModuleItem moduleItem = getCurrentModuleItem(currentPos);
-
-        return moduleItem.getTitle();
-    }
-
-    @Override
-    protected void setupTitle(String title) {
-        //Update actionbar title
-        if(getActivity() instanceof NavigationActivity && ((NavigationActivity) getActivity()).getSupportActionBar() != null) {
-            ModuleItem moduleItem = getCurrentModuleItem(currentPos);
-            ((NavigationActivity) getActivity()).getSupportActionBar().setTitle(moduleItem.getTitle());
-        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -195,6 +187,12 @@ public class CourseModuleProgressionFragment extends ParentFragment {
         setButtonListeners();
 
     }
+
+    @Override
+    public void applyTheme() {
+
+    }
+
     //this function is mostly for the internal web view fragments so we can go back in the webview
     @Override
     public boolean handleBackPressed() {
@@ -224,23 +222,22 @@ public class CourseModuleProgressionFragment extends ParentFragment {
     ///////////////////////////////////////////////////////////////////////////
 
     private void initViews(View rootView) {
-        viewPager = (ViewPagerNonSwipeable)rootView.findViewById(R.id.pager);
+        viewPager = rootView.findViewById(R.id.pager);
         markDoneWrapper = rootView.findViewById(R.id.markDoneWrapper);
         markDoneButton =  rootView.findViewById(R.id.markDoneButton);
-        markDoneCheckBox = (CheckBox) rootView.findViewById(R.id.markDoneCheckbox);
+        markDoneCheckBox = rootView.findViewById(R.id.markDoneCheckbox);
 
         //module name that will appear between the prev and next buttons
-        moduleName = (TextView)rootView.findViewById(R.id.moduleName);
+        moduleName = rootView.findViewById(R.id.moduleName);
+        moduleNameIcon = rootView.findViewById(R.id.moduleNameIcon);
 
         // Watch for button clicks.
-        prev = (Button)rootView.findViewById(R.id.prev_item);
+        prev = rootView.findViewById(R.id.prev_item);
 
-        Drawable d = CanvasContextColor.getColoredDrawable(getActivity(), R.drawable.left_arrow, getCanvasContext());
-        prev.setBackgroundDrawable(d);
+        prev.setBackground(ColorKeeper.getColoredDrawable(getActivity(), R.drawable.left_arrow, getCanvasContext()));
 
-        next = (Button)rootView.findViewById(R.id.next_item);
-        d = CanvasContextColor.getColoredDrawable(getActivity(), R.drawable.right_arrow, getCanvasContext());
-        next.setBackgroundDrawable(d);
+        next = rootView.findViewById(R.id.next_item);
+        next.setBackground(ColorKeeper.getColoredDrawable(getActivity(), R.drawable.right_arrow, getCanvasContext()));
     }
 
     private void setModuleName(String name) {
@@ -313,7 +310,6 @@ public class CourseModuleProgressionFragment extends ParentFragment {
 
         //get the fragment and update the title
         Fragment fragment = adapter.getItem(currentPos);
-        ((ParentFragment)fragment).setShouldUpdateTitle(true);
 
         ModuleItem.CompletionRequirement completionRequirement = getCurrentModuleItem(currentPos).getCompletionRequirement();
         if (completionRequirement != null && ModuleItem.MUST_VIEW.equals(completionRequirement.getType())) {
@@ -324,7 +320,7 @@ public class CourseModuleProgressionFragment extends ParentFragment {
         }
 
         ModuleItem moduleItem = getCurrentModuleItem(currentPos);
-        setupTitle(moduleItem.getTitle());
+
         updateModuleMarkDoneView(moduleItem);
     }
 
@@ -375,7 +371,7 @@ public class CourseModuleProgressionFragment extends ParentFragment {
                         ModuleManager.markAsNotDone(getCanvasContext(), getModelObject().getModuleId(), getModelObject().getId(),
                                 new StatusCallback<ResponseBody>() {
                                     @Override
-                                    public void onResponse(retrofit2.Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {
+                                    public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                                         markDoneCheckBox.setChecked(false);
                                         getModelObject().getCompletionRequirement().setCompleted(false);
                                         notifyOfItemChanged(getModelObject());
@@ -385,7 +381,7 @@ public class CourseModuleProgressionFragment extends ParentFragment {
                         ModuleManager.markAsDone(getCanvasContext(), getModelObject().getModuleId(), getModelObject().getId(),
                                 new StatusCallback<ResponseBody>() {
                                     @Override
-                                    public void onResponse(retrofit2.Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {
+                                    public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                                         markDoneCheckBox.setChecked(true);
                                         getModelObject().getCompletionRequirement().setCompleted(true);
                                         notifyOfItemChanged(getModelObject());
@@ -619,32 +615,34 @@ public class CourseModuleProgressionFragment extends ParentFragment {
             }
         }
 
-        //don't need a locked icon here, so remove any compound drawables
-        moduleName.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-        //remove any padding that may have been set by other items
-        moduleName.setPadding(0, 0, 0, 0);
+        moduleNameIcon.setVisibility(View.GONE);
         return false;
     }
 
-    /**
-     * there needs to be some padding between the lock and the name, but the default for compound drawable is too much.
-     * we'll get the dp value of 30 and set the left padding of the entire view to decrease the compound drawable padding
-     * so the lock isn't so far away from the Module title.
-     *
-     */
     private void setLockedIcon() {
-        Resources r = getResources();
-        int px = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, r.getDisplayMetrics());
-        Drawable d = getResources().getDrawable(R.drawable.lock_dark);
-        moduleName.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
-        //set some padding so the lock isn't so far to the left
-        moduleName.setPadding(px, 0, 0, 0);
+        moduleNameIcon.setVisibility(View.VISIBLE);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     // Adapter
     ///////////////////////////////////////////////////////////////////////////////////////////
     public class CourseModuleProgressionAdapter extends FragmentStatePagerAdapter {
+
+        private boolean expectingUpdate;
+
+        @Override
+        public void finishUpdate(ViewGroup container) {
+            super.finishUpdate(container);
+            if (!expectingUpdate) return;
+            expectingUpdate = false;
+            List<Fragment> fragments = getChildFragmentManager().getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof FragmentInteractions) {
+                    ((FragmentInteractions) fragment).applyTheme();
+                }
+            }
+        }
+
         public CourseModuleProgressionAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -661,18 +659,32 @@ public class CourseModuleProgressionFragment extends ParentFragment {
 
         @Override
         public Fragment getItem(int position) {
+            expectingUpdate = true;
 
             //position is the overall position, and we could have multiple modules with their individual positions (if 2 modules have 3 items each, the last
             //item in the second module is position 5, not 2 (zero based)),
             //so we need to find the correct one overall
             ModuleItem moduleItem = getCurrentModuleItem(position);
 
-
+            // Add module item ID to bundle for PageView tracking
             Fragment fragment = ModuleUtility.getFragment(moduleItem, course, modules.get(groupPos));
+            Bundle args = fragment.getArguments();
+            if (args == null) {
+                args = new Bundle();
+                fragment.setArguments(args);
+            }
+            args.putLong(com.instructure.pandautils.utils.Const.MODULE_ITEM_ID, moduleItem.getId());
+
+            return fragment;
             //don't update the actionbar title here, we'll do it later. When we update it here the actionbar title sometimes
             //gets updated to the next fragment's title
-            ((ParentFragment)fragment).setShouldUpdateTitle(false);
-            return fragment;
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            super.setPrimaryItem(container, position, object);
+            // For PageView tracking
+            if (object != null) ((Fragment) object).setUserVisibleHint(true);
         }
 
         @Override
@@ -694,14 +706,11 @@ public class CourseModuleProgressionFragment extends ParentFragment {
         moduleItemsCallback = new StatusCallback<List<ModuleItem>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<ModuleItem>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<ModuleItem>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 List<ModuleItem> moduleItems = response.body();
-                if(!apiCheck() || moduleItems.size() == 0) {
+                if(!apiCheck() || moduleItems == null || moduleItems.size() == 0) {
                     return;
                 }
-
-                // Stop indeterminate progress indicator
-                hideProgressBar();
 
                 // Update ui here with results
                 ArrayList<ModuleItem> result = new ArrayList<>();
@@ -744,6 +753,10 @@ public class CourseModuleProgressionFragment extends ParentFragment {
                 }
 
                 adapter.notifyDataSetChanged();
+
+                // When we tap on a module item it will try to load the previous and next modules, this can throw off the module item that was already loaded,
+                // so load it to the current position
+                viewPager.setCurrentItem(currentPos);
 
                 //prev/next buttons may now need to be visible (if we were on a module item that was the last in its group but
                 //now we have info about the next module, we want the user to be able to navigate there)

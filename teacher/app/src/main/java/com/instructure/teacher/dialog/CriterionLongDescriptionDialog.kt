@@ -27,15 +27,11 @@ import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.pandautils.utils.StringArg
-import com.instructure.pandautils.utils.dismissExisting
 import kotlinx.android.synthetic.main.dialog_criterion_long_description.view.*
 
 
@@ -79,9 +75,9 @@ class CriterionLongDescriptionDialog : AppCompatDialogFragment() {
                 override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {}
                 override fun onPageStartedCallback(webView: WebView?, url: String?) {}
                 override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
-                override fun canRouteInternallyDelegate(url: String?): Boolean = RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
+                override fun canRouteInternallyDelegate(url: String?): Boolean = RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, false)
                 override fun routeInternallyCallback(url: String?) {
-                    RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)
+                    RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, true)
                 }
             }
 

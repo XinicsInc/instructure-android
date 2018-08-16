@@ -20,7 +20,7 @@
 
     <item
         android:id="@+id/menu_attachment"
-        android:icon="@drawable/vd_attachment"
+        android:icon="@drawable/vd_utils_attachment"
         android:title="@string/attachment"
         app:showAsAction="always" />
 

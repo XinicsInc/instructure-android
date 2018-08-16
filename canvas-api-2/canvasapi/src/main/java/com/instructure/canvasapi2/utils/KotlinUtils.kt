@@ -18,7 +18,11 @@
 
 package com.instructure.canvasapi2.utils
 
-import java.util.*
+import java.io.File
+import java.io.InputStream
+import java.lang.reflect.Field
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 /** Returns true if this string is non-null and non-blank, otherwise returns false */
 @Suppress("NOTHING_TO_INLINE")
@@ -40,28 +44,7 @@ inline fun <T> List<T>.intersectBy(other: List<T>, unique: (T) -> Any): List<T> 
     return list
 }
 
-/**
- * Randomly shuffles elements in this mutable list.
- */
-fun <T> MutableList<T>.shuffle() = Collections.shuffle(this)
-
-/**
- * Randomly shuffles elements in this mutable list using the specified [random] instance as the source of randomness.
- */
-fun <T> MutableList<T>.shuffle(random: Random) = Collections.shuffle(this, random)
-
-/**
- * Returns a new list with the elements of this list randomly shuffled.
- */
-fun <T> Iterable<T>.shuffled(): List<T> = toMutableList().apply { shuffle() }
-
-/**
- * Returns a new list with the elements of this list randomly shuffled
- * using the specified [random] instance as the source of randomness.
- */
-fun <T> Iterable<T>.shuffled(random: Random): List<T> = toMutableList().apply { shuffle(random) }
-
-fun <T> tryOrNull(block: () -> T?): T? {
+inline fun <T> tryOrNull(block: () -> T?): T? {
     return try {
         block()
     } catch (ignore: Throwable) {
@@ -79,6 +62,11 @@ fun Int.rangeWithin(scope: Int): IntRange = (this - scope)..(this + scope)
  * new range of equal length with a starting value of [minValue].
  */
 fun IntRange.coerceAtLeast(minValue: Int) = if (start > minValue) this else minValue..(minValue + endInclusive - start)
+
+/**
+ * Copies this [InputStream] into the specified [File]
+ */
+fun InputStream.copyTo(file: File) = use { input -> file.outputStream().use { output -> input.copyTo(output) } }
 
 /**
  * A property whose sole purpose is to force *when* expressions to be exhaustive. This is useful
@@ -126,3 +114,27 @@ fun IntRange.coerceAtLeast(minValue: Int) = if (start > minValue) this else minV
  */
 @Suppress("unused")
 val Any?.exhaustive get() = Unit
+
+/**
+ * Convenience delegate for accessing a private field via reflection
+ */
+class ReflectField<T>(private val fieldName: String, private val declaringClass: Class<*>) : ReadWriteProperty<Any, T> {
+
+    lateinit var field: Field
+
+    operator fun provideDelegate(thisRef: Any, prop: KProperty<*>): ReadWriteProperty<Any, T> {
+        field = declaringClass.getDeclaredField(fieldName)
+        field.isAccessible = true
+        return this
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun getValue(thisRef: Any, property: KProperty<*>): T {
+        return field.get(thisRef) as T
+    }
+
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
+        field.set(thisRef, value)
+    }
+
+}

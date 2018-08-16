@@ -21,22 +21,23 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.webkit.CookieManager
-import com.instructure.candroid.service.PushRegistrationService
+import com.instructure.candroid.BuildConfig
+import com.instructure.candroid.widget.WidgetUpdater
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginSignInActivity
+import com.instructure.pandautils.services.PushNotificationRegistrationService
 
 class SignInActivity : BaseLoginSignInActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        if (!PushRegistrationService.hasTokenBeenSentToServer(this)) {
-            startService(Intent(this, PushRegistrationService::class.java))//Register Push Notifications
-        }
+        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading, BuildConfig.PUSH_SERVICE_PROJECT_ID)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().flush()
         }
 
-        val intent = Intent(this, NavigationActivity.getStartActivityClass())
+        val intent = Intent(this, NavigationActivity.startActivityClass)
         if (getIntent() != null && getIntent().extras != null) {
             intent.putExtras(getIntent().extras)
         }
@@ -48,7 +49,7 @@ class SignInActivity : BaseLoginSignInActivity() {
     }
 
     override fun refreshWidgets() {
-        //TODO:
+        WidgetUpdater.updateWidgets()
     }
 
     companion object {

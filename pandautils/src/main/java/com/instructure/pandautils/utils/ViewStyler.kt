@@ -23,13 +23,17 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.support.annotation.ColorInt
 import android.support.annotation.DimenRes
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.TextInputLayout
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
+import android.support.v7.app.ActionBar
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
 import android.text.Spannable
@@ -41,6 +45,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.R
 
 object ViewStyler {
@@ -122,6 +127,21 @@ object ViewStyler {
     }
 
     @JvmStatic
+    fun themeActionBar(activity: Activity?, actionBar: ActionBar?, @ColorInt backgroundColor: Int) {
+        if (activity != null && actionBar != null) {
+            val colorDrawable = ColorDrawable(backgroundColor)
+            actionBar.setBackgroundDrawable(colorDrawable)
+            setStatusBarDark(activity, backgroundColor)
+        }
+    }
+
+    @JvmStatic
+    fun themeToolbar(activity: Activity, toolbar: Toolbar?, canvasContext: CanvasContext?) {
+        if(toolbar == null || canvasContext == null) return
+        themeToolbar(activity, toolbar, canvasContext.color, Color.WHITE, true)
+    }
+
+    @JvmStatic
     fun themeToolbar(activity: Activity, toolbar: Toolbar, @ColorInt backgroundColor: Int, @ColorInt contentColor: Int) {
         themeToolbar(activity, toolbar, backgroundColor, contentColor, true)
     }
@@ -183,6 +203,14 @@ object ViewStyler {
     }
 
     @JvmStatic
+    fun themeButton(button: Button, backgroundColor: Int, textColor: Int) {
+        val drawable = button.background
+        drawable.mutate().colorFilter = PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.SRC_ATOP)
+        button.background = drawable
+        button.setTextColor(textColor)
+    }
+
+    @JvmStatic
     fun setStatusBarDark(activity: Activity, @ColorInt color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.window.statusBarColor = ThemePrefs.darker(color)
@@ -211,7 +239,8 @@ object ViewStyler {
         imageView.setImageDrawable(drawable)
     }
 
-    private fun makeColorStateList(defaultColor: Int, brand: Int) = generateColorStateList(
+    @JvmStatic
+    fun makeColorStateList(defaultColor: Int, brand: Int) = generateColorStateList(
             intArrayOf(-android.R.attr.state_enabled) to defaultColor,
             intArrayOf(android.R.attr.state_focused, -android.R.attr.state_pressed) to brand,
             intArrayOf(android.R.attr.state_focused, android.R.attr.state_pressed) to brand,
@@ -269,4 +298,10 @@ fun AlertDialog.Builder.showThemed() {
         dialog.getButton(AlertDialog.BUTTON_NEUTRAL)?.setTextColor(ThemePrefs.buttonColor)
     }
     dialog.show()
+}
+
+fun BottomNavigationView.applyTheme(@ColorInt selectedColor: Int = ThemePrefs.brandColor, @ColorInt unselectedColor: Int = Color.BLACK) {
+    val colorStateList = ViewStyler.makeColorStateList(unselectedColor, selectedColor)
+    this.itemIconTintList = colorStateList
+    this.itemTextColor = colorStateList
 }

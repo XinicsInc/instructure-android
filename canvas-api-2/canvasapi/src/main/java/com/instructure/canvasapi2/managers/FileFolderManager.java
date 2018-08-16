@@ -129,6 +129,19 @@ public class FileFolderManager extends BaseManager {
         }
     }
 
+    public static void getFolder(long folderId, boolean forceNetwork, StatusCallback<FileFolder> callback) {
+        if (isTesting() || mTesting) {
+
+        } else {
+            RestBuilder adapter = new RestBuilder(callback);
+            RestParams params = new RestParams.Builder()
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build();
+
+            FileFolderAPI.getFolder(folderId, adapter, params, callback);
+        }
+    }
+
     public static void getFirstPageFolders(long folderId, boolean forceNetwork, StatusCallback<List<FileFolder>> callback) {
 
         if (isTesting() || mTesting) {
@@ -191,7 +204,7 @@ public class FileFolderManager extends BaseManager {
 
             FileFolderAPI.getRootFolderForContext(adapter, canvasContext, new StatusCallback<FileFolder>() {
                 @Override
-                public void onResponse(Response<FileFolder> response, LinkHeaders linkHeaders, ApiType type) {
+                public void onResponse(@NonNull Response<FileFolder> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                     FileFolderAPI.getFirstPageFolders(adapter, response.body().getId(), callback, folderParams);
                 }
             }, params);
@@ -215,7 +228,7 @@ public class FileFolderManager extends BaseManager {
 
             FileFolderAPI.getRootFolderForContext(adapter, canvasContext, new StatusCallback<FileFolder>() {
                 @Override
-                public void onResponse(Response<FileFolder> response, LinkHeaders linkHeaders, ApiType type) {
+                public void onResponse(@NonNull Response<FileFolder> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                     FileFolderAPI.getFirstPageFiles(adapter, response.body().getId(), callback, fileParams);
                 }
             }, params);
@@ -247,7 +260,7 @@ public class FileFolderManager extends BaseManager {
 
             FileFolderAPI.getRootFolderForContext(adapter, canvasContext, new StatusCallback<FileFolder>() {
                 @Override
-                public void onResponse(Response<FileFolder> response, LinkHeaders linkHeaders, ApiType type) {
+                public void onResponse(@NonNull Response<FileFolder> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                     getAllFolders(response.body().getId(), forceNetwork, callback);
                 }
             }, params);
@@ -288,7 +301,7 @@ public class FileFolderManager extends BaseManager {
 
             FileFolderAPI.getRootFolderForContext(adapter, canvasContext, new StatusCallback<FileFolder>() {
                 @Override
-                public void onResponse(Response<FileFolder> response, LinkHeaders linkHeaders, ApiType type) {
+                public void onResponse(@NonNull Response<FileFolder> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                     getAllFiles(response.body().getId(), forceNetwork, callback);
                 }
             }, params);

@@ -15,8 +15,12 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.soseedy.CanvasUser
+import com.instructure.soseedy.SeededCourseAssignmentSubmissions
+import com.instructure.soseedy.SubmissionSeed
+import com.instructure.soseedy.SubmissionType
+import com.instructure.soseedy.SubmissionType.*
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.CanvasUser
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
@@ -30,26 +34,24 @@ class SpeedGraderPageTest : TeacherTest() {
 
     @Test
     fun displaysSubmissionDropDown() {
-        goToSpeedGraderPage()
+        goToSpeedGraderPage(submissionType = ONLINE_TEXT_ENTRY, students = 1, submissions = listOf(2))
         speedGraderPage.assertHasSubmissionDropDown()
     }
 
     @Test
     fun displaySubmissionPickerDialog() {
-        goToSpeedGraderPage()
+        goToSpeedGraderPage(submissionType = ONLINE_TEXT_ENTRY, students = 1, submissions = listOf(2))
         speedGraderPage.openSubmissionsDialog()
         speedGraderPage.assertSubmissionDialogDisplayed()
     }
 
     @Test
     fun opensToCorrectSubmission() {
-        logIn()
-        val course = getNextCourse()
-        coursesListPage.openCourse(course)
-        courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(getNextAssignment())
-        assignmentDetailsPage.openSubmissionsPage()
-        List(4) { getNextStudent(course) }.forEach { student ->
+        val data = goToSpeedGraderPage(students = 4, submissionType = ONLINE_TEXT_ENTRY)
+        val students = data.students
+        speedGraderPage.clickBackButton()
+        for (i in 0 until students.size) {
+            val student = students[i]
             assignmentSubmissionListPage.clickSubmission(student)
             speedGraderPage.assertGradingStudent(student)
             speedGraderPage.clickBackButton()
@@ -58,7 +60,7 @@ class SpeedGraderPageTest : TeacherTest() {
 
     @Test
     fun hasCorrectPageCount() {
-        goToSpeedGraderPage()
+        goToSpeedGraderPage(students = 4)
         speedGraderPage.assertPageCount(4)
     }
 
@@ -76,50 +78,84 @@ class SpeedGraderPageTest : TeacherTest() {
 
     @Test
     fun displaysTextSubmission() {
-        goToSpeedGraderPage()
+        goToSpeedGraderPage(submissionType = ONLINE_TEXT_ENTRY, submissions = listOf(1))
         speedGraderPage.assertDisplaysTextSubmissionView()
     }
 
     @Test
     fun displaysUnsubmittedEmptyState() {
-        goToSpeedGraderPage()
+        goToSpeedGraderPage(submissionType = ONLINE_TEXT_ENTRY)
         speedGraderPage.assertDisplaysEmptyState(R.string.speedgrader_student_no_submissions)
     }
 
     @Test
     fun displaysNoSubmissionsAllowedEmptyState() {
-        goToSpeedGraderPage()
+        goToSpeedGraderPage(submissionType = NO_TYPE)
         speedGraderPage.assertDisplaysEmptyState(R.string.speedGraderNoneMessage)
     }
 
     @Test
     fun displaysOnPaperEmptyState() {
-        goToSpeedGraderPage()
+        goToSpeedGraderPage(submissionType = ON_PAPER)
         speedGraderPage.assertDisplaysEmptyState(R.string.speedGraderOnPaperMessage)
     }
 
     @Test
     fun displaysExternalToolEmptyState() {
-        goToSpeedGraderPage()
+        goToSpeedGraderPage(submissionType = EXTERNAL_TOOL)
         speedGraderPage.assertDisplaysEmptyState(R.string.speedgrader_student_no_submissions)
     }
 
     @Test
     fun displaysUrlSubmission() {
-        goToSpeedGraderPage()
-        val submission = getNextSubmission()
-        speedGraderPage.assertDisplaysUrlSubmissionLink(submission)
+        val submissions = goToSpeedGraderPage(submissionType = ONLINE_URL, submissions = listOf(1)).submissions[0]
+        speedGraderPage.assertDisplaysUrlSubmissionLink(submissions.getSubmissions(0))
         speedGraderPage.assertDisplaysUrlWebView()
     }
 
-    private fun goToSpeedGraderPage(): CanvasUser {
-        val teacher = logIn()
-        val course = getNextCourse()
+    private fun goToSpeedGraderPage(
+            students: Int = 1,
+            submissionType: SubmissionType = SubmissionType.NO_TYPE,
+            submissions: List<Int> = listOf(0),
+            selectStudent: Int = 0
+    ): SpeedGraderPageData {
+        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val assignment = seedAssignments(
+                assignments = 1,
+                courseId = course.id,
+                submissionTypes = listOf(submissionType),
+                teacherToken = teacher.token).assignmentsList[0]
+
+        val assignmentSubmissions: MutableList<SeededCourseAssignmentSubmissions> =
+                (0 until submissions.size).map {
+                    seedAssignmentSubmission(
+                            submissionSeeds = listOf(
+                                    SubmissionSeed.newBuilder()
+                                            .setSubmissionType(submissionType)
+                                            .setAmount(submissions[it]).build()),
+                            assignmentId = assignment.id,
+                            courseId = course.id,
+                            studentToken = data.studentsList[it].token
+                    )
+                }.toMutableList()
+
+        tokenLogin(teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(getNextAssignment())
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()
-        assignmentSubmissionListPage.clickSubmission(getNextStudent(course))
-        return teacher
+        assignmentSubmissionListPage.clickSubmission(data.studentsList[selectStudent])
+
+        return SpeedGraderPageData(
+                submissions = assignmentSubmissions,
+                students = data.studentsList
+        )
     }
 }
+
+data class SpeedGraderPageData(
+        val submissions: List<SeededCourseAssignmentSubmissions>,
+        val students: List<CanvasUser>
+)

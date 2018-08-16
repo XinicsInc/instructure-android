@@ -16,7 +16,7 @@ public class RouteForgotPasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.route_password_activity);
+        setContentView(R.layout.activity_route_password);
         WebView webView = findViewById(R.id.route_webview);
         final String url = getIntent().getDataString();
 

@@ -4,27 +4,4 @@
         <item>@string/complete_grade</item>
         <item>@string/incomplete_grade</item>
     </string-array>
-
-
-    <array name="standardAnnotationColors">
-        <item>@color/redAnnotation</item>
-        <item>@color/orangeAnnotation</item>
-        <item>@color/yellowAnnotation</item>
-        <item>@color/brownAnnotation</item>
-        <item>@color/greenAnnotation</item>
-        <item>@color/darkBlueAnnotation</item>
-        <item>@color/blueAnnotation</item>
-        <item>@color/pinkAnnotation</item>
-        <item>@color/purpleAnnotation</item>
-        <item>@color/darkGrayAnnotation</item>
-    </array>
-
-    <array name="highlightAnnotationColors">
-        <item>@color/redHighlightAnnotation</item>
-        <item>@color/orangeHighlightAnnotation</item>
-        <item>@color/yellowHighlightAnnotation</item>
-        <item>@color/greenHighlightAnnotation</item>
-        <item>@color/blueHighlightAnnotation</item>
-        <item>@color/pinkHighlightAnnotation</item>
-    </array>
 </resources>

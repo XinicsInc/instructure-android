@@ -1,99 +1,134 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="hello_world">你好，世界！</string>
-  <string name="action_settings">设置</string>
-  <string name="mobileVerifyGeneral">此程序不授权使用</string>
-  <string name="mobileVerifyDomainUnauthorized">您输入的服务器没有授权这个程序。</string>
-  <string name="mobileVerifyUserAgentUnauthorized">此应用程序的用户代理未经授权。</string>
-  <string name="mobileVerifyUnknownError">我们无法验证服务器在此程序中的使用。</string>
-  <string name="unknownDevice">不明装置</string>
-  <string name="errorOccurred">发生意外错误。</string>
-  <string name="pageNotFound">页面未找到。</string>
-  <string name="confirm">确认</string>
-  <string name="cancel">取消</string>
-  <string name="help">帮助</string>
-  <string name="enterURL">输入您的 Canvas URL:</string>
-  <string name="signIntoCanvasNetwork">试图登录到 Canvas Network？</string>
-  <string name="remove">移除</string>
-  <string name="exampleURLSimple">myschool.instructure.com</string>
-  <string name="masquerade">仿冒</string>
-  <string name="userId">用户ID</string>
-  <string name="domain">域名</string>
-  <string name="masqueradingUserId">伪装的用户 ID</string>
-  <string name="masqueradingUserDomain">伪装的域</string>
-  <string name="masqueradingBegin">开始伪装</string>
-  <string name="masqueradingStop">停止伪装</string>
-  <!--Multiple User Sign in-->
-  <string name="removeUser">要删除此用户吗？</string>
-  <string name="removedForever">您必须再次登录该用户，以访问他们的内容</string>
-  <!--Content Descriptions-->
-  <string name="canvasLogo">Canvas 标志</string>
-  <string name="canvasLoginOn">Canvas_登录: 打开</string>
-  <string name="canvasLoginOff">Canvas_登录: 关闭</string>
-  <string name="siteAdminLogin">网站管理员的登录: 打开</string>
-  <string name="username">用户名</string>
-  <string name="password">密码</string>
-  <string name="authenticationRequired">需要身份验证</string>
-  <string name="invalidEmailPassword">无效的电子邮件或密码</string>
-  <string name="login">登录</string>
-  <string name="logout">退出</string>
-  <!--Logout Warning Dialog-->
-  <string name="logout_warning">确定要注销吗？</string>
-  <string name="logout_yes">是</string>
-  <string name="logout_no">不</string>
-  <!--Smart Login-->
-  <string name="loginNearYou">在您附近</string>
-  <string name="loginCanvasNetwork">Canvas Network</string>
-  <string name="loginRightBehindYou">在您身后</string>
-  <string name="loginMiles">%1$s 英里远</string>
-  <string name="loginCanvasHelp">没有看见您的学校吗？输入学校的网址或点击这里寻求帮助。</string>
-  <string name="loginCanvasHelpWithUser">输入学校的网址或点击这里寻求帮助。</string>
-  <string name="loginHint">寻找您的学校或学区</string>
-  <!--Zendesk Dialog-->
-  <string name="zendesk_reportAProblem">报告一个问题</string>
-  <string name="zendesk_subject">学科</string>
-  <string name="zendesk_description">描述</string>
-  <string name="zendesk_writeSomething">写一些东西…</string>
-  <string name="zendesk_send">发送</string>
-  <string name="zendesk_feedbackThankyou">感谢您向我们的支持团队报告问题。您将通过电子邮件收到验证和更新。</string>
-  <string name="zendesk_severityText">这如何影响您？</string>
-  <string name="zendesk_casualQuestion">只是一个偶然问题、意见、想法、建议...</string>
-  <string name="zendesk_casualQuestion_tag">只是_一个_评论</string>
-  <string name="zendesk_needHelp">我需要一些帮助，但不是迫切的。</string>
-  <string name="zendesk_needHelp_tag">不_迫切</string>
-  <string name="zendesk_somethingsBroken">系统出错了，但我可以解决它，并完成我所需要做的事。</string>
-  <string name="zendesk_somethingsBroken_tag">可能的_解决方法</string>
-  <string name="zendesk_cantGetThingsDone">我无法把事情做好，直到我听到您回来。</string>
-  <string name="zendesk_cantGetThingsDone_tag">阻止_我_所_需要_做_的</string>
-  <string name="zendesk_extremelyCritical">极其重大的紧急事件！</string>
-  <string name="zendesk_extremelyCritical_tag">极其_重大的_紧急事件</string>
-  <string name="zendesk_emailAddress">电子邮件地址</string>
-  <string name="zendesk_enterEmail">输入您的电子邮箱地址…</string>
-  <string name="zendesk_unknown">未知、不明</string>
-  <!--Distance Strings-->
-  <string name="lessThanOne">&lt; 1 英里 (1.6 公里)</string>
-  <string name="oneMile">1 英里 (1.6 公里)</string>
-  <string name="miles">英里</string>
-  <string name="kilometers">公里</string>
-  <!--String for submitting tickets-->
-  <string name="device">装置</string>
-  <string name="osVersion">OS 版本</string>
-  <string name="previousLoginTitle">历史登录记录</string>
-  <string name="canvasNetworks">Canvas 网络</string>
-  <string name="findMySchool">查找我的学校</string>
-  <string name="appTypeTeacher">教师</string>
-  <string name="appTypeStudent">学生</string>
-  <string name="appTypeParent">家长</string>
-  <string name="canvasLowerCase">canvas</string>
-  <string name="whatsYourSchoolName">您的学校名称是什么？</string>
-  <string name="next">下一个</string>
-  <string name="schoolInstructureCom">school.instructure.com</string>
-  <string name="contentDescription_removePreviousUser">删除上一个用户</string>
-  <string name="accountDomainFooter">找不到学校？尝试键入完整的学校 URL。</string>
-  <string name="accountDomainFooterLink">轻击此处获取帮助。</string>
-  <string name="login_noInternetConnectionTitle">无互联网连接</string>
-  <string name="login_noInternetConnectionMessage">此操作需要互联网连接。</string>
-  <string name="empty_feedback">须填写主题和描述后才能提交反馈。</string>
-  <string name="versionNum">版本号</string>
-  <string name="scrollInstructions">滚动以查看所有详情</string>
+
+    <string name="hello_world">你好，世界！</string>
+    <string name="action_settings">设置</string>
+    <string name="mobileVerifyGeneral">此应用程序没有得到授权使用</string>
+    <string name="mobileVerifyDomainUnauthorized">您输入的服务器没有授权此应用程序。</string>
+    <string name="mobileVerifyUserAgentUnauthorized">此应用程序的用户代理没有得到授权。</string>
+    <string name="mobileVerifyUnknownError">我们无法验证此应用程序使用的服务器。</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">发生意外错误。</string>
+    <string name="pageNotFound">页面未找到。</string>
+    <string name="confirm">确认</string>
+    <string name="cancel">取消</string>
+    <string name="help">帮助</string>
+    <string name="enterURL">输入您的 Canvas URL:</string>
+    <string name="signIntoCanvasNetwork">试图登录到Canvas的网络？</string>
+    <string name="remove">移除</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="masquerade">仿冒</string>
+    <string name="userId">用户 ID</string>
+    <string name="domain">域</string>
+
+    <string name="masqueradingUserId">伪装的用户 ID</string>
+    <string name="masqueradingUserDomain">伪装的域</string>
+    <string name="masqueradingBegin">开始伪装</string>
+    <string name="masqueradingStop">停止伪装</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">要删除此用户吗？</string>
+    <string name="removedForever">您必须再次登录此用户以访问他们的内容。</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas 标志</string>
+
+    <string name="canvasLoginOn">Canvas_Login：启用</string>
+    <string name="canvasLoginOff">Canvas_Login：关闭</string>
+    <string name="siteAdminLogin">站点管理员登录：启用</string>
+
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="authenticationRequired">需要进行身份验证</string>
+    <string name="invalidEmailPassword">无效的电子邮件或密码</string>
+    <string name="login">登录</string>
+    <string name="logout">退出</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">确定要注销吗？</string>
+    <string name="logout_yes">是</string>
+    <string name="logout_no">否</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">在您附近</string>
+    <string name="loginCanvasNetwork">Canvas 网络</string>
+    <string name="loginRightBehindYou">在您身后</string>
+    <string name="loginMiles">距离 %1$s 英里</string>
+    <string name="loginCanvasHelp">找不到您的学校？输入学校的网址或点击这里寻求帮助。</string>
+    <string name="loginCanvasHelpWithUser">输入学校的网址或点击这里寻求帮助。</string>
+    <string name="loginHint">查找您的学校或地区</string>
+
+    <!-- Zendesk Dialog -->
+    <string name="zendesk_reportAProblem">报告一个问题</string>
+    <string name="zendesk_subject">主题</string>
+    <string name="zendesk_description">说明</string>
+    <string name="zendesk_writeSomething">写一些东西&#8230;</string>
+    <string name="zendesk_send">发送</string>
+    <string name="zendesk_feedbackThankyou">感谢您向我们的支持团队报告您的问题。您将通过电子邮件收到确认和更新。</string>
+    <string name="zendesk_severityText">这对您有什么影响？</string>
+    <string name="zendesk_casualQuestion">只是一个偶然问题、意见、想法、建议&#8230;</string>
+    <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+    <string name="zendesk_needHelp">我需要一些帮助，但不紧急。</string>
+    <string name="zendesk_needHelp_tag">not_urgent</string>
+    <string name="zendesk_somethingsBroken">出了一些问题，但我无法解决问题并完成我的任务。</string>
+    <string name="zendesk_somethingsBroken_tag">可能的_解决方法</string>
+    <string name="zendesk_cantGetThingsDone">如果我得不到您的回复，我就无法完成任务。</string>
+    <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+    <string name="zendesk_extremelyCritical">非常紧急！</string>
+    <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+    <string name="zendesk_emailAddress">电子邮件地址</string>
+    <string name="zendesk_enterEmail">输入您的电子邮箱地址&#8230;</string>
+    <string name="zendesk_unknown">未知</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 英里（1.6 公里）</string>
+    <string name="oneMile">1 英里 (1.6 公里)</string>
+    <string name="miles">英里</string>
+    <string name="kilometers">公里</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">设备</string>
+    <string name="osVersion">操作系统版本</string>
+
+    <string name="previousLoginTitle">历史登录记录</string>
+    <string name="canvasNetworks">Canvas 网络</string>
+    <string name="findMySchool">查找我的学校</string>
+    <string name="appTypeTeacher">教师</string>
+    <string name="appTypeStudent">学生</string>
+    <string name="appTypeParent">家长</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">您的学校名称是什么？</string>
+    <string name="next">下一步</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">删除上一个用户</string>
+    <string name="accountDomainFooter">找不到您的学校？尝试键入完整的学校 URL。</string>
+    <string name="accountDomainFooterLink">轻击此处获取帮助。</string>
+
+    <string name="login_noInternetConnectionTitle">无互联网连接</string>
+    <string name="login_noInternetConnectionMessage">此操作需要互联网连接。</string>
+    <string name="empty_feedback">须填写主题和描述后才能提交反馈。</string>
+    <string name="versionNum">版本号</string>
+    <string name="scrollInstructions">滚动以查看所有详情</string>
+
+    <string name="masqueradeErrorUserId">您必须输入用户 ID。</string>
+    <string name="masqueradeErrorDomain">您必须输入域。</string>
+    <string name="masqueradeError">尝试伪装时出错。</string>
 </resources>

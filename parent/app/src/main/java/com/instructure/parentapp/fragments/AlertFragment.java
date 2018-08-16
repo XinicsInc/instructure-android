@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 
 import com.instructure.canvasapi2.models.Alert;
 import com.instructure.canvasapi2.models.Student;
-import com.instructure.canvasapi2.utils.APIHelper;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.pandarecycler.decorations.SpacesItemDecoration;
 import com.instructure.pandautils.fragments.BaseSyncFragment;
@@ -76,7 +75,7 @@ public class AlertFragment extends BaseSyncFragment<Alert, AlertPresenter, Alert
 
     @Override
     public int layoutResId() {
-        return R.layout.alert_fragment_view;
+        return R.layout.fragment_alert;
     }
 
     @Override

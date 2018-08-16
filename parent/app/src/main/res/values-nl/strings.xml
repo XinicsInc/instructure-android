@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2016 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,44 +16,55 @@
   -->
 
 <resources>
+
     <string name="action_settings">Instellingen</string>
     <string name="canvasLogo">Canvas Logo</string>
     <string name="email">E-mail</string>
+    <string name="emailAddress">E-mailadres</string>
     <string name="parent_email">E-mail ouders</string>
     <string name="confirmPassword">Wachtwoord bevestigen</string>
     <string name="firstName">Voornaam</string>
     <string name="lastName">Achternaam</string>
     <string name="password">Wachtwoord</string>
-    <string name="log_in">Inloggen</string>
-    <string name="createAccount">Account creëren</string>
-    <string name="forgotPassword">Wachtwoord vergeten</string>
-    <string name="requestPassword">Wachtwoord aanvragen</string>
+    <string name="log_in">Aanmelden</string>
+    <string name="createAccount">Account maken</string>
+    <string name="create">Maken</string>
+    <string name="forgotPassword">Wachtwoord vergeten?</string>
+    <string name="forgotPasswordWithoutQuestion">Wachtwoord vergeten?</string>
+    <string name="enterAccountEmailHint">Account-e-mail</string>
+    <string name="requestPassword">Wachtwoord opvragen</string>
+    <string name="resetPassword">Wachtwoord opnieuw instellen</string>
+    <string name="requestPasswordHelpText">We sturen je een e-mail om jet wachtwoord opnieuw in te stellen.</string>
+    <string name="requestPasswordSuccess">Je wachtwoord is opnieuw ingesteld.</string>
     <string name="fullName">Volledige naam</string>
-    <string name="invalidEmail">Ongeldig e-mailadres. Probeer het nogmaals.</string>
+    <string name="passwordsDoNotMatch">Wachtwoorden komen niet overeen.</string>
+    <string name="passwordsCannotBeBlank">Wachtwoorden kunnen niet leeg zijn</string>
+    <string name="passwordResetFailed">Je wachtwoord kan nu niet opnieuw worden ingesteld.</string>
+    <string name="invalidEmail">Ongeldig e-mailadres. Probeer het nog eens.</string>
     <string name="next">Volgende</string>
     <string name="createAccountMessage">Er zal een e-mail gezonden worden naar het e-mailadres dat je hebt opgegeven tijdens het registreren.</string>
-    <string name="accountCreationSuccess">Aanmaken van account succesvol. Bekijk je e-mail om registratie te voltooien.</string>
-    <string name="errorOccurred">Er heeft zich een onverwachte fout voorgedaan. Probeer het nogmaals.</string>
+    <string name="accountCreationSuccess">De account is aangemaakt. Bekijk je e-mail om de registratie te voltooien.</string>
+    <string name="errorOccurred">Er is een onverwachte fout opgetreden. Probeer het opnieuw.</string>
     <string name="unknownDevice">Onbekend apparaat</string>
     <string name="addStudent">Cursist toevoegen</string>
-    <string name="school">School</string>
+    <string name="school">Onderwijsinstelling</string>
     <string name="finish">Eindigen</string>
-    <string name="close">Sluiten</string>
+    <string name="close">Afronding</string>
     <string name="noStudents">Geen cursisten beschikbaar. Tik op de drie stippen in bovenstaand menu om cursisten toe te voegen.</string>
-    <string name="noStudentsView">Er zijn geen cursisten met je account geassocieerd.</string>
+    <string name="noStudentsView">Er zijn geen cursisten verbonden met je account.</string>
     <string name="noCourses">Deze cursist heeft geen cursussen beschikbaar.</string>
     <string name="noAlerts">Deze cursist heeft geen waarschuwingen om te bekijken.</string>
     <string name="noItemsToDisplayShort">Geen items</string>
     <string name="emailsSentTo">E-mails verzonden aan:</string>
     <string name="logged_in_as">Ingelogd als:</string>
     <string name="notifyWhen">Waarschuw mij als</string>
-    <string name="gradeAbove">Cursusbeoordeling boven</string>
-    <string name="gradeBelow">Cursusbeoordeling onder</string>
+    <string name="gradeAbove">Cursuscijfer hoger dan</string>
+    <string name="gradeBelow">Cursuscijfer lager dan</string>
     <string name="assignmentMissing">Opdracht ontbreekt</string>
     <string name="teacherAnnouncements">Cursusaankondigingen</string>
     <string name="institutionAnnouncements">Aankondigingen van instituut</string>
-    <string name="assignmentGradeAbove">Opdrachtbeoordeling boven</string>
-    <string name="assignmentGradeBelow">Opdrachtbeoordeling onder</string>
+    <string name="assignmentGradeAbove">Opdrachtcijfer hoger dan</string>
+    <string name="assignmentGradeBelow">Opdrachtcijfer lager dan</string>
     <string name="never">Nooit</string>
     <string name="save">Opslaan</string>
     <string name="enterThreshold">Percentage invoeren</string>
@@ -73,37 +84,37 @@
     <string name="noLocation">Geen locatie opgegeven</string>
     <string name="previousAlerts">Vorige waarschuwingen</string>
     <string name="currentAlerts">Huidige waarschuwingen</string>
-    <string name="badDomainError">Ongeldig domein. Probeer het nogmaals.</string>
+    <string name="badDomainError">Ongeldig domein. Probeer het nog eens.</string>
     <string name="unauthorized">Je hebt geen toestemming voor toegang tot deze informatie.</string>
-    <string name="revokedTokenErrorContent">Je hebt geen toestemming voor toegang tot de informatie van %1$s.  Je kunt je cursist opnieuw toestemming geven vanuit het menu instellingen.</string>
+    <string name="revokedTokenErrorContent">Je hebt geen toestemming voor toegang tot de informatie van %1$s. Je kunt je cursist opnieuw toestemming geven vanuit het menu Instellingen.</string>
     <string name="revokedTokenErrorTitle">Toegang tot token ingetrokken</string>
-    <string name="featureFlagDisabledError">Dit instituut heeft toegang tot de Canvas Ouders mobiele app niet ingeschakeld.</string>
+    <string name="featureFlagDisabledError">Het instituut heeft toegang tot de mobiele app Canvas Ouders niet ingeschakeld.</string>
 
     <!-- Help strings -->
-    <string name="askInstructor">Stel je instructeur een vraag</string>
-    <string name="askInstructorDetails">Vragen worden bij je instructeur ingediend</string>
-    <string name="searchGuides">Zoek in de Canvas gidsen</string>
-    <string name="canvasGuides">Canvas gidsen</string>
-    <string name="searchGuidesDetails">Vind antwoorden op gewone vragen</string>
-    <string name="reportProblem">Meld een probleem</string>
-    <string name="reportProblemDetails">Als de app het niet goed doet, laat het ons dan weten</string>
-    <string name="requestFeature">Vraag een functie aan</string>
+    <string name="askInstructor">Je cursusleider een vraag stellen</string>
+    <string name="askInstructorDetails">Vragen worden bij jouw cursusleider ingezonden</string>
+    <string name="searchGuides">In Canvas-handleidingen zoeken</string>
+    <string name="canvasGuides">Canvas-handleidingen</string>
+    <string name="searchGuidesDetails">Antwoorden op veelgestelde vragen zoeken</string>
+    <string name="reportProblem">Een probleem melden</string>
+    <string name="reportProblemDetails">Als de app niet goed werkt, laat ons dat dan weten</string>
+    <string name="requestFeature">Een functie aanvragen</string>
     <string name="requestFeatureDetails">Heb je een idee om de app te verbeteren?</string>
-    <string name="shareYourLove">Deel je liefde voor de  App</string>
-    <string name="shareYourLoveDetails">Vertel ons over je favoriete onderdelen van de app</string>
+    <string name="shareYourLove">Laat weten hoe goed je de App vindt</string>
+    <string name="shareYourLoveDetails">Laat ons weten wat jouw favoriete onderdelen van de app zijn</string>
     <string name="sendFeedback">Feedback versturen</string>
-    <string name="sendMail">E-mail&#8230; versturen</string>
-    <string name="help_domain">Domein</string>
+    <string name="sendMail">E-mail versturen&#8230;</string>
+    <string name="help_domain">Domein:</string>
     <string name="help_versionNum">Versie:</string>
     <string name="help_userId">Gebruikers ID</string>
     <string name="help_email">E-mail:</string>
     <string name="help_locale">Landinstellingen:</string>
     <string name="installDate">Installatiedatum:</string>
-    <string name="icon">Icoon</string>
+    <string name="icon">Pictogram</string>
     <string name="due">Inleverdatum:</string>
     <string name="no_due_date">Geen inleverdatum</string>
     <string name="tapToSet">Tik om in te stellen</string>
-    <string name="alarmNotSet">Alarm kon niet worden ingesteld. Probeer het nogmaals.</string>
+    <string name="alarmNotSet">Alarm kon niet worden ingesteld. Probeer het nog eens.</string>
     <string name="could_not_route_course">Kon de cursusinschrijving niet vinden.</string>
     <string name="could_not_route_assignment">Kon de opdracht niet vinden.</string>
     <string name="email_already_exists">Er bestaat al een gebruiker met dat e-mailadres.</string>
@@ -125,23 +136,23 @@
     <string name="set_reminder">Herinnering instellen</string>
     <string name="enter_student_institution">Instituut van cursist invoeren</string>
     <string name="enter_student_login">Inlog en wachtwoord van cursist invoeren</string>
-    <string name="access_not_enabled">Dit instituut heeft toegang tot de Canvas Ouders mobiele app niet ingeschakeld.</string>
-    <string name="dismiss">Verwijderen</string>
+    <string name="access_not_enabled">Het instituut heeft toegang tot de mobiele app Canvas Ouders niet ingeschakeld.</string>
+    <string name="dismiss">Afwijzen</string>
     <string name="invalid_username_password">De combinatie van e-mail en wachtwoord was ongeldig.</string>
-    <string name="opening">Opening&#8230;</string>
+    <string name="opening">Bezig met openen&#8230;</string>
     <string name="locked_assignment_desc">Deze opdracht is onderdeel van de module %s en is nog niet ontgrendeld.</string>
     <string name="locked_assignment_desc_line2">Ga naar de pagina cursusmodulen in een browser voor informatie over hoe deze content te ontgrendelen.</string>
     <string name="locked_assignment_not_module">Deze opdracht is vergrendeld.</string>
     <string name="no_description">Er is geen beschrijving voor deze opdracht</string>
-    <string name="cannot_view_file">Kan dit bestand niet in de app zien. Bekijk in een browser.</string>
-    <string name="calendar_event">Agenda evenement</string>
+    <string name="cannot_view_file">Kan dit bestand niet in de app zien. Bekijk het in een browser.</string>
+    <string name="calendar_event">Gebeurtenis op kalender</string>
     <string name="set_reminder_toggle">Herinnering instellen voor aan- en uitzetten</string>
-    <string name="or">Of</string>
+    <string name="or">of</string>
     <string name="canvas_login_text">Aanmelden op Canvas</string>
 
     <!-- Feature Request -->
-    <string name="featureSubject">Idee voor Canvas Ouders App  [Android]</string>
-    <string name="understandRequest">De volgende informatie zal ons helpen je idee beter te begrijpen:</string>
+    <string name="featureSubject">Idee voor Canvas Parent App  [Android]</string>
+    <string name="understandRequest">De volgende informatie helpt ons een beter idee te krijgen van jouw idee:</string>
 
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 mijl (1,6 km)</string>
@@ -151,14 +162,16 @@
 
     <string name="grade">Cijfer:</string>
     <string name="notGraded">Nog niet beoordeeld</string>
-    <string name="missing">Ontbreekt</string>
+    <string name="missing">Ontbrekend</string>
     <string name="submitted">Ingediend</string>
     <string name="in_class">In-Klas</string>
-    <string name="excused">Verontschuldigd</string>
-    <string name="late">Laat</string>
+    <string name="excused">Vrijgesteld</string>
+    <string name="late">Te laat</string>
     <string name="greaterThan9">9+</string>
 
-    <string name="onlyCanvasObservers">Alleen Canvas-observeerders kunnen een Canvas Parent verifiëren.</string>
+    <string name="onlyCanvasObservers">Alleen Canvas-waarnemers kunnen verifiëren in Canvas Parent.</string>
+    <string name="unableToAddStudentError">We kunnen deze cursist op dit moment niet toevoegen.</string>
+
     <string name="open_source">Open bron</string>
     <string name="open_source_details">Licenties voor open bronnen weergeven</string>
 
@@ -180,5 +193,13 @@
     <string name="selectChildRegion">Kies de regio van de student</string>
     <string name="selectRegion">Regio selecteren</string>
     <string name="unauthorizedRegion">Niet-geautoriseerde regio</string>
-    <string name="mismatchedRegionMessage">Deze instelling bevindt zich buiten uw geselecteerde regio Als u een cursist van deze instelling wilt toevoegen, gebruikt u de optie “Regio selecteren” op de aanmeldingspagina om een account te maken in de regio %1$s.</string>
+    <string name="mismatchedRegionMessage">Deze instelling bevindt zich buiten uw geselecteerde regio. Als u een cursist van deze instelling wilt toevoegen, gebruikt u de optie “Regio selecteren” op de aanmeldingspagina om een account te maken in de regio %1$s.</string>
+
+    <string name="notification_channel_name">Algemene meldingen</string>
+    <string name="notification_channel_description">Meldingen voor herinneringen en belangrijke informatie over je cursist.</string>
+
+    <string name="whatsYourStudentsSchoolName">Voer de schoolnaam van de cursist in</string>
+    <string name="findYourStudentsSchoolHint">Vind de school of het district van je cursist</string>
+    <string name="noGradeText">Niet van toepassing</string>
+    <string name="locked">Vergrendeld</string>
 </resources>

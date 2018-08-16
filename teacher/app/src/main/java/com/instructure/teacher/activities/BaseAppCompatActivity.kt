@@ -17,15 +17,19 @@
 
 package com.instructure.teacher.activities
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.loginapi.login.api.zendesk.utilities.ZendeskDialogStyled
+import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.utils.ActivityResult
+import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.postSticky
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.HelpDialogStyled
 
-open class BaseAppCompatActivity : AppCompatActivity(), ZendeskDialogStyled.ZendeskDialogResultListener {
-
+abstract class BaseAppCompatActivity : AppCompatActivity(), ZendeskDialogStyled.ZendeskDialogResultListener {
 
     override fun onTicketPost() {
         dismissHelpDialog()
@@ -45,6 +49,17 @@ open class BaseAppCompatActivity : AppCompatActivity(), ZendeskDialogStyled.Zend
             } catch (e: IllegalStateException) {
                 Logger.e("Committing a transaction after activities saved state was called: " + e)
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == UploadFilesDialog.CAMERA_PIC_REQUEST ||
+                requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
+                requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY) {
+            //File Dialog Fragment will not be notified of onActivityResult(), alert manually
+            OnActivityResults(ActivityResult(requestCode, resultCode, data), null).postSticky()
         }
     }
 }

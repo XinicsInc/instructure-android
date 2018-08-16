@@ -16,8 +16,8 @@
  */
 package com.instructure.teacher.ui.pages
 
+import com.instructure.soseedy.CanvasUser
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.CanvasUser
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
@@ -30,13 +30,9 @@ class QuizSubmissionListPage : BasePage(), PageAssert by SimplePageAssert() {
 
     private val assignmentSubmissionListFilterLabel by OnViewWithId(R.id.filterTitle)
 
-    private val assignmentSubmissionClearFilter by OnViewWithId(R.id.clearFilterTextView, false)
+    private val assignmentSubmissionClearFilter by WaitForViewWithId(R.id.clearFilterTextView, false)
 
     private val assignmentSubmissionFilterButton by OnViewWithId(R.id.submissionFilter)
-
-    private val filterAllSubmissions by OnViewWithId(R.id.allSubmissions, false)
-
-    private val filterSubmittedLate by OnViewWithId(R.id.submittedLate, false)
 
     private val assignmentSubmissionStatus by OnViewWithId(R.id.submissionStatus)
 
@@ -69,6 +65,14 @@ class QuizSubmissionListPage : BasePage(), PageAssert by SimplePageAssert() {
         assignmentSubmissionFilterButton.click()
     }
 
+    fun clickFilterSubmissions() {
+        onViewWithText("Filter submissions").click()
+    }
+
+    fun clickDialogPositive() {
+        onViewWithId(android.R.id.button1).click()
+    }
+
     fun clickSubmission(student: CanvasUser) {
         waitForViewWithText(student.name).click()
     }
@@ -78,7 +82,11 @@ class QuizSubmissionListPage : BasePage(), PageAssert by SimplePageAssert() {
     }
 
     fun filterPendingReview() {
-        onViewWithText(R.string.quizStatusPendingReview).click()
+        onViewWithText(R.string.havent_been_graded).click()
+    }
+
+    fun filterNotGraded() {
+        onViewWithText("Not Graded").click()
     }
 
     fun assertFilterLabelText(text: Int) {
@@ -98,7 +106,7 @@ class QuizSubmissionListPage : BasePage(), PageAssert by SimplePageAssert() {
     }
 
     fun assertSubmissionStatusSubmitted() {
-        assignmentSubmissionStatus.assertHasText(R.string.quizStatusComplete)
+        assignmentSubmissionStatus.assertHasText(R.string.submission_status_submitted)
     }
 
     fun clickAddMessage() {

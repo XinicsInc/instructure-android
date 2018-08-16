@@ -26,18 +26,23 @@ import com.instructure.candroid.R;
 
 public class QuizViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView title, description, status, questions, date, points;
+    public TextView title, description, status, questions, date, points, bulletPointsAndQuestions, bulletStatusAndDate;
     public ImageView icon;
+    public View dateContainer, pointsContainer;
 
     public QuizViewHolder(View itemView) {
         super(itemView);
-        title = (TextView)itemView.findViewById(R.id.title);
-        description = (TextView)itemView.findViewById(R.id.description);
-        status = (TextView)itemView.findViewById(R.id.status);
-        questions = (TextView)itemView.findViewById(R.id.questions);
-        date = (TextView)itemView.findViewById(R.id.date);
-        points = (TextView)itemView.findViewById(R.id.points);
-        icon = (ImageView)itemView.findViewById(R.id.icon);
+        title = itemView.findViewById(R.id.title);
+        description = itemView.findViewById(R.id.description);
+        status = itemView.findViewById(R.id.status);
+        questions = itemView.findViewById(R.id.questions);
+        date = itemView.findViewById(R.id.date);
+        points = itemView.findViewById(R.id.points);
+        icon = itemView.findViewById(R.id.icon);
+        bulletPointsAndQuestions = itemView.findViewById(R.id.bulletPointsAndQuestions);
+        bulletStatusAndDate = itemView.findViewById(R.id.bulletStatusAndDate);
+        dateContainer = itemView.findViewById(R.id.dateContainer);
+        pointsContainer = itemView.findViewById(R.id.pointsContainer);
     }
 
     public static int holderResId(){

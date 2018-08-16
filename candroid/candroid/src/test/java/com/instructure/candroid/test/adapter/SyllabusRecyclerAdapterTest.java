@@ -30,7 +30,7 @@ import org.robolectric.annotation.Config;
 import java.util.Calendar;
 import java.util.Date;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class SyllabusRecyclerAdapterTest extends InstrumentationTestCase{
     private SyllabusRecyclerAdapter mAdapter;
@@ -53,7 +53,7 @@ public class SyllabusRecyclerAdapterTest extends InstrumentationTestCase{
     public void areContentsTheSame_NotNullSameDate(){
         ScheduleItem item = new ScheduleItem();
         item.setTitle("item");
-        item.setStartDate(new Date());
+        item.setStartAt(new Date());
 
         assertTrue(mAdapter.createItemCallback().areContentsTheSame(item, item));
     }
@@ -62,11 +62,11 @@ public class SyllabusRecyclerAdapterTest extends InstrumentationTestCase{
     public void areContentsTheSame_NotNullDifferentDate(){
         ScheduleItem item = new ScheduleItem();
         item.setTitle("item");
-        item.setStartDate(new Date(Calendar.getInstance().getTimeInMillis() + 1000));
+        item.setStartAt(new Date(Calendar.getInstance().getTimeInMillis() + 1000));
 
         ScheduleItem item1 = new ScheduleItem();
         item1.setTitle("item");
-        item1.setStartDate(new Date(Calendar.getInstance().getTimeInMillis() - 1000));
+        item1.setStartAt(new Date(Calendar.getInstance().getTimeInMillis() - 1000));
 
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(item, item1));
     }
@@ -75,11 +75,11 @@ public class SyllabusRecyclerAdapterTest extends InstrumentationTestCase{
     public void areContentsTheSame_NullDate(){
         ScheduleItem item = new ScheduleItem();
         item.setTitle("item");
-        item.setStartDate(new Date());
+        item.setStartAt(new Date());
 
         ScheduleItem item1 = new ScheduleItem();
         item1.setTitle("item");
-        item1.setStartDate(null);
+        item1.setStartAt(null);
 
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(item, item1));
     }

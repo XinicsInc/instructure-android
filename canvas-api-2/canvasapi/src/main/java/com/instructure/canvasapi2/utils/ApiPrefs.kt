@@ -55,6 +55,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     /* Masquerading Prefs */
     @JvmStatic
+    var canMasquerade by NBooleanPref()
+    @JvmStatic
     var isMasquerading by BooleanPref()
     @JvmStatic
     var masqueradeId by LongPref(-1L)

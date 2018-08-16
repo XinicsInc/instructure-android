@@ -18,6 +18,8 @@
 package com.instructure.candroid.adapter;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +39,7 @@ import com.instructure.candroid.binders.QuizMultipleDropdownBinder;
 import com.instructure.candroid.binders.QuizNumericalBinder;
 import com.instructure.candroid.binders.QuizTextOnlyBinder;
 import com.instructure.candroid.binders.SubmitButtonBinder;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
 import com.instructure.candroid.fragment.InternalWebviewFragment;
 import com.instructure.candroid.fragment.QuizStartFragment;
 import com.instructure.candroid.holders.QuizEssayViewHolder;
@@ -71,7 +73,7 @@ import com.instructure.canvasapi2.models.QuizSubmissionResponse;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.pandautils.views.CanvasWebView;
 
@@ -131,7 +133,7 @@ public class QuizSubmissionQuestionListRecyclerAdapter extends BaseListRecyclerA
         embeddedWebViewCallback = new CanvasWebView.CanvasEmbeddedWebViewCallback() {
             @Override
             public void launchInternalWebViewFragment(String url) {
-                InternalWebviewFragment.loadInternalWebView((FragmentActivity)context, ((Navigation) context), InternalWebviewFragment.createBundle(canvasContext, url, false));
+                InternalWebviewFragment.Companion.loadInternalWebView((FragmentActivity)context, ((Navigation) context), InternalWebviewFragment.Companion.createBundle(canvasContext, url, false));
             }
 
             @Override
@@ -303,7 +305,7 @@ public class QuizSubmissionQuestionListRecyclerAdapter extends BaseListRecyclerA
     }
 
     public void bindTheHolder(final QuizSubmissionQuestion baseItem, RecyclerView.ViewHolder holder, int position) {
-        int courseColor = CanvasContextColor.getCachedColor(getContext(), canvasContext);
+        int courseColor = ColorKeeper.getOrGenerateColor(canvasContext);
 
         if(position == super.getItemCount()) {
             //submit button
@@ -315,7 +317,7 @@ public class QuizSubmissionQuestionListRecyclerAdapter extends BaseListRecyclerA
                     QuizManager.postQuizSubmit(canvasContext, quizSubmission, true, new StatusCallback<QuizSubmissionResponse>() {
 
                         @Override
-                        public void onResponse(Response<QuizSubmissionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+                        public void onResponse(@NonNull Response<QuizSubmissionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                             if(type == ApiType.CACHE) return;
                             // Submitted!
                             Toast.makeText(getContext(), R.string.quizSubmittedSuccessfully, Toast.LENGTH_SHORT).show();
@@ -329,7 +331,7 @@ public class QuizSubmissionQuestionListRecyclerAdapter extends BaseListRecyclerA
                         }
 
                         @Override
-                        public void onFail(Call<QuizSubmissionResponse> callResponse, Throwable error, Response response) {
+                        public void onFail(@Nullable Call<QuizSubmissionResponse> call, @NonNull Throwable error, @Nullable Response response) {
                             Toast.makeText(getContext(), R.string.quizSubmittedFailure, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -446,7 +448,7 @@ public class QuizSubmissionQuestionListRecyclerAdapter extends BaseListRecyclerA
                 QuizManager.postQuizQuestionMultipleDropdown(quizSubmission, questionId, answers, true, new StatusCallback<QuizSubmissionQuestionResponse>() {
 
                     @Override
-                    public void onResponse(Response<QuizSubmissionQuestionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+                    public void onResponse(@NonNull Response<QuizSubmissionQuestionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                         if(type == ApiType.CACHE) return;
 
                         QuizSubmissionQuestionResponse quizSubmissionQuestionResponse = response.body();
@@ -493,7 +495,7 @@ public class QuizSubmissionQuestionListRecyclerAdapter extends BaseListRecyclerA
 
                 QuizManager.postQuizQuestionMatching(quizSubmission, questionId, answers, true, new StatusCallback<QuizSubmissionQuestionResponse>(){
                     @Override
-                    public void onResponse(Response<QuizSubmissionQuestionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+                    public void onResponse(@NonNull Response<QuizSubmissionQuestionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                         if(type == ApiType.CACHE) return;
 
                         final QuizSubmissionQuestionResponse quizSubmissionQuestionResponse = response.body();
@@ -559,7 +561,7 @@ public class QuizSubmissionQuestionListRecyclerAdapter extends BaseListRecyclerA
     private void postQuizQuestionFileUpload(final long questionId, final long attachmentId){
         QuizManager.postQuizQuestionFileUpload(canvasContext, quizSubmission, attachmentId, questionId, true, new StatusCallback<QuizSubmissionQuestionResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<QuizSubmissionQuestionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<QuizSubmissionQuestionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type.isAPI()) addAnsweredQuestion(questionId);
             }
         });

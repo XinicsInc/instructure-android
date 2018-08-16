@@ -1,99 +1,134 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="hello_world">Привет, мир!</string>
-  <string name="action_settings">Настройки</string>
-  <string name="mobileVerifyGeneral">Это приложение не авторизовано для использования</string>
-  <string name="mobileVerifyDomainUnauthorized">Сервер, на который вы вошли, не авторизован для этого приложения.</string>
-  <string name="mobileVerifyUserAgentUnauthorized">Агент пользователя не авторизован для этого приложения.</string>
-  <string name="mobileVerifyUnknownError">Мы не смогли проверить сервер на использование вместе с этим приложением.</string>
-  <string name="unknownDevice">Неизвестное устройство</string>
-  <string name="errorOccurred">Возникла непредвиденная ошибка.</string>
-  <string name="pageNotFound">Страница не найдена</string>
-  <string name="confirm">Подтвердить</string>
-  <string name="cancel">Отменить</string>
-  <string name="help">Справка</string>
-  <string name="enterURL">Введите Ваш URL Canvas:</string>
-  <string name="signIntoCanvasNetwork">Пытаетесь войти в Canvas Network?</string>
-  <string name="remove">Удалить</string>
-  <string name="exampleURLSimple">myschool.instructure.com</string>
-  <string name="masquerade">Выполнить подмену</string>
-  <string name="userId">ID пользователя</string>
-  <string name="domain">Домейн</string>
-  <string name="masqueradingUserId">Подмена ID пользователя</string>
-  <string name="masqueradingUserDomain">Подмена домена</string>
-  <string name="masqueradingBegin">Начать подмену</string>
-  <string name="masqueradingStop">Остановить подмену</string>
-  <!--Multiple User Sign in-->
-  <string name="removeUser">Удалить пользователя?</string>
-  <string name="removedForever">Вам придется войти в систему, как даннa пользователь для получения доступа к их содержимому.</string>
-  <!--Content Descriptions-->
-  <string name="canvasLogo">Логотип Canvas</string>
-  <string name="canvasLoginOn">Canvas_Login: ВКЛ</string>
-  <string name="canvasLoginOff">Canvas_Login: ВЫКЛ</string>
-  <string name="siteAdminLogin">Логин Админа Сайта: ВКЛ</string>
-  <string name="username">Имя пользователя</string>
-  <string name="password">Пароль</string>
-  <string name="authenticationRequired">Необходима аутентификация</string>
-  <string name="invalidEmailPassword">Неправильный адрес электронной почты или пароль</string>
-  <string name="login">Логин</string>
-  <string name="logout">Выйти</string>
-  <!--Logout Warning Dialog-->
-  <string name="logout_warning">Вы действительно хотите выйти?</string>
-  <string name="logout_yes">Да</string>
-  <string name="logout_no">Нет</string>
-  <!--Smart Login-->
-  <string name="loginNearYou">Рядом с вами</string>
-  <string name="loginCanvasNetwork">Canvas Network</string>
-  <string name="loginRightBehindYou">Сразу за вами</string>
-  <string name="loginMiles">в %1$s милях</string>
-  <string name="loginCanvasHelp">Не можете найти вашу школу? Введите URL школы или нажмите здесь для справки.</string>
-  <string name="loginCanvasHelpWithUser">Введите URL школы или нажмите здесь для справки.</string>
-  <string name="loginHint">Найдите свою школу или район</string>
-  <!--Zendesk Dialog-->
-  <string name="zendesk_reportAProblem">Сообщить о проблеме</string>
-  <string name="zendesk_subject">Тема</string>
-  <string name="zendesk_description">Описание</string>
-  <string name="zendesk_writeSomething">Напишите что-нибудь...</string>
-  <string name="zendesk_send">Отправить</string>
-  <string name="zendesk_feedbackThankyou">Благодарим Вас за сообщение о своей проблеме нашей службе поддержки. Вы получите подтверждение и обновления по электронной почте.</string>
-  <string name="zendesk_severityText">Как это влияет на вас?</string>
-  <string name="zendesk_casualQuestion">Просто обычный вопрос, комментарий, идея, предложение...</string>
-  <string name="zendesk_casualQuestion_tag">just_a_comment</string>
-  <string name="zendesk_needHelp">Мне нужна помощь, но это не срочно.</string>
-  <string name="zendesk_needHelp_tag">not_urgent</string>
-  <string name="zendesk_somethingsBroken">Что-то не работает, но я могу обойтись без этого, чтобы получить то, что мне нужно сделать.</string>
-  <string name="zendesk_somethingsBroken_tag">workaround_possible</string>
-  <string name="zendesk_cantGetThingsDone">Я не могу добиться своей цели, пока не услышу от вас ответа.</string>
-  <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
-  <string name="zendesk_extremelyCritical">ЭКСТРЕННАЯ И КРИТИЧЕСКАЯ СИТУАЦИЯ!!</string>
-  <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
-  <string name="zendesk_emailAddress">Адрес электронной почты</string>
-  <string name="zendesk_enterEmail">Введите ваш адрес электронной почты…</string>
-  <string name="zendesk_unknown">Неизвестно</string>
-  <!--Distance Strings-->
-  <string name="lessThanOne">&lt; 1 мили (1.6 км)</string>
-  <string name="oneMile">1 миля (1.6 км)</string>
-  <string name="miles">миль</string>
-  <string name="kilometers">км</string>
-  <!--String for submitting tickets-->
-  <string name="device">Устройство</string>
-  <string name="osVersion">Версия ОС</string>
-  <string name="previousLoginTitle">Предыдущие идентификаторы</string>
-  <string name="canvasNetworks">Сети Canvas</string>
-  <string name="findMySchool">Найти мою школу</string>
-  <string name="appTypeTeacher">Учитель</string>
-  <string name="appTypeStudent">Учащийся</string>
-  <string name="appTypeParent">Родитель</string>
-  <string name="canvasLowerCase">canvas</string>
-  <string name="whatsYourSchoolName">Как называется ваше учебное заведение?</string>
-  <string name="next">Дальше</string>
-  <string name="schoolInstructureCom">school.instructure.com</string>
-  <string name="contentDescription_removePreviousUser">Удалить предыдущего пользователя</string>
-  <string name="accountDomainFooter">Не можете найти ваше учебное заведение? Попробуйте набрать полный адрес URL учебного заведения.</string>
-  <string name="accountDomainFooterLink">Прикоснитесь здесь для получения помощи.</string>
-  <string name="login_noInternetConnectionTitle">Нет интернет-соединения</string>
-  <string name="login_noInternetConnectionMessage">Для выполнения этого действия необходимо интернет-соединение.</string>
-  <string name="empty_feedback">Для отправки отзыва необходимо указать тему и дать описание.</string>
-  <string name="versionNum">Номер версии</string>
-  <string name="scrollInstructions">Прокрутить, чтобы просмотреть все детали</string>
+
+    <string name="hello_world">Привет, мир!</string>
+    <string name="action_settings">Настройки</string>
+    <string name="mobileVerifyGeneral">Это приложение не авторизовано для использования</string>
+    <string name="mobileVerifyDomainUnauthorized">Введенный сервер не авторизован для этого приложения.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Пользовательский агент для этого приложения не авторизован.</string>
+    <string name="mobileVerifyUnknownError">Мы не смогли проверить сервер для использования с этим приложением.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Произошла непредвиденная ошибка.</string>
+    <string name="pageNotFound">Страница не найдена</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отменить</string>
+    <string name="help">Справка</string>
+    <string name="enterURL">Введите Ваш URL Canvas:</string>
+    <string name="signIntoCanvasNetwork">Пытаетесь войти в Canvas Network?</string>
+    <string name="remove">Удалить</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="masquerade">Подмена</string>
+    <string name="userId">Идентификатор пользователя</string>
+    <string name="domain">Домен</string>
+
+    <string name="masqueradingUserId">Подмена ID пользователя</string>
+    <string name="masqueradingUserDomain">Подмена домена</string>
+    <string name="masqueradingBegin">Начать подмену</string>
+    <string name="masqueradingStop">Остановить подмену</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Удалить пользователя?</string>
+    <string name="removedForever">Вам необходимо повторно войти в систему с учетными данными этого пользователя, чтобы получить доступ к контенту.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Логотип Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: ВКЛ</string>
+    <string name="canvasLoginOff">Canvas_Login: ВЫКЛ</string>
+    <string name="siteAdminLogin">Вход в систему в качестве администратора сайта: ВКЛ</string>
+
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="authenticationRequired">Необходима аутентификация</string>
+    <string name="invalidEmailPassword">Неправильный адрес электронной почты или пароль</string>
+    <string name="login">Войти</string>
+    <string name="logout">Выйти</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Вы действительно хотите выйти?</string>
+    <string name="logout_yes">Да</string>
+    <string name="logout_no">Нет</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">Рядом с вами</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">Сразу за вами</string>
+    <string name="loginMiles">На расстоянии %1$s миль</string>
+    <string name="loginCanvasHelp">Не видите свою школу? Введите URL школы или нажмите здесь для справки.</string>
+    <string name="loginCanvasHelpWithUser">Введите URL школы или нажмите здесь для справки.</string>
+    <string name="loginHint">Найдите свое учебное заведение или район</string>
+
+    <!-- Zendesk Dialog -->
+    <string name="zendesk_reportAProblem">Сообщить о проблеме</string>
+    <string name="zendesk_subject">Тема</string>
+    <string name="zendesk_description">Описание</string>
+    <string name="zendesk_writeSomething">Напишите что-нибудь&#8230;</string>
+    <string name="zendesk_send">Отправить</string>
+    <string name="zendesk_feedbackThankyou">Спасибо, что сообщили о своей проблеме в нашу службу поддержки.  Вы получите подтверждение и обновления по электронной почте.</string>
+    <string name="zendesk_severityText">Как это влияет на вас?</string>
+    <string name="zendesk_casualQuestion">Просто обычный вопрос, комментарий, идея, предложение&#8230;</string>
+    <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+    <string name="zendesk_needHelp">Мне нужна помощь, но не срочно.</string>
+    <string name="zendesk_needHelp_tag">not_urgent</string>
+    <string name="zendesk_somethingsBroken">Что-то сломалось, но я могу справиться с этим, чтобы сделать все необходимое.</string>
+    <string name="zendesk_somethingsBroken_tag">workaround_possible</string>
+    <string name="zendesk_cantGetThingsDone">Я не смогу сделать все необходимое, пока вы не ответите мне.</string>
+    <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+    <string name="zendesk_extremelyCritical">ЧРЕЗВЫЧАЙНО КРИТИЧЕСКАЯ СИТУАЦИЯ!!</string>
+    <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+    <string name="zendesk_emailAddress">Адрес электронной почты</string>
+    <string name="zendesk_enterEmail">Введите ваш адрес электронной почты&#8230;</string>
+    <string name="zendesk_unknown">Неизвестно</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 мили (1,6 км)</string>
+    <string name="oneMile">1 миля (1.6 км)</string>
+    <string name="miles">миль</string>
+    <string name="kilometers">км</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Устройство</string>
+    <string name="osVersion">Версия ОС</string>
+
+    <string name="previousLoginTitle">Предыдущие идентификаторы</string>
+    <string name="canvasNetworks">Canvas Network</string>
+    <string name="findMySchool">Найти мою школу</string>
+    <string name="appTypeTeacher">Преподаватель</string>
+    <string name="appTypeStudent">Студент</string>
+    <string name="appTypeParent">Родитель</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">Как называется ваше учебное заведение?</string>
+    <string name="next">Далее</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Удалить предыдущего пользователя</string>
+    <string name="accountDomainFooter">Не удается найти свое учебное заведение? Попробуйте набрать полный адрес URL учебного заведения.</string>
+    <string name="accountDomainFooterLink">Прикоснитесь здесь для получения помощи.</string>
+
+    <string name="login_noInternetConnectionTitle">Нет интернет-соединения</string>
+    <string name="login_noInternetConnectionMessage">Для выполнения этого действия необходимо интернет-соединение.</string>
+    <string name="empty_feedback">Для отправки отзыва необходимо указать тему и дать описание.</string>
+    <string name="versionNum">Номер версии</string>
+    <string name="scrollInstructions">Прокрутить, чтобы просмотреть все детали</string>
+
+    <string name="masqueradeErrorUserId">Вам необходимо ввести идентификатор пользователя.</string>
+    <string name="masqueradeErrorDomain">Вам необходимо указать домен.</string>
+    <string name="masqueradeError">Ошибка при попытке подмены.</string>
 </resources>

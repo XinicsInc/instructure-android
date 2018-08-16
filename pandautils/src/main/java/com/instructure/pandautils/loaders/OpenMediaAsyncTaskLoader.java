@@ -20,6 +20,7 @@ package com.instructure.pandautils.loaders;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -227,7 +228,7 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
         return filename;
     }
 
-    private String parseFilename(String headerField) {
+    public static String parseFilename(String headerField) {
         String filename = headerField;
         Matcher matcher = Pattern.compile("filename=\"(.*)\"").matcher(headerField);
         if (matcher.find()) {
@@ -236,7 +237,7 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
         return filename;
     }
 
-    private String makeFilenameUnique(String filename, String url) {
+    public static String makeFilenameUnique(String filename, String url) {
         Matcher matcher = Pattern.compile("(.*)\\.(.*)").matcher(filename);
         if (matcher.find()) {
             String actualFilename = matcher.group(1);
@@ -300,6 +301,7 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
         //Download it if the file doesn't exist in the external cache....
         Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "downloadFile URL: " + url);
         File attachmentFile = new File(Utils.getAttachmentsDirectory(context), filename);
+        Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "File: " + attachmentFile);
         if (!attachmentFile.exists()) {
             //Download the content from the url
             if (writeAttachmentsDirectoryFromURL(url, attachmentFile)) {
@@ -317,7 +319,9 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
 
     private void attemptDownloadFile(Context context, Intent intent, LoadedMedia loadedMedia, String url, String filename) throws Exception {
         File file = downloadFile(context, url, filename);
-        intent.setDataAndType(FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + Const.FILE_PROVIDER_AUTHORITY, file), mimeType);
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + Const.FILE_PROVIDER_AUTHORITY, file);
+        intent.setDataAndType(fileUri, contentResolver.getType(fileUri));
         //We know that we can always handle pdf intents with pspdfkit, so we don't want to error out here
         if (!isIntentHandledByActivity(intent) && !mimeType.equals("application/pdf") ) {
             loadedMedia.setErrorMessage(R.string.noApps);

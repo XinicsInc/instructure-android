@@ -1,75 +1,62 @@
+/*
+ * Copyright (C) 2017 - present  Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 buildscript {
-    /* Global constants */
-    apply from: '../gradle/global.gradle'
 
     /* Merge Private Data */
-    apply from: '../private-data/merge-private-data.gradle'
-    mergePrivateData "teacher", false
+    PrivateData.merge(project, "teacher")
 
     repositories {
         jcenter()
+        google()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
+        maven { url 'https://maven.fabric.io/public' }
     }
+
     dependencies {
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
-        classpath "com.google.gms:oss-licenses:$GLOBAL_OSS_LICENSES_PLUGIN_VERSION"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$GLOBAL_KOTLIN_VERSION"
+        classpath Plugins.ANDROID_GRADLE_TOOLS
+        classpath Plugins.APOLLO
+        classpath Plugins.FABRIC
+        classpath Plugins.OSS_LICENSES
+        classpath Plugins.KOTLIN
+        classpath Plugins.GOOGLE_SERVICES
+
+        if (project.hasProperty('coverage')) {
+            // https://github.com/arturdm/jacoco-android-gradle-plugin
+            // note: if there are issues with the unit tests, try rm -rf .gradle
+            classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
+        }
     }
-}
-
-plugins {
-    // https://plugins.gradle.org/plugin/com.gradle.build-scan
-    id 'com.gradle.build-scan' version '1.9'
-    id 'org.standardout.versioneye' version '1.4.0'
-}
-
-buildScan {
-    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-    licenseAgree = 'yes'
-}
-
-versioneye {
-    includeSubProjects = true
 }
 
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
+        maven {
+            credentials {
+                username pspdfMavenUser
+                password pspdfMavenPass
+            }
+            url 'https://customers.pspdfkit.com/maven/'
+        }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-ext {
-    compileSdkVersion = GLOBAL_COMPILE_SDK
-    buildToolsVersion = GLOBAL_BUILD_TOOLS_VERSION
-
-    targetSdkVersion = GLOBAL_TARGET_SDK
-    minSdkVersion = GLOBAL_MIN_SDK
-
-    versionCode = 10
-    versionName = '1.2.0'
-
-    supportLibraryVersion = GLOBAL_SUPPORT_LIBRARY_VERSION
-    googlePlayServicesVersion = GLOBAL_PLAY_SERVICES_VERSION
-
-    supportDependencies = [
-            design : "com.android.support:design:$supportLibraryVersion",
-            recyclerView : "com.android.support:recyclerview-v7:$supportLibraryVersion",
-            appCompat : "com.android.support:appcompat-v7:$supportLibraryVersion",
-            supportAnnotation: "com.android.support:support-annotations:$supportLibraryVersion",
-            cardView: "com.android.support:cardview-v7:$supportLibraryVersion",
-            gpsWearable: "com.google.android.gms:play-services-wearable:$googlePlayServicesVersion",
-            supportLibV13: "com.android.support:support-v13:$supportLibraryVersion",
-            percentLayout: "com.android.support:percent:$supportLibraryVersion",
-            vector: "com.android.support:support-vector-drawable:$supportLibraryVersion",
-            v4: "com.android.support:support-v4:$supportLibraryVersion",
-            percent: "com.android.support:percent:$supportLibraryVersion",
-            palette: "com.android.support:palette-v7:$supportLibraryVersion"
-    ]
 }

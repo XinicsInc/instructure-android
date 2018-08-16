@@ -26,19 +26,17 @@ import com.instructure.candroid.R;
 
 public class DiscussionTopicHeaderViewHolder extends RecyclerView.ViewHolder{
 
-    public TextView title, description,lastPost, unread;
+    public TextView title, description,lastPost;
     public ImageView pin, icon;
 
     public DiscussionTopicHeaderViewHolder(View itemView) {
         super(itemView);
 
-        title = (TextView)itemView.findViewById(R.id.title);
-        description = (TextView)itemView.findViewById(R.id.description);
-        unread = (TextView)itemView.findViewById(R.id.unreadCount);
-        lastPost = (TextView)itemView.findViewById(R.id.lastPost);
-
-        icon = (ImageView)itemView.findViewById(R.id.icon);
-        pin = (ImageView)itemView.findViewById(R.id.pin);
+        title = itemView.findViewById(R.id.title);
+        description = itemView.findViewById(R.id.description);
+        lastPost = itemView.findViewById(R.id.lastPost);
+        icon = itemView.findViewById(R.id.icon);
+        pin = itemView.findViewById(R.id.pin);
     }
 
     public static int holderResId(){

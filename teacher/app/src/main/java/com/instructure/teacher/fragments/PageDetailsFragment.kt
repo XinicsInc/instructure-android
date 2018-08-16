@@ -36,13 +36,16 @@ import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.PageDeletedEvent
 import com.instructure.teacher.events.PageUpdatedEvent
 import com.instructure.teacher.factory.PageDetailsPresenterFactory
-import com.instructure.teacher.interfaces.FullScreenInteractions
-import com.instructure.teacher.interfaces.Identity
-import com.instructure.teacher.interfaces.MasterDetailInteractions
+import com.instructure.interactions.FullScreenInteractions
+import com.instructure.interactions.Identity
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.teacher.presenters.PageDetailsPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.isTablet
+import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
+import com.instructure.teacher.utils.setupMenu
+import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.PageDetailsView
 import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_page_details.*
@@ -58,16 +61,6 @@ class PageDetailsFragment : BasePresenterFragment<
     private var mCanvasContext: CanvasContext by ParcelableArg(default = Course())
     private var mPage: Page by ParcelableArg(default = Page())
     private var mPageId: String by StringArg()
-
-    override fun onHandleBackPressed(): Boolean {
-        canvasWebView?.let {
-            if (it.canGoBack()) {
-                it.handleGoBack()
-                return true
-            }
-        }
-        return super.onHandleBackPressed()
-    }
 
     override fun onStart() {
         super.onStart()

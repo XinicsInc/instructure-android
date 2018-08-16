@@ -18,6 +18,7 @@
 package com.instructure.candroid.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.View;
@@ -39,7 +40,7 @@ import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked;
 import com.instructure.pandarecycler.util.GroupSortedList;
 import com.instructure.pandarecycler.util.Types;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class QuizListRecyclerAdapter extends ExpandableRecyclerAdapter<String, Q
 
         mCanvasContext = canvasContext;
         mAdapterToFragmentCallback = adapterToFragmentCallback;
-        mCourseColor = CanvasContextColor.getCachedColor(context, canvasContext);
+        mCourseColor = ColorKeeper.getOrGenerateColor(canvasContext);
         setExpandedByDefault(true);
         setViewHolderHeaderClicked(new ViewHolderHeaderClicked<String>() {
             @Override
@@ -82,7 +83,7 @@ public class QuizListRecyclerAdapter extends ExpandableRecyclerAdapter<String, Q
         mQuizzesCallback = new StatusCallback<List<Quiz>>() {
 
             @Override
-            public void onResponse(Response<List<Quiz>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<Quiz>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 setNextUrl(linkHeaders.nextUrl);
                 mQuizzes = response.body();
                 populateAdapter();

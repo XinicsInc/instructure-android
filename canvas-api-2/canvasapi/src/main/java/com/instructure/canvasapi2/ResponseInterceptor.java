@@ -55,7 +55,7 @@ public class ResponseInterceptor implements Interceptor {
              * exceeds {@code maxAge}, it will not be used and a network request will
              * be made.
              */ 
-            builder.addHeader("Cache-Control", "public, max-age=300");//5 Minutes
+            builder.addHeader("Cache-Control", "public, max-age=3600");//1 Hour
         }
         return builder.build();
     }

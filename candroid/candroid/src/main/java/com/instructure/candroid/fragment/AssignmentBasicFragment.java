@@ -14,17 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.instructure.candroid.fragment;
 
-
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.RouterUtils;
 import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.models.Assignment;
@@ -40,17 +37,26 @@ import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.LockInfo;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.pandautils.utils.Const;
-import com.instructure.pandautils.video.ActivityContentVideoViewClient;
+import com.instructure.pandautils.utils.OnBackStackChangedEvent;
+import com.instructure.pandautils.utils.ViewStyler;
 import com.instructure.pandautils.views.CanvasWebView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class AssignmentBasicFragment extends ParentFragment {
 
     private Assignment mAssignment;
+
+    private Toolbar mToolbar;
     private TextView mDueDate;
     private RelativeLayout mDueDateWrapper;
     private CanvasWebView mAssignmentWebView;
@@ -58,11 +64,26 @@ public class AssignmentBasicFragment extends ParentFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         View rootView = getLayoutInflater().inflate(R.layout.fragment_assignment_basic, container, false);
-        setupViews(rootView);
-
+        mToolbar = rootView.findViewById(R.id.toolbar);
+        mDueDate = rootView.findViewById(R.id.dueDate);
+        mAssignmentWebView = rootView.findViewById(R.id.assignmentWebView);
+        mDueDateWrapper = rootView.findViewById(R.id.dueDateWrapper);
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setupViews();
+    }
+
+    @Override
+    public void applyTheme() {
+        if(mAssignment != null && mAssignment.getName() != null) {
+            mToolbar.setTitle(mAssignment.getName());
+        }
+        ViewStyler.themeToolbar(getActivity(), mToolbar, getCanvasContext());
     }
 
     @Override
@@ -82,18 +103,45 @@ public class AssignmentBasicFragment extends ParentFragment {
     }
 
     @Override
-    public void onFragmentActionbarSetupComplete(FRAGMENT_PLACEMENT placement) {
-        super.onFragmentActionbarSetupComplete(placement);
-        if(getSupportActionBar() != null && mAssignment != null && mAssignment.getName() != null) {
-            getSupportActionBar().setTitle(mAssignment.getName());
-        }
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
-    private void setupViews(View rootView) {
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 
-        mDueDate = (TextView) rootView.findViewById(R.id.dueDate);
-        mAssignmentWebView = (CanvasWebView) rootView.findViewById(R.id.assignmentWebView);
-        mDueDateWrapper = (RelativeLayout) rootView.findViewById(R.id.dueDateWrapper);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBackStackChangedEvent(OnBackStackChangedEvent event) {
+        event.get(new Function1<Class<?>, Unit>() {
+            @Override
+            public Unit invoke(Class<?> clazz) {
+                if(clazz != null && clazz.isAssignableFrom(AssignmentBasicFragment.class)) {
+                    if (mAssignmentWebView != null) {
+                        mAssignmentWebView.onResume();
+                    }
+                } else {
+                    if (mAssignmentWebView != null) {
+                        mAssignmentWebView.onPause();
+                    }
+                }
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public boolean handleBackPressed() {
+        if(mAssignmentWebView != null) {
+            return mAssignmentWebView.handleGoBack();
+        }
+        return super.handleBackPressed();
+    }
+
+    private void setupViews() {
 
         if(mAssignment.getDueAt() != null) {
             mDueDate.setText(getString(R.string.dueAt) + " " + DateHelper.getDateTimeString(getActivity(), mAssignment.getDueAt()));
@@ -101,29 +149,13 @@ public class AssignmentBasicFragment extends ParentFragment {
             mDueDateWrapper.setVisibility(View.GONE);
         }
 
-        mAssignmentWebView.setClient(new ActivityContentVideoViewClient(getActivity(), new ActivityContentVideoViewClient.HostingView() {
-
-            @Nullable
-            @Override
-            public Dialog getDialogFragment() {
-                List<Fragment> fragmentList = getFragmentManager().getFragments();
-
-                if (fragmentList != null) {
-                    if (fragmentList.get(0) instanceof DialogFragment) {
-                        return ((DialogFragment) fragmentList.get(0)).getDialog();
-                    }
-                }
-                return null;
-            }
-        }));
-
-
+        mAssignmentWebView.addVideoClient(getActivity());
         mAssignmentWebView.setCanvasEmbeddedWebViewCallback(new CanvasWebView.CanvasEmbeddedWebViewCallback() {
             @Override
             public void launchInternalWebViewFragment(String url) {
                 //create and add the InternalWebviewFragment to deal with the link they clicked
                 InternalWebviewFragment internalWebviewFragment = new InternalWebviewFragment();
-                internalWebviewFragment.setArguments(InternalWebviewFragment.createBundle(url, "", false, ""));
+                internalWebviewFragment.setArguments(InternalWebviewFragment.Companion.createBundle(url, "", false, ""));
 
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.setCustomAnimations(R.anim.slide_in_from_bottom, android.R.anim.fade_out, R.anim.none, R.anim.slide_out_to_bottom);
@@ -179,7 +211,7 @@ public class AssignmentBasicFragment extends ParentFragment {
         }
 
         if (description == null || description.equals("null") || description.equals("")) {
-            description = getString(R.string.noDescription);
+            description = "<p>" + getString(R.string.noDescription) + "</p>";
         }
 
         mAssignmentWebView.formatHTML(description, mAssignment.getName());
@@ -220,16 +252,16 @@ public class AssignmentBasicFragment extends ParentFragment {
     }
 
     @Override
-    public String getFragmentTitle() {
-        if(mAssignment != null) {
-            return mAssignment.getName();
-        }
-        return null;
+    @NonNull
+    public String title() {
+        if(mAssignment != null) return mAssignment.getName();
+        return "";
     }
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {
-        return FRAGMENT_PLACEMENT.DETAIL;
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {
+        return FragmentInteractions.Placement.DETAIL;
     }
 
     @Override

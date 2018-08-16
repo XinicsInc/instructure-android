@@ -32,10 +32,12 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitPaginated
-import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.CanvasContextColor
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.toast
 
 class PeopleListRecyclerAdapter(
         context: Context,
@@ -43,7 +45,7 @@ class PeopleListRecyclerAdapter(
         private val mAdapterToFragmentCallback: AdapterToFragmentCallback<User>
 ) : ExpandableRecyclerAdapter<String, User, RecyclerView.ViewHolder>(context, String::class.java, User::class.java) {
 
-    private val mCourseColor = CanvasContextColor.getCachedColor(context, mCanvasContext)
+    private val mCourseColor = ColorKeeper.getOrGenerateColor(mCanvasContext)
     private val mEnrollmentPriority = mapOf( "Teacher" to 4, "Ta" to 3, "Student" to 2, "Observer" to 1)
     private var mApiCalls: WeaveJob? = null
 
@@ -54,7 +56,7 @@ class PeopleListRecyclerAdapter(
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     override fun loadFirstPage() {
-        mApiCalls = weave {
+        mApiCalls = tryWeave {
             var canvasContext = mCanvasContext
 
             // If the canvasContext is a group, and has a course we want to add the Teachers and TAs from that course to the peoples list
@@ -85,6 +87,8 @@ class PeopleListRecyclerAdapter(
             }
 
             setNextUrl(null)
+        } catch {
+            context.toast(R.string.errorOccurred)
         }
     }
 

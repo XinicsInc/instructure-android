@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.instructure.androidpolling.app.R;
 import com.instructure.androidpolling.app.util.ApplicationManager;
@@ -40,7 +41,7 @@ public class StartingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         CourseManager.getAllFavoriteCourses(true, new StatusCallback<List<Course>>() {
             @Override
-            public void onResponse(retrofit2.Response<List<Course>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull retrofit2.Response<List<Course>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 ApplicationManager.saveCourses(StartingActivity.this, response.body());
                 checkEnrollments(response.body());
             }

@@ -102,7 +102,10 @@
     <dimen name="gridIconSizeBig">48dp</dimen>
     <dimen name="gridIconSizeSmall">22dp</dimen>
 
-    <dimen name="navigation_drawer_width">310dp</dimen>
+    <dimen name="defaultGridSpacing">4dp</dimen>
+    <dimen name="courseListPadding">8dp</dimen>
+
+    <dimen name="navigation_drawer_width">320dp</dimen>
 
     <dimen name="actionbar_course_title_width">160dp</dimen>
     <dimen name="actionbar_course_navigation_width">220dp</dimen>
@@ -135,11 +138,22 @@
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_header_margins">12dp</dimen>
     <dimen name="card_header_checkbox_margins">18dp</dimen>
-    <dimen name="card_header_indicator_size">32dp</dimen>
+    <dimen name="card_header_indicator_size">24dp</dimen>
 
     <dimen name="people_details_margin">32dp</dimen>
 
     <dimen name="canvas_edit_text_view_padding">8dp</dimen>
     <dimen name="med_padding">8dp</dimen>
     <dimen name="standard_margin">16dp</dimen>
+
+    <dimen name="profileAvatarSize">64dp</dimen>
+    <dimen name="dialogRadioButtonTextSize">16sp</dimen>
+
+    <dimen name="message_user_avatar_size">40dp</dimen>
+    <dimen name="unread_message_marker_size">8dp</dimen>
+    <dimen name="attachment_view_width">150dp</dimen>
+    <dimen name="attachment_view_height">90dp</dimen>
+    <dimen name="message_avatar_dimen">32dp</dimen>
+    <dimen name="widgetListPreferredHeight">48dp</dimen>
+
 </resources>

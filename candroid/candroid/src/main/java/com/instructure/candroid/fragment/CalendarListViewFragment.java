@@ -19,17 +19,18 @@ package com.instructure.candroid.fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,22 +40,26 @@ import android.widget.Toast;
 import com.antonyt.infiniteviewpager.InfiniteViewPager;
 import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.CalendarListRecyclerAdapter;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
 import com.instructure.candroid.dialog.CalendarChooserDialogStyled;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.model.DateWindow;
 import com.instructure.candroid.util.Analytics;
-import com.instructure.candroid.util.ApplicationManager;
 import com.instructure.candroid.util.CanvasCalendarUtils;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.ListViewHelpers;
 import com.instructure.candroid.util.RouterUtils;
+import com.instructure.candroid.util.StudentPrefs;
 import com.instructure.candroid.view.ViewUtils;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.ScheduleItem;
 import com.instructure.canvasapi2.utils.APIHelper;
 import com.instructure.canvasapi2.utils.Logger;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.ThemePrefs;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.text.DateFormatSymbols;
@@ -67,6 +72,7 @@ import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 
+@PageView(url = "calendar")
 public class CalendarListViewFragment extends OrientationChangeFragment {
 
     //region CalendarView Enum
@@ -101,31 +107,41 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
     }
     //endregion
 
-    // region Calendar View State
     private CalendarView currentCalendarView = CalendarView.DAY_VIEW;
-    // endregion
 
-    // region Views
     private RelativeLayout mCalendarContainer;
     private CanvasCalendarFragment mCalendarFragment;
     private TextView mMonthText;
     private LinearLayout mEmptyPandaView;
     private TextView mEmptyTextView;
     private View mMonthContainer;
-    private ImageView mMonthFlipper;
-    // endregion
+    private ImageView mDropDownIndicator;
+    private Toolbar mToolbar;
+    private FrameLayout mToolbarContentWrapper;
 
     private CalendarListRecyclerAdapter mRecyclerAdapter;
     private CalendarChooserDialogStyled.CalendarChooserCallback mDialogCallback;
     private CalendarListRecyclerAdapter.AdapterToCalendarCallback mAdapterToCalendarCallback;
     private AdapterToFragmentCallback<ScheduleItem> mAdapterToFragmentCallback;
-    // endregion
 
     private boolean mIsFirstTimeCreation = false;
 
     @Override
+    @NonNull
+    public String title() {
+        return getString(R.string.calendar);
+    }
+
+    @Override
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {
+        return FragmentInteractions.Placement.MASTER;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         //Most of this will never get called since we are using
         //onConfig change, however, it will be used to save state
         //in the case that the activity is destroyed.
@@ -137,10 +153,10 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
         configuration = getResources().getConfiguration().orientation;
 
         //Restore saved state
-        int year = ApplicationManager.getPrefs(getContext()).load(Const.CALENDAR_YEAR_PREF, -1);
-        int month = ApplicationManager.getPrefs(getContext()).load(Const.CALENDAR_MONTH_PREF, -1);
-        int day = ApplicationManager.getPrefs(getContext()).load(Const.CALENDAR_DAY_PREF, -1);
-        boolean flag = ApplicationManager.getPrefs(getContext()).load(Const.CALENDAR_PREF_FLAG, false);
+        int year = StudentPrefs.getCalendarYearPref();
+        int month = StudentPrefs.getCalendarMonthPref();
+        int day = StudentPrefs.getCalendarDayPref();
+        boolean flag = StudentPrefs.getCalendarPrefFlag();
 
         if(!flag && mRecyclerAdapter.getSelectedDay() == null && month != -1 && year != -1 && day != -1){
              mRecyclerAdapter.setSelectedDay(DateTime.forDateOnly(year, month, day));
@@ -156,14 +172,14 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
         else {
             if(!flag){
                 //We are returning to a saved state
-                currentCalendarView = CalendarView.fromInteger(ApplicationManager.getPrefs(getContext()).load(Const.CALENDAR_VIEW_PREF, 0));
-                mCalendarFragment.setArguments(CanvasCalendarFragment.createBundle(getContext(), Calendar.getInstance(Locale.getDefault()), month, year));
+                currentCalendarView = CalendarView.fromInteger(StudentPrefs.getCalendarViewType());
+                mCalendarFragment.setArguments(CanvasCalendarFragment.createBundle(Calendar.getInstance(Locale.getDefault()), month, year));
             } else {
                 //This will create default behavior
-                mCalendarFragment.setArguments(CanvasCalendarFragment.createBundle(getContext(), Calendar.getInstance(Locale.getDefault()), -1, -1));
+                mCalendarFragment.setArguments(CanvasCalendarFragment.createBundle(Calendar.getInstance(Locale.getDefault()), -1, -1));
             }
 
-            mRecyclerAdapter.setStartDayMonday(ApplicationManager.getPrefs(getContext()).load(Const.CALENDAR_START_DAY_PREFS, false));
+            mRecyclerAdapter.setStartDayMonday(StudentPrefs.getWeekStartsOnMonday());
         }
 
         mDialogCallback = new CalendarChooserDialogStyled.CalendarChooserCallback() {
@@ -199,28 +215,26 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
         super.onPause();
 
         if(mRecyclerAdapter.getSelectedDay() != null){
-            ApplicationManager.getPrefs(getContext()).save(Const.CALENDAR_YEAR_PREF, mRecyclerAdapter.getSelectedDay().getYear());
-            ApplicationManager.getPrefs(getContext()).save(Const.CALENDAR_MONTH_PREF, mRecyclerAdapter.getSelectedDay().getMonth());
-            ApplicationManager.getPrefs(getContext()).save(Const.CALENDAR_DAY_PREF, mRecyclerAdapter.getSelectedDay().getDay());
-            ApplicationManager.getPrefs(getContext()).save(Const.CALENDAR_VIEW_PREF, CalendarView.toInteger(currentCalendarView));
-            ApplicationManager.getPrefs(getContext()).save(Const.CALENDAR_PREF_FLAG, false);
+            StudentPrefs.setCalendarYearPref(mRecyclerAdapter.getSelectedDay().getYear());
+            StudentPrefs.setCalendarMonthPref(mRecyclerAdapter.getSelectedDay().getMonth());
+            StudentPrefs.setCalendarDayPref(mRecyclerAdapter.getSelectedDay().getDay());
+            StudentPrefs.setCalendarPrefFlag(false);
+            StudentPrefs.setCalendarViewType(CalendarView.toInteger(currentCalendarView));
         }
     }
 
-    public void setupActionbar() {
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        setupActionbarSpinnerForMonth();
+    @Override
+    public void applyTheme() {
+        setupToolbarMenu(mToolbar, R.menu.calendar_menu);
+        setCalendarViewTypeChecked(mToolbar.getMenu());
+        setupCalendarSpinner();
+        if(getNavigation() != null) getNavigation().attachNavigationDrawer(this, mToolbar);
+        //Styling done in attachNavigationDrawer
     }
 
-    @Override
-    public void onFragmentActionbarSetupComplete(FRAGMENT_PLACEMENT placement) {
-        super.onFragmentActionbarSetupComplete(placement);
+    private void setupCalendarSpinner() {
         if(mRecyclerAdapter != null && mRecyclerAdapter.isCalendarViewCreated()){
-            setupActionbar();
+            setupActionbarSpinnerForMonth();
         }
     }
 
@@ -250,24 +264,15 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
     }
 
     @Override
-    public String getFragmentTitle() {
-        return getString(R.string.calendar);
-    }
-
-    @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {
-        return FRAGMENT_PLACEMENT.MASTER;
-    }
-
-    @Override
     public View populateView(LayoutInflater inflater, ViewGroup container) {
-        View rootView = inflater.inflate(R.layout.calendar_listview_fragment, container, false);
-        mCalendarContainer = (RelativeLayout) rootView.findViewById(R.id.calendarContainer);
-        final int span = isTablet(getContext()) ? 2 : 1;
-        configureRecyclerViewAsGrid(rootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView, R.string.noItemsToDisplayShort, span);
+        View rootView = inflater.inflate(R.layout.fragment_calendar_listview, container, false);
+        mToolbar = rootView.findViewById(R.id.toolbar);
+        mToolbarContentWrapper = rootView.findViewById(R.id.toolbarContentWrapper);
+        mCalendarContainer = rootView.findViewById(R.id.calendarContainer);
+        configureRecyclerView(rootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
 
-        mEmptyPandaView = (LinearLayout)rootView.findViewById(R.id.emptyView);
-        mEmptyTextView = (TextView) mEmptyPandaView.findViewById(R.id.noItems);
+        mEmptyPandaView = rootView.findViewById(R.id.emptyView);
+        mEmptyTextView = mEmptyPandaView.findViewById(R.id.noItems);
 
         //First time will replace, all others attach
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -279,6 +284,7 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
             fragmentTransaction.commitAllowingStateLoss();
         }
         setUpListeners();
+        applyTheme();
         return rootView;
     }
 
@@ -334,27 +340,13 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
     }
 
     @Override
-    public boolean navigationContextIsCourse() {
-        //When the user returns to calendar from viewing an event, NavigationActivity will think
-        //the context is a Course, so we override this here.
-        return false;
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerAdapter.loadData();
     }
 
     @Override
-    public void createOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.createOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.calendar_menu, menu);
-        setCalendarViewTypeChecked(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.calendarToday:
                 todayClick();
@@ -393,7 +385,7 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
 
     private void showCalendarChooserDialog(boolean firstShow){
         if(mRecyclerAdapter.getContextNames() != null){
-            CalendarChooserDialogStyled.show(getFragmentActivity(), CalendarListRecyclerAdapter.getFilterPrefs(getContext()), mRecyclerAdapter.getContextNames(), mRecyclerAdapter.getContextCourseCodes(), firstShow, mDialogCallback);
+            CalendarChooserDialogStyled.show(getActivity(), CalendarListRecyclerAdapter.getFilterPrefs(), mRecyclerAdapter.getContextNames(), mRecyclerAdapter.getContextCourseCodes(), firstShow, mDialogCallback);
         }
     }
 
@@ -439,12 +431,17 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
                     mCalendarFragment.setSelectedDates(today, today);
                 }
                 mRecyclerAdapter.setCalendarViewCreated(true);
-                setupActionbar();
+                applyTheme();
             }
 
             @Override
             public void onChangeMonth(int month, int year, boolean fromCreation) {
                 super.onChangeMonth(month, year, fromCreation);
+                if(mRecyclerAdapter != null && mRecyclerAdapter.getSelectedDay() != null && month == mRecyclerAdapter.getSelectedDay().getMonth()) {
+                    // This will often get called a second time on resume from the view pager page changed
+                    // listener. We don't want to trigger the month change logic if the month is not changing.
+                    return;
+                }
                 if (mMonthText != null) {
 
                     if (fromCreation  || hasOrientationChanged()){
@@ -491,7 +488,7 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
         }
 
         if(mRecyclerAdapter.getSelectedDay() != null){
-            ApplicationManager.getPrefs(getContext()).save(Const.CALENDAR_PREF_FLAG, true);
+            StudentPrefs.setCalendarPrefFlag(false);
         }
     }
 
@@ -499,15 +496,20 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
      * Helper method to configure actionbar button for calendar grid drop down
      */
     private void setupActionbarSpinnerForMonth() {
-        mMonthContainer = LayoutInflater.from(getSupportActionBar().getThemedContext()).inflate(R.layout.actionbar_calendar_layout, null);
-        getSupportActionBar().setCustomView(mMonthContainer);
-        mMonthText = (TextView) mMonthContainer.findViewById(R.id.monthText);
-        if(mCalendarFragment.getCurrentMonth() != -1){
+
+        mMonthContainer = LayoutInflater.from(getContext()).inflate(R.layout.actionbar_calendar_layout, null);
+        mToolbarContentWrapper.removeAllViews();
+        mToolbarContentWrapper.addView(mMonthContainer);
+
+        mDropDownIndicator = mMonthContainer.findViewById(R.id.indicator);
+        mDropDownIndicator.setImageDrawable(ColorKeeper.getColoredDrawable(getContext(), R.drawable.vd_expand, ThemePrefs.getPrimaryTextColor()));
+
+        mMonthText = mMonthContainer.findViewById(R.id.monthText);
+        if (mCalendarFragment.getCurrentMonth() != -1) {
             //this is month - 1 because DateFormatSymbols uses 0 indexed months, and DateTime uses
             // 1 indexed months.
             mMonthText.setText(new DateFormatSymbols().getMonths()[mCalendarFragment.getCurrentMonth() - 1] + " " + mCalendarFragment.getCurrentYear());
         }
-        mMonthFlipper = (ImageView) mMonthContainer.findViewById(R.id.indicator);
 
         mMonthContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -515,6 +517,8 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
                 expandOrCollapseCalendar(mCalendarContainer, mCalendarContainer.getVisibility() == View.GONE);
             }
         });
+
+        mMonthText.setTextColor(ThemePrefs.getPrimaryTextColor());
     }
 
     /**
@@ -535,7 +539,7 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
         // Otherwise, if landscape, then animate the width of the calendar, otherwise the height.
         final int translation = isExpand ? 0 : isLandscape ? -calendarView.getWidth() : -calendarView.getHeight();
 
-        mMonthFlipper.animate().rotationBy(isExpand ? -180f : 180f);
+        mDropDownIndicator.animate().rotationBy(isExpand ? -180f : 180f);
 
         AnimatorListenerAdapter onFinished = new AnimatorListenerAdapter() {
             @Override
@@ -638,12 +642,11 @@ public class CalendarListViewFragment extends OrientationChangeFragment {
      * menu item 3 = Schedule View
      * menu item 4 = Calendar Settings
      *
-     * @param menu
+     * @param menu A menu object
      */
     private void setCalendarViewTypeChecked(Menu menu) {
-        menu.getItem(1).setChecked(currentCalendarView == CalendarView.DAY_VIEW);
-        menu.getItem(2).setChecked(currentCalendarView == CalendarView.WEEK_VIEW);
-        menu.getItem(3).setChecked(currentCalendarView == CalendarView.MONTH_VIEW);
+        MenuItem item = menu.getItem(StudentPrefs.getCalendarViewType() + 1);
+        if(item != null) item.setChecked(true);
     }
 
     ///////////////////////////////////////////////////////

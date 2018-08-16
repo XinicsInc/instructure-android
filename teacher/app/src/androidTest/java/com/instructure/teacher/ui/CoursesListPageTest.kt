@@ -17,10 +17,7 @@
 
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.TestRail
-import com.instructure.teacher.ui.utils.getAllCourses
-import com.instructure.teacher.ui.utils.logIn
+import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
 class CoursesListPageTest : TeacherTest() {
@@ -42,7 +39,10 @@ class CoursesListPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3108898")
     fun displaysCourseList() {
-        logIn()
-        coursesListPage.assertHasCourses(getAllCourses())
+        val data = seedData(teachers = 1, favoriteCourses = 3)
+        val teacher = data.teachersList[0]
+        tokenLogin(teacher)
+
+        coursesListPage.assertHasCourses(data.favoriteCourses)
     }
 }

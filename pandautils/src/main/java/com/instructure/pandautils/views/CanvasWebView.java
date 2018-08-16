@@ -34,6 +34,8 @@ package com.instructure.pandautils.views;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +44,8 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -53,8 +57,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Patterns;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.ViewTreeObserver;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.ValueCallback;
@@ -62,6 +69,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.instructure.canvasapi2.utils.APIHelper;
 import com.instructure.canvasapi2.utils.ApiPrefs;
@@ -69,7 +78,9 @@ import com.instructure.canvasapi2.utils.FileUtils;
 import com.instructure.canvasapi2.utils.Logger;
 import com.instructure.pandautils.R;
 import com.instructure.pandautils.utils.Utils;
-import com.instructure.pandautils.video.ContentVideoViewClient;
+import com.instructure.pandautils.video.VideoWebChromeClient;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
@@ -82,6 +93,9 @@ import java.util.Map;
 public class CanvasWebView extends WebView implements NestedScrollingChild {
 
     private static final int VIDEO_PICKER_RESULT_CODE = 1202;
+    private static final int COPY_LINK_ID = 9357;
+    private static final int SHARE_LINK_ID = 9358;
+
     private final String encoding = "UTF-8";
 
     private int mLastY;
@@ -90,6 +104,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     private int mNestedOffsetY;
     private boolean firstScroll = true;
     private NestedScrollingChildHelper mChildHelper;
+    private boolean addedJavascriptInterface;
 
     public interface CanvasWebViewClientCallback {
         void openMediaFromWebView(String mime, String url, String filename);
@@ -119,23 +134,40 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     private VideoPickerCallback mVideoPickerCallback;
 
     private Context mContext;
-    private ContentVideoViewClient mClient;
-    private WebChromeClient mWebChromeClient;
+    private CanvasWebChromeClient mWebChromeClient;
     private ValueCallback<Uri[]> mFilePathCallback;
 
     public CanvasWebView(Context context) {
         super(context);
+        addedJavascriptInterface = false;
         init(context);
     }
 
     public CanvasWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        addedJavascriptInterface = false;
         init(context);
     }
 
     public CanvasWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        addedJavascriptInterface = false;
         init(context);
+    }
+
+    public class JavascriptInterface {
+        @android.webkit.JavascriptInterface
+        @SuppressWarnings("unused")
+        // Must match Javascript interface method of VideoWebChromeClient
+        public void notifyVideoEnd() {
+            // This code is not executed in the UI thread, so we must force that to happen
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mWebChromeClient != null) mWebChromeClient.onHideCustomView();
+                }
+            });
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -155,9 +187,6 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         //fontScale comes back as a float
         int scalePercent = (int)(getResources().getConfiguration().fontScale * 100);
         this.getSettings().setTextZoom(scalePercent);
-
-        mWebChromeClient = new CanvasWebChromeClient();
-        this.setWebChromeClient(mWebChromeClient);
 
         this.setDownloadListener(new DownloadListener() {
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
@@ -187,6 +216,43 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
         }
+
+        addViewTreeObserver();
+    }
+
+    private void addViewTreeObserver() {
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int newVis = getVisibility();
+            }
+        });
+    }
+
+    /**
+     * Builds a video enabled WebChromeClient.
+     **/
+    public void addVideoClient(final Activity activity) {
+        mWebChromeClient = new CanvasWebChromeClient(activity, this);
+        this.setWebChromeClient(mWebChromeClient);
+    }
+
+    private void addJavascriptInterface() {
+        if (!addedJavascriptInterface) {
+            // Add javascript interface to be called when the video ends (must be done before page load)
+            addJavascriptInterface(new JavascriptInterface(), VideoWebChromeClient.JsInterfaceName);
+            addedJavascriptInterface = true;
+        }
+    }
+
+    /**
+     * Indicates if the video is being displayed using a custom view (typically full-screen)
+     *
+     * @return true it the video is being displayed using a custom view (typically full-screen)
+     */
+    @SuppressWarnings("unused")
+    public boolean isVideoFullscreen() {
+        return mWebChromeClient != null && mWebChromeClient.isVideoFullscreen();
     }
 
     @Override
@@ -214,6 +280,62 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     }
 
     /**
+     * Create a context menu to copy the link that was pressed and then copy that link to the clipboard
+     * 
+     */
+    @Override
+    protected void onCreateContextMenu(ContextMenu menu) {
+        super.onCreateContextMenu(menu);
+        final HitTestResult result = this.getHitTestResult();
+
+        MenuItem.OnMenuItemClickListener handler = new MenuItem.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                // do the menu action
+                if(item.getItemId() == COPY_LINK_ID) {
+                    ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    if (clipboard != null) {
+                        ClipData clip = ClipData.newPlainText(mContext.getString(R.string.link), result.getExtra());
+                        clipboard.setPrimaryClip(clip);
+
+                        // Let the user know
+                        Toast.makeText(mContext, mContext.getString(R.string.linkCopied), Toast.LENGTH_SHORT).show();
+                    }
+                } else if(item.getItemId() == SHARE_LINK_ID) {
+                    // Share the link with other apps
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(result.getExtra()));
+                    if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+                        mContext.startActivity(intent);
+                    } else {
+                        // No apps can do anything with this link, let the user know
+                        Toast.makeText(mContext, mContext.getString(R.string.noApps), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return true;
+            }
+        };
+
+        if (result.getType() == HitTestResult.ANCHOR_TYPE ||
+                result.getType() == HitTestResult.SRC_ANCHOR_TYPE) {
+
+            // Title of the link, use a custom view so we can show the entire link in the style we want
+            TextView title = new TextView(mContext);
+            title.setText(result.getExtra());
+            title.setTextColor(mContext.getResources().getColor(R.color.canvasTextDark));
+            int padding = (int)Utils.dpToPx(mContext, 8);
+            title.setPadding(padding*2, padding, padding*2, 0);
+
+            menu.setHeaderView(title);
+
+            // Menu options for a hyperlink.
+            // Copy
+            menu.add(0, COPY_LINK_ID, 0, mContext.getString(R.string.copyLinkAddress)).setOnMenuItemClickListener(handler);
+            // Share with a different app
+            menu.add(0, SHARE_LINK_ID, 1, mContext.getString(R.string.shareLink)).setOnMenuItemClickListener(handler);
+        }
+    }
+
+    /**
      * Handles back presses for the CanvasWebView and the lifecycle of the ActivityContentVideoViewClient
      *
      * Use instead of goBack and canGoBack
@@ -221,9 +343,8 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
      * @return true if handled; false otherwise
      */
     public boolean handleGoBack() {
-        if (mClient != null && mClient.isFullscreen()) {
-            mWebChromeClient.onHideCustomView();
-            return true;
+        if (mWebChromeClient != null && mWebChromeClient.isVideoFullscreen()) {
+            return mWebChromeClient.onBackPressed();
         } else if (super.canGoBack()) {
             super.goBack();
             return true;
@@ -251,10 +372,10 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     public static String applyWorkAroundForDoubleSlashesAsUrlSource(String html) {
         if(TextUtils.isEmpty(html)) return "";
         // Fix for embedded videos that have // instead of http://
-        html = html.replaceAll("href=\"//", "href=\"http://");
-        html = html.replaceAll("href='//", "href='http://");
-        html = html.replaceAll("src=\"//", "src=\"http://");
-        html = html.replaceAll("src='//", "src='http://");
+        html = html.replaceAll("href=\"//", "href=\"https://");
+        html = html.replaceAll("href='//", "href='https://");
+        html = html.replaceAll("src=\"//", "src=\"https://");
+        html = html.replaceAll("src='//", "src='https://");
         return html;
     }
 
@@ -269,59 +390,32 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     public static String addProtocolToLinks(String html) {
         if(TextUtils.isEmpty(html)) return "";
 
-        html = html.replaceAll("href=\"www.", "href=\"http://www.");
-        html = html.replaceAll("href='www.", "href='http://www.");
-        html = html.replaceAll("src=\"www.", "src=\"http://www.");
-        html = html.replaceAll("src='www.", "src='http://www.");
+        html = html.replaceAll("href=\"www.", "href=\"https://www.");
+        html = html.replaceAll("href='www.", "href='https://www.");
+        html = html.replaceAll("src=\"www.", "src=\"https://www.");
+        html = html.replaceAll("src='www.", "src='https://www.");
         return html;
     }
 
-    public class CanvasWebChromeClient extends WebChromeClient {
-        private CustomViewCallback mCallback;
+    public class CanvasWebChromeClient extends VideoWebChromeClient {
+
+        CanvasWebChromeClient(@NonNull Activity activity, @NonNull CanvasWebView webView) { super(activity, webView); }
+
         @Override
-        public void onShowCustomView(View view, CustomViewCallback callback) {
-            super.onShowCustomView(view, callback);
-            mCallback = callback;
-            mClient.onShowCustomView(view);
+        public boolean onShowFileChooser(@Nullable WebView webView, @Nullable ValueCallback<Uri[]> filePathCallback, @Nullable FileChooserParams fileChooserParams) {
+            return showFileChooser(webView, filePathCallback, fileChooserParams);
         }
 
         @Override
-        public void onHideCustomView() {
-            super.onHideCustomView();
-            if (mCallback != null) {
-                mCallback.onCustomViewHidden();
-            }
-            mClient.onDestroyContentVideoView();
-        }
-
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
+        public void onProgressChanged(@Nullable WebView view, int newProgress) {
+            if(mCanvasWebChromeClientCallback != null) mCanvasWebChromeClientCallback.onProgressChangedCallback(view, newProgress);
             super.onProgressChanged(view, newProgress);
-        }
-
-        @Override
-        public void onCloseWindow(WebView window) {
-            if(!handleGoBack()) {
-                if(getContext() instanceof Activity) {
-                    ((Activity) getContext()).onBackPressed();
-                }
-            }
-        }
-
-        @Override // For Android > 5.0
-        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-            if(mVideoPickerCallback != null && mVideoPickerCallback.permissionsGranted()) {
-                showFileChooser(webView, filePathCallback, fileChooserParams);
-                return true;
-            }
-            return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
         }
     }
 
     public class CanvasWebViewClient extends WebViewClient {
 
-        public CanvasWebViewClient() {
-        }
+        public CanvasWebViewClient() {}
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -379,16 +473,21 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
 
             // Handle the embedded webview case (Its not within the InternalWebViewFragment)
             if (mCanvasEmbeddedWebViewCallback != null && mCanvasEmbeddedWebViewCallback.shouldLaunchInternalWebViewFragment(url)) {
-                String contentTypeGuess = URLConnection.guessContentTypeFromName(url);
-                // null when type can't be determined, launchInternalWebView anyway
-                // When contentType has 'application', it typically means it's a pdf or some type of document that needs to be downloaded,
-                //   so allow the embedded webview to open the url, which will trigger the DownloadListener. If for some reason the content can
-                //   be loaded in the webview, the content will just load in the embedded webview (which isn't ideal, but in majority of cases it won't happen).
-                if (contentTypeGuess == null || !contentTypeGuess.contains("application")) {
-                    mCanvasEmbeddedWebViewCallback.launchInternalWebViewFragment(url);
-                    return true;
-                }
+                if (Patterns.WEB_URL.matcher(url).matches()) {
+                    String contentTypeGuess = URLConnection.guessContentTypeFromName(url);
+                    // null when type can't be determined, launchInternalWebView anyway
+                    // When contentType has 'application', it typically means it's a pdf or some type of document that needs to be downloaded,
+                    //   so allow the embedded webview to open the url, which will trigger the DownloadListener. If for some reason the content can
+                    //   be loaded in the webview, the content will just load in the embedded webview (which isn't ideal, but in majority of cases it won't happen).
+                    if (contentTypeGuess == null || !contentTypeGuess.contains("application")) {
+                        mCanvasEmbeddedWebViewCallback.launchInternalWebViewFragment(url);
+                        return true;
+                    }
+                } else return true;
             }
+
+            if (url.startsWith("blob:")) return false; // MBL-9546 (Don't remove me, I'll break an LTI tool if you do.)
+
             view.loadUrl(url, extraHeaders);
             //we're handling the url ourselves, so return true.
             return true;
@@ -428,15 +527,23 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
             }
         }
     }
-    @Override
-    public void loadUrl(String url) {
-        super.loadUrl(url);
-    }
-
 
     @Override
     public void loadData(String data, String mimeType, String encoding) {
+        addJavascriptInterface();
         super.loadData(data, mimeType, encoding);
+    }
+
+    @Override
+    public void loadDataWithBaseURL(String baseUrl, String data, String mimeType, String encoding, String historyUrl) {
+        addJavascriptInterface();
+        super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
+    }
+
+    @Override
+    public void loadUrl(String url) {
+        addJavascriptInterface();
+        super.loadUrl(url);
     }
 
     /**
@@ -486,12 +593,9 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         // Arc needs the protocol attached to the referrer, so use that if we're using arc
         try {
             //sanitize the html
-            String sanitized =html.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
-            if (URLDecoder.decode(sanitized, encoding).contains("instructuremedia.com/lti/launch")) {
-                return true;
-            }
-        } catch (UnsupportedEncodingException e) {}
-
+            String sanitized = html.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+            if (URLDecoder.decode(sanitized, encoding).contains("instructuremedia.com/lti/launch")) return true;
+        } catch (UnsupportedEncodingException e) { /* do nothing */ }
         return false;
     }
 
@@ -504,7 +608,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
 
         String result = htmlWrapper.replace("{$CONTENT$}", html);
 
-        this.loadDataWithBaseURL(CanvasWebView.getReferrer(CanvasWebView.containsArcLTI(html, encoding)), result, "text/html", encoding, getHtmlAsUrl(result, encoding));
+        this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result, encoding));
 
         setupAccessibilityContentDescription(result, contentDescription);
 
@@ -573,14 +677,6 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     public void setCanvasWebChromeClientShowFilePickerCallback(VideoPickerCallback callback) {
         this.getSettings().setAllowFileAccess(true);
         this.mVideoPickerCallback = callback;
-    }
-
-    public ContentVideoViewClient getClient() {
-        return mClient;
-    }
-
-    public void setClient(ContentVideoViewClient mClient) {
-        this.mClient = mClient;
     }
 
     // endregion

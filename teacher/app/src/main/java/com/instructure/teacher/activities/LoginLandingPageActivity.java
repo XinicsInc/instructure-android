@@ -23,15 +23,20 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.instructure.canvasapi2.models.AccountDomain;
+import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity;
 import com.instructure.loginapi.login.snicker.SnickerDoodle;
+import com.instructure.pandautils.services.PushNotificationRegistrationService;
+import com.instructure.teacher.BuildConfig;
 import com.instructure.teacher.R;
 
 public class LoginLandingPageActivity extends BaseLoginLandingPageActivity {
 
     @Override
     protected Intent launchApplicationMainActivityIntent() {
-        return SplashActivity.Companion.createIntent(this);
+        PushNotificationRegistrationService.Companion.scheduleJob(this, ApiPrefs.isMasquerading(), BuildConfig.PUSH_SERVICE_PROJECT_ID);
+
+        return SplashActivity.Companion.createIntent(this, null);
     }
 
     @Override
@@ -46,7 +51,7 @@ public class LoginLandingPageActivity extends BaseLoginLandingPageActivity {
 
     @Override
     protected int appTypeName() {
-        return R.string.appTypeTeacher;
+        return R.string.appUserTypeTeacher;
     }
 
     @Override

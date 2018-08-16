@@ -33,9 +33,13 @@ import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.tests.CourseManager_Test;
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Response;
 
 
 public class CourseManager extends BaseManager {
@@ -333,40 +337,6 @@ public class CourseManager extends BaseManager {
         }
     }
 
-    public static List<Course> getCoursesSynchronous(final boolean forceNetwork) {
-        if (isTesting() || mTesting) {
-            //TODO
-            return null;
-        } else {
-            final RestBuilder adapter = new RestBuilder();
-            RestParams params = new RestParams.Builder()
-                    .withPerPageQueryParam(true)
-                    .withShouldIgnoreToken(false)
-                    .withForceReadFromNetwork(forceNetwork)
-                    .build();
-
-
-            return CourseAPI.getAllCoursesSynchronous(adapter, params);
-        }
-    }
-
-    public static List<Course> getFavoriteCoursesSynchronous(final boolean forceNetwork) {
-        if (isTesting() || mTesting) {
-            //TODO
-            return null;
-        } else {
-            final RestBuilder adapter = new RestBuilder();
-            RestParams params = new RestParams.Builder()
-                    .withPerPageQueryParam(true)
-                    .withShouldIgnoreToken(false)
-                    .withForceReadFromNetwork(forceNetwork)
-                    .build();
-
-
-            return CourseAPI.getFavCoursesSynchronous(adapter, params);
-        }
-    }
-
     public static void getEnrollmentsForGradingPeriod(long courseId, long gradingPeriodId, StatusCallback<List<Enrollment>> callback, boolean forceNetwork) {
         if (isTesting() || mTesting) {
             //TODO
@@ -432,6 +402,46 @@ public class CourseManager extends BaseManager {
         }
     }
     //endregion
+
+    @NonNull
+    public static List<Course> getFavoriteCoursesSynchronous(final boolean forceNetwork) throws IOException {
+        if (isTesting() || mTesting) {
+            //TODO
+            return new ArrayList<>();
+        } else {
+            final RestBuilder adapter = new RestBuilder();
+            RestParams params = new RestParams.Builder()
+                    .withPerPageQueryParam(true)
+                    .withShouldIgnoreToken(false)
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build();
+
+
+            Response<List<Course>> response = CourseAPI.getFavoriteCoursesSynchronously(adapter, params);
+            if(response != null && response.isSuccessful() && response.body() != null) return response.body();
+            else return new ArrayList<>();
+        }
+    }
+
+    @NonNull
+    public static List<Course> getCoursesSynchronous(final boolean forceNetwork) throws IOException {
+        if (isTesting() || mTesting) {
+            //TODO
+            return new ArrayList<>();
+        } else {
+            final RestBuilder adapter = new RestBuilder();
+            RestParams params = new RestParams.Builder()
+                    .withPerPageQueryParam(true)
+                    .withShouldIgnoreToken(false)
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build();
+
+
+            List<Course> data = CourseAPI.getCoursesSynchronously(adapter, params);
+            if(data != null) return data;
+            else return new ArrayList<>();
+        }
+    }
 
 
     public static Map<Long, Course> createCourseMap(List<Course> courses) {

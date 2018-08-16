@@ -18,6 +18,7 @@
 package com.instructure.canvasapi2.models;
 
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -28,10 +29,13 @@ public class Grades extends CanvasModel<Grades> {
 
     @SerializedName("html_url")
     private String htmlUrl;
+
+    @Nullable
     @SerializedName("current_score")
-    private double currentScore;
+    private Double currentScore;
+    @Nullable
     @SerializedName("final_score")
-    private double finalScore;
+    private Double finalScore;
     @SerializedName("current_grade")
     private String currentGrade;
     @SerializedName("final_grade")
@@ -58,11 +62,11 @@ public class Grades extends CanvasModel<Grades> {
         return htmlUrl;
     }
 
-    public double getCurrentScore() {
+    public Double getCurrentScore() {
         return currentScore;
     }
 
-    public double getFinalScore() {
+    public Double getFinalScore() {
         return finalScore;
     }
 
@@ -110,8 +114,8 @@ public class Grades extends CanvasModel<Grades> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.htmlUrl);
-        dest.writeDouble(this.currentScore);
-        dest.writeDouble(this.finalScore);
+        dest.writeValue(this.currentScore);
+        dest.writeValue(this.finalScore);
         dest.writeString(this.currentGrade);
         dest.writeString(this.finalGrade);
     }
@@ -121,8 +125,8 @@ public class Grades extends CanvasModel<Grades> {
 
     protected Grades(Parcel in) {
         this.htmlUrl = in.readString();
-        this.currentScore = in.readDouble();
-        this.finalScore = in.readDouble();
+        this.currentScore = (Double) in.readValue(Double.class.getClassLoader());
+        this.finalScore = (Double) in.readValue(Double.class.getClassLoader());
         this.currentGrade = in.readString();
         this.finalGrade = in.readString();
     }

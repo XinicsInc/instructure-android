@@ -15,7 +15,8 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.models.CanvasUser
+import com.instructure.soseedy.SubmissionSeed
+import com.instructure.soseedy.SubmissionType.ONLINE_TEXT_ENTRY
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
@@ -49,15 +50,27 @@ class SpeedGraderGradePageTest : TeacherTest() {
         speedGraderGradePage.assertRubricHidden()
     }
 
-    private fun goToSpeedGraderGradePage(): CanvasUser {
-        val teacher = logIn()
-        val course = getNextCourse()
+    private fun goToSpeedGraderGradePage() {
+        val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val student = data.studentsList[0]
+        val course = data.coursesList[0]
+        val assignment = seedAssignments(
+                course.id,
+                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
+                teacherToken = teacher.token).assignmentsList[0]
+
+        seedAssignmentSubmission(listOf(
+                SubmissionSeed.newBuilder()
+                        .setSubmissionType(ONLINE_TEXT_ENTRY)
+                        .setAmount(1).build()), assignment.id, course.id, student.token)
+
+        tokenLogin(teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(getNextAssignment())
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()
-        assignmentSubmissionListPage.clickSubmission(getNextStudent(course))
+        assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectGradesTab()
-        return teacher
     }
 }

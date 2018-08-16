@@ -1,0 +1,48 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+dependencies {
+    compile project(':dataseedingapi')
+
+    // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.grpc%22%20a%3A%22grpc-netty%22
+    compile 'io.grpc:grpc-netty:1.6.1'
+    compile Libs.KOTLIN_STD_LIB
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+buildscript {
+    /* Merge Private Data */
+    PrivateData.merge(project, "dataseeding")
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath Plugins.KOTLIN
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+task("fatJar", type: Jar) {
+    baseName = "${project.name}-all"
+    manifest {
+        attributes 'Main-Class': 'com.instructure.dataseeding.OutOfProcessServer'
+    }
+    from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

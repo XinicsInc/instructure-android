@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.inParallel
+import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.teacher.R
 import com.instructure.teacher.events.DiscussionTopicEvent
@@ -77,8 +77,10 @@ class DiscussionsDetailsPresenter(
     fun getDiscussionTopicHeader(discussionTopicHeaderId: Long, forceNetwork: Boolean) {
         DiscussionManager.getDetailedDiscussion(canvasContext, discussionTopicHeaderId, object: StatusCallback<DiscussionTopicHeader>() {
             override fun onResponse(response: Response<DiscussionTopicHeader>, linkHeaders: LinkHeaders, type: ApiType) {
-                discussionTopicHeader = response.body()
-                viewCallback?.populateDiscussionTopicHeader(discussionTopicHeader, false)
+                response.body()?.let {
+                    discussionTopicHeader = it
+                    viewCallback?.populateDiscussionTopicHeader(discussionTopicHeader, false)
+                }
             }
         })
     }
@@ -145,16 +147,18 @@ class DiscussionsDetailsPresenter(
     }
 
     private val mDiscussionTopicCallback = object: StatusCallback<DiscussionTopic>(){
-        override fun onResponse(response: Response<DiscussionTopic>, linkHeaders: LinkHeaders?, type: ApiType?) {
+        override fun onResponse(response: Response<DiscussionTopic>, linkHeaders: LinkHeaders, type: ApiType) {
             if(response.code() == 403) {
                 //forbidden
                 viewCallback?.populateAsForbidden()
             } else {
-                discussionTopic = response.body()
-                discussionTopic.views.forEach {
-                    it.init(discussionTopic, it)
+                response.body()?.let {
+                    discussionTopic = it
+                    discussionTopic.views.forEach {
+                        it.init(discussionTopic, it)
+                    }
+                    viewCallback?.populateDiscussionTopic(discussionTopicHeader, discussionTopic)
                 }
-                viewCallback?.populateDiscussionTopic(discussionTopicHeader, discussionTopic)
             }
         }
     }
@@ -237,21 +241,18 @@ class DiscussionsDetailsPresenter(
         if(mDiscussionMarkAsReadApiCalls != null && mDiscussionMarkAsReadApiCalls!!.isActive) return
         mDiscussionMarkAsReadApiCalls = weave {
             val markedAsReadIds: MutableList<Long> = ArrayList()
-            inParallel {
-                ids.forEach {
-                    val entryId = it
-                    await<Void?>({ DiscussionManager.markDiscussionTopicEntryRead(canvasContext, discussionTopicHeader.id, entryId, it) }) {
-                        markedAsReadIds.add(entryId)
-                        val entry = findEntry(entryId)
-                        if (entry != null) {
-                            entry.isUnread = false
-                        }
-                        discussionTopic.unreadEntriesMap.remove(entryId)
-                        discussionTopic.unreadEntries.remove(entryId)
-                        if (discussionTopicHeader.unreadCount > 0) discussionTopicHeader.unreadCount -= 1
-                    }
+            ids.forEach { entryId ->
+                val response = awaitApiResponse<Void?>{ DiscussionManager.markDiscussionTopicEntryRead(canvasContext, discussionTopicHeader.id, entryId, it) }
+                if(response.isSuccessful) {
+                    markedAsReadIds.add(entryId)
+                    val entry = findEntry(entryId)
+                    entry?.isUnread = false
+                    discussionTopic.unreadEntriesMap.remove(entryId)
+                    discussionTopic.unreadEntries.remove(entryId)
+                    if (discussionTopicHeader.unreadCount > 0) discussionTopicHeader.unreadCount -= 1
                 }
             }
+
             viewCallback?.updateDiscussionsMarkedAsReadCompleted(markedAsReadIds)
             DiscussionTopicHeaderEvent(discussionTopicHeader).post()
         }
@@ -259,8 +260,8 @@ class DiscussionsDetailsPresenter(
 
     fun deleteDiscussionEntry(entryId: Long) {
         DiscussionManager.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId, object: StatusCallback<Void>() {
-            override fun onResponse(response: Response<Void>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-                if(response?.code() in 200..299) {
+            override fun onResponse(response: Response<Void>, linkHeaders: LinkHeaders, type: ApiType) {
+                if(response.code() in 200..299) {
                     val entry = findEntry(entryId)
                     if (entry != null) {
                         entry.isDeleted = true

@@ -16,21 +16,26 @@
  */
 package com.instructure.teacher.activities
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.FragmentActivity
 import android.view.Window
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.R
-import com.instructure.teacher.router.Route
+import com.instructure.teacher.fragments.FileListFragment
+import com.instructure.interactions.router.RouteContext
+import com.instructure.interactions.router.RouterParams
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.services.FileDownloadService
 
-class RouteValidatorActivity : Activity() {
+class RouteValidatorActivity : FragmentActivity() {
 
-    internal var host = ""
+    private var host = ""
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -54,14 +59,29 @@ class RouteValidatorActivity : Activity() {
             startActivity(InitLoginActivity.createIntent(this))
             finish()
         } else if (host !in domain) {
-            val intent = InitLoginActivity.createLaunchApplicationMainActivityIntent(this)
+            val intent = InitLoginActivity.createLaunchApplicationMainActivityIntent(this, null)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             finish()
         } else {
-            //Allow the UI to show.
+            // Allow the UI to show.
             Handler().postDelayed({
-                RouteMatcher.routeUrl(this@RouteValidatorActivity, url, domain, Route.RouteContext.EXTERNAL)
+                // If it's a file link we need to start a service so that our app can download it before we show it
+                val route = RouteMatcher.getInternalRoute(url ?: "", domain)
+                // If we've already downloaded the file we just want to route to it
+                val fileDownloaded = intent.extras?.getBoolean(Const.FILE_DOWNLOADED, false) ?: false
+                if (!fileDownloaded && (route?.routeContext == RouteContext.FILE || route?.primaryClass == FileListFragment::class.java && route.queryParamsHash.containsKey(RouterParams.PREVIEW))) {
+                    val intent = Intent(this@RouteValidatorActivity, FileDownloadService::class.java)
+                    val bundle = Bundle()
+                    bundle.putParcelable(Route.ROUTE, route)
+                    bundle.putString(Const.URL, url)
+                    intent.putExtras(bundle)
+                    this@RouteValidatorActivity.startService(intent)
+                } else {
+                    RouteMatcher.routeUrl(this@RouteValidatorActivity, url ?: "", domain, RouteContext.EXTERNAL)
+                }
+
+                RouteMatcher.routeUrl(this@RouteValidatorActivity, url!!, domain, RouteContext.EXTERNAL)
                 finish()
             }, 1000)
         }

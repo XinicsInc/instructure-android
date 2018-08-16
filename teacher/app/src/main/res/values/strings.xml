@@ -30,6 +30,7 @@
     <string name="tab_announcements">Announcements</string>
     <string name="tab_attendance">Attendance</string>
     <string name="tab_pages">Pages</string>
+    <string name="tab_todo">To Do</string>
     <string name="content_description_school_logo">School Logo</string>
     <string name="search_guides">Search the Canvas Guides</string>
     <string name="canvas_guides">Canvas Guides</string>
@@ -58,6 +59,10 @@
     <string name="profile">Profile</string>
     <string name="share">Share</string>
     <string name="share_with">Share With&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Compose Message -->
     <string name="no_subject">(no subject)</string>
@@ -141,7 +146,6 @@
     <string name="select_files_or_photos">Select files or photos</string>
     <string name="uploading_files">Uploading files&#8230;</string>
     <string name="no_attachment">(No Attachment)</string>
-    <string name="remove_attachment">Remove attachment</string>
     <string name="creating_announcement">Creating Announcement&#8230;</string>
 
     <string name="copy_email">Copy email address</string>
@@ -163,8 +167,6 @@
     <string name="inbox_empty_starred_title">No Starred Messages</string>
     <string name="inbox_empty_message">Tap the \"+\" to create a new conversation.</string>
     <string name="inbox_empty_starred_message">Star messages by tapping the star in the message.</string>
-
-    <string name="download_attachment">Download Attachment</string>
 
     <string name="reply">Reply</string>
     <string name="replyAll">Reply All</string>
@@ -324,7 +326,7 @@
     <string name="unknown_student">Unknown Student</string>
     <string name="closed">Closed</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">Due %s at %s</string>
+    <string name="due_date_at_time" formatted="false">Due %1s at %2s</string>
     <string name="last_post" formatted="false">Last post %s</string>
     <string name="submission_types">Submission Types</string>
     <string name="full_due_date_details">Full due date details</string>
@@ -434,7 +436,6 @@
     <string name="deleteComment">Delete Comment</string>
     <string name="deleteAnnotation">Delete Annotation</string>
     <string name="deleteCommentConfirmation">Are you sure you want to delete this comment?</string>
-    <string name="deleteHeadCommentConfirmation">This comment is an annotation. Deleting this will delete all replies and the annotation. Are you sure you want to do this?</string>
     <string name="rubric_view_long_description">View long description</string>
     <string name="rubric">Rubric</string>
     <string name="enter_custom_value">Enter a custom value</string>
@@ -533,7 +534,9 @@
     <string name="contentDescriptionFileIcon">File Icon</string>
     <string name="contentDescriptionExpandPage">Expand Page</string>
     <string name="contentDescriptionCollapsePage">Collapse Page</string>
-  
+    <string name="noInternetConnectionTitle">No Internet Connection</string>
+    <string name="noInternetConnectionMessage">This action requires an internet connection.</string>
+
     <string name="emptyDetailsMessage">Tap on an item in the list to view the details</string>
 
     <string name="assignmentQuizzes">Assignment Quizzes</string>
@@ -602,12 +605,6 @@
     <string name="quiz_details_from_to">From %1$s to %2$s</string>
     <string name="quiz_details_after">After %1$s</string>
     <string name="quiz_details_until">Until %1$s</string>
-    <string name="continueWithoutSavingTitle">Continue without saving?</string>
-    <string name="continueWithoutSavingMessage">Are you sure you would like to continue without saving?</string>
-    <string name="continueUnsaved">Continue</string>
-    <string name="exitWithoutSavingTitle">Exit without saving?</string>
-    <string name="exitWithoutSavingMessage">Are you sure you would like to exit without saving?</string>
-    <string name="exitUnsaved">Exit</string>
     <string name="filterPointsMustBeSet">Enter a value.</string>
 
     <plurals name="quantityQuestions">
@@ -636,7 +633,6 @@
     <string name="discussions_replies_title">Replies</string>
     <string name="discussions_reply">Reply</string>
     <string name="discussions_edit">Edit</string>
-    <string name="discussions_deleted" formatted="false">Deleted this reply %s</string>
     <string name="discussions_forbidden">Replies are only visible to those who have posted at least one reply.</string>
     <string name="discussions_unknown_author">Unknown Author</string>
     <string name="discussions_delete">Delete Discussion</string>
@@ -756,6 +752,7 @@
     <string name="choosePhotoFromGallery">Choose photo from Gallery</string>
     <string name="fileNotFound">File not found.</string>
     <string name="version" formatted="false">Version %s</string>
+    <string name="fullVersion">Version %s (%d)</string>
     <string name="tap_to_view_submissions_list">Tap to view submissions list.</string>
     <string name="assignmentDescriptionContentDescription">Assignment Description</string>
     <string name="quizDescriptionContentDescription">Quiz Description</string>
@@ -867,4 +864,32 @@
     <string name="errorUpdatingFile">An error occurred updating this file</string>
     <string name="errorUpdatingFolder">An error occurred updating this folder</string>
 
+    <string name="toDoEmpty">Nothing more to do!\n Enjoy your day.</string>
+    <string name="toDoNoSubmissions">There are no submissions to grade for this assignment.</string>
+    <string name="errorToDoRouteFailed">An error occurred trying to view this To Do item.</string>
+    <string name="errorIsDesigner">Designer enrollment cannot view this.</string>
+
+    <string name="sections">Sections</string>
+    <string name="filterBy">Filter By&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">for %s</string>
+    <string name="filterBySection">Filter by section</string>
+    <string name="filterSubmissionsLowercase">Filter submissions</string>
+    <string name="latePenalty">Late penalty</string>
+    <string name="finalGrade">Final Grade</string>
+    <string name="moderatedGradingUnsupported">Moderated grading is not currently supported in mobile SpeedGrader.</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s pt</item>
+        <item quantity="other">-%s pts</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s point</item>
+        <item quantity="other">-%s points</item>
+    </plurals>
+    <string name="todoUnreadCount">To do %d unread</string>
+    <string name="profileSettings">Profile Settings</string>
+    <string name="downloadingFile">Downloading file&#8230;</string>
+    <string name="fileDownloadedSuccessfully">File downloaded successfully.</string>
+    <string name="tapToView">Tap to view</string>
+    <string name="errorDownloadingFile">An error occurred downloading your file. Please try again.</string>
+    
 </resources>

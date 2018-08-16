@@ -164,7 +164,7 @@ public class StudentViewActivity extends BaseRouterActivity implements ViewPager
                     ApplicationManager.getParentId(StudentViewActivity.this),
                     new StatusCallback<List<Student>>() {
                         @Override
-                        public void onResponse(Response<List<Student>> response, LinkHeaders linkHeaders, ApiType type) {
+                        public void onResponse(@NonNull Response<List<Student>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                             //Only non-cache data
                             if (!APIHelper.isCachedResponse(response)) {
                                 if (response.body() != null && !response.body().isEmpty()) {

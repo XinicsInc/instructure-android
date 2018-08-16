@@ -201,7 +201,7 @@ class AttendanceListPresenter(private val mCanvasContext: CanvasContext, private
 
             attendance._postingAttendance = attendance.attendance
             AttendanceManager.markAttendance(attendance, mToken, mCookie, object : StatusCallback<Attendance>() {
-                override fun onResponse(response: Response<Attendance>, linkHeaders: LinkHeaders?, type: ApiType) {
+                override fun onResponse(response: Response<Attendance>, linkHeaders: LinkHeaders, type: ApiType) {
                     if(type.isAPI) {
                         response.body()?.let {
                             if (response.code() in 200..299) {
@@ -215,7 +215,7 @@ class AttendanceListPresenter(private val mCanvasContext: CanvasContext, private
                     }
                 }
 
-                override fun onFail(response: Call<Attendance>?, error: Throwable?) {
+                override fun onFail(call: Call<Attendance>?, error: Throwable, response: Response<*>?) {
                     mJobList.remove(attendance.studentId)
                     attendance.attendance = attendance._postingAttendance //Revert status
                     viewCallback?.notifyAttendanceAsMarked(attendance)

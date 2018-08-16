@@ -21,36 +21,16 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
-repositories {
-    jcenter()
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://jitpack.io" }
-    maven { url "https://maven.google.com" }
-}
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-        maven { url "https://jitpack.io" }
-        maven { url "https://maven.google.com" }
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-}
-
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
         applicationId "com.instructure.androidpolling.app"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
+        versionCode = 6
+        versionName = '1.1.1'
         multiDexEnabled true
 
         /* Add private data */
@@ -67,6 +47,18 @@ android {
         release{
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    flavorDimensions 'default'
+
+    productFlavors {
+        dev {
+            dimension 'default'
+        }
+
+        prod {
+            dimension 'default'
         }
     }
 
@@ -96,29 +88,27 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':canvas-api-2')
-    compile project(':login-api-2')
-    compile project(':blueprint')
-    compile project(':pandautils')
-    compile project(':recyclerview')
-    compile project(':libraries:croutonlibrary')
-    compile project(':libraries:jazzyviewpager')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.jakewharton:butterknife:8.8.1'
+    /* Module Dependencies */
+    implementation project(':login-api-2')
+    implementation project(':libraries:croutonlibrary')
+    implementation project(':libraries:jazzyviewpager')
+
+    /* Butterknife */
+    implementation 'com.jakewharton:butterknife:8.8.1'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    compile "com.android.support:multidex:$GLOBAL_MULTI_DEX_VERSION"
-    compile("com.crashlytics.sdk.android:crashlytics:$GLOBAL_CRASHLYTICS_VERSION") {
+    /* Crashlytics */
+    implementation(Libs.CRASHLYTICS) {
         transitive = true
     }
 
-    compile rootProject.ext.supportDependencies.supportLibV13
-
-    /* Kotlin */
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$GLOBAL_KOTLIN_VERSION"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$GLOBAL_KOTLIN_COROUTINES_VERSION"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-android:$GLOBAL_KOTLIN_COROUTINES_VERSION"
+    /* Support Dependencies */
+    implementation Libs.SUPPORT_V13
+    implementation Libs.SUPPORT_RECYCLERVIEW
+    implementation Libs.SUPPORT_APPCOMPAT
+    implementation Libs.SUPPORT_DESIGN
 
 }
 

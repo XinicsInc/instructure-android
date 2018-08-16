@@ -17,39 +17,42 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="24dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="16dp"
+    android:paddingTop="16dp">
 
     <TextView
-        android:id="@+id/select_course"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:id="@+id/selectCourse"
         style="@style/TextStyle.Primary"
-        android:text="@string/whichCourse"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/whichCourse" />
 
     <TextView
-        android:id="@+id/all_teachers"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:id="@+id/allTeachers"
         style="@style/TextStyle.Secondary"
-        android:layout_below="@id/select_course"
-        android:text="@string/allTeachers"
-        android:layout_marginBottom="10dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectCourse"
+        android:layout_marginBottom="10dp"
+        android:text="@string/allTeachers" />
 
     <Spinner
-        android:id="@+id/course_spinner"
-        android:layout_height="wrap_content"
+        android:id="@+id/courseSpinner"
         android:layout_width="match_parent"
-        android:layout_below="@id/all_teachers"
-        android:layout_marginBottom="10dp"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/allTeachers"
+        android:layout_marginBottom="10dp" />
 
     <EditText
         android:id="@+id/message"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_below="@id/course_spinner"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/courseSpinner"
         android:layout_marginBottom="10dp"
-        android:hint="@string/composeMessage"/>
+        android:hint="@string/composeMessage" />
 
 </RelativeLayout>

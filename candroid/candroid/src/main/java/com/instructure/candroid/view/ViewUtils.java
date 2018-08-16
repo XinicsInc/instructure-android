@@ -20,16 +20,24 @@ package com.instructure.candroid.view;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.instructure.candroid.R;
+import com.instructure.candroid.activity.InternalWebViewActivity;
+import com.instructure.candroid.activity.InterwebsToApplication;
+import com.instructure.candroid.util.RouterUtils;
+import com.instructure.canvasapi2.utils.ApiPrefs;
 
 import java.lang.reflect.Method;
 
@@ -75,6 +83,45 @@ public class ViewUtils {
             // see: http://stackoverflow.com/questions/10991194/android-displaymetrics-returns-incorrect-screen-size-in-pixels-on-ics
             display.getMetrics(metrics);
             return metrics.heightPixels;
+        }
+    }
+
+    /**
+     * Parse the links to make them clickable and override what they do (so we don't just open a different app)
+     * @param tv
+     */
+    public static void linkifyTextView(TextView tv) {
+        SpannableString current = (SpannableString) tv.getText();
+        URLSpan[] spans =
+                current.getSpans(0, current.length(), URLSpan.class);
+
+        for (URLSpan span : spans) {
+            int start = current.getSpanStart(span);
+            int end = current.getSpanEnd(span);
+
+            current.removeSpan(span);
+            current.setSpan(new DefensiveURLSpan(span.getURL()), start, end,
+                    0);
+        }
+    }
+
+    public static class DefensiveURLSpan extends URLSpan {
+        private String url;
+
+        private DefensiveURLSpan(String url) {
+            super(url);
+            this.url = url;
+        }
+
+        @Override
+        public void onClick(View widget) {
+            if (RouterUtils.getInternalRoute(url, ApiPrefs.getDomain()) != null) {
+                // Normally we would do the normal routing, but we need an activity for that, which we don't have. So we'll use the more generic routing for the app
+                widget.getContext().startActivity(InterwebsToApplication.Companion.createIntent(widget.getContext(), Uri.parse(url)));
+            } else {
+                Intent intent = InternalWebViewActivity.createIntent(widget.getContext(), url, "", false);
+                widget.getContext().startActivity(intent);
+            }
         }
     }
 }

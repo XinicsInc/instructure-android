@@ -19,8 +19,6 @@ package com.instructure.candroid.binders;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
@@ -29,7 +27,7 @@ import com.instructure.candroid.adapter.QuizSubmissionQuestionListRecyclerAdapte
 import com.instructure.candroid.holders.SubmitButtonViewHolder;
 import com.instructure.candroid.interfaces.QuizSubmit;
 import com.instructure.canvasapi2.models.CanvasContext;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 public class SubmitButtonBinder {
 
@@ -39,16 +37,9 @@ public class SubmitButtonBinder {
             return;
         }
 
-        int[] colors = CanvasContextColor.getCachedColors(context, canvasContext);
-        StateListDrawable stateListDrawable=new StateListDrawable();
-        if(colors.length >= 2) {
-            stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, new ColorDrawable(colors[1]));
-            stateListDrawable.addState(new int[]{android.R.attr.state_enabled}, new ColorDrawable(colors[0]));
-            holder.submitButton.setBackgroundDrawable(stateListDrawable);
-        } else {
-            //it shouldn't get here, but this will just set the color as the course color, so no pressed state
-            holder.submitButton.setBackgroundColor(CanvasContextColor.getCachedColor(context, canvasContext));
-        }
+        //todo implement primary/dark color here
+        int color = ColorKeeper.getOrGenerateColor(canvasContext);
+        holder.submitButton.setBackgroundColor(color    );
 
         holder.submitButton.setOnClickListener(new View.OnClickListener() {
             @Override

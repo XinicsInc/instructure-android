@@ -18,24 +18,6 @@
 
 <resources>
 
-    <string-array name="navigationMenuArray">
-        <item>@string/dashboard</item>
-        <item>@string/notifications</item>
-        <item>@string/toDoList</item>
-        <item>@string/inbox</item>
-        <item>@string/calendar</item>
-        <item>@string/bookmarks</item>
-        <item>@string/grades</item>
-    </string-array>
-
-    <string-array name="canvas_poll">
-        <item>@string/poll_item_1</item>
-        <item>@string/poll_item_2</item>
-        <item>@string/poll_item_3</item>
-        <item>@string/poll_item_4</item>
-        <item>@string/poll_item_5</item>
-    </string-array>
-
     <string-array name="discussion_attachments">
         <item>@string/discussionAttachment</item>
         <item>@string/discussionUpload</item>

@@ -20,7 +20,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/titleText"
     android:layout_height="wrap_content"
-    android:minHeight="?android:listPreferredItemHeight"
     android:layout_width="match_parent"
     android:gravity="center"
-    style="@style/TextStyle.Primary.SingleLine"/>
+    style="@style/AdapterItemTitleText"/>

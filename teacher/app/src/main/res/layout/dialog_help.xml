@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
     ~ Copyright (C) 2017 - present Instructure, Inc.
     ~
@@ -20,121 +19,124 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbarStyle="outsideOverlay"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:scrollbarStyle="outsideOverlay">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/scrollInstructions"
         android:orientation="vertical"
-        android:contentDescription="@string/scrollInstructions">
+        android:paddingBottom="24dp"
+        android:paddingStart="24dp"
+        android:paddingTop="18dp">
 
         <LinearLayout
-            android:id="@+id/search_guides"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:listPreferredItemHeight"
+            android:id="@+id/searchGuides"
             android:layout_width="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
             android:gravity="center_vertical"
+            android:minHeight="?android:listPreferredItemHeight"
             android:orientation="vertical"
-            android:background="?android:selectableItemBackground">
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 style="@style/TextFont.Regular"
-                android:textColor="@color/defaultTextDark"
-                android:text="@string/searchGuides"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/searchGuides"
+                android:textColor="@color/defaultTextDark" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/searchGuidesDetails"
                 android:textColor="@color/defaultTextGray"
-                android:textStyle="italic"
-                android:text="@string/searchGuidesDetails"/>
+                android:textStyle="italic" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/report_problem"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:listPreferredItemHeight"
+            android:id="@+id/reportProblem"
             android:layout_width="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
             android:gravity="center_vertical"
+            android:minHeight="?android:listPreferredItemHeight"
             android:orientation="vertical"
-            android:background="?android:selectableItemBackground">
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 style="@style/TextFont.Regular"
-                android:textColor="@color/defaultTextDark"
-                android:text="@string/reportProblem"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reportProblem"
+                android:textColor="@color/defaultTextDark" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reportProblemDetails"
                 android:textColor="@color/defaultTextGray"
-                android:textStyle="italic"
-                android:text="@string/reportProblemDetails"/>
+                android:textStyle="italic" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/request_feature"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:listPreferredItemHeight"
+            android:id="@+id/requestFeature"
             android:layout_width="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
             android:gravity="center_vertical"
+            android:minHeight="?android:listPreferredItemHeight"
             android:orientation="vertical"
-            android:background="?android:selectableItemBackground">
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 style="@style/TextFont.Regular"
-                android:textColor="@color/defaultTextDark"
-                android:text="@string/requestFeature"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/requestFeature"
+                android:textColor="@color/defaultTextDark" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/requestFeatureDetails"
                 android:textColor="@color/defaultTextGray"
-                android:textStyle="italic"
-                android:text="@string/requestFeatureDetails"/>
+                android:textStyle="italic" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/share_love"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:listPreferredItemHeight"
+            android:id="@+id/shareLove"
             android:layout_width="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
             android:gravity="center_vertical"
+            android:minHeight="?android:listPreferredItemHeight"
             android:orientation="vertical"
-            android:background="?android:selectableItemBackground">
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 style="@style/TextFont.Regular"
-                android:textColor="@color/defaultTextDark"
-                android:text="@string/shareYourLove"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shareYourLove"
+                android:textColor="@color/defaultTextDark" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shareYourLoveDetails"
                 android:textColor="@color/defaultTextGray"
-                android:textStyle="italic"
-                android:text="@string/shareYourLoveDetails"/>
+                android:textStyle="italic" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

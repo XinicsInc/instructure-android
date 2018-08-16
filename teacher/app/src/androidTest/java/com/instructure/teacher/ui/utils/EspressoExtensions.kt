@@ -18,6 +18,7 @@
 
 package com.instructure.teacher.ui.utils
 
+import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.ViewInteraction
 import android.support.test.espresso.action.ViewActions
@@ -25,12 +26,12 @@ import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions
 import android.support.test.espresso.matcher.ViewMatchers
 import android.view.View
+import com.instructure.espresso.ViewCallOnClick
 import com.instructure.espresso.WaitForViewMatcher
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.pages.BasePage
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import android.support.test.InstrumentationRegistry
 
 
 fun ViewInteraction.assertVisible(): ViewInteraction
@@ -231,9 +232,11 @@ fun BasePage.clickCoursesTab() { waitForViewWithId(R.id.tab_courses).perform(cli
 
 fun BasePage.clickInboxTab() { waitForViewWithId(R.id.tab_inbox).perform(click()) }
 
-fun BasePage.clickProfileTab() { waitForViewWithId(R.id.tab_profile).perform(click()) }
+fun BasePage.clickProfileMenu() { waitForViewWithContentDescription(R.string.navigation_drawer_open).perform(click()) }
 
 fun BasePage.getStringFromResource(stringResource: Int): String{
     val targetContext = InstrumentationRegistry.getTargetContext()
     return targetContext.resources.getString(stringResource)
 }
+
+fun BasePage.callOnClick(matcher: Matcher<View>) = ViewCallOnClick.callOnClick(matcher)

@@ -31,8 +31,8 @@ public class SyllabusItemViewHolder extends RecyclerView.ViewHolder {
 
     public SyllabusItemViewHolder(View itemView) {
         super(itemView);
-        title = (TextView) itemView.findViewById(R.id.title);
-        icon = (ImageView) itemView.findViewById(R.id.icon);
+        title = itemView.findViewById(R.id.title);
+        icon = itemView.findViewById(R.id.icon);
     }
 
     public static int holderResId() {

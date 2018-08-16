@@ -19,6 +19,7 @@ package com.instructure.candroid.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -39,7 +40,7 @@ import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.pandarecycler.util.GroupSortedList;
 import com.instructure.pandarecycler.util.Types;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,6 +48,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Response;
 
 public class SyllabusRecyclerAdapter extends ExpandableRecyclerAdapter<String, ScheduleItem, RecyclerView.ViewHolder> {
 
@@ -124,7 +127,7 @@ public class SyllabusRecyclerAdapter extends ExpandableRecyclerAdapter<String, S
     @Override
     public void onBindChildHolder(RecyclerView.ViewHolder holder, String s, ScheduleItem scheduleItem) {
         if(scheduleItem != null) {
-            final int courseColor = CanvasContextColor.getCachedColor(getContext(), mCanvasContext);
+            final int courseColor = ColorKeeper.getOrGenerateColor(mCanvasContext);
             if (scheduleItem.getItemType() == ScheduleItem.Type.TYPE_SYLLABUS) {
                 SyllabusBinder.bindSyllabusItem(getContext(), (SyllabusItemViewHolder) holder, courseColor, scheduleItem, mAdapterToFragmentCallback);
             } else {
@@ -219,7 +222,7 @@ public class SyllabusRecyclerAdapter extends ExpandableRecyclerAdapter<String, S
         mScheduleCallback = new StatusCallback<List<ScheduleItem>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<ScheduleItem>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<ScheduleItem>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 mCallbackSyncHash.put(EVENTS_ID, response.body());
                 syncCallbacks();
             }
@@ -228,7 +231,7 @@ public class SyllabusRecyclerAdapter extends ExpandableRecyclerAdapter<String, S
         mAssignmentCallback = new StatusCallback<List<ScheduleItem>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<ScheduleItem>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<ScheduleItem>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 mCallbackSyncHash.put(ASSIGNMENTS_ID, response.body());
                 syncCallbacks();
             }

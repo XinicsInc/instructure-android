@@ -24,11 +24,19 @@ import android.support.annotation.MenuRes
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
+import android.text.SpannableString
+import android.text.style.URLSpan
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.teacher.R
-import com.instructure.teacher.interfaces.MasterDetailInteractions
+import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.router.RouteMatcher
+import com.instructure.interactions.MasterDetailInteractions
+import com.instructure.interactions.router.RouteContext
 import de.hdodenhof.circleimageview.CircleImageView
 
 
@@ -192,6 +200,32 @@ fun TextView?.adoptToolbarStyle(toolbar: Toolbar?) {
         if (appearance != 0) setTextAppearance(context, appearance)
 
         setTextColor(preserveColors)
+    }
+}
+
+fun TextView.linkifyTextView() {
+    val current = this.text as SpannableString
+    val spans = current.getSpans(0, current.length, URLSpan::class.java)
+
+    for (span in spans) {
+        val start = current.getSpanStart(span)
+        val end = current.getSpanEnd(span)
+
+        current.removeSpan(span)
+        current.setSpan(DefensiveURLSpan(span.url), start, end,
+                0)
+    }
+}
+
+class DefensiveURLSpan(private val url: String) : URLSpan(url) {
+
+    override fun onClick(widget: View) {
+        if(RouteMatcher.getInternalRoute(url, ApiPrefs.domain) != null) {
+            RouteMatcher.routeUrl(widget.context, url, ApiPrefs.domain, RouteContext.EXTERNAL)
+        } else {
+            val intent = InternalWebViewActivity.createIntent(widget.context, url, "", false)
+            widget.context.startActivity(intent)
+        }
     }
 }
 

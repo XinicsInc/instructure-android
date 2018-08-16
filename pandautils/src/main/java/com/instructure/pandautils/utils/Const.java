@@ -45,17 +45,10 @@ public class Const {
     public static final String AUTHENTICATE = "authenticate";
     public static final String BUNDLE = "bundle";
     public static final String BUNDLE_INTENT = "bundledIntent";
-    public static final String CALENDAR_START_DAY_PREFS = "calendarStartDayPrefs";
     public static final String CALENDAR_DIALOG_CONTEXT_LIST = "calendarDialogContextList";
     public static final String CALENDAR_DIALOG_FILTER_PREFS = "calendarDialogFilterPrefs";
     public static final String CALENDAR_DIALOG_CONTEXT_IDS= "calendarDialogContextIds";
     public static final String CALENDAR_DIALOG_CONTEXT_COURSE_IDS = "calendarDialogContextCourseIds";
-    public static final String CALENDAR_YEAR_PREF = "calendarYearPref";
-    public static final String CALENDAR_MONTH_PREF = "calendarMonthPref";
-    public static final String CALENDAR_DAY_PREF = "calendarDayPref";
-    public static final String CALENDAR_PREF_FLAG = "calendarPrefFlag";
-    public static final String CALENDAR_VIEW_PREF = "calendarViewType";
-    public static final String CALENDAR_CHOOSER_FLAG = "calendarChooserFlag";
     public static final String CALENDAR_EVENT_START_DATE = "calendarEventStartDate";
     public static final String CANVAS_CONTEXT = "canvasContext";
     public static final String CANVAS_LOGIN = "canvas_login";
@@ -81,7 +74,9 @@ public class Const {
     public static final String FEATURE_NAME = "featureName";
     public static final String FILE_ALLOWED = "fileAllowed";
     public static final String FILE_URL = "fileUrl";
+    public static final String FILE_DOWNLOADED = "fileDownloaded";
     public static final String FINISH = "finish";
+    public static final String FOLDER = "folder";
     public static final String FOLDER_ID = "folderId";
     public static final String FOLDER_NAME = "folderName";
     public static final String FOR_RESULT = "forResult";
@@ -115,16 +110,19 @@ public class Const {
     public static final String MESSAGE_TYPE ="messageType";
     public static final String MODULE_ID = "moduleId";
     public static final String MODULE_ITEM = "moduleItems";
+    public static final String MODULE_ITEM_ID = "moduleItemId";
     public static final String MODULE_OBJECTS = "moduleObjects";
     public static final String NAME = "name";
+    public static final String PAGE = "page";
     public static final String PAGE_NAME = "pageName";
     public static final String PARENT_FOLDER_ID = "parentFolderID";
     public static final String PASSED_URI = "passedURI";
     public static final String PENDING_REVIEW = "pending_review";
+    public static final String PROJECT_ID = "project_id";
     public static final String QUIZ = "quiz";
     public static final String RECIPIENT = "recipient";
+    public static final String RECIPIENTS = "recipients";
     public static final String REMOVAL_TYPE = "removalType";
-    public static final String ROUTE = "route";
     public static final String SCHEDULE_ITEM= "scheduleItem";
     public static final String SCHEDULE_ITEM_ID = "scheduleItemId";
     public static final String SCOPE = "scope";
@@ -176,10 +174,10 @@ public class Const {
     public static final String TITLE = "title";
     public static final String BODY = "body";
     public static final String COURSE_VIEW = "course_view";
-    public static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
     public static final String WITH_SLIDING_PANE = "with_sliding_pane";
     public static final String PLACEMENT = "placement";
     public static final String PROFILE_URL = "canvas.instructure.com";
+    public static final String NO_PICTURE_URL = "images/dotted_pic.png";
 
     public static final String LOGIN = "login";
     public static final String CALENDAR = "calendar";
@@ -214,7 +212,6 @@ public class Const {
     public static final String DOMAIN_FOR_DISPLAY = "domainForDisplay";
     public static final String SCHEME = "scheme";
     public static final String PARSE = "parse";
-    public static final String GOOGLE_NOW_VOICE_SEARCH = "googleNowVoiceSearch";
     public static final String SPEEDGRADER_PACKAGE = "com.instructure.speedgrader";
     public static final String SPEEDGRADER_ACTION = "com.instructure.speedgrader.SPEED_GRADER";
     public static final String SPEEDGRADER_PLAYSTORE = "market://details?id=com.instructure.speedgrader";
@@ -255,17 +252,10 @@ public class Const {
     public static final String DATE_TO_SHOW_CANVAS_POLL = "canvasPollShowDate";
     public static final String CAN_BE_POLLED = "canBePolled";
 
-    public static final String TUTORIAL_VIEWED = "tutorialViewed";
-
-    public static final String VIEWED_NEW_FEATURE_BANNER = "viewed_new_feature_banner_increment=01";
-    public static final String FUN_MODE = "funModeEnabled";
-
     public static final String STUDENT_ID = "student_id";
     public static final String STUDENT = "student";
 
     public static final String CONVERSATION_ID = "conversation_id";
-
-    public static final String FILTER_PREFS_KEY = "calFilterPrefsKey";
 
     public static final String POSITION = "position";
     public static final String ARRAY = "array";
@@ -293,9 +283,6 @@ public class Const {
     public static final String WAIT_FOR_TRANSITION = "WAIT_FOR_TRANSITION";
 
     public static final float ACTIONBAR_ELEVATION = 10;
-    public static final String SHOW_GRADES_ON_CARD = "showGradesOnCard";
-
-    public static final String NOTIFICATION_PREFS_ROUTE_TO_PUSH = "routeToPushNotifications";
 
     public static final String RECEIVED_FROM_OUTSIDE = "receivedFromOutside";
     public static final String FROM_MODULE = "fromModule";
@@ -319,4 +306,8 @@ public class Const {
     public static final String ACTION_MEDIA_UPLOAD_FAIL = "com.instructure.action.NOTORIOUS_UPLOAD_ERROR";
     public static final String ERROR = "UPLOAD_ERROR";
     public static final String IS_SUBMISSION = "isSubmission";
+
+    // Language intent strings used for checking the incoming pending intent for a push notification
+    public static final String LANGUAGES_PENDING_INTENT_KEY = "languagesPendingIntentKey";
+    public static final int LANGUAGES_PENDING_INTENT_ID = 654321;
 }

@@ -79,8 +79,8 @@ class CreateOrEditPagePresenter(private val mCanvasContext: CanvasContext,
 
     fun deletePage(pageUrl: String) {
         PageManager.deletePage(mCanvasContext, pageUrl, object: StatusCallback<Page>(){
-            override fun onResponse(response: Response<Page>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-                if(response?.code() in 200..299) {
+            override fun onResponse(response: Response<Page>, linkHeaders: LinkHeaders, type: ApiType) {
+                if(response.code() in 200..299) {
                     PageDeletedEvent(page, (PageDetailsFragment::class.java.toString() + ".onResume()")).post()
                     viewCallback?.pageDeletedSuccessfully()
                 }

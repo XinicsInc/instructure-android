@@ -17,7 +17,7 @@
 package com.instructure.teacher.ui.pages
 
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.*
+import com.instructure.teacher.ui.utils.OnViewWithId
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
 

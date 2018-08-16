@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.models;
 
 import android.content.Context;
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 import com.instructure.canvasapi2.R;
@@ -282,10 +283,12 @@ public class StreamItem extends CanvasModel<StreamItem> {
         return submission_comments;
     }
 
+    @Nullable
     public CanvasContext getCanvasContext() {
         return canvasContext;
     }
 
+    @Nullable
     public Assignment getAssignment() {
         return assignment;
     }

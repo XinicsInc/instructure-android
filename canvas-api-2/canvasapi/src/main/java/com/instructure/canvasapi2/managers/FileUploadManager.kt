@@ -106,6 +106,12 @@ class SubmissionUploadContext @JvmOverloads constructor(
         override val getUploadContext: String = "courses/$courseId/assignments/$assignmentId/submissions/self"
 ) : UploadContextProvider
 
+class SubmissionCommentUploadContext @JvmOverloads constructor(
+        val courseId: Long,
+        val assignmentId: Long,
+        override val getUploadContext: String = "courses/$courseId/assignments/$assignmentId/submissions/self/comments"
+) : UploadContextProvider
+
 class CourseUploadContext @JvmOverloads constructor(
         val courseId: Long,
         override val getUploadContext: String = "courses/$courseId"

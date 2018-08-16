@@ -17,47 +17,138 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="12dp"
-    android:clipChildren="false"
-    android:clipToPadding="false">
+    android:background="@color/canvasBackgroundWhite"
+    android:minWidth="320dp"
+    android:orientation="vertical">
 
-    <android.support.design.widget.TextInputLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?android:attr/actionBarSize"
+        app:navigationIcon="@drawable/vd_close_gray"
+        app:title="Act As User"/>
 
-        <EditText
-            android:id="@+id/userId"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/login_dividerColor"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/masqueradingUserId"
-            android:inputType="number" />
+            android:layout_gravity="center_horizontal"
+            android:clipToPadding="false"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="24dp">
 
-    </android.support.design.widget.TextInputLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="146dp"
+                android:clipToPadding="false"
+                android:importantForAccessibility="noHideDescendants"
+                android:paddingTop="8dp">
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/vd_masquerade_panda_white"/>
 
-        <EditText
-            android:id="@+id/domain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/masqueradingUserDomain"
-            android:inputType="textEmailAddress" />
+                <ImageView
+                    android:id="@+id/redPanda"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:importantForAccessibility="no"
+                    android:rotation="-24"
+                    android:src="@drawable/vd_masquerade_panda_red"
+                    android:transformPivotX="0dp"
+                    android:transformPivotY="250dp"
+                    android:translationY="30dp"/>
 
-    </android.support.design.widget.TextInputLayout>
+            </FrameLayout>
 
-    <Button
-        android:id="@+id/stopMasqueradingButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/masqueradingStop"
-        android:visibility="gone"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="@string/masqueradeInfo"
+                android:textColor="@color/login_darkText"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/domainLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:hintEnabled="false">
+
+                <EditText
+                    android:id="@+id/domainInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/masquerade_input_background"
+                    android:hint="@string/domain"
+                    android:inputType="textEmailAddress"
+                    android:padding="16dp"
+                    android:textColorHint="@color/login_grayText"
+                    android:textSize="16sp"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/userIdLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:hintEnabled="false">
+
+                <EditText
+                    android:id="@+id/userIdInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/masquerade_input_background"
+                    android:ems="10"
+                    android:hint="@string/userId"
+                    android:inputType="number"
+                    android:padding="16dp"
+                    android:textColorHint="@color/login_grayText"
+                    android:textSize="16sp"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginEnd="-4dp"
+                android:layout_marginStart="-4dp"
+                android:layout_marginTop="6dp"
+                android:backgroundTint="@color/canvas_default_accent"
+                android:text="@string/actAsUser"
+                android:textAllCaps="false"
+                android:textColor="@color/white"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="6dp"
+                android:padding="16dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

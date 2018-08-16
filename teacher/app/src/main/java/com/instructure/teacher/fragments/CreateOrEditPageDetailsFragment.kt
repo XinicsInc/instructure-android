@@ -30,12 +30,12 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.parcelCopy
+import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
-import com.instructure.teacher.dialog.UnsavedChangesExitDialog
 import com.instructure.teacher.factory.CreateOrEditPagePresenterFactory
-import com.instructure.teacher.interfaces.Identity
+import com.instructure.interactions.Identity
 import com.instructure.teacher.presenters.CreateOrEditPagePresenter
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.CreateOrEditPageView

@@ -27,7 +27,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.R
 import java.io.File
 
-
 /** Whether or not this Uri is exposed */
 fun Uri.isExposed() = "file" == scheme && !path.startsWith("/system/")
 

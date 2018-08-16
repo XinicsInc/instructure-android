@@ -23,13 +23,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -49,17 +53,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.activity.InternalWebViewActivity;
-import com.instructure.candroid.delegate.Navigation;
-import com.instructure.candroid.util.ApplicationManager;
+import com.instructure.candroid.activity.StudentSubmissionActivity;
+import com.instructure.candroid.util.AppManager;
 import com.instructure.candroid.util.DownloadMedia;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.RouterUtils;
+import com.instructure.candroid.view.AttachmentLayout;
+import com.instructure.candroid.view.AttachmentView;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.AssignmentManager;
 import com.instructure.canvasapi2.managers.NotoriousManager;
@@ -69,9 +76,11 @@ import com.instructure.canvasapi2.models.Attachment;
 import com.instructure.canvasapi2.models.Author;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.DiscussionTopic;
+import com.instructure.canvasapi2.models.GradeableStudentSubmission;
 import com.instructure.canvasapi2.models.LTITool;
 import com.instructure.canvasapi2.models.MediaComment;
 import com.instructure.canvasapi2.models.NotoriousConfig;
+import com.instructure.canvasapi2.models.StudentAssignee;
 import com.instructure.canvasapi2.models.Submission;
 import com.instructure.canvasapi2.models.SubmissionComment;
 import com.instructure.canvasapi2.utils.APIHelper;
@@ -80,12 +89,31 @@ import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.utils.FileUtils;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.canvasapi2.utils.pageview.BeforePageView;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery;
+import com.instructure.interactions.FragmentInteractions;
+import com.instructure.interactions.Navigation;
 import com.instructure.pandautils.activities.NotoriousMediaUploadPicker;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.dialogs.UploadFilesDialog;
+import com.instructure.pandautils.models.FileSubmitObject;
+import com.instructure.pandautils.services.FileUploadService;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.FileUploadEvent;
+import com.instructure.pandautils.utils.FileUploadNotification;
+import com.instructure.pandautils.utils.FragmentExtensionsKt;
+import com.instructure.pandautils.utils.PandaViewUtils;
 import com.instructure.pandautils.utils.PermissionUtils;
 import com.instructure.pandautils.utils.ProfileUtils;
 import com.instructure.pandautils.utils.RequestCodes;
+import com.instructure.pandautils.utils.Utils;
+import com.instructure.pandautils.utils.ViewStyler;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -95,22 +123,29 @@ import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function2;
 import retrofit2.Call;
+import retrofit2.Response;
 
-
+@PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
 public class SubmissionDetailsFragment extends ParentFragment {
+
     public interface SubmissionDetailsFragmentCallback {
         void updateSubmissionDate(Date date);
     }
 
-    // instance variables go here, grouped logically
-    //Views
+    private Toolbar toolbar;
+
     private Button addSubmission;
     private Button submitComment;
     private Button mediaComment;
     private Button addComment;
+    private ProgressBar sendingProgressBar;
     private ListView listView;
     private ImageView addSubmissionInfo;
+    private AttachmentLayout attachmentLayout;
 
     private SubmissionAdapter adapter;
     private boolean hasSubmissions;
@@ -119,6 +154,13 @@ public class SubmissionDetailsFragment extends ParentFragment {
     private Assignment assignment;
     private Course course;
     private int lastPosition = -1;
+    private ArrayList<FileSubmitObject> attachmentsList = new ArrayList<>();
+    private ArrayList<Long> attachmentIds = new ArrayList<>();
+    private ArrayList<Attachment> attachments = new ArrayList<>();
+
+    private BroadcastReceiver errorBroadcastReceiver;
+    private BroadcastReceiver allUploadsCompleteBroadcastReceiver;
+    private boolean needsUnregister;
 
     //submission type booleans
     private boolean isOnlineTextAllowed;
@@ -140,7 +182,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
     private String currentFileName;
     private String currentDisplayName;
     private String currentMessage;
-    private ApplicationManager am;
+    private AppManager am;
     private LayoutInflater inflater;
     //view that contains the comment text box and submit button. Global here so we can
     //make it GONE when the user is a teacher.
@@ -163,6 +205,16 @@ public class SubmissionDetailsFragment extends ParentFragment {
     private StatusCallback<Assignment> canvasCallbackAssignment;
     private StatusCallback<NotoriousConfig> notoriousConfigCallback;
 
+    @PageViewUrlParam(name = "assignmentId")
+    private long getAssignmentId() {
+        return assignment.getId();
+    }
+
+    @PageViewUrlQuery(name = "module_item_id")
+    private Long getModuleItemId() {
+        return FragmentExtensionsKt.getModuleItemId(this);
+    }
+
     private BroadcastReceiver submissionCommentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -175,16 +227,14 @@ public class SubmissionDetailsFragment extends ParentFragment {
     };
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.DETAIL; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.DETAIL; }
 
     @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.assignmentTabSubmission);
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Interface Methods
-    ///////////////////////////////////////////////////////////////////////////
 
     public void setSubmissionDetailsFragmentCallback(SubmissionDetailsFragmentCallback submissionDetailsFragmentCallback) {
         this.submissionDetailsFragmentCallback = submissionDetailsFragmentCallback;
@@ -195,8 +245,9 @@ public class SubmissionDetailsFragment extends ParentFragment {
     }
 
     /**
-     * For explanation of isWithinAnotherCallback and isCached refer to comment in {@link com.instructure.candroid.activity.CallbackActivity#getUserSelf}
+     * For explanation of isWithinAnotherCallback and isCached refer to comment in {@link com.instructure.candroid.activity.CallbackActivity#}
      */
+    @BeforePageView
     public void setAssignment(Assignment assignment, boolean isWithinAnotherCallback, boolean isCached) {
         this.assignment = assignment;
         populateViews(assignment, isWithinAnotherCallback, isCached);
@@ -206,10 +257,6 @@ public class SubmissionDetailsFragment extends ParentFragment {
         return R.string.assignmentTabSubmission;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // LifeCycle
-    ///////////////////////////////////////////////////////////////////////////
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,33 +264,42 @@ public class SubmissionDetailsFragment extends ParentFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+    public void onStart() {
+        super.onStart();
+        registerReceivers();
+        EventBus.getDefault().register(this);
+    }
 
-        View rootView = getLayoutInflater().inflate(R.layout.submission_details_fragment, container, false);
+    @Override
+    public void onStop() {
+        super.onStop();
+        unregisterReceivers();
+        EventBus.getDefault().unregister(this);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = getLayoutInflater().inflate(R.layout.fragment_submission_details, container, false);
         setupViews(rootView);
-
         return rootView;
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void applyTheme() {
+        setupToolbarMenu(toolbar);
+        PandaViewUtils.setupToolbarBackButton(toolbar, this);
+        ViewStyler.themeToolbar(getActivity(), toolbar, getCanvasContext());
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(submissionCommentReceiver,
-                new IntentFilter(Const.SUBMISSION_COMMENT_SUBMITTED));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(submissionCommentReceiver);
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onFileEvent(final FileUploadEvent event) {
+        event.get(new Function1<FileUploadNotification, Unit>() {
+            @Override
+            public Unit invoke(FileUploadNotification fileUploadNotification) {
+                if(assignment != null) loadData(assignment.getId(), false, false);
+                return null;
+            }
+        });
     }
 
     @Override
@@ -267,7 +323,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
         myUserId = ApiPrefs.getUser().getId();
 
-        am = ((ApplicationManager)getActivity().getApplication());
+        am = ((AppManager)getActivity().getApplication());
 
         setupListeners();
         hasGrade = false;
@@ -291,14 +347,14 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        currentMimeType         =   (String)v.findViewById(R.id.mime).getTag();
-        currentURL              =   (String)v.findViewById(R.id.url).getTag();
-        currentFileName         =   (String)v.findViewById(R.id.file).getTag();
-        currentDisplayName      =   (String)v.findViewById(R.id.display).getTag();
+        currentMimeType = (String) v.findViewById(R.id.mime).getTag();
+        currentURL = (String) v.findViewById(R.id.url).getTag();
+        currentFileName = (String) v.findViewById(R.id.file).getTag();
+        currentDisplayName = (String) v.findViewById(R.id.display).getTag();
 
         menu.add(getResources().getString(R.string.open));
 
-        if(ApplicationManager.isDownloadManagerAvailable(getActivity()) && currentFileName != null && currentDisplayName != null)
+        if(AppManager.isDownloadManagerAvailable(getActivity()) && currentFileName != null && currentDisplayName != null)
             menu.add(getResources().getString(R.string.download));
     }
 
@@ -323,36 +379,44 @@ public class SubmissionDetailsFragment extends ParentFragment {
         DownloadMedia.downloadMedia(getActivity(),currentURL, currentFileName, currentDisplayName);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // View
-    ///////////////////////////////////////////////////////////////////////////
-
     private void setupViews(View rootView) {
+        toolbar = rootView.findViewById(R.id.toolbar);
+
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         //set up top header (top cell)
-        headerView = (View)getLayoutInflater(null).inflate(R.layout.submission_details_header, null);
+        headerView = inflater.inflate(R.layout.submission_details_header, null);
         //buttons, make them gone initially because we don't show them if they're a teacher
-        addSubmission = (Button)headerView.findViewById(R.id.addSubmission);
-        addSubmissionInfo = (ImageView)headerView.findViewById(R.id.addSubmissionInfo);
+        addSubmission = headerView.findViewById(R.id.addSubmission);
+        addSubmissionInfo = headerView.findViewById(R.id.addSubmissionInfo);
         addSubmissionInfo.setVisibility(View.GONE);
         addSubmission.setVisibility(View.GONE);
 
-        addComment = (Button)headerView.findViewById(R.id.addComment);
+        addComment = headerView.findViewById(R.id.addComment);
         addComment.setVisibility(View.GONE);
 
         //listviews
-        listView = (ListView)rootView.findViewById(R.id.submissionsList);
+        listView = rootView.findViewById(R.id.submissionsList);
 
         //compose header view
-        composeHeaderView = getLayoutInflater(null).inflate(R.layout.submission_details_compose_view, null);
+        composeHeaderView = inflater.inflate(R.layout.submission_details_compose_view, null);
         composeHeaderView.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.MATCH_PARENT));
-        submitComment = (Button)composeHeaderView.findViewById(R.id.composeButton);
-        mediaComment = (Button)composeHeaderView.findViewById(R.id.mediaComment);
-        //editTexts 
-        message = (EditText)composeHeaderView.findViewById(R.id.composeMessage);
+        composeHeaderView.findViewById(R.id.composeButton).setBackground(ColorKeeper.getColoredDrawable(getContext(), R.drawable.vd_send, Color.GRAY));
+        submitComment = composeHeaderView.findViewById(R.id.composeButton);
+        sendingProgressBar = composeHeaderView.findViewById(R.id.sendingProgressBar);
+        mediaComment = composeHeaderView.findViewById(R.id.mediaComment);
+        attachmentLayout = composeHeaderView.findViewById(R.id.attachmentLayout);
+        //editTexts
+        message = composeHeaderView.findViewById(R.id.composeMessage);
 
         composeHeaderView.setVisibility(View.GONE);
         //add the top header (turn in button, label, and divider)
         listView.addHeaderView(headerView, null, false);
+
+        ViewStyler.themeButton(addSubmission);
+        ViewStyler.themeButton(submitComment);
+        ViewStyler.themeButton(mediaComment);
+        ViewStyler.themeButton(addComment);
     }
 
     private void populateAssignmentDetails(Assignment assignment, Course course) {
@@ -365,6 +429,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
             if(assignment.getLockAt() != null && currentDate.after(assignment.getLockAt())){
                 addSubmission.setEnabled(false);
                 addSubmission.setText(getString(R.string.pastDueDate));
+                ViewStyler.themeButton(addSubmission, Color.LTGRAY, Color.BLACK);
             } else if (assignment.getDiscussionTopicHeader() != null && assignment.getDiscussionTopicHeader().getId() > 0 && assignment.getCourseId() > 0) { //Allow the user to go to the discussion.
                 addSubmission.setText(getString(R.string.goToDiscussion));
             }
@@ -385,7 +450,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
 
     /**
-     * For explanation of isWithinAnotherCallback and isCached refer to comment in {@link com.instructure.candroid.activity.CallbackActivity#getUserSelf}
+     * For explanation of isWithinAnotherCallback and isCached refer to comment in {@link com.instructure.candroid.activity.CallbackActivity#}
      */
     private void populateViews(Assignment assignment, boolean isWithinAnotherCallback, boolean isCached) {
         if (assignment == null) return;
@@ -398,14 +463,8 @@ public class SubmissionDetailsFragment extends ParentFragment {
         checkSubmissionTypes(assignment);
     }
 
-
-
-    /////////////////////////////////////////////////////////////////////////// 
-    // Helper functions 
-    ///////////////////////////////////////////////////////////////////////////
-
     /**
-     * For explanation of isWithinAnotherCallback and isCached refer to comment in {@link com.instructure.candroid.activity.CallbackActivity#getUserSelf}
+     * For explanation of isWithinAnotherCallback and isCached refer to comment in {@link com.instructure.candroid.activity.CallbackActivity}
      */
     public void loadData(long assignmentId, boolean isWithinAnotherCallback, boolean isCached) {
         SubmissionManager.getSingleSubmission(course.getId(), assignmentId, myUserId, canvasCallbackSubmission, true);
@@ -423,6 +482,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
             } else if(submissionType == Assignment.SUBMISSION_TYPE.ON_PAPER) {
                 isPaper = true;
                 addSubmission.setEnabled(false);
+                ViewStyler.themeButton(addSubmission, Color.LTGRAY, Color.BLACK);
                 addSubmission.setText(getString(R.string.turnIn));
                 addSubmissionInfo.setVisibility(View.VISIBLE);
                 addSubmissionInfo.setOnClickListener(new OnClickListener() {
@@ -434,6 +494,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
             } else if(submissionType == Assignment.SUBMISSION_TYPE.NONE) {
                 isNoSubmission = true;
                 addSubmission.setEnabled(false);
+                ViewStyler.themeButton(addSubmission, Color.LTGRAY, Color.BLACK);
                 addSubmission.setText(getString(R.string.noSubRequired));
             } else if(submissionType == Assignment.SUBMISSION_TYPE.MEDIA_RECORDING){
                 isMediaRecording = true;
@@ -455,6 +516,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
         if(!isOnlineTextAllowed && !isUrlEntryAllowed && !isFileEntryAllowed &&
                 !isPaper && !isNoSubmission && !isDiscussion && !isQuiz && !isExternalTool && !isMediaRecording) {
             addSubmission.setEnabled(false);
+            ViewStyler.themeButton(addSubmission, Color.LTGRAY, Color.BLACK);
             addSubmission.setText(getString(R.string.noTurnInOnMobile));
         }
     }
@@ -524,8 +586,48 @@ public class SubmissionDetailsFragment extends ParentFragment {
             mediaComment.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = NotoriousMediaUploadPicker.createIntentForSubmissionComment(getContext(), assignment);
-                    assignmentFragment.get().startActivityForResult(intent, RequestCodes.NOTORIOUS_REQUEST);
+                    ListView listView = new ListView(getActivity());
+                    AttachmentAdapter adapter = new AttachmentAdapter(getActivity(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.discussion_attachments));
+                    listView.setAdapter(adapter);
+                    listView.setDivider(null);
+                    listView.setPadding(
+                            (int) Utils.dpToPx(getActivity(), 10),
+                            (int) Utils.dpToPx(getActivity(), 10),
+                            (int) Utils.dpToPx(getActivity(), 10),
+                            (int) Utils.dpToPx(getActivity(), 16));
+
+                    final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                            .setTitle(R.string.commentUpload)
+                            .setView(listView)
+                            .create();
+
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            switch(position){
+                                case 0:
+                                    // Use File Upload Dialog
+                                    showUploadFileDialog();
+                                    dialog.dismiss();
+                                    break;
+                                case 1:
+                                    if (message.getText().toString().trim().length() != 0 || attachmentIds.size() > 0) {
+                                        Toast.makeText(getContext(), R.string.unableToUploadMediaComment, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // Use Notorious
+                                        Intent intent = NotoriousMediaUploadPicker.createIntentForSubmissionComment(getContext(), assignment);
+                                        assignmentFragment.get().startActivityForResult(intent, RequestCodes.NOTORIOUS_REQUEST);
+                                        dialog.dismiss();
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+
+                    dialog.show();
+
                 }
             });
         }
@@ -566,7 +668,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
                             if(submission.getAttachments().size() == 1) {
                                 //makes more sense to open the file since they should already have it on their device
                                 if(submission.getAttachments().get(0).getContentType().contains("pdf")) {
-                                    openMedia(true, submission.getAttachments().get(0).getContentType(), submission.getAttachments().get(0).getUrl(), submission.getAttachments().get(0).getFilename());
+                                    startActivity(StudentSubmissionActivity.createIntent(getActivity(), course, assignment, new GradeableStudentSubmission(new StudentAssignee(ApiPrefs.getUser(), ApiPrefs.getUser().getId(), ApiPrefs.getUser().getName()), null, false)));
                                 } else {
                                     openMedia(submission.getAttachments().get(0).getContentType(), submission.getAttachments().get(0).getUrl(), submission.getAttachments().get(0).getFilename());
                                 }
@@ -584,21 +686,21 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
                             Navigation navigation = getNavigation();
                             if(navigation != null){
-                                Bundle bundle = InternalWebviewFragment.createBundleHTML(getCanvasContext(), submission.getBody());
-                                navigation.addFragment(
-                                        FragUtils.getFrag(InternalWebviewFragment.class, bundle));
+                                Bundle bundle = InternalWebviewFragment.Companion.createBundleHTML(getCanvasContext(), submission.getBody());
+                                navigation.addFragment(FragUtils.getFrag(InternalWebviewFragment.class, bundle));
                             }
                         }
                         else if(submission.getSubmissionType().equals("online_url")) {
-                            if(submission.getAttachments() != null && submission.getAttachments().size() > 0) {
-                                Navigation navigation = getNavigation();
-                                if(navigation != null){
-                                    Bundle bundle = SubmissionViewOnlineURLFragment.createBundle(getCanvasContext(), submission);
-                                    navigation.addFragment(
-                                            FragUtils.getFrag(SubmissionViewOnlineURLFragment.class, bundle));
-                                }
+                            // Take the user to viewing the online url submission. If the image hasn't processed yet they'll see a toast and it
+                            // will match what the web does - show the url and say it might be different from when they submitted.
+                            Navigation navigation = getNavigation();
+                            if(navigation != null){
+                                Bundle bundle = SubmissionViewOnlineURLFragment.createBundle(getCanvasContext(), submission);
+                                navigation.addFragment(
+                                        FragUtils.getFrag(SubmissionViewOnlineURLFragment.class, bundle));
                             }
-                            else {
+
+                            if(submission.getAttachments().size() == 0) {
                                 //the server hasn't processed the image for the submitted url yet, show a crouton and reload
                                 showToast(R.string.itemStillProcessing);
                                 loadData(assignment.getId(), false, false);
@@ -629,9 +731,106 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
     }
 
+    private void showUploadFileDialog(){
+        // We don't want to remember what was previously there
+        attachmentsList.clear();
+        Bundle bundle = UploadFilesDialog.createSubmissionCommentBundle(course, assignment, attachmentsList);
+        UploadFilesDialog.show(getFragmentManager(), bundle, new Function1<Integer, Unit>() {
+            @Override
+            public Unit invoke(Integer integer) {
+                return null;
+            }
+        });
+    }
+
+
+    private void registerReceivers() {
+        errorBroadcastReceiver = getErrorReceiver();
+        allUploadsCompleteBroadcastReceiver = getAllUploadsCompleted();
+
+        getActivity().registerReceiver(errorBroadcastReceiver, new IntentFilter(FileUploadService.UPLOAD_ERROR));
+        getActivity().registerReceiver(allUploadsCompleteBroadcastReceiver, new IntentFilter(FileUploadService.ALL_UPLOADS_COMPLETED));
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(submissionCommentReceiver,
+                new IntentFilter(Const.SUBMISSION_COMMENT_SUBMITTED));
+        needsUnregister = true;
+    }
+
+    private void unregisterReceivers() {
+        if(getActivity() == null || !needsUnregister){return;}
+
+        if(errorBroadcastReceiver != null){
+            getActivity().unregisterReceiver(errorBroadcastReceiver);
+            errorBroadcastReceiver = null;
+        }
+
+        if(allUploadsCompleteBroadcastReceiver != null){
+            getActivity().unregisterReceiver(allUploadsCompleteBroadcastReceiver);
+            allUploadsCompleteBroadcastReceiver = null;
+        }
+
+        if(submissionCommentReceiver != null) {
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(submissionCommentReceiver);
+        }
+
+        needsUnregister = false;
+    }
+
+    private BroadcastReceiver getErrorReceiver() {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(final Context context, final Intent intent) {
+                if(!isAdded()){return;}
+
+                final Bundle bundle = intent.getExtras();
+                String errorMessage = bundle.getString(Const.MESSAGE);
+                if(null == errorMessage || "".equals(errorMessage)){
+                    errorMessage = getString(R.string.errorUploadingFile);
+                }
+                showToast(errorMessage);
+            }
+        };
+    }
+
+    // Creates new discussion reply with attachments for the user
+    private BroadcastReceiver getAllUploadsCompleted() {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(final Context context, final Intent intent) {
+                if(!isAdded()){return;}
+                showToast(R.string.filesUploadedSuccessfully);
+                if(intent != null && intent.hasExtra(Const.ATTACHMENTS)) {
+                    ArrayList<Attachment> intentAttachments = intent.getExtras().getParcelableArrayList(Const.ATTACHMENTS);
+                    if (intentAttachments != null && intentAttachments.size() > 0) {
+                        for (int i = 0; i < intentAttachments.size(); i++) {
+                            Attachment attachment = intentAttachments.get(i);
+                            attachments.add(attachment);
+                            attachmentIds.add(attachment.getId());
+                        }
+
+                        refreshAttachments();
+                    }
+                }
+            }
+        };
+    }
+
+    private void refreshAttachments() {
+        attachmentLayout.setPendingAttachments(attachments, true, new Function2<AttachmentView.AttachmentAction, Attachment, Unit>() {
+            @Override
+            public Unit invoke(AttachmentView.AttachmentAction action, Attachment attachment) {
+                if (action == AttachmentView.AttachmentAction.REMOVE) {
+                    attachments.remove(attachment);
+                    attachmentIds.remove(attachment.getId());
+                }
+                return null;
+            }
+        });
+
+    }
+
     public static String getQuizURL(Context context, long courseid, long quizId) {
         //https://mobiledev.instructure.com/api/v1/courses/24219/quizzes/1129998/
-        ApplicationManager AM = (ApplicationManager) context.getApplicationContext();
+        AppManager AM = (AppManager) context.getApplicationContext();
         return ApiPrefs.getProtocol() + "://" + ApiPrefs.getDomain() + "/courses/" + courseid + "/quizzes/" + quizId;
     }
 
@@ -684,10 +883,10 @@ public class SubmissionDetailsFragment extends ParentFragment {
         } else {
             currentMessage = message.getText().toString();
 
-            //disable the comment button so the user can't submit the same comment multiple times.
-            //It gets enabled after the api call is made
-            submitComment.setEnabled(false);
-            SubmissionManager.postSubmissionComment(course.getId(), assignmentId, ApiPrefs.getUser().getId(), currentMessage, false, canvasCallbackMessage);
+            // Show a progress bar while the message sends
+            submitComment.setVisibility(View.GONE);
+            sendingProgressBar.setVisibility(View.VISIBLE);
+            SubmissionManager.postSubmissionComment(course.getId(), assignmentId, ApiPrefs.getUser().getId(), currentMessage, false, attachmentIds, canvasCallbackMessage);
         }
     }
 
@@ -757,7 +956,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
         //Set the image to be the media_comment icon
         final ImageView image = (ImageView)extraVisibility.findViewById(R.id.image);
-        image.setImageResource(R.drawable.content_new);
+        image.setImageDrawable(ColorKeeper.getColoredDrawable(getContext(), R.drawable.vd_add, Color.GRAY));
 
         extraVisibility.setOnClickListener(new OnClickListener() {
 
@@ -766,7 +965,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
                 if (content.getText().toString().equals(getResources().getString(R.string.showExtras))) {
                     content.setText(getResources().getString(R.string.hideExtras));
 
-                    image.setImageResource(R.drawable.content_hide);
+                    image.setImageDrawable(ColorKeeper.getColoredDrawable(getContext(), R.drawable.vd_minus, Color.GRAY));
 
                     for (int i = 1; i < extras.getChildCount(); i++) {
                         extras.getChildAt(i).setVisibility(View.VISIBLE);
@@ -774,7 +973,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
                 } else {
                     content.setText(getResources().getString(R.string.showExtras));
 
-                    image.setImageResource(R.drawable.content_new);
+                    image.setImageDrawable(ColorKeeper.getColoredDrawable(getContext(), R.drawable.vd_add, Color.GRAY));
 
                     for (int i = 1; i < extras.getChildCount(); i++) {
                         extras.getChildAt(i).setVisibility(View.GONE);
@@ -797,7 +996,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
         RelativeLayout extra = (RelativeLayout)(inflater.inflate(R.layout.detailed_conversation_extras, null));
 
         //the text should be the display name
-        TextView content = (TextView) extra.findViewById(R.id.content);
+        TextView content = extra.findViewById(R.id.content);
         String displayName = mediaComment.getDisplayName();
         if (displayName == null || "null".equals(displayName)) {
             displayName = mediaComment.get_fileName();
@@ -811,11 +1010,11 @@ public class SubmissionDetailsFragment extends ParentFragment {
         content.setTextColor(getResources().getColor(R.color.real_blue));
 
         //Set the image to be the media_comment icon
-        ImageView image = (ImageView)extra.findViewById(R.id.image);
+        ImageView image = extra.findViewById(R.id.image);
         if(mediaComment.getMediaType() == MediaComment.MediaType.VIDEO) {
-            image.setImageResource(R.drawable.ic_cv_video2_light);
+            image.setImageDrawable(ColorKeeper.getColoredDrawable(getContext(), R.drawable.vd_media, getResources().getColor(R.color.defaultTextGray)));
         } else {
-            image.setImageResource(R.drawable.conversation_media_comment);
+            image.setImageDrawable(ColorKeeper.getColoredDrawable(getContext(), R.drawable.vd_audio, getResources().getColor(R.color.defaultTextGray)));
         }
 
         //Add a divider
@@ -870,7 +1069,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
             //Set the image to be the conversation_attachment icon
             ImageView image = (ImageView)extra.findViewById(R.id.image);
-            image.setImageResource(R.drawable.conversation_attachment);
+            image.setImageResource(R.drawable.vd_attachment);
 
             //Set hidden mimetype url display name. filename. id
             extra.findViewById(R.id.mime).setTag(atts.get(i).getDisplayName());
@@ -980,6 +1179,26 @@ public class SubmissionDetailsFragment extends ParentFragment {
     // Adapter
     ///////////////////////////////////////////////////////////////////////////
 
+    public class AttachmentAdapter extends ArrayAdapter<String> {
+
+        public AttachmentAdapter(@NonNull Context context, int resource, @NonNull String[] objects) {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView textView = (TextView) super.getView(position, convertView, parent);
+
+            if (position == 1 && (message.getText().toString().trim().length() != 0 || attachmentIds.size() > 0)) {
+                // We want to gray it out if there is a comment already started because it will submit the media comment without text comments and attachments
+                textView.setTextColor(getResources().getColor(R.color.defaultTextGray));
+            } else {
+                textView.setTextColor(getResources().getColor(R.color.defaultTextDark));
+            }
+            return textView;
+        }
+    }
+
     public class SubmissionFileAdapter extends ArrayAdapter<Attachment>{
 
         private Context context;
@@ -1002,14 +1221,14 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
                 holder = new AttachmentHolder();
                 row = inflater.inflate(R.layout.listview_item_row_attachedfiles, parent, false);
-                holder.title = (TextView)row.findViewById(R.id.fileName);
-                holder.trashCan = (Button)row.findViewById(R.id.removeFile);
-                holder.icon = (ImageView)row.findViewById(R.id.fileIcon);
+                holder.title = row.findViewById(R.id.fileName);
+                holder.trashCan = row.findViewById(R.id.removeFile);
+                holder.icon = row.findViewById(R.id.fileIcon);
                 row.setTag(holder);
             } else {
                 holder = (AttachmentHolder)row.getTag();
             }
-            holder.icon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_document, course));
+            holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_document, course));
 
             Attachment attachment = attachmentList.get(position);
             if(attachment != null) {
@@ -1103,7 +1322,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
             Submission submission = subList.get(position);
             if(submission != null) {
-                int color = CanvasContextColor.getCachedColor(context, course);
+                int color = ColorKeeper.getOrGenerateColor(course);
                 int drawable = 0;
                 //submission history view
                 if(getItemViewType(position) == 0) {
@@ -1118,31 +1337,31 @@ public class SubmissionDetailsFragment extends ParentFragment {
                         String subType = submission.getSubmissionType();
                         if(subType.equals("online_text_entry")) {
                             holder.message.setText(context.getString(R.string.subTypeOnlineText));
-                            drawable = R.drawable.ic_cv_textsubmission;
+                            drawable = R.drawable.vd_text_submission;
                         }
                         else if(subType.equals("online_url")) {
                             holder.message.setText(context.getString(R.string.subTypeOnlineURL));
-                            drawable = R.drawable.ic_cv_link;
+                            drawable = R.drawable.vd_link;
                         }
                         else if(subType.equals("online_upload")) {
                             holder.message.setText(context.getString(R.string.subTypeFileUpload));
-                            drawable = R.drawable.ic_cv_document;
+                            drawable = R.drawable.vd_document;
                         }
                         else if(subType.equals("media_recording")) {
                             holder.message.setText(context.getString(R.string.subTypeMediaRecording));
-                            drawable = R.drawable.ic_cv_media;
+                            drawable = R.drawable.vd_attach_media;
                         }
                         else if(subType.equals("online_quiz")) {
                             holder.message.setText(context.getString(R.string.subTypeOnlineQuiz));
-                            drawable = R.drawable.ic_cv_quizzes;
+                            drawable = R.drawable.vd_quiz;
                         }
                         else if(subType.equals("basic_lti_launch")) {
                             holder.message.setText(context.getString(R.string.sub_type_lti_launch));
-                            drawable = R.drawable.ic_cv_tools_fill;
+                            drawable = R.drawable.vd_lti;
                         }
 
                         if(drawable != 0) {
-                            Drawable d = CanvasContextColor.getColoredDrawable(context, drawable, color);
+                            Drawable d = ColorKeeper.getColoredDrawable(context, drawable, color);
                             holder.image.setImageDrawable(d);
                         }
 
@@ -1171,11 +1390,11 @@ public class SubmissionDetailsFragment extends ParentFragment {
                     holder.date.setText("");
                     holder.message.setText("");
 
-                    ProfileUtils.configureAvatarView(context, submission.getSubmissionComments().get(0).getAuthor().getDisplayName(), submission.getSubmissionComments().get(0).getAuthor().getAvatarImageUrl(), (CircleImageView) holder.image, false);
+                    ProfileUtils.loadAvatarForUser((CircleImageView) holder.image, submission.getSubmissionComments().get(0).getAuthor());
 
                     //if it's the current user, color the bubble the course color
                     if(getItemViewType(position) == 2) {
-                        holder.chatBubble.setBackgroundDrawable(CanvasContextColor.getColoredDrawable(context, R.drawable.chat_transparent_right, color));
+                        holder.chatBubble.setBackground(ColorKeeper.getColoredDrawable(context, R.drawable.chat_transparent_right, color));
                     }
 
                     populateMessage(submission.getSubmissionComments().get(0), submission.getSubmissionComments().get(0).getAuthor(), holder.extras, holder.title, holder.image, holder.date, holder.message);
@@ -1218,7 +1437,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
         notoriousConfigCallback = new StatusCallback<NotoriousConfig>() {
             @Override
-            public void onResponse(retrofit2.Response<NotoriousConfig> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<NotoriousConfig> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (!apiCheck()) {
                     return;
                 }
@@ -1233,7 +1452,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
         // We don't want to display unnecessary croutons.
         canvasCallbackSubmission = new StatusCallback<Submission>() {
             @Override
-            public void onResponse(retrofit2.Response<Submission> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Submission> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (!apiCheck()) {
                     return;
                 }
@@ -1246,7 +1465,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
         canvasCallbackMessage = new StatusCallback<Submission>() {
 
             @Override
-            public void onResponse(retrofit2.Response<Submission> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Submission> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (!apiCheck()) {
                     return;
                 }
@@ -1274,20 +1493,33 @@ public class SubmissionDetailsFragment extends ParentFragment {
                 imm.hideSoftInputFromWindow(message.getWindowToken(), 0);
 
                 // Enable the send message button again
-                submitComment.setEnabled(true);
+                submitComment.setVisibility(View.VISIBLE);
+                sendingProgressBar.setVisibility(View.GONE);
+
+                // Clear the attachments list
+                attachmentsList.clear();
+                attachmentIds.clear();
+                attachments.clear();
+                refreshAttachments();
             }
 
             @Override
-            public void onFail(Call<Submission> callResponse, Throwable error, retrofit2.Response response) {
+            public void onFail(@Nullable Call<Submission> call, @NonNull Throwable error, @Nullable Response response) {
                 // Enable the send message button again if there was an Error
-                submitComment.setEnabled(true);
+                submitComment.setVisibility(View.VISIBLE);
+                sendingProgressBar.setVisibility(View.GONE);
+                // Clear the attachments list
+                attachmentsList.clear();
+                attachmentIds.clear();
+                attachments.clear();
+                refreshAttachments();
             }
         };
 
 
         canvasCallbackLTITool = new StatusCallback<LTITool>() {
             @Override
-            public void onResponse(retrofit2.Response<LTITool> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<LTITool> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (!apiCheck()) {
                     return;
                 }
@@ -1299,13 +1531,13 @@ public class SubmissionDetailsFragment extends ParentFragment {
                         .build();
 
                 // Do NOT authenticate or the LTI tool won't load.
-                InternalWebviewFragment.loadInternalWebView(getActivity(), ((Navigation) getActivity()), InternalWebviewFragment.createBundle(getCanvasContext(), uri.toString(), ltiTool.getName(), false));
+                InternalWebviewFragment.Companion.loadInternalWebView(getActivity(), ((Navigation) getActivity()), InternalWebviewFragment.Companion.createBundle(getCanvasContext(), uri.toString(), ltiTool.getName(), false, false, true, assignment.getUrl()));
             }
 
             @Override
-            public void onFail(Call<LTITool> response, Throwable error, int code) {
+            public void onFail(@Nullable Call<LTITool> call, @NonNull Throwable error, @Nullable Response response) {
                 // If it wasn't a network Error, then the LTI tool must be expired or invalid.
-                if (APIHelper.hasNetworkConnection() && code != 504) {
+                if (APIHelper.hasNetworkConnection() && (response == null || (response!= null && response.code() != 504))) {
                     showToast(R.string.invalidExternal);
                 }
             }
@@ -1314,7 +1546,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
         canvasCallbackAssignment = new StatusCallback<Assignment>() {
 
             @Override
-            public void onResponse(retrofit2.Response<Assignment> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Assignment> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(!apiCheck()){
                     return;
                 }
@@ -1343,10 +1575,6 @@ public class SubmissionDetailsFragment extends ParentFragment {
             }
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void handleIntentExtras(Bundle extras) {

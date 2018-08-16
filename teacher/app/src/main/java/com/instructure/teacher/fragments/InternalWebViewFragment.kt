@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -35,7 +36,9 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.isTablet
+import com.instructure.teacher.utils.setupCloseButton
+import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_internal_webview.*
 import kotlinx.coroutines.experimental.Job
 
@@ -92,11 +95,19 @@ open class InternalWebViewFragment : BaseFragment() {
         }
 
         toolbar.title = title.validOrNull() ?: url
-        toolbar.setupMenu(R.menu.menu_internal_webview) {
-            val browserIntent = Intent("android.intent.action.VIEW").apply {
-                data = Uri.parse(url)
+
+        // if we are displaying html we don't want them to view the url in a different browser
+        if(!html.isValid()) {
+            toolbar.setupMenu(R.menu.menu_internal_webview) {
+                val browserIntent = Intent("android.intent.action.VIEW").apply {
+                    data = Uri.parse(url)
+                }
+                if (browserIntent.resolveActivity(activity.packageManager) != null) {
+                    startActivity(browserIntent)
+                } else {
+                    toast(R.string.no_apps)
+                }
             }
-            startActivity(browserIntent)
         }
 
         setupToolbar(courseColor)
@@ -175,8 +186,8 @@ open class InternalWebViewFragment : BaseFragment() {
                     } catch (e: StatusCallbackError) {
                     }
                 }
-                canvasWebView.loadUrl(url, getReferer())
             }
+            canvasWebView.loadUrl(url, getReferer())
         }
     }
 
@@ -222,6 +233,13 @@ open class InternalWebViewFragment : BaseFragment() {
         fun newInstance(url: String, html: String) = InternalWebViewFragment().apply {
             this.url = url
             this.html = html
+        }
+
+        @JvmStatic
+        fun newInstance(url: String, html: String, title: String) = InternalWebViewFragment().apply {
+            this.url = url
+            this.html = html
+            this.title = title
         }
 
         @JvmStatic

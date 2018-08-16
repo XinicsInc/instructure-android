@@ -20,12 +20,12 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import com.instructure.canvasapi2.utils.isValid
 import kotlinx.android.synthetic.main.adapter_file_folder.view.*
 import java.text.DecimalFormat
 
@@ -54,15 +54,16 @@ class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             fileName.text = item.displayName
             fileSize.text = readableFileSize(context, item.size)
             if(item.thumbnailUrl.isValid()) {
-                fileIconOrImage.setImage(item.thumbnailUrl)
+                fileIconOrImage.setImage(item.thumbnailUrl!!)
             } else {
+                val contentType = item.contentType.orEmpty()
                 when {
-                    item.contentType.contains("pdf") -> fileIconOrImage.setIcon(R.drawable.vd_pdf, courseColor)
-                    item.contentType.contains("presentation") -> fileIconOrImage.setIcon(R.drawable.vd_ppt, courseColor)
-                    item.contentType.contains("spreadsheet") -> fileIconOrImage.setIcon(R.drawable.vd_spreadsheet, courseColor)
-                    item.contentType.contains("wordprocessing") -> fileIconOrImage.setIcon(R.drawable.vd_word_doc, courseColor)
-                    item.contentType.contains("zip") -> fileIconOrImage.setIcon(R.drawable.vd_zip, courseColor)
-                    item.contentType.contains("image") -> fileIconOrImage.setIcon(R.drawable.vd_image, courseColor)
+                    contentType.contains("pdf") -> fileIconOrImage.setIcon(R.drawable.vd_pdf, courseColor)
+                    contentType.contains("presentation") -> fileIconOrImage.setIcon(R.drawable.vd_ppt, courseColor)
+                    contentType.contains("spreadsheet") -> fileIconOrImage.setIcon(R.drawable.vd_spreadsheet, courseColor)
+                    contentType.contains("wordprocessing") -> fileIconOrImage.setIcon(R.drawable.vd_word_doc, courseColor)
+                    contentType.contains("zip") -> fileIconOrImage.setIcon(R.drawable.vd_zip, courseColor)
+                    contentType.contains("image") -> fileIconOrImage.setIcon(R.drawable.vd_image, courseColor)
                     else -> fileIconOrImage.setIcon(R.drawable.vd_document, courseColor)
                 }
             }

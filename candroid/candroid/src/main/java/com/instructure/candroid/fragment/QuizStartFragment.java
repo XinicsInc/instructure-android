@@ -17,9 +17,10 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,26 +30,31 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.Param;
 import com.instructure.candroid.util.RouterUtils;
 import com.instructure.candroid.view.CanvasLoading;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.QuizManager;
-import com.instructure.canvasapi2.models.User;
-import com.instructure.canvasapi2.utils.ApiType;
-import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.Quiz;
 import com.instructure.canvasapi2.models.QuizSubmission;
 import com.instructure.canvasapi2.models.QuizSubmissionResponse;
 import com.instructure.canvasapi2.models.QuizSubmissionTime;
+import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.canvasapi2.utils.ApiType;
+import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.canvasapi2.utils.NumberHelper;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 import com.instructure.pandautils.views.CanvasWebView;
 
 import java.util.ArrayList;
@@ -58,7 +64,10 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@PageView(url = "{canvasContext}/quizzes/{quizId}")
 public class QuizStartFragment extends ParentFragment {
+
+    private Toolbar toolbar;
 
     private TextView quizTitle;
     private CanvasWebView quizDetails;
@@ -101,14 +110,21 @@ public class QuizStartFragment extends ParentFragment {
     private CanvasWebView.CanvasWebViewClientCallback webViewClientCallback;
     private CanvasWebView.CanvasEmbeddedWebViewCallback embeddedWebViewCallback;
 
-    @Override
-    public String getFragmentTitle() {
-        return getString(R.string.quizzes);
+    @PageViewUrlParam(name = "quizId")
+    private Long getQuizId() {
+        return quiz != null ? quiz.getId() : 0;
     }
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {
-        return FRAGMENT_PLACEMENT.DETAIL;
+    @NonNull
+    public String title() {
+        return quiz != null ? quiz.getTitle() : getString(R.string.quizzes);
+    }
+
+    @Override
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {
+        return FragmentInteractions.Placement.DETAIL;
     }
 
     //Currently there isn't a way to know how to decide if we want to route
@@ -119,10 +135,10 @@ public class QuizStartFragment extends ParentFragment {
     }
 
     @Override
+    @NonNull
     public HashMap<String, String> getParamForBookmark() {
-        HashMap<String, String> map = getCanvasContextParams();
+        HashMap<String, String> map = super.getParamForBookmark();
         map.put(Param.QUIZ_ID, Long.toString(quiz.getId()));
-
         return map;
     }
 
@@ -131,16 +147,11 @@ public class QuizStartFragment extends ParentFragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.quiz_start, container, false);
+        toolbar = rootView.findViewById(R.id.toolbar);
         setupViews(rootView);
         setupCallbacks();
 
         return rootView;
-    }
-
-    @Nullable
-    @Override
-    protected String getActionbarTitle() {
-        return quiz != null ? quiz.getTitle() : null;
     }
 
     @Override
@@ -154,7 +165,14 @@ public class QuizStartFragment extends ParentFragment {
         if(quiz != null) QuizManager.getQuizSubmissions(course, quiz.getId(), true, quizSubmissionResponseCanvasCallback);
     }
 
-    //called after submitting a quiz
+    @Override
+    public void applyTheme() {
+        PandaViewUtils.setupToolbarBackButton(toolbar, this);
+        setupToolbarMenu(toolbar);
+        ViewStyler.themeToolbar(getActivity(), toolbar, getCanvasContext());
+    }
+
+    // Called after submitting a quiz
     public void updateQuizInfo() {
         canvasLoading.setVisibility(View.VISIBLE);
         //don't let them try to start the quiz until the data loads
@@ -162,36 +180,36 @@ public class QuizStartFragment extends ParentFragment {
         quizSubmissionResponseCanvasCallback.reset(); // Reset to clear out any link headers
         QuizManager.getQuizSubmissions(course, quiz.getId(), true, quizSubmissionResponseCanvasCallback);
     }
+
     private void setupViews(View rootView) {
 
-        quizTitle = (TextView) rootView.findViewById(R.id.quiz_title);
-        quizDetails = (CanvasWebView) rootView.findViewById(R.id.quiz_details);
+        quizTitle = rootView.findViewById(R.id.quiz_title);
+        quizDetails = rootView.findViewById(R.id.quiz_details);
 
-        quizTurnedIn = (TextView) rootView.findViewById(R.id.quiz_turned_in);
-        quizUnlocked = (TextView) rootView.findViewById(R.id.quiz_unlocked);
-        quizTimeLimit = (TextView) rootView.findViewById(R.id.quiz_time_limit);
+        quizTurnedIn = rootView.findViewById(R.id.quiz_turned_in);
+        quizUnlocked = rootView.findViewById(R.id.quiz_unlocked);
+        quizTimeLimit = rootView.findViewById(R.id.quiz_time_limit);
 
-        quizPointsPossibleDetails = (TextView) rootView.findViewById(R.id.quiz_points_details);
-        quizAttemptDetails = (TextView) rootView.findViewById(R.id.quiz_attempt_details);
-        quizQuestionCountDetails = (TextView) rootView.findViewById(R.id.quiz_question_count_details);
-        quizDueDateDetails = (TextView) rootView.findViewById(R.id.quiz_due_details);
-        quizTurnedInDetails = (TextView) rootView.findViewById(R.id.quiz_turned_in_details);
-        quizUnlockedDetails = (TextView) rootView.findViewById(R.id.quiz_unlocked_details);
-        quizTimeLimitDetails = (TextView) rootView.findViewById(R.id.quiz_time_limit_details);
+        quizPointsPossibleDetails = rootView.findViewById(R.id.quiz_points_details);
+        quizAttemptDetails = rootView.findViewById(R.id.quiz_attempt_details);
+        quizQuestionCountDetails = rootView.findViewById(R.id.quiz_question_count_details);
+        quizDueDateDetails = rootView.findViewById(R.id.quiz_due_details);
+        quizTurnedInDetails = rootView.findViewById(R.id.quiz_turned_in_details);
+        quizUnlockedDetails = rootView.findViewById(R.id.quiz_unlocked_details);
+        quizTimeLimitDetails = rootView.findViewById(R.id.quiz_time_limit_details);
 
-        quizTurnedInContainer = (RelativeLayout) rootView.findViewById(R.id.quiz_turned_in_container);
-        quizUnlockedContainer = (RelativeLayout) rootView.findViewById(R.id.quiz_unlocked_container);
-        quizTimeLimitContainer = (RelativeLayout) rootView.findViewById(R.id.quiz_time_limit_container);
+        quizTurnedInContainer = rootView.findViewById(R.id.quiz_turned_in_container);
+        quizUnlockedContainer = rootView.findViewById(R.id.quiz_unlocked_container);
+        quizTimeLimitContainer = rootView.findViewById(R.id.quiz_time_limit_container);
 
-        canvasLoading = (CanvasLoading) rootView.findViewById(R.id.loading);
+        canvasLoading = rootView.findViewById(R.id.loading);
 
 
-        next = (Button) rootView.findViewById(R.id.next);
+        next = rootView.findViewById(R.id.next);
 
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(quiz.isLockedForUser()) {
                     if(quiz.getLockExplanation() != null) {
                         showToast(quiz.getLockExplanation());
@@ -201,10 +219,9 @@ public class QuizStartFragment extends ParentFragment {
 
                 if(shouldStartQuiz) {
                     QuizManager.startQuiz(course, quiz.getId(), true, quizStartResponseCallback);
-                    //if the user hits the back button, we don't want them to try to start the quiz again
+                    // If the user hits the back button, we don't want them to try to start the quiz again
                     shouldStartQuiz = false;
-                }
-                else if(quizSubmission != null) {
+                } else if (quizSubmission != null) {
                     showQuiz();
                 } else {
                     getLockedMessage();
@@ -212,16 +229,15 @@ public class QuizStartFragment extends ParentFragment {
             }
         });
 
-        viewResults = (Button) rootView.findViewById(R.id.quiz_results);
+        viewResults = rootView.findViewById(R.id.quiz_results);
 
         viewResults.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = InternalWebviewFragment.createBundle(course, quiz.getUrl(), false);
+                Bundle bundle = InternalWebviewFragment.Companion.createBundle(course, quiz.getUrl(), false);
 
                 Navigation navigation = getNavigation();
-                if(navigation != null){
-
+                if (navigation != null) {
                     InternalWebviewFragment fragment = FragUtils.getFrag(InternalWebviewFragment.class, bundle);
                     //we don't want it to route internally, it will pop open the sliding drawer and route back the to same place
                     fragment.setShouldRouteInternally(false);
@@ -233,12 +249,12 @@ public class QuizStartFragment extends ParentFragment {
 
     public void populateQuizInfo() {
         quizTitle.setText(quiz.getTitle());
-        setupTitle(getActionbarTitle());
+        toolbar.setTitle(title());
 
         quizDetails.formatHTML(quiz.getDescription(), "");
         quizDetails.setBackgroundColor(getResources().getColor(R.color.transparent));
-        //set some callbacks in case there is a link in the quiz description. We want it to open up in a new
-        //InternalWebViewFragment
+        // Set some callbacks in case there is a link in the quiz description. We want it to open up in a new
+        // InternalWebViewFragment
         quizDetails.setCanvasEmbeddedWebViewCallback(embeddedWebViewCallback);
 
         quizDetails.setCanvasWebViewClientCallback(webViewClientCallback);
@@ -272,14 +288,6 @@ public class QuizStartFragment extends ParentFragment {
         } else {
             quizTimeLimitContainer.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onCallbackFinished(ApiType type) {
-        if (canvasLoading != null) {
-            canvasLoading.displayNoConnection(false);
-        }
-        super.onCallbackStarted();
     }
 
     public void onNoNetwork() {
@@ -321,7 +329,7 @@ public class QuizStartFragment extends ParentFragment {
             @Override
             public void launchInternalWebViewFragment(String url) {
 
-                InternalWebviewFragment.loadInternalWebView(getActivity(), getNavigation(), InternalWebviewFragment.createBundle(course, url, false));
+                InternalWebviewFragment.Companion.loadInternalWebView(getActivity(), getNavigation(), InternalWebviewFragment.Companion.createBundle(course, url, false));
             }
 
             @Override
@@ -333,7 +341,7 @@ public class QuizStartFragment extends ParentFragment {
         quizSubmissionTimeCanvasCallback = new StatusCallback<QuizSubmissionTime>() {
 
             @Override
-            public void onResponse(Response<QuizSubmissionTime> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<QuizSubmissionTime> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type == ApiType.CACHE) return;
                 QuizStartFragment.this.quizSubmissionTime = quizSubmissionTime;
                 QuizManager.getQuizSubmissions(course, quiz.getId(), true, quizSubmissionResponseCanvasCallback);
@@ -342,7 +350,7 @@ public class QuizStartFragment extends ParentFragment {
         quizSubmissionResponseCanvasCallback = new StatusCallback<QuizSubmissionResponse>() {
 
             @Override
-            public void onResponse(Response<QuizSubmissionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<QuizSubmissionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type == ApiType.CACHE) return;
                 final QuizSubmissionResponse quizSubmissionResponse = response.body();
 
@@ -359,68 +367,73 @@ public class QuizStartFragment extends ParentFragment {
 
                 quizSubmissionResponse.setQuizSubmissions(submissions);
                 if (quizSubmissionResponse.getQuizSubmissions() == null || quizSubmissionResponse.getQuizSubmissions().size() == 0) {
-                    //no quiz submissions, let the user start the quiz.
+                    // No quiz submissions, let the user start the quiz.
 
-                    //they haven't turned it in yet, so don't show the view
+                    // They haven't turned it in yet, so don't show the turned-in view
                     quizTurnedInContainer.setVisibility(View.GONE);
                     shouldStartQuiz = true;
-
+                    next.setVisibility(View.VISIBLE);
+                    next.setEnabled(true);
                 } else {
-                    //we should have at least 1 item in the array due to the check in the if statement above
+                    // We should have at least 1 submission
                     quizSubmission = quizSubmissionResponse.getQuizSubmissions().get(quizSubmissionResponse.getQuizSubmissions().size() - 1);
 
                     next.setEnabled(true);
 
                     final boolean hasUnlimitedAttempts = quiz.getAllowedAttempts() == -1;
-                    final boolean teacherUnlockedQuizAttempts = quizSubmission.isManuallyUnlocked();
+                    final boolean teacherUnlockedQuizAttempts = quizSubmission.isManuallyUnlocked(); // Teacher can manually unlock a quiz for an individual student
                     final boolean hasMoreAttemptsLeft = quizSubmission.getAttemptsLeft() > 0;
 
                     final boolean canTakeQuizAgain = hasUnlimitedAttempts | teacherUnlockedQuizAttempts | hasMoreAttemptsLeft;
 
                     if(quiz.getHideResults() == Quiz.HIDE_RESULTS_TYPE.ALWAYS && !canTakeQuizAgain) {
-                        //don't let the user see the questions if they've exceeded their attempts
+                        // Don't let the user see the questions if they've exceeded their attempts
                         next.setVisibility(View.GONE);
                     } else if(quiz.getHideResults() == Quiz.HIDE_RESULTS_TYPE.AFTER_LAST_ATTEMPT && !canTakeQuizAgain) {
-                        //they can only see the results after their last attempt, and that hasn't happened yet
+                        // They can only see the results after their last attempt, and that hasn't happened yet
                         next.setVisibility(View.GONE);
                     }
 
+                    // They can -take- the quiz if there's no finished time and they have attempts left, OR the teacher has unlocked the quiz for them
+
+                    // If they've finished the quiz and have no more attempt chances, or the teacher has locked the quiz, then they're done
                     // -1 allowed attempts == unlimited
                     if (quizSubmission.getFinishedAt() != null && !canTakeQuizAgain) {
-
-                        //they can't take the quiz anymore, let them see results
+                        // They've finished the quiz and they can't take it anymore; let them see results
+                        next.setVisibility(View.VISIBLE);
                         next.setText(getString(R.string.viewQuestions));
                         shouldLetAnswer = false;
-
                     } else {
-                        //they are allowed to take the quiz...
-                        if(quizSubmission.getFinishedAt() != null) {
+                        // They are allowed to take the quiz...
+                        next.setVisibility(View.VISIBLE);
+
+                        if (quizSubmission.getFinishedAt() != null) {
                             shouldStartQuiz = true;
                             next.setText(getString(R.string.takeQuizAgain));
                         } else {
-                            //let the user resume their quiz
+                            // Let the user resume their quiz
                             next.setText(getString(R.string.resumeQuiz));
                         }
                     }
 
-                    if(quizSubmission.getFinishedAt() != null) {
+                    if (quizSubmission.getFinishedAt() != null) {
                         quizTurnedIn.setText(getString(R.string.turnedIn));
                         quizTurnedInDetails.setText(DateHelper.getDateTimeString(getActivity(), quizSubmission.getFinishedAt()));
-                        //the user has turned in the quiz, let them see the results
+                        // The user has turned in the quiz, let them see the results
                         viewResults.setVisibility(View.VISIBLE);
 
                     } else {
                         quizTurnedInContainer.setVisibility(View.GONE);
                     }
 
-                    //weird hack where if the time expires and the user hasn't submitted it doesn't let you start the quiz
+                    // Weird hack where if the time expires and the user hasn't submitted it doesn't let you start the quiz
                     if(quizSubmission.getWorkflowState() == QuizSubmission.WORKFLOW_STATE.UNTAKEN && (quizSubmission.getEndAt() != null && (quizSubmissionTime != null && quizSubmissionTime.getTimeLeft() > 0))) {
                         next.setEnabled(false);
                         //submit the quiz for them
                         QuizManager.submitQuiz(course, quizSubmission, true, new StatusCallback<QuizSubmissionResponse>() {
                             @Override
-                            public void onResponse(Response<QuizSubmissionResponse> response, LinkHeaders linkHeaders, ApiType type) {
-                                if(type == ApiType.CACHE) return;
+                            public void onResponse(@NonNull Response<QuizSubmissionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
+                                if (type == ApiType.CACHE) return;
                                 //the user has turned in the quiz, let them see the results
                                 viewResults.setVisibility(View.VISIBLE);
                                 next.setEnabled(true);
@@ -428,12 +441,12 @@ public class QuizStartFragment extends ParentFragment {
                                 next.setText(getString(R.string.takeQuizAgain));
                                 QuizSubmissionResponse quizResponse = response.body();
 
-                                //since this is a student app, make sure they only have their own submissions (if they're siteadmin it'll be different)
+                                // Since this is a student app, make sure they only have their own submissions (if they're siteadmin it'll be different)
                                 final ArrayList<QuizSubmission> submissions = new ArrayList<>();
                                 final User user = ApiPrefs.getUser();
-                                if(user != null) {
+                                if (user != null) {
                                     for (QuizSubmission submission : quizResponse.getQuizSubmissions()) {
-                                        if (submission.getUserId() == user.getId()){
+                                        if (submission.getUserId() == user.getId()) {
                                             submissions.add(submission);
                                         }
                                     }
@@ -448,13 +461,12 @@ public class QuizStartFragment extends ParentFragment {
                         });
                     }
 
-                    //if the user can only see results once and they have seen it, don't let them view the questions
-                    if(quiz.isOneTimeResults() && quizSubmission.hasSeenResults()) {
+                    // If the user can only see results once and they have seen it, don't let them view the questions
+                    if (quiz.isOneTimeResults() && quizSubmission.hasSeenResults()) {
                         next.setVisibility(View.GONE);
                     }
 
-
-                    if(quiz.isLockedForUser()) {
+                    if (quiz.isLockedForUser()) {
                         shouldStartQuiz = false;
                         next.setText(getString(R.string.assignmentLocked));
                     }
@@ -463,16 +475,14 @@ public class QuizStartFragment extends ParentFragment {
                 populateQuizInfo();
 
                 canvasLoading.setVisibility(View.GONE);
-
-
             }
 
             @Override
-            public void onFail(Call<QuizSubmissionResponse> response, Throwable error, int code) {
+            public void onFail(@Nullable Call<QuizSubmissionResponse> call, @NonNull Throwable error, @Nullable Response response) {
                 canvasLoading.setVisibility(View.GONE);
                 //if a quiz is excused we get a 401 error when trying to get the submissions. This is a workaround until we have an excused field
                 //on quizzes.
-                if(code == 401) {
+                if (response != null && response.code() == 401) {
                     populateQuizInfo();
                     //there is a not authorized error, so don't let them start the quiz
                     next.setVisibility(View.GONE);
@@ -483,14 +493,14 @@ public class QuizStartFragment extends ParentFragment {
         quizStartResponseCallback = new StatusCallback<QuizSubmissionResponse>() {
 
             @Override
-            public void onResponse(Response<QuizSubmissionResponse> response, LinkHeaders linkHeaders, ApiType type, int code) {
-                if(code == 200 && type == ApiType.API) {
-                    //we want to show the quiz here, but we need to get the quizSubmissionId first so our
-                    //api call for the QuizQuestionsFragment knows which questions to get
+            public void onResponse(@NonNull Response<QuizSubmissionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
+                if(response.code() == 200 && type == ApiType.API) {
+                    // We want to show the quiz here, but we need to get the quizSubmissionId first so our
+                    // api call for the QuizQuestionsFragment knows which questions to get
                     StatusCallback<QuizSubmissionResponse> quizSubmissionResponseCallback = new StatusCallback<QuizSubmissionResponse>() {
 
                         @Override
-                        public void onResponse(Response<QuizSubmissionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+                        public void onResponse(@NonNull Response<QuizSubmissionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                             QuizSubmissionResponse quizSubmissionResponse = response.body();
                             if(quizSubmissionResponse != null && quizSubmissionResponse.getQuizSubmissions() != null &&
                                     quizSubmissionResponse.getQuizSubmissions().size() > 0) {
@@ -509,30 +519,30 @@ public class QuizStartFragment extends ParentFragment {
             }
 
             @Override
-            public void onFail(Call<QuizSubmissionResponse> response, Throwable error, int code) {
-                if(code == 403) {
-                    //forbidden
-                    //check to see if it's because of IP restriction or bad access code or either
+            public void onFail(@Nullable Call<QuizSubmissionResponse> call, @NonNull Throwable error, @Nullable Response response) {
+                if(response != null && response.code() == 403) {
+                    // Forbidden
+                    // Check to see if it's because of IP restriction or bad access code or either
                     getLockedMessage();
                 }
             }
         };
 
         quizStartSessionCallback = new StatusCallback<ResponseBody>() {
-            //alerting the user that we couldn't post the start session event doesn't really make sense. If something went wrong the logs will
-            //be off on the admin/teacher side
+            // Alerting the user that we couldn't post the start session event doesn't really make sense. If something went wrong the logs will
+            // be off on the admin/teacher side
         };
     }
 
 
     private void getLockedMessage() {
-        //check to see if it's because of IP restriction or bad access code or either
+        // Check to see if it's because of IP restriction or bad access code or either
         if(quiz.getIpFilter() != null && quiz.getAccessCode() == null) {
             showToast(R.string.lockedIPAddress);
         } else if(quiz.getIpFilter() == null && quiz.getAccessCode() != null) {
             showToast(R.string.lockedInvalidAccessCode);
         } else {
-            //something went wrong (no data possibly)
+            // Something went wrong (no data possibly)
             showToast(R.string.cantStartQuiz);
         }
     }
@@ -541,18 +551,13 @@ public class QuizStartFragment extends ParentFragment {
         Navigation navigation = getNavigation();
         if(navigation != null){
 
-            //post the android session started event
+            // Post the android session started event
             QuizManager.postQuizStartedEvent(getCanvasContext(), quizSubmission.getQuizId(), quizSubmission.getId(), true, quizStartSessionCallback);
             Bundle bundle = QuizQuestionsFragment.createBundle(getCanvasContext(), quiz, quizSubmission, shouldLetAnswer);
 
             navigation.addFragment(FragUtils.getFrag(QuizQuestionsFragment.class, bundle));
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

@@ -17,16 +17,18 @@
 
 package com.instructure.candroid.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.instructure.candroid.R;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.canvasapi2.models.Assignment;
@@ -43,7 +45,6 @@ public class WhatIfDialogStyled extends DialogFragment {
 
     //views
     private EditText whatIfScore;
-    private EditText totalScoreEdit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,48 +62,50 @@ public class WhatIfDialogStyled extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         final FragmentActivity activity = getActivity();
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(activity)
-                .title(activity.getString(R.string.whatIfDialogText))
-                .positiveText(R.string.done)
-                .negativeText(R.string.cancel)
-                .autoDismiss(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                .setTitle(activity.getString(R.string.whatIfDialogText))
+                .setPositiveButton(R.string.done, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(callback != null){
+                            final String whatIf = whatIfScore.getText().toString();
+                            callback.onOkayClick(whatIf, Double.parseDouble(totalScore), assignment, position);
+                        }
+                        dismissAllowingStateLoss();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dismissAllowingStateLoss();
+                    }
+                });
 
+        @SuppressLint("InflateParams")
         View view = LayoutInflater.from(activity).inflate(R.layout.what_if_dialog, null);
 
-        totalScoreEdit = (EditText)view.findViewById(R.id.totalScore);
-        whatIfScore = (EditText)view.findViewById(R.id.currentScore);
+        EditText totalScoreEdit = view.findViewById(R.id.totalScore);
         totalScoreEdit.setText(totalScore);
 
-        builder.customView(view, false);
+        whatIfScore = view.findViewById(R.id.currentScore);
 
-        if(courseColor != 0){
-            builder.positiveColor(courseColor);
-            builder.negativeColor(courseColor);
-        }
+        builder.setView(view);
 
-        builder.callback(new MaterialDialog.ButtonCallback() {
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onPositive(MaterialDialog dialog) {
-                super.onPositive(dialog);
-                if(callback != null){
-                    final String whatIf = whatIfScore.getText().toString();
-                    callback.onOkayClick(whatIf, Double.parseDouble(totalScore), assignment, position);
+            public void onShow(DialogInterface worthless) {
+                if(courseColor != 0){
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(courseColor);
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(courseColor);
                 }
-                dismissAllowingStateLoss();
-            }
-
-            @Override
-            public void onNegative(MaterialDialog dialog) {
-                super.onNegative(dialog);
-                dismissAllowingStateLoss();
             }
         });
 
-        final MaterialDialog dialog = builder.build();
         dialog.setCanceledOnTouchOutside(true);
+
         return dialog;
     }
 
@@ -114,6 +117,7 @@ public class WhatIfDialogStyled extends DialogFragment {
     public void onDestroyView() {
         if (getDialog() != null && getRetainInstance())
             getDialog().setDismissMessage(null);
+
         super.onDestroyView();
     }
 

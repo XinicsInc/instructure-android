@@ -29,16 +29,13 @@ public class ExpandableViewHolder extends RecyclerView.ViewHolder {
 
     public TextView title;
     public ImageView expandCollapse;
-    public RelativeLayout rootView;
     public boolean isExpanded;
 
     public ExpandableViewHolder(View itemView) {
         super(itemView);
-        title = (TextView) itemView.findViewById(R.id.title);
-        expandCollapse = (ImageView) itemView.findViewById(R.id.expand_collapse);
-        rootView = (RelativeLayout) itemView.findViewById(R.id.rootView);
+        title = itemView.findViewById(R.id.title);
+        expandCollapse = itemView.findViewById(R.id.expand_collapse);
     }
-
 
     public static int holderResId() {
         return R.layout.viewholder_header_expandable;

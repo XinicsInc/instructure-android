@@ -13,119 +13,124 @@
   ~
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ~
   -->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:minHeight="?android:listPreferredItemHeight">
+    android:background="@color/white">
 
-    <!--Doing this to fix an android 4.1.1 issue normally this layout is useless-->
-    <FrameLayout
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/utils_editTextColor"/>
+
+    <ImageView
+        android:id="@+id/messageOptions"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="@string/messageOptions"
+        android:focusable="true"
+        android:padding="8dp"
+        android:tint="@color/darkGray"
+        app:srcCompat="@drawable/vd_overflow_white_18dp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/authorAvatar"
+        android:layout_width="@dimen/message_avatar_dimen"
+        android:layout_height="@dimen/message_avatar_dimen"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:importantForAccessibility="no"
+        tools:src="@tools:sample/avatars"/>
+
+    <TextView
+        android:id="@+id/authorName"
+        style="@style/TextFont.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/authorAvatar"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@+id/authorAvatar"
+        android:layout_toStartOf="@+id/messageOptions"
+        android:textColor="@color/defaultTextDark"
+        android:textSize="14sp"
+        tools:text="@tools:sample/full_names"/>
+
+    <TextView
+        android:id="@+id/dateTime"
+        style="@style/TextFont.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/authorName"
+        android:layout_below="@+id/authorName"
+        android:layout_toEndOf="@+id/authorAvatar"
+        android:textColor="@color/defaultTextGray"
+        android:textSize="12sp"
+        tools:text="Mar 18, 2015, 9:03 AM"/>
+
+    <View
+        android:id="@+id/headerDivider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/authorAvatar"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/utils_editTextColor"/>
+
+    <TextView
+        android:id="@+id/messageBody"
+        style="@style/TextFont.Regular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="12dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="12dp">
+        android:layout_below="@+id/headerDivider"
+        android:layout_margin="16dp"
+        android:textColor="@color/defaultTextDark"
+        android:textSize="16sp"
+        android:autoLink="web"
+        tools:text="This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. Only for show. He who searches for meaning here will be sorely disappointed."/>
 
-        <RelativeLayout
-            android:id="@+id/titleContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <com.instructure.candroid.view.AttachmentLayout
+        android:id="@+id/attachmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/messageBody"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:al_previewChildCount="3"
+        app:al_spacing="12dp"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/userAvatar"
-                android:layout_width="@dimen/gridIconSizeBig"
-                android:layout_height="@dimen/gridIconSizeBig"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:contentDescription="@string/icon"
-                android:transformPivotX="24dp"
-                android:transformPivotY="24dp" />
+    <TextView
+        android:id="@+id/reply"
+        style="@style/TextFont.Regular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/attachmentContainer"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="-8dp"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
+        android:minHeight="48dp"
+        android:paddingBottom="8dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="12dp"
+        android:text="@string/reply"
+        android:textSize="16sp"/>
 
-            <RelativeLayout
-                android:id="@+id/topText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/userAvatar"
-                android:layout_toRightOf="@id/userAvatar">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_toLeftOf="@+id/attachment"
-                    android:layout_toStartOf="@+id/attachment">
-
-                    <TextView
-                        android:id="@+id/userNameText"
-                        style="@style/TextStyle.Primary.CardView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start|center_vertical"
-                        android:singleLine="true" />
-
-                </FrameLayout>
-
-                <ImageView
-                    android:id="@+id/attachment"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_toLeftOf="@+id/dateText"
-                    android:layout_toStartOf="@+id/dateText"
-                    android:contentDescription="@string/icon"
-                    android:src="@drawable/conversation_attachment" />
-
-                <TextView
-                    android:id="@+id/dateText"
-                    style="@style/TextStyle.Tertiary.SingleLine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true" />
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/subjectText"
-                style="@style/TextStyle.Tertiary.SingleLine.Dark"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/topText"
-                android:layout_marginLeft="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_toEndOf="@id/userAvatar"
-                android:layout_toRightOf="@id/userAvatar" />
-
-            <TextView
-                android:id="@+id/lastMessageText"
-                style="@style/TextStyle.Tertiary.SingleLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/subjectText"
-                android:layout_marginLeft="12dp"
-                android:layout_marginStart="12dp"
-                android:layout_toEndOf="@id/userAvatar"
-                android:layout_toRightOf="@id/userAvatar" />
-
-        </RelativeLayout>
-
-    </FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/utils_editTextColor"/>
 
 </RelativeLayout>

@@ -17,11 +17,10 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,9 +32,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.instructure.candroid.R;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.MasteryPath;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
 
 import java.lang.ref.WeakReference;
@@ -62,15 +62,12 @@ public class MasteryPathSelectionFragment extends ParentFragment {
     private long mModuleItemId;
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.DETAIL; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.DETAIL; }
 
     @Override
-    public String getFragmentTitle() {
-        return getString(R.string.choose_assignment_group);
-    }
-
-    @Override
-    protected String getActionbarTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.choose_assignment_group);
     }
 
@@ -84,7 +81,7 @@ public class MasteryPathSelectionFragment extends ParentFragment {
 
      @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.assignment_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_assignment, container, false);
     }
 
     @Override
@@ -101,19 +98,6 @@ public class MasteryPathSelectionFragment extends ParentFragment {
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setSaveFromParentEnabled(false); // Prevents a crash with FragmentStatePagerAdapter
         mFragmentPagerAdapter = new FragmentPagerDetailAdapter(getChildFragmentManager());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getSupportActionBar().setElevation(0);
-            mTabLayout.setElevation(Const.ACTIONBAR_ELEVATION);
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getSupportActionBar().setElevation(Const.ACTIONBAR_ELEVATION);
-        }
-        super.onDestroyView();
     }
 
     private TabLayout.OnTabSelectedListener tabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -148,8 +132,8 @@ public class MasteryPathSelectionFragment extends ParentFragment {
         setupTabLayoutColors();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mTabLayout.setTabMode((!isTablet(getContext()) && !isLandscape(getContext()) ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED));
-        mTabLayout.setTabsFromPagerAdapter(mFragmentPagerAdapter);
-        mTabLayout.setOnTabSelectedListener(tabSelectedListener);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.addOnTabSelectedListener(tabSelectedListener);
 
         if (savedInstanceState != null) {
             currentTab = savedInstanceState.getInt(Const.TAB_ID, 0);
@@ -160,12 +144,15 @@ public class MasteryPathSelectionFragment extends ParentFragment {
     }
 
     private void setupTabLayoutColors() {
-        int color = CanvasContextColor.getCachedColor(getActivity(), getCanvasContext());
+        int color = ColorKeeper.getOrGenerateColor(getCanvasContext());
         mTabLayout.setBackgroundColor(color);
         mTabLayout.setTabTextColors(getResources().getColor(R.color.glassWhite), Color.WHITE);
     }
 
+    @Override
+    public void applyTheme() {
 
+    }
 
     //region Adapter
 

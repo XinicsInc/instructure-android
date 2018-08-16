@@ -18,10 +18,10 @@
 package com.instructure.canvasapi2.models;
 
 import android.os.Parcel;
-
+import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 import com.instructure.canvasapi2.utils.APIHelper;
-
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,12 +52,14 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
     private long needsGradingCount;
     @SerializedName("apply_assignment_group_weights")
     private boolean applyAssignmentGroupWeights;
+    @Nullable
     private Double currentScore;
+    @Nullable
     private Double finalScore;
-    private boolean checkedCurrentGrade;
-    private boolean checkedFinalGrade;
+    private boolean checkedCourseGrade = false;
     private String currentGrade;
     private String finalGrade;
+    private CourseGrade courseGrade;
     @SerializedName("is_favorite")
     private boolean isFavorite;
     @SerializedName("access_restricted_by_date")
@@ -66,6 +68,9 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
     private String imageUrl;
     @SerializedName("has_weighted_grading_periods")
     private boolean isWeightedGradingPeriods;
+    @SerializedName("has_grading_periods")
+    private boolean hasGradingPeriods;
+    private List<Section> sections = new ArrayList<>();
 
     @Override
     public long getId() {
@@ -106,6 +111,7 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
         return APIHelper.stringToDate(endAt);
     }
 
+    @Nullable
     public String getSyllabusBody() {
         return syllabusBody;
     }
@@ -118,6 +124,7 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
         return isPublic;
     }
 
+    @Nullable
     public Term getTerm() {
         return term;
     }
@@ -132,14 +139,6 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
 
     public boolean isApplyAssignmentGroupWeights() {
         return applyAssignmentGroupWeights;
-    }
-
-    public boolean isCheckedCurrentGrade() {
-        return checkedCurrentGrade;
-    }
-
-    public boolean isCheckedFinalGrade() {
-        return checkedFinalGrade;
     }
 
     public boolean isFavorite() {
@@ -160,6 +159,11 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
 
     public boolean isWeightedGradingPeriods() {
         return isWeightedGradingPeriods;
+    }
+    public boolean isCheckedCourseGrade() { return checkedCourseGrade; }
+
+    public List<Section> getSections() {
+        return sections;
     }
 
     //endregion
@@ -230,14 +234,6 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
         this.finalScore = finalScore;
     }
 
-    public void setCheckedCurrentGrade(boolean checkedCurrentGrade) {
-        this.checkedCurrentGrade = checkedCurrentGrade;
-    }
-
-    public void setCheckedFinalGrade(boolean checkedFinalGrade) {
-        this.checkedFinalGrade = checkedFinalGrade;
-    }
-
     public void setCurrentGrade(String currentGrade) {
         this.currentGrade = currentGrade;
     }
@@ -264,6 +260,22 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
 
     public void setWeightedGradingPeriods(boolean weightedGradingPeriods) {
         isWeightedGradingPeriods = weightedGradingPeriods;
+    }
+
+    public boolean isHasGradingPeriods() {
+        return hasGradingPeriods;
+    }
+
+    public void setHasGradingPeriods(boolean hasGradingPeriods) {
+        this.hasGradingPeriods = hasGradingPeriods;
+    }
+
+    public void setCheckedCourseGrade(boolean checkedCourseGrade) {
+        this.checkedCourseGrade = checkedCourseGrade;
+    }
+
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
     }
 
     //endregion
@@ -330,71 +342,82 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
         return false;
     }
 
-    public double getCurrentScore() {
-        if (currentScore == null) {
-            for (Enrollment enrollment : enrollments) {
+    /**
+     * A helper method to get access to all course grade values in one place and how to display them
+     *
+     * See CourseGrade for documentation regarding its properties
+     *
+     * @param ignoreMGP - This flag will ignore current grading period scores. If the course has
+     *                  grading periods and this flag is set to true, the all GradingPeriod grades
+     *                  will be returned as they are treated the same as standard course totals.
+     *
+     * @return CourseGrade - Contains all course grade values, locked status, and noGrade status (N/A). Will be null
+     *                      if the user does not have either a student or observer enrollment in this course.
+     */
+    @Nullable
+    public CourseGrade getCourseGrade(boolean ignoreMGP) {
+        if(!checkedCourseGrade) {
+            checkedCourseGrade = true;
+
+            for(Enrollment enrollment : enrollments) {
                 if (enrollment.isStudent() || enrollment.isObserver()) {
-                    if(enrollment.isMultipleGradingPeriodsEnabled() && enrollment.getCurrentPeriodComputedCurrentScore() != null) {
-                        currentScore = enrollment.getCurrentPeriodComputedCurrentScore();
-                    } else {
-                        currentScore = enrollment.getCurrentScore();
-                    }
-                    return currentScore;
+                    return getCourseGradeFromEnrollment(enrollment, ignoreMGP);
                 }
             }
-            currentScore = 0.0;
         }
-        return currentScore;
+
+        return courseGrade;
     }
 
-    public String getCurrentGrade() {
-        if (!checkedCurrentGrade) {
-            checkedCurrentGrade = true;
-            for (Enrollment enrollment : enrollments) {
-                if (enrollment.isStudent() || enrollment.isObserver()) {
-                    if (enrollment.isMultipleGradingPeriodsEnabled() && enrollment.getCurrentPeriodComputedCurrentGrade() != null) {
-                        currentGrade = enrollment.getCurrentPeriodComputedCurrentGrade();
-                    } else {
-                        currentGrade = enrollment.getCurrentGrade();
-                    }
-                    return currentGrade;
-                }
-            }
+    @NonNull
+    public CourseGrade getCourseGradeFromEnrollment(Enrollment enrollment, boolean ignoreMGP) {
+        //First we want to see if its locked before we proceed
+        if(hasActiveGradingPeriod() && !ignoreMGP) {
+            // If they have an active grading period we show the current period values
+            courseGrade = new CourseGrade(
+                    enrollment.getCurrentPeriodComputedCurrentGrade(),
+                    enrollment.getCurrentPeriodComputedCurrentScore(),
+                    enrollment.getCurrentPeriodComputedFinalGrade(),
+                    enrollment.getCurrentPeriodComputedFinalScore(),
+                    isCourseGradeLocked(),
+                    noCurrentGrade(enrollment.getCurrentPeriodComputedCurrentGrade(), enrollment.getCurrentPeriodComputedCurrentScore()),
+                    noFinalGrade(enrollment.getCurrentPeriodComputedFinalGrade(), enrollment.getCurrentPeriodComputedFinalScore()));
+        } else {
+            // Otherwise, we show the computed overall values (All Grading Periods is covered by this case)
+            courseGrade = new CourseGrade(
+                    enrollment.getCurrentGrade(),
+                    enrollment.getCurrentScore(),
+                    enrollment.getFinalGrade(),
+                    enrollment.getFinalScore(),
+                    isCourseGradeLocked(),
+                    noCurrentGrade(enrollment.getCurrentGrade(), enrollment.getCurrentScore()),
+                    noFinalGrade(enrollment.getFinalGrade(), enrollment.getFinalScore()));
         }
-        return currentGrade;
+
+        return courseGrade;
     }
 
-    public double getFinalScore() {
-        if (finalScore == null) {
-            for (Enrollment enrollment : enrollments) {
-                if (enrollment.isStudent() || enrollment.isObserver()) {
-                    if (enrollment.isMultipleGradingPeriodsEnabled()) {
-                        finalScore = enrollment.getCurrentPeriodComputedFinalScore();
-                    } else {
-                        finalScore = enrollment.getFinalScore();
-                    }
-                    return finalScore;
-                }
+    private boolean isCourseGradeLocked() {
+        if(isHideFinalGrades()) {
+            return true;
+        } else {
+            // If the general hide final setting is off, we still need to check MGP all grades setting
+            if(isHasGradingPeriods()) {
+                // The grade is locked if they have no active period and the totals for all is hidden
+                return !hasActiveGradingPeriod() && !isTotalsForAllGradingPeriodsEnabled();
             }
-            finalScore = 0.0;
         }
-        return finalScore;
+
+        // If we've made it this far, the course is definitely not locked
+        return false;
     }
 
-    public String getFinalGrade() {
-        if (!checkedFinalGrade) {
-            checkedFinalGrade = true;
-            for (Enrollment enrollment : enrollments) {
-                if (enrollment.isStudent() || enrollment.isObserver()) {
-                    if (enrollment.isMultipleGradingPeriodsEnabled()) {
-                       finalGrade = enrollment.getCurrentPeriodComputedFinalGrade();
-                    } else {
-                        finalGrade = enrollment.getFinalGrade();
-                    }
-                }
-            }
-        }
-        return finalGrade;
+    private boolean noFinalGrade(String finalGrade, Double finalScore) {
+        return (finalScore == null) && (finalGrade == null || finalGrade.contains("N/A") || finalGrade.isEmpty());
+    }
+
+    private boolean noCurrentGrade(String currentGrade, Double currentScore) {
+        return (currentScore == null) && (currentGrade == null || currentGrade.contains("N/A") || currentGrade.isEmpty());
     }
 
     public void addEnrollment(Enrollment enrollment) {
@@ -404,6 +427,26 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
         } else {
             enrollments.add(enrollment);
         }
+    }
+
+    private boolean hasActiveGradingPeriod() {
+        for (Enrollment enrollment : enrollments) {
+            if (enrollment.isStudent() || enrollment.isObserver()) {
+                return (enrollment.isMultipleGradingPeriodsEnabled() && enrollment.getCurrentGradingPeriodId() != 0);
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isTotalsForAllGradingPeriodsEnabled() {
+        for (Enrollment enrollment : enrollments) {
+            if (enrollment.isStudent() || enrollment.isObserver()) {
+                return (enrollment.isMultipleGradingPeriodsEnabled() && enrollment.isTotalsForAllGradingPeriodsOption());
+            }
+        }
+
+        return false;
     }
 
     public enum LICENSE {
@@ -519,8 +562,6 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
         dest.writeByte(this.applyAssignmentGroupWeights ? (byte) 1 : (byte) 0);
         dest.writeValue(this.currentScore);
         dest.writeValue(this.finalScore);
-        dest.writeByte(this.checkedCurrentGrade ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.checkedFinalGrade ? (byte) 1 : (byte) 0);
         dest.writeString(this.currentGrade);
         dest.writeString(this.finalGrade);
         dest.writeString(this.default_view);
@@ -528,6 +569,10 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
         dest.writeByte(this.accessRestrictedByDate ? (byte) 1 : (byte) 0);
         dest.writeString(this.imageUrl);
         dest.writeByte(this.isWeightedGradingPeriods ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.hasGradingPeriods ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.checkedCourseGrade ? (byte) 1 : (byte) 0);
+        dest.writeTypedList(sections);
+        dest.writeParcelable(this.courseGrade, flags);
     }
 
     protected Course(Parcel in) {
@@ -547,8 +592,6 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
         this.applyAssignmentGroupWeights = in.readByte() != 0;
         this.currentScore = (Double) in.readValue(Double.class.getClassLoader());
         this.finalScore = (Double) in.readValue(Double.class.getClassLoader());
-        this.checkedCurrentGrade = in.readByte() != 0;
-        this.checkedFinalGrade = in.readByte() != 0;
         this.currentGrade = in.readString();
         this.finalGrade = in.readString();
         this.default_view = in.readString();
@@ -556,6 +599,10 @@ public class Course extends CanvasContext implements Comparable<CanvasContext>{
         this.accessRestrictedByDate = in.readByte() != 0;
         this.imageUrl = in.readString();
         this.isWeightedGradingPeriods = in.readByte() != 0;
+        this.hasGradingPeriods = in.readByte() != 0;
+        this.checkedCourseGrade = in.readByte() != 0;
+        this.sections = in.createTypedArrayList(Section.CREATOR);
+        this.courseGrade = in.readParcelable(CourseGrade.class.getClassLoader());
     }
 
     public static final Creator<Course> CREATOR = new Creator<Course>() {

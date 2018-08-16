@@ -1,167 +1,193 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="chooseMedia">选择媒体</string>
-  <string name="takeVideo">录制视频</string>
-  <string name="noCameraOnDevice">无摄像头</string>
-  <!--NotoriousPicker/uploadService-->
-  <string name="notificationTitle">上传到Canvas</string>
-  <string name="preparingUpload">正在准备上传</string>
-  <string name="loadingFilesIndeterminate">正在加载文件</string>
-  <string name="fileUploadSuccess">成功上传</string>
-  <string name="noNetwork">网络不可用 - 请稍后再试</string>
-  <string name="uploadMessage">“上传正在进行中。检查上传状态的通知。</string>
-  <string name="mediaUpload">媒体上传</string>
-  <string name="uploadingFile">正在上传文件</string>
-  <string name="errorUploadingFile">正在上传文件时出现错误。请再尝试。</string>
-  <string name="fileSubmission">提交文件(s)</string>
-  <string name="uploadFiles"> 上传文件(s) </string>
-  <string name="upload">上传</string>
-  <string name="errorSendingMessage">正在发送消息时出现错误。请再尝试。</string>
-  <!--Turn in Files-->
-  <string name="chooseFileSource">从...选择文件</string>
-  <string name="addFile">添加文件</string>
-  <string name="choose_a_file">选择文件</string>
-  <string name="fromCamera">摄像机、照相机</string>
-  <string name="fromGallery">画廊</string>
-  <string name="fromDevice">装置</string>
-  <string name="fromOtherApplication">其他</string>
-  <string name="Domain">域名</string>
-  <string name="files">文件</string>
-  <string name="file">文件</string>
-  <string name="addItem">添加项目</string>
-  <string name="assignment">作业</string>
-  <string name="attachedFiles">附加文件</string>
-  <string name="turnIn">上交、提交</string>
-  <string name="course">课程</string>
-  <string name="sending">正在发送</string>
-  <!--rating dialog-->
-  <string name="star1">标记评级一</string>
-  <string name="star2">标记评级二</string>
-  <string name="star3">标记评级三</string>
-  <string name="star4">标记评级四</string>
-  <string name="star5">标记评级五</string>
-  <!--Submitting files-->
-  <string name="fileQuotaExceeded">目前您已超出文件存储的配额。</string>
-  <string name="errorSubmittingFiles">正在上交您的文件时出现错误。请再尝试。</string>
-  <string name="errorLoadingFiles">正在加载您的文件时出现错误。请检查您的网络连接，然后再尝试。</string>
-  <string name="filesUploadedSuccessfully">文件成功上传。</string>
-  <string name="filesSubmittedSuccessfully">文件成功提交。</string>
-  <string name="messageSentSuccessfully">消息成功发送。</string>
-  <string name="shareWithCanvas">其他应用程序可以与Canvas共享文件！寻找在应用程序下面的图标，并点击Canvas。</string>
-  <string name="shareWithCanvas2">这将打开该应用程序。然后，只需选择哪门课程，以及您想要上交的作业。</string>
-  <string name="contentDescriptionSocialShare">分享图标</string>
-  <string name="submitAssignment">提交作业</string>
-  <string name="assignmentHeader">作业：</string>
-  <string name="submittingAssignment">提交作业...</string>
-  <string name="conversations">会话</string>
-  <string name="inbox">收件箱</string>
-  <string name="divider">分隔器</string>
-  <string name="legal">合法的</string>
-  <string name="completeHomework">完成您的家庭作业</string>
-  <string name="takeExam">进行考试</string>
-  <string name="fileIcon">文件图标</string>
-  <string name="uploadingFileNum" formatted="false">正在上传 %d of %d</string>
-  <string name="fileLocked" formatted="false">%s 已被锁定。</string>
-  <string name="filePermissionGranted">文件现在准备下载，请再次尝试。</string>
-  <string name="filePermissionDenied">没有授予权限的文件不可以被下载。</string>
-  <string name="pleaseTryAgain">已授予权限，请重试。</string>
-  <string name="pickVideo">选择视频</string>
-  <!--Errors-->
-  <string name="errorOccurred">发生意外错误。</string>
-  <string name="serverError">发生服务器错误。</string>
-  <string name="unauthorized">您未经授权访问此处。要么您未经授权，或者您不可进入(好像您的课程还未开始)</string>
-  <string name="fileNoLongerExists">该文件不再存在。</string>
-  <string name="invalidAccessToken">您的会期已过。请登录，以开始一个新的会期。</string>
-  <string name="uploadingFromSourceFailed">从此资源上传的文件无法完成。</string>
-  <string name="errorGettingPhoto">获取照片时出现错误。请再尝试。 </string>
-  <string name="errorTextMissing">添加一些文本以发送消息</string>
-  <string name="fileUploadNotSupported">您无法上传文件到所选择的作业里。</string>
-  <string name="noCourseSelected">请选择一门课程</string>
-  <string name="selectCourse">选择课程</string>
-  <string name="selectAssignment">选择一个作业</string>
-  <string name="loadingAssignments">正在加载作业...</string>
-  <string name="noAssignmentSelected">请选择一个作业</string>
-  <string name="noAssignmentsWithFileUpload">此课程没有允许上传文件的作业。</string>
-  <string name="teacherNotAllowedFileSubmission">作为此课程的教师，您无法提交文件。</string>
-  <string name="noFilesUploaded">您没有选择任何的文件。</string>
-  <string name="oneOrMoreExtensionNotAllowed">一个或多个文件不允许文件扩展</string>
-  <string name="extensionNotAllowed">不允许选择文件的类型</string>
-  <string name="allowedExtensions">允许扩展：</string>
-  <!--Media Task Loader-->
-  <string name="noDataConnection">请检查您的数据连接，然后再试一次。</string>
-  <string name="noApps">您的设备没有安装任何应用程序可以处理此文件。</string>
-  <string name="noAppsShort">无法打开</string>
-  <string name="unexpectedErrorOpeningFile">尝试打开该文件时发生意外错误。</string>
-  <string name="unexpectedErrorDownloadingFile">尝试下载该文件时发生意外错误。</string>
-  <string name="done">完成</string>
-  <!--Tutorial Messages-->
-  <string name="tutorial_tipColorPickerTitle">选择课程的颜色</string>
-  <string name="tutorial_tipColorPickerMessage">您可以从多种颜色的选择来自定义您的课程。</string>
-  <string name="tutorial_tipCourseGradesTitle">快速查看成绩</string>
-  <string name="tutorial_tipCourseGradesMessage">点击课程评分，跳跃到成绩。</string>
-  <string name="tutorial_tipLandingPageTitle">选项登录的页面</string>
-  <string name="tutorial_tipLandingPageMessage">通过选择一个登录的页面，当应用程序开始时，Canvas将自动加载该页面。</string>
-  <string name="tutorial_tipLockSlideTitle">锁定或解锁屏幕</string>
-  <string name="tutorial_tipLockSlideMessage">锁定屏幕允许您在屏幕上滚动而无需打开导航菜单。</string>
-  <string name="tutorial_tipHideStudentNames">当评分设置时隐藏名字</string>
-  <string name="tutorial_tipHideStudentNamesMessage">通过隐藏学生的姓名以删除偏差。</string>
-  <string name="tutorial_tipMyCoursesTitle">我的课程</string>
-  <string name="tutorial_tipMyCoursesMessage">在“我的课程”和“所有课程”之间迅速切换！</string>
-  <string name="tutorial_tipSwitchUsers">转换用户</string>
-  <string name="tutorial_tipSwitchUsersMessage">轻松地转换和添加用户</string>
-  <string name="tutorial_tipViewProfile">您的个人资料</string>
-  <string name="tutorial_tipViewProfileMessage">查看和更改您的个人头像和背景。您还可以查看您的个人文件。</string>
-  <string name="tutorial_tipNotificationPreferences">首选通知</string>
-  <string name="tutorial_tipNotificationPreferencesMessage">过滤您的首选并检查复选框，以启用或禁用一个特定的通知类型。</string>
-  <string name="tutorial_tipNavigationShortcuts">迅速转换课程</string>
-  <string name="tutorial_tipNavigationShortcutsMessage">在您最喜欢的课程之间进行转换。</string>
-  <!--Permissions-->
-  <string name="permissionDenied">要使用此功能，必须首先得到授权。</string>
-  <string name="noConnection">没有连接</string>
-  <!--General-->
-  <string name="yes">是</string>
-  <string name="no">不</string>
-  <string name="inbox_all">收件箱</string>
-  <string name="inbox_unread">未读</string>
-  <string name="inbox_starred">已标记</string>
-  <string name="inbox_sent">已发送</string>
-  <string name="inbox_archived">已归档</string>
-  <string name="forbidden">回复只对至少发布了一条回复的人可见。</string>
-  <string name="like">赞</string>
-  <string name="likes">赞</string>
-  <string name="lockedAssignmentNotModule">此作业被锁定。</string>
-  <string name="deletedEntryNoChildren">该删除的讨论条目没有回复。</string>
-  <string name="deleted">[删除]</string>
-  <string name="deleted_by">[被%1$s删除]</string>
-  <string name="lockedDiscussionDesc">该讨论是模块%s的组成部分，并且尚未锁定。</string>
-  <string name="gradedDiscussion">评分讨论</string>
-  <string name="pointsPossible">绩点</string>
-  <string name="sideCommentEntry">在该类型的讨论中，您不能评论该级别的任何条目。</string>
-  <string name="accessibility_overflow">溢出</string>
-  <string name="discussion_response">评论</string>
-  <string name="discussion_responses">评论</string>
-  <string name="discussion_unread">未读</string>
-  <string name="discussion_reply">回复</string>
-  <string name="close">关闭</string>
-  <!--App Names-->
-  <string name="utils_canvas">Canvas</string>
-  <string name="utils_canvasTeacher">Canvas 教师</string>
-  <string name="utils_canvasParent">Canvas 父母</string>
-  <string name="utils_polls">Canvas 投票</string>
-  <string name="utils_speedgrader">快速评分</string>
-  <!--Rating Dialog-->
-  <string name="utils_howAreWeDoing">我们做得怎样？</string>
-  <string name="utils_rateUs">您如何评价我们？</string>
-  <string name="utils_doBetter">我们如何能做得更好？</string>
-  <string name="utils_sendFeedback">发送反馈</string>
-  <string name="utils_suggestions">给安卓的建议</string>
-  <string name="utils_domain">域</string>
-  <string name="utils_versionNum">版本：</string>
-  <string name="utils_userId">用户 ID</string>
-  <string name="utils_email">电子邮件</string>
-  <string name="utils_dontShowAgain">不再显示</string>
-  <string name="utils_installDate">安装日期：</string>
-  <string name="utils_device">设备</string>
-  <string name="utils_osVersion">操作系统版本</string>
-  <string name="loading">正在加载</string>
+    <string name="chooseMedia">选择媒体</string>
+    <string name="takeVideo">录制视频</string>
+    <string name="noCameraOnDevice">无摄像头</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">上传到Canvas</string>
+    <string name="preparingUpload">正在准备上传</string>
+    <string name="loadingFilesIndeterminate">正在加载文件</string>
+    <string name="fileUploadSuccess">成功上传</string>
+    <string name="noNetwork">网络不可用 - 请稍后再试。</string>
+    <string name="uploadMessage">“正在上传。检查上传状态通知。</string>
+    <string name="mediaUpload">媒体上传</string>
+    <string name="uploadingFile">正在上传文件</string>
+    <string name="errorUploadingFile">上传文件时出错。请重试。</string>
+    <string name="fileSubmission">提交文件(s)</string>
+    <string name="uploadFiles">上传文件(s)</string>
+    <string name="upload">上传</string>
+    <string name="errorSendingMessage">发送消息时出错。请重试。</string>
+
+    <string name="notificationChannelNameFileUploadsName">文件上传通知</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas 正在上传文件的通知</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">从&#8230;选择文件</string>
+    <string name="addFile">添加文件</string>
+    <string name="choose_a_file">选择文件</string>
+
+    <string name="fromCamera">摄像机、照相机</string>
+    <string name="fromGallery">画廊</string>
+    <string name="fromDevice">设备</string>
+    <string name="fromOtherApplication">其他</string>
+    <string name="Domain">域</string>
+    <string name="files">文件</string>
+    <string name="file">文件</string>
+    <string name="addItem">添加项目</string>
+    <string name="assignment">作业</string>
+    <string name="attachedFiles">附加文件</string>
+    <string name="turnIn">上交</string>
+    <string name="course">课程</string>
+    <string name="sending">正在发送</string>
+
+    <!--rating dialog-->
+    <string name="star1">标记评级一</string>
+    <string name="star2">标记评级二</string>
+    <string name="star3">标记评级三</string>
+    <string name="star4">标记评级四</string>
+    <string name="star5">标记评级五</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">目前您已超出文件存储的配额。</string>
+    <string name="errorSubmittingFiles">上交您的文件时出错。请重试。</string>
+    <string name="errorLoadingFiles">加载文件时出错。请检查您的互联网连接，然后再试一次。</string>
+    <string name="filesUploadedSuccessfully">文件成功上传。</string>
+    <string name="filesSubmittedSuccessfully">文件成功提交。</string>
+    <string name="messageSentSuccessfully">消息成功发送。</string>
+    <string name="shareWithCanvas">其他应用程序可以与 Canvas 共享文件！查找应用程序下方的图标并单击 Canvas。</string>
+    <string name="shareWithCanvas2">此时将打开此应用程序。然后只需选择要上交文件的课程和作业。</string>
+    <string name="contentDescriptionSocialShare">分享图标</string>
+    <string name="submitAssignment">提交作业</string>
+    <string name="assignmentHeader">作业：</string>
+    <string name="submittingAssignment">提交作业&#8230;</string>
+    <string name="conversations">会话</string>
+    <string name="inbox">收件箱</string>
+    <string name="divider">分隔器</string>
+    <string name="legal">法律</string>
+    <string name="completeHomework">完成您的家庭作业</string>
+    <string name="takeExam">进行考试</string>
+    <string name="fileIcon">文件图标</string>
+    <string name="uploadingFileNum" formatted="false">正在上传第 %d 个，共 %d 个</string>
+    <string name="fileLocked" formatted="false">%s 已锁定。</string>
+    <string name="filePermissionGranted">文件现在准备下载，请再次尝试。</string>
+    <string name="filePermissionDenied">没有授予权限的文件不可以被下载。</string>
+    <string name="pleaseTryAgain">已授予权限，请重试。</string>
+    <string name="pickVideo">选择视频</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">发生意外错误。</string>
+    <string name="serverError">发生服务器错误。</string>
+    <string name="unauthorized">您没有访问权限。您没有权限或暂无访问权限（例如您的课程尚未开始）</string>
+    <string name="fileNoLongerExists">该文件不再存在。</string>
+    <string name="invalidAccessToken">您的会话已过期。请登录以开始一个新会话。</string>
+    <string name="uploadingFromSourceFailed">从此资源上传的文件无法完成。</string>
+    <string name="errorGettingPhoto">获取照片时出错。请重试。</string>
+    <string name="errorTextMissing">添加一些文本以发送消息</string>
+
+    <string name="fileUploadNotSupported">您没有上传文件到所选作业。</string>
+    <string name="noCourseSelected">请选择一个课程</string>
+    <string name="selectCourse">选择课程</string>
+    <string name="selectAssignment">选择一个作业</string>
+    <string name="loadingAssignments">正在加载作业&#8230;</string>
+    <string name="noAssignmentSelected">请选择一个作业</string>
+    <string name="noAssignmentsWithFileUpload">此课程没有允许上传文件的作业。</string>
+    <string name="teacherNotAllowedFileSubmission">作为此课程的老师，您无法提交文件</string>
+    <string name="noFilesUploaded">您没有选择任何文件。</string>
+    <string name="oneOrMoreExtensionNotAllowed">一个或多个文件具有不被允许的文件扩展名</string>
+    <string name="extensionNotAllowed">不允许选择文件的类型</string>
+    <string name="allowedExtensions">允许扩展：</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> 请检查您的数据连接，然后再试一次。</string>
+    <string name="noApps">您的设备未安装可以处理此文件的任何应用程序。</string>
+    <string name="noAppsShort">无法打开</string>
+    <string name="unexpectedErrorOpeningFile">尝试打开该文件时发生意外错误。</string>
+    <string name="unexpectedErrorDownloadingFile">尝试下载该文件时发生意外错误。</string>
+
+    <string name="done">完成</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">要使用此功能，必须首先得到授权。</string>
+    <string name="noConnection">没有连接</string>
+
+    <!--General-->
+    <string name="yes">是</string>
+    <string name="no">否</string>
+
+    <string name="inbox_all">收件箱</string>
+    <string name="inbox_unread">未读</string>
+    <string name="inbox_starred">已标记</string>
+    <string name="inbox_sent">已发送</string>
+    <string name="inbox_archived">已归档</string>
+
+    <string name="forbidden">回复只对至少发布了一条回复的人可见。</string>
+
+    <string name="like">赞</string>
+    <string name="likes">赞</string>
+    <string name="lockedAssignmentNotModule">此作业被锁定。</string>
+    <string name="deletedEntryNoChildren">该删除的讨论条目没有回复。</string>
+    <string name="deleted">[删除]</string>
+    <string name="deleted_by">[被%1$s删除]</string>
+    <string name="lockedDiscussionDesc">该讨论是模块%s的组成部分，并且尚未锁定。</string>
+    <string name="gradedDiscussion">评分讨论</string>
+    <string name="pointsPossible">可能得分</string>
+    <string name="sideCommentEntry">在该类型的讨论中，您不能评论该级别的任何条目。</string>
+
+    <string name="accessibility_overflow">溢出</string>
+
+    <string name="discussion_response">评论</string>
+    <string name="discussion_responses">评论</string>
+    <string name="discussion_unread">未读</string>
+    <string name="discussion_reply">回复</string>
+    <string name="close">关闭</string>
+
+    <string name="noInternetConnectionTitle">无互联网连接</string>
+    <string name="noInternetConnectionMessage">此操作需要互联网连接。</string>
+    <string name="content_description_avatar">头像</string>
+    <string name="formattedAvatarAction">查看 %s 的用户详细信息。</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas 教师</string>
+    <string name="utils_canvasParent">Canvas 父母</string>
+    <string name="utils_polls">Canvas 投票</string>
+    <string name="utils_speedgrader">快速评分</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">我们做得怎样？</string>
+    <string name="utils_rateUs">您如何评价我们？</string>
+    <string name="utils_doBetter">我们如何能做得更好？</string>
+    <string name="utils_sendFeedback">发送反馈</string>
+    <string name="utils_suggestions">给安卓的建议</string>
+    <string name="utils_domain">域</string>
+    <string name="utils_versionNum">版本：</string>
+    <string name="utils_userId">用户 ID</string>
+    <string name="utils_email">电子邮件</string>
+    <string name="utils_dontShowAgain">不再显示</string>
+    <string name="utils_installDate">安装日期：</string>
+    <string name="utils_device">设备</string>
+    <string name="utils_osVersion">操作系统版本</string>
+    <string name="loading">正在加载</string>
+    <string name="save">保存</string>
+    <string name="cropInstructions">缩放并拖动以调整图像。</string>
+
 </resources>

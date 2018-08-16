@@ -16,11 +16,10 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.data.Data.getNextDiscussion
-import com.instructure.teacher.ui.models.CanvasUser
+import com.instructure.soseedy.SeededData
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.getNextCourse
-import com.instructure.teacher.ui.utils.logIn
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class DiscussionsListPageTest : TeacherTest() {
@@ -31,16 +30,18 @@ class DiscussionsListPageTest : TeacherTest() {
     }
 
     @Test fun assertHasDiscussion() {
-        getToDiscussionsListPage()
-        val discussion = getNextDiscussion()
+        val discussion = getToDiscussionsListPage().discussionsList[0]
         discussionsListPage.assertHasDiscussion(discussion)
     }
 
-    private fun getToDiscussionsListPage(): CanvasUser {
-        val teacher = logIn()
-        val course = getNextCourse()
+    private fun getToDiscussionsListPage(): SeededData {
+        val data = seedData(teachers = 1, favoriteCourses = 1, discussions = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        tokenLogin(teacher)
+
         coursesListPage.openCourse(course)
         courseBrowserPage.openDiscussionsTab()
-        return teacher
+        return data
     }
 }

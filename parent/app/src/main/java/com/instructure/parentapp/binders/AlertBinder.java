@@ -19,21 +19,17 @@ package com.instructure.parentapp.binders;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.View;
 
 import com.instructure.canvasapi2.models.Alert;
-import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.utils.DateHelper;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Utils;
 import com.instructure.parentapp.BuildConfig;
 import com.instructure.parentapp.R;
 import com.instructure.parentapp.adapter.AlertListRecyclerAdapter;
 import com.instructure.parentapp.holders.AlertViewHolder;
 import com.instructure.parentapp.interfaces.AdapterToFragmentBadgeCallback;
-
-import java.util.List;
 
 public class AlertBinder extends BaseBinder {
 
@@ -112,7 +108,7 @@ public class AlertBinder extends BaseBinder {
             case ASSIGNMENT_GRADE_LOW:
             case ASSIGNMENT_MISSING:
                 if (item.isMarkedRead()) {
-                    holder.icon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, R.drawable.ic_warning_white_18dp, context.getResources().getColor(R.color.courseGrey)));
+                    holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_warning_white_18dp, context.getResources().getColor(R.color.gray)));
                 } else {
                     holder.icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_warning_white_18dp));
                 }

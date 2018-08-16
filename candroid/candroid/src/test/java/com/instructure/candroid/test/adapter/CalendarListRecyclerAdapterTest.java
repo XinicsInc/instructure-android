@@ -23,6 +23,7 @@ import android.test.InstrumentationTestCase;
 import com.instructure.candroid.adapter.CalendarListRecyclerAdapter;
 import com.instructure.canvasapi2.models.Assignment;
 import com.instructure.canvasapi2.models.ScheduleItem;
+import com.instructure.canvasapi2.utils.APIHelper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,7 @@ import org.robolectric.annotation.Config;
 import java.util.Calendar;
 import java.util.Date;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class CalendarListRecyclerAdapterTest extends InstrumentationTestCase {
     private CalendarListRecyclerAdapter mAdapter;
@@ -57,7 +58,7 @@ public class CalendarListRecyclerAdapterTest extends InstrumentationTestCase {
     public void testAreContentsTheSame_noAssignmentSame(){
         ScheduleItem scheduleItem1 = new ScheduleItem();
         scheduleItem1.setTitle("ScheduleItem1");
-        scheduleItem1.setStartDate(new Date());
+        scheduleItem1.setStartAt(new Date());
         assertTrue(mAdapter.createItemCallback().areContentsTheSame(scheduleItem1, scheduleItem1));
     }
 
@@ -66,10 +67,10 @@ public class CalendarListRecyclerAdapterTest extends InstrumentationTestCase {
         ScheduleItem scheduleItem1 = new ScheduleItem();
         scheduleItem1.setTitle("ScheduleItem1a");
         Date date = new Date();
-        scheduleItem1.setStartDate(date);
+        scheduleItem1.setStartAt(date);
         ScheduleItem scheduleItem2 = new ScheduleItem();
         scheduleItem2.setTitle("ScheduleItem1b");
-        scheduleItem2.setStartDate(date);
+        scheduleItem2.setStartAt(date);
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(scheduleItem1, scheduleItem2));
     }
 
@@ -77,10 +78,10 @@ public class CalendarListRecyclerAdapterTest extends InstrumentationTestCase {
     public void testAreContentsTheSame_noAssignmentDifferentDate(){
         ScheduleItem scheduleItem1 = new ScheduleItem();
         scheduleItem1.setTitle("ScheduleItem1a");
-        scheduleItem1.setStartDate(new Date(Calendar.getInstance().getTimeInMillis() - 1000));
+        scheduleItem1.setStartAt(new Date(Calendar.getInstance().getTimeInMillis() - 1000));
         ScheduleItem scheduleItem2 = new ScheduleItem();
         scheduleItem2.setTitle("ScheduleItem1a");
-        scheduleItem2.setStartDate(new Date(Calendar.getInstance().getTimeInMillis() + 1000));
+        scheduleItem2.setStartAt(new Date(Calendar.getInstance().getTimeInMillis() + 1000));
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(scheduleItem1, scheduleItem2));
     }
 
@@ -88,9 +89,9 @@ public class CalendarListRecyclerAdapterTest extends InstrumentationTestCase {
     public void testAreContentsTheSame_sameAssignment(){
         ScheduleItem scheduleItem1 = new ScheduleItem();
         scheduleItem1.setTitle("ScheduleItem1");
-        scheduleItem1.setStartDate(new Date());
+        scheduleItem1.setStartAt(new Date());
         Assignment assignment1 = new Assignment();
-        assignment1.setDueDate(new Date());
+        assignment1.setDueAt(APIHelper.dateToString(new Date()));
         scheduleItem1.setAssignment(assignment1);
         assertTrue(mAdapter.createItemCallback().areContentsTheSame(scheduleItem1, scheduleItem1));
     }
@@ -100,16 +101,16 @@ public class CalendarListRecyclerAdapterTest extends InstrumentationTestCase {
         ScheduleItem scheduleItem1 = new ScheduleItem();
         scheduleItem1.setTitle("ScheduleItem1");
         Date date = new Date();
-        scheduleItem1.setStartDate(date);
+        scheduleItem1.setStartAt(date);
         Assignment assignment1 = new Assignment();
-        assignment1.setDueDate(new Date(Calendar.getInstance().getTimeInMillis() - 1000));
+        assignment1.setDueAt(APIHelper.dateToString(new Date(Calendar.getInstance().getTimeInMillis() - 1000)));
         scheduleItem1.setAssignment(assignment1);
 
         ScheduleItem scheduleItem2 = new ScheduleItem();
         scheduleItem2.setTitle("ScheduleItem1");
-        scheduleItem2.setStartDate(date);
+        scheduleItem2.setStartAt(date);
         Assignment assignment2 = new Assignment();
-        assignment2.setDueDate(new Date(Calendar.getInstance().getTimeInMillis() + 1000));
+        assignment2.setDueAt(APIHelper.dateToString(new Date(Calendar.getInstance().getTimeInMillis() + 1000)));
         scheduleItem2.setAssignment(assignment2);
 
         assertFalse(mAdapter.createItemCallback().areContentsTheSame(scheduleItem1, scheduleItem2));
@@ -120,14 +121,14 @@ public class CalendarListRecyclerAdapterTest extends InstrumentationTestCase {
         ScheduleItem scheduleItem1 = new ScheduleItem();
         scheduleItem1.setTitle("ScheduleItem1");
         Date date = new Date();
-        scheduleItem1.setStartDate(date);
+        scheduleItem1.setStartAt(date);
         Assignment assignment1 = new Assignment();
-        assignment1.setDueDate(date);
+        assignment1.setDueAt(APIHelper.dateToString(date));
         scheduleItem1.setAssignment(assignment1);
 
         ScheduleItem scheduleItem2 = new ScheduleItem();
         scheduleItem2.setTitle("ScheduleItem1");
-        scheduleItem2.setStartDate(date);
+        scheduleItem2.setStartAt(date);
         Assignment assignment2 = null;
         scheduleItem2.setAssignment(assignment2);
 

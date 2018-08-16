@@ -17,6 +17,5 @@
   -->
 
 <resources>
-    <integer name="num_columns_course_grid">2</integer>
     <integer name="course_actionbar_max_length">96</integer>
 </resources>

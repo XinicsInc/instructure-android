@@ -27,7 +27,7 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.interfaces.RecipientAdapterCallback
-import com.instructure.teacher.utils.ProfileUtils
+import com.instructure.pandautils.utils.ProfileUtils
 import kotlinx.android.synthetic.main.viewholder_recipient.view.*
 
 class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -66,7 +66,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             if(isSelected) {
                 setChecked(true)
             } else {
-                ProfileUtils.loadAvatarForUser(context, avatar, recipient.name, recipient.avatarURL)
+                ProfileUtils.loadAvatarForUser(avatar, recipient.name, recipient.avatarURL)
             }
             
             userCount.setVisible()
@@ -74,7 +74,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         } else if (recipient.recipientType == Recipient.Type.metagroup) {
             checkBox.setGone()
 
-            ProfileUtils.loadAvatarForUser(context, avatar, recipient.name, recipient.avatarURL)
+            ProfileUtils.loadAvatarForUser(avatar, recipient.name, recipient.avatarURL)
 
             userCount.setVisible()
             userCount.text = context.resources.getQuantityString(R.plurals.group_count, recipient.itemCount, recipient.itemCount)
@@ -85,7 +85,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 setChecked(true)
             } else {
                 userCount.text = ""
-                ProfileUtils.loadAvatarForUser(context, avatar, recipient.name, recipient.avatarURL)
+                ProfileUtils.loadAvatarForUser(avatar, recipient.name, recipient.avatarURL)
             }
         }
 

@@ -16,7 +16,7 @@
 package com.instructure.teacher.ui.utils.pageAssert
 
 import android.support.test.espresso.ViewInteraction
-import com.instructure.teacher.ui.utils.assertDisplayed
+import com.instructure.teacher.ui.utils.assertVisible
 
 
 interface PropertyAssert {
@@ -24,7 +24,7 @@ interface PropertyAssert {
 }
 
 class SimplePropertyAssert : PropertyAssert {
-    override fun assertProperties(properties: List<ViewInteraction>) = properties.forEach { it.assertDisplayed() }
+    override fun assertProperties(properties: List<ViewInteraction>) = properties.forEach { it.assertVisible() }
 }
 
 class SkipPropertyAssert : PropertyAssert {

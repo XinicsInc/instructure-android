@@ -18,6 +18,8 @@
 package com.instructure.candroid.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -29,7 +31,7 @@ import com.instructure.candroid.holders.ExpandableViewHolder;
 import com.instructure.candroid.holders.NotificationViewHolder;
 import com.instructure.candroid.interfaces.NotificationAdapterToFragmentCallback;
 import com.instructure.canvasapi2.StatusCallback;
-import com.instructure.canvasapi2.managers.ConversationManager;
+import com.instructure.canvasapi2.managers.InboxManager;
 import com.instructure.canvasapi2.managers.CourseManager;
 import com.instructure.canvasapi2.managers.GroupManager;
 import com.instructure.canvasapi2.managers.StreamManager;
@@ -53,6 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<Date, StreamItem, RecyclerView.ViewHolder> {
@@ -191,7 +194,7 @@ public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<D
 
         mCoursesCallback = new StatusCallback<List<Course>>() {
             @Override
-            public void onResponse(retrofit2.Response<List<Course>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<Course>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 mCourseMap = CourseManager.createCourseMap(response.body());
                 populateActivityStreamAdapter();
             }
@@ -199,7 +202,7 @@ public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<D
 
         mGroupsCallback = new StatusCallback<List<Group>>() {
             @Override
-            public void onResponse(retrofit2.Response<List<Group>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<Group>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 mGroupMap = GroupManager.createGroupMap(response.body());
                 populateActivityStreamAdapter();
             }
@@ -220,7 +223,7 @@ public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<D
             }
 
             @Override
-            public void onResponse(retrofit2.Response<List<StreamItem>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<StreamItem>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 List<StreamItem> streamItems = response.body();
 
                 checkPreviouslyCheckedItems(streamItems);
@@ -233,8 +236,9 @@ public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<D
                 setNextUrl(linkHeaders.nextUrl);
             }
 
+
             @Override
-            public void onFail(Call<List<StreamItem>> callResponse, Throwable error, retrofit2.Response response) {
+            public void onFail(@Nullable Call<List<StreamItem>> call, @NonNull Throwable error, @Nullable Response response) {
                 if (!APIHelper.hasNetworkConnection()) {
                     NotificationListRecyclerAdapter.this.onNoNetwork();
                 } else {
@@ -318,25 +322,28 @@ public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<D
             streamItem.setCanvasContextFromMap(mCourseMap, mGroupMap);
 
             // load conversations if needed
-            if (streamItem.getType() == StreamItem.Type.CONVERSATION) {
+            if (streamItem.getType() == StreamItem.Type.CONVERSATION && ApiPrefs.getUser() != null) {
 
-                ConversationManager.getConversation(streamItem.getConversationId(), false,
+                InboxManager.getConversation(streamItem.getConversationId(), false,
                         new StatusCallback<Conversation>() {
                     @Override
-                    public void onResponse(retrofit2.Response<Conversation> response, LinkHeaders linkHeaders, ApiType type) {
-                        streamItem.setConversation(getContext(), response.body(), ApiPrefs.getUser().getId(), getContext().getString(R.string.monologue));
-                        notifyDataSetChanged();
+                    public void onResponse(@NonNull Response<Conversation> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
+                        // need to make sure the user isn't null
+                        if(ApiPrefs.getUser() != null) {
+                            streamItem.setConversation(getContext(), response.body(), ApiPrefs.getUser().getId(), getContext().getString(R.string.monologue));
+                            notifyDataSetChanged();
+                        }
                     }
 
 
                     @Override
-                    public void onFail(Call<Conversation> response, Throwable error) {
-                        //Show crouton if it's a network error
+                    public void onFail(@Nullable Call<Conversation> call, @NonNull Throwable error, @Nullable Response response) {
+                        // Show crouton if it's a network error
                         if (!APIHelper.hasNetworkConnection()) {
                             mAdapterToFragmentCallback.onShowErrorCrouton(R.string.noDataConnection);
                         }
-                        //Otherwise show that it's been deleted.
-                        else {
+                        // Otherwise show that it's been deleted if we have a valid user
+                        else if(ApiPrefs.getUser() != null) {
                             Conversation conversation = new Conversation();
                             conversation.setDeleted(true);
                             conversation.setDeletedString(getContext().getString(R.string.deleted));
@@ -368,7 +375,7 @@ public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<D
         StreamManager.hideStreamItem(streamItem.getId(), new StatusCallback<HiddenStreamItem>() {
 
             @Override
-            public void onResponse(retrofit2.Response<HiddenStreamItem> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<HiddenStreamItem> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if (response.body().isHidden()) {
                     removeItem(streamItem);
 
@@ -379,7 +386,7 @@ public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<D
             }
 
             @Override
-            public void onFail(Call<HiddenStreamItem> callResponse, Throwable error, retrofit2.Response response) {
+            public void onFail(@Nullable Call<HiddenStreamItem> call, @NonNull Throwable error, @Nullable Response response) {
                 mDeletedStreamItems.remove(streamItem);
             }
         });

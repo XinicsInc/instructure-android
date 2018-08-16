@@ -17,8 +17,9 @@
 package com.instructure.teacher.presenters
 
 import android.net.Uri
+import com.instructure.annotations.FileCaching.FileCache
+import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.weave
-import com.instructure.teacher.utils.awaitFileDownload
 import com.instructure.teacher.viewinterface.ViewPdfFragmentView
 import instructure.androidblueprint.FragmentPresenter
 import kotlinx.coroutines.experimental.Job
@@ -34,7 +35,7 @@ class ViewPdfFragmentPresenter(val pdfUrl: String) : FragmentPresenter<ViewPdfFr
         viewCallback?.onLoadingStarted()
         if (job?.isActive ?: false) return
         job = weave {
-            val tempFile: File? = com.instructure.teacher.PSPDFKit.FileCache.awaitFileDownload(pdfUrl) {
+            val tempFile: File? = FileCache.awaitFileDownload(pdfUrl) {
                 onUI { viewCallback?.onLoadingProgress(it) }
             }
             viewCallback?.let {

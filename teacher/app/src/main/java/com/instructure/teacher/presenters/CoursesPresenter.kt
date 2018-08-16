@@ -21,11 +21,11 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.isValidTerm
+import com.instructure.teacher.utils.hasActiveEnrollment
 import com.instructure.teacher.viewinterface.CoursesView
 import instructure.androidblueprint.SyncPresenter
 
-class CoursesPresenter(filter: (Course) -> Boolean):
-        SyncPresenter<Course, CoursesView>(Course::class.java) {
+class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) {
 
     override fun loadData(forceNetwork: Boolean) {
         if(forceNetwork) clearData()
@@ -41,7 +41,11 @@ class CoursesPresenter(filter: (Course) -> Boolean):
 
     private val mFavoriteCoursesCallback = object : StatusCallback<List<Course>>() {
         override fun onResponse(response: retrofit2.Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-            data.addOrUpdate(response.body().filter(filter).filter(Course::isFavorite).filter(Course::isValidTerm))
+            val courses = response.body() ?: return
+            val validCourses = courses.filter {
+                it.isFavorite && it.isValidTerm() && (it.isTeacher || it.isTA || it.isDesigner) && it.hasActiveEnrollment()
+            }
+            data.addOrUpdate(validCourses)
         }
 
         override fun onFinished(type: ApiType) {

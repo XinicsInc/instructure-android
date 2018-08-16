@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.ParentResponse;
 import com.instructure.canvasapi2.models.RemoteFile;
 import com.instructure.canvasapi2.models.ResetParent;
 import com.instructure.canvasapi2.models.Student;
+import com.instructure.canvasapi2.models.TermsOfService;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
@@ -92,6 +93,10 @@ public class UserManager_Test {
     }
 
     public static void getPeopleList(RestBuilder adapter, RestParams params, long canvasContextId, StatusCallback<List<User>> callback) {
+        // TODO
+    }
+
+    public static void getTermsOfService(RestBuilder adapter, RestParams params, StatusCallback<TermsOfService> callback) {
         // TODO
     }
 

@@ -17,9 +17,9 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +28,41 @@ import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.RubricRecyclerAdapter;
 import com.instructure.candroid.decorations.RubricDecorator;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.view.EmptyPandaView;
 import com.instructure.canvasapi2.models.Assignment;
+import com.instructure.canvasapi2.utils.pageview.BeforePageView;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam;
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery;
 import com.instructure.pandarecycler.PandaRecyclerView;
+import com.instructure.pandautils.utils.FragmentExtensionsKt;
 
+@PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions/{submissionId}")
 public class RubricFragment extends ParentFragment {
+
+    @PageViewUrlParam(name="assignmentId")
+    private long getAssignmentId() {
+        if (mRecyclerAdapter.getAssignment() != null) {
+            return mRecyclerAdapter.getAssignment().getId();
+        } else {
+            return 0;
+        }
+    }
+
+    @PageViewUrlParam(name="submissionId")
+    private String getSubmissionId() {
+        if (mRecyclerAdapter.getAssignment() != null && mRecyclerAdapter.getAssignment().getSubmission() != null) {
+            long submissionId = mRecyclerAdapter.getAssignment().getSubmission().getId();
+            return submissionId > 0 ? String.valueOf(submissionId) : "";
+        }
+        return "";
+    }
+
+    @PageViewUrlQuery(name = "module_item_id")
+    private Long getModuleItemId() {
+        return FragmentExtensionsKt.getModuleItemId(this);
+    }
 
     private RubricRecyclerAdapter mRecyclerAdapter;
 
@@ -41,22 +71,21 @@ public class RubricFragment extends ParentFragment {
     }
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.DETAIL; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.DETAIL; }
 
     @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.grades);
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Interface Methods
-    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * Since this is a nested fragment, the ViewPager calls this method
      *
-     * For explanation of isWithinAnotherCallback and isCached refer to comment in {@link com.instructure.candroid.activity.CallbackActivity#getUserSelf}
+     * For explanation of isWithinAnotherCallback and isCached refer to comment in {@link com.instructure.candroid.activity.CallbackActivity}
      */
+    @BeforePageView
     public void setAssignment(Assignment assignment, boolean isWithinAnotherCallback, boolean isCached) {
         if (mRecyclerAdapter != null) {
             mRecyclerAdapter.setAssignment(assignment);
@@ -72,10 +101,6 @@ public class RubricFragment extends ParentFragment {
             mRecyclerAdapter.onNoNetwork();
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // LifeCycle
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -118,9 +143,9 @@ public class RubricFragment extends ParentFragment {
         return rootView;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
+    @Override
+    public void applyTheme() {}
+
     @Override
     public void handleIntentExtras(Bundle extras) {
         super.handleIntentExtras(extras);

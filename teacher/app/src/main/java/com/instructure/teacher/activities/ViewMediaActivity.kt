@@ -38,7 +38,7 @@ import com.instructure.teacher.events.FileFolderDeletedEvent
 import com.instructure.teacher.events.FileFolderUpdatedEvent
 import com.instructure.teacher.fragments.EditFileFolderFragment
 import com.instructure.teacher.models.EditableFile
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import kotlinx.android.synthetic.main.activity_view_media.*

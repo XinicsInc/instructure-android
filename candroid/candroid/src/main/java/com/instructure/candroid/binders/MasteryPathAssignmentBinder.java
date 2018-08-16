@@ -24,7 +24,7 @@ import com.instructure.candroid.holders.MasteryAssignmentViewHolder;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
 import com.instructure.canvasapi2.models.Assignment;
 import com.instructure.canvasapi2.models.MasteryPathAssignment;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 
 public class MasteryPathAssignmentBinder extends BaseBinder {
@@ -39,7 +39,7 @@ public class MasteryPathAssignmentBinder extends BaseBinder {
         holder.title.setText(masteryPathAssignment.getModel().getName());
 
         final int drawable = getAssignmentIcon(masteryPathAssignment.getModel());
-        holder.icon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, drawable, courseColor));
+        holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, drawable, courseColor));
         holder.rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

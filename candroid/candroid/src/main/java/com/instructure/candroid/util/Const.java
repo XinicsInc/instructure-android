@@ -49,6 +49,4 @@ public class Const {
     public static final String MODULE_POSITION = "modulePosition";
 
     public static final int MASQUERADING_PENDING_INTENT_ID = 123456;
-    public static final String LANGUAGES_PENDING_INTENT_KEY = "languagesPendingIntentKey";
-    public static final int LANGUAGES_PENDING_INTENT_ID = 654321;
 }

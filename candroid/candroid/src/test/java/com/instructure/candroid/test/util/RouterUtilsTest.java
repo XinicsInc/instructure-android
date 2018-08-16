@@ -19,14 +19,15 @@ package com.instructure.candroid.test.util;
 
 import android.test.InstrumentationTestCase;
 
+import com.instructure.candroid.activity.BaseRouterActivity;
 import com.instructure.candroid.fragment.AnnouncementListFragment;
 import com.instructure.candroid.fragment.AssignmentFragment;
 import com.instructure.candroid.fragment.AssignmentListFragment;
 import com.instructure.candroid.fragment.BasicQuizViewFragment;
-import com.instructure.candroid.fragment.DetailedConversationFragment;
-import com.instructure.candroid.fragment.DetailedDiscussionFragment;
+import com.instructure.candroid.fragment.CourseModuleProgressionFragment;
+import com.instructure.candroid.fragment.CourseSettingsFragment;
+import com.instructure.candroid.fragment.DiscussionDetailsFragment;
 import com.instructure.candroid.fragment.DiscussionListFragment;
-import com.instructure.candroid.fragment.FileDetailsFragment;
 import com.instructure.candroid.fragment.FileListFragment;
 import com.instructure.candroid.fragment.GradesListFragment;
 import com.instructure.candroid.fragment.InboxFragment;
@@ -38,14 +39,13 @@ import com.instructure.candroid.fragment.PeopleDetailsFragment;
 import com.instructure.candroid.fragment.PeopleListFragment;
 import com.instructure.candroid.fragment.QuizListFragment;
 import com.instructure.candroid.fragment.ScheduleListFragment;
-import com.instructure.candroid.fragment.SettingsFragment;
-import com.instructure.candroid.fragment.SyllabusFragment;
 import com.instructure.candroid.fragment.UnSupportedTabFragment;
 import com.instructure.candroid.util.Param;
 import com.instructure.candroid.util.RouterUtils;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Tab;
-import com.instructure.canvasapi2.utils.APIHelper;
+import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.canvasapi2.utils.ContextKeeper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,12 +56,13 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 
-@Config(sdk = 17)
+@Config(sdk = 19)
 @RunWith(RobolectricTestRunner.class)
 public class RouterUtilsTest extends InstrumentationTestCase {
 
     @Before
     public void setUp() throws Exception {
+        ContextKeeper.setAppContext(RuntimeEnvironment.application.getApplicationContext());
     }
 
     @Test
@@ -77,6 +78,20 @@ public class RouterUtilsTest extends InstrumentationTestCase {
     public void testCanRouteInternally_notSupported() {
         // Had to comment out so they will pass on Jenkins
         //assertTrue(callCanRouteInternally("https://mobiledev.instructure.com/courses/833052/media_download?"));
+    }
+
+    @Test
+    public void testCanRouteInternally_courseIdParseCorrect() {
+        // Written due to a crash found by Crashlytics
+        // See: https://fabric.io/instructure/android/apps/com.instructure.candroid/issues/5a69f6858cb3c2fa63977be1?time=1509408000000%3A1517270399999
+        assertEquals(833052L, BaseRouterActivity.parseCourseId("sis_course_id:833052"));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCanRouteInternally_courseIdParseWrong() {
+        // Written due to a crash found by Crashlytics
+        // See: https://fabric.io/instructure/android/apps/com.instructure.candroid/issues/5a69f6858cb3c2fa63977be1?time=1509408000000%3A1517270399999
+        BaseRouterActivity.parseCourseId("sis_course_id:833");
     }
 
     @Test
@@ -97,8 +112,6 @@ public class RouterUtilsTest extends InstrumentationTestCase {
         //String domain = APIHelper.getDomain(RuntimeEnvironment.application);
         return RouterUtils.getInternalRoute(url, "mobiledev.instructure.com");
     }
-
-
 
     @Test
     public void testGetInternalRoute_supportedDomain() {
@@ -203,7 +216,6 @@ public class RouterUtilsTest extends InstrumentationTestCase {
         route = callGetInternalRoute("https://mobiledev.instructure.com/conversations/1078680");
         assertNotNull(route);
         assertEquals(InboxFragment.class, route.getMasterCls());
-        assertEquals(DetailedConversationFragment.class, route.getDetailCls());
 
         HashMap<String, String> expectedParams = new HashMap<>();
         expectedParams.put(Param.CONVERSATION_ID, "1078680");
@@ -224,7 +236,7 @@ public class RouterUtilsTest extends InstrumentationTestCase {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/24219/discussion_topics/1129998?module_item_id=12345");
         assertNotNull(route);
         assertEquals(ModuleListFragment.class, route.getMasterCls());
-        assertEquals(DetailedDiscussionFragment.class, route.getDetailCls());
+        assertEquals(CourseModuleProgressionFragment.class, route.getDetailCls());
 
         HashMap<String, String> expectedQueryParams = new HashMap<>();
         expectedQueryParams.put(Param.MODULE_ITEM_ID, "12345");
@@ -234,28 +246,28 @@ public class RouterUtilsTest extends InstrumentationTestCase {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/24219/pages/1129998?module_item_id=12345");
         assertNotNull(route);
         assertEquals(ModuleListFragment.class, route.getMasterCls());
-        assertEquals(PageDetailsFragment.class, route.getDetailCls());
+        assertEquals(CourseModuleProgressionFragment.class, route.getDetailCls());
         assertEquals(expectedQueryParams, route.getQueryParamsHash());
 
         // quizzes
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/24219/quizzes/1129998?module_item_id=12345");
         assertNotNull(route);
         assertEquals(ModuleListFragment.class, route.getMasterCls());
-        assertEquals(BasicQuizViewFragment.class, route.getDetailCls());
+        assertEquals(CourseModuleProgressionFragment.class, route.getDetailCls());
         assertEquals(expectedQueryParams, route.getQueryParamsHash());
 
         // assignments
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/24219/assignments/1129998?module_item_id=12345");
         assertNotNull(route);
         assertEquals(ModuleListFragment.class, route.getMasterCls());
-        assertEquals(AssignmentFragment.class, route.getDetailCls());
+        assertEquals(CourseModuleProgressionFragment.class, route.getDetailCls());
         assertEquals(expectedQueryParams, route.getQueryParamsHash());
 
         // files
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/24219/files/1129998?module_item_id=12345");
         assertNotNull(route);
         assertEquals(ModuleListFragment.class, route.getMasterCls());
-        assertEquals(FileDetailsFragment.class, route.getDetailCls());
+        assertEquals(CourseModuleProgressionFragment.class, route.getDetailCls());
         assertEquals(expectedQueryParams, route.getQueryParamsHash());
     }
 
@@ -307,7 +319,7 @@ public class RouterUtilsTest extends InstrumentationTestCase {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/discussion_topics/1234");
         assertNotNull(route);
         assertEquals(DiscussionListFragment.class, route.getMasterCls());
-        assertEquals(DetailedDiscussionFragment.class, route.getDetailCls());
+        assertEquals(DiscussionDetailsFragment.class, route.getDetailCls());
 
         HashMap<String, String> expectedParams = new HashMap<>();
         expectedParams.put(Param.COURSE_ID, "836357");
@@ -342,7 +354,7 @@ public class RouterUtilsTest extends InstrumentationTestCase {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/announcements/12345");
         assertNotNull(route);
         assertEquals(AnnouncementListFragment.class, route.getMasterCls());
-        assertEquals(DetailedDiscussionFragment.class, route.getDetailCls());
+        assertEquals(DiscussionDetailsFragment.class, route.getDetailCls());
 
         HashMap<String, String> expectedParams = new HashMap<>();
         expectedParams.put(Param.COURSE_ID, "836357");
@@ -372,7 +384,7 @@ public class RouterUtilsTest extends InstrumentationTestCase {
         RouterUtils.Route route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/syllabus");
         assertNotNull(route);
         assertEquals(ScheduleListFragment.class, route.getMasterCls());
-        assertEquals(SyllabusFragment.class, route.getDetailCls());
+        assertEquals(ScheduleListFragment.class, route.getDetailCls());
 
         HashMap<String, String> expectedParams = new HashMap<>();
         expectedParams.put(Param.COURSE_ID, "836357");
@@ -427,7 +439,7 @@ public class RouterUtilsTest extends InstrumentationTestCase {
     public void testGetInternalRoute_settings() {
         RouterUtils.Route route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/settings/");
         assertNotNull(route);
-        assertEquals(SettingsFragment.class, route.getMasterCls());
+        assertEquals(CourseSettingsFragment.class, route.getMasterCls());
 
         HashMap<String, String> expectedParams = new HashMap<>();
         expectedParams.put(Param.COURSE_ID, "836357");
@@ -478,7 +490,7 @@ public class RouterUtilsTest extends InstrumentationTestCase {
 
     @Test
     public void testCreateBookmarkCourse() {
-        APIHelper.setDomain(RuntimeEnvironment.application.getApplicationContext(), "mobiledev.instructure.com");
+        ApiPrefs.setDomain("mobiledev.instructure.com");
         HashMap<String, String> replacementParams = new HashMap<>();
         replacementParams.put(Param.COURSE_ID, "123");
         replacementParams.put(Param.QUIZ_ID, "456");
@@ -486,13 +498,14 @@ public class RouterUtilsTest extends InstrumentationTestCase {
 
         HashMap<String, String> queryParams = new HashMap<>();
 
-        String url = RouterUtils.createUrl(RuntimeEnvironment.application.getApplicationContext(), canvasContext.getType(), QuizListFragment.class, BasicQuizViewFragment.class, replacementParams, queryParams);
+
+        String url = RouterUtils.createUrl(canvasContext.getType(), QuizListFragment.class, BasicQuizViewFragment.class, replacementParams, queryParams);
         assertEquals("https://mobiledev.instructure.com/courses/123/quizzes/456", url);
     }
 
     @Test
     public void testCreateBookmarkGroups() {
-        APIHelper.setDomain(RuntimeEnvironment.application.getApplicationContext(), "mobiledev.instructure.com");
+        ApiPrefs.setDomain("mobiledev.instructure.com");
         HashMap<String, String> replacementParams = new HashMap<>();
         replacementParams.put(Param.COURSE_ID, "123");
         replacementParams.put(Param.QUIZ_ID, "456");
@@ -500,7 +513,7 @@ public class RouterUtilsTest extends InstrumentationTestCase {
 
         HashMap<String, String> queryParams = new HashMap<>();
 
-        String url = RouterUtils.createUrl(RuntimeEnvironment.application.getApplicationContext(), canvasContext.getType(), QuizListFragment.class, BasicQuizViewFragment.class, replacementParams, queryParams);
+        String url = RouterUtils.createUrl(canvasContext.getType(), QuizListFragment.class, BasicQuizViewFragment.class, replacementParams, queryParams);
         assertEquals("https://mobiledev.instructure.com/groups/123/quizzes/456", url);
     }
 }

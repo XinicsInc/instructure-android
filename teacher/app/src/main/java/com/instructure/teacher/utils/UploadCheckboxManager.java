@@ -26,11 +26,10 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.CheckedTextView;
 
-import com.instructure.teacher.dialog.FileUploadDialog;
+import com.instructure.pandautils.dialogs.UploadFilesDialog;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class UploadCheckboxManager {
 
@@ -64,17 +63,16 @@ public class UploadCheckboxManager {
         return mCurrentCheckBox;
     }
 
-    public FileUploadDialog.FileUploadType getSelectedType(){
-        // TODO
-        /*switch (mCurrentCheckBox.getId()){
-            case R.id.myFilesCheckBox:
-                return FileUploadDialog.FileUploadType.USER;
-            case R.id.courseFilesCheckBox:
-                return FileUploadDialog.FileUploadType.COURSE;
-            case R.id.assignmentCheckBox:
-                return FileUploadDialog.FileUploadType.ASSIGNMENT;
-        }*/
-        return FileUploadDialog.FileUploadType.USER;
+    public UploadFilesDialog.FileUploadType getSelectedType(){
+//        switch (mCurrentCheckBox.getId()){
+//            case R.id.myFilesCheckBox:
+//                return FileUploadDialog.FileUploadType.USER;
+//            case R.id.courseFilesCheckBox:
+//                return FileUploadDialog.FileUploadType.COURSE;
+//            case R.id.assignmentCheckBox:
+//                return FileUploadDialog.FileUploadType.ASSIGNMENT;
+//        }
+        return UploadFilesDialog.FileUploadType.USER;
     }
 
 

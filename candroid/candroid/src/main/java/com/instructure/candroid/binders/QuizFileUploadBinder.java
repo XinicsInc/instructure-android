@@ -30,7 +30,7 @@ import com.instructure.candroid.interfaces.QuizToggleFlagState;
 import com.instructure.canvasapi2.models.Attachment;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.views.CanvasWebView;
 
 
@@ -74,15 +74,15 @@ public class QuizFileUploadBinder extends BaseBinder{
                 }
             });
             if(attachment.getContentType().contains("image")){
-                holder.fileIcon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_image, canvasContext));
+                holder.fileIcon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_image, canvasContext));
             }else{
-                holder.fileIcon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_document, canvasContext));
+                holder.fileIcon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_document, canvasContext));
             }
         } else if(quizSubmissionQuestion.getAnswer() != null) {
             //This means the user has previously uploaded a file
             holder.fileName.setText(context.getString(R.string.fileUploadSuccess));
             holder.fileIcon.setVisibility(View.VISIBLE);
-            holder.fileIcon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, R.drawable.ic_cv_document, canvasContext));
+            holder.fileIcon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_document, canvasContext));
             holder.remove.setVisibility(View.VISIBLE);
             holder.remove.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,12 +104,12 @@ public class QuizFileUploadBinder extends BaseBinder{
         holder.question.setCanvasEmbeddedWebViewCallback(callback);
         holder.questionNumber.setText(context.getString(R.string.question) + " " + (position + 1));
 
-        final Drawable courseColorFlag = CanvasContextColor.getColoredDrawable(context, R.drawable.ic_bookmark_fill_grey, courseColor);
+        final Drawable courseColorFlag = ColorKeeper.getColoredDrawable(context, R.drawable.vd_bookmark_filled, courseColor);
 
         if(quizSubmissionQuestion.isFlagged()) {
             holder.flag.setImageDrawable(courseColorFlag);
         } else {
-            holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+            holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
         }
 
         if(shouldLetAnswer) {
@@ -118,7 +118,7 @@ public class QuizFileUploadBinder extends BaseBinder{
                 public void onClick(View view) {
                     if (quizSubmissionQuestion.isFlagged()) {
                         //unflag it
-                        holder.flag.setImageResource(R.drawable.ic_bookmark_outline_grey);
+                        holder.flag.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_navigation_bookmarks, context.getResources().getColor(R.color.defaultTextGray)));
                         flagStateCallback.toggleFlagged(false, quizSubmissionQuestion.getId());
                         quizSubmissionQuestion.setFlagged(false);
                     } else {

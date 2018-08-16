@@ -18,14 +18,26 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
-    android:background="@color/canvasBackgroundOffWhite">
+    android:background="@color/canvasBackgroundWhite">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/defaultPrimary"
+        android:elevation="6dp"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:targetApi="lollipop" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
@@ -73,14 +85,12 @@
                             android:id="@+id/quiz_due"
                             style="@style/TextStyle.Primary"
                             android:layout_marginEnd="16dp"
-                            android:layout_marginRight="16dp"
                             android:text="@string/dueAt" />
 
                         <TextView
                             android:id="@+id/quiz_due_details"
                             style="@style/TextStyle.Secondary"
                             android:layout_toEndOf="@id/quiz_due"
-                            android:layout_toRightOf="@id/quiz_due"
                             android:textSize="18sp" />
                     </RelativeLayout>
 
@@ -98,14 +108,12 @@
                             android:id="@+id/quiz_points_possible"
                             style="@style/TextStyle.Primary"
                             android:layout_marginEnd="16dp"
-                            android:layout_marginRight="16dp"
                             android:text="@string/points" />
 
                         <TextView
                             android:id="@+id/quiz_points_details"
                             style="@style/TextStyle.Secondary"
                             android:layout_toEndOf="@id/quiz_points_possible"
-                            android:layout_toRightOf="@id/quiz_points_possible"
                             android:textSize="18sp" />
                     </RelativeLayout>
 
@@ -123,14 +131,12 @@
                             android:id="@+id/quiz_question_count"
                             style="@style/TextStyle.Primary"
                             android:layout_marginEnd="16dp"
-                            android:layout_marginRight="16dp"
                             android:text="@string/questions" />
 
                         <TextView
                             android:id="@+id/quiz_question_count_details"
                             style="@style/TextStyle.Secondary"
                             android:layout_toEndOf="@id/quiz_question_count"
-                            android:layout_toRightOf="@id/quiz_question_count"
                             android:textSize="18sp" />
                     </RelativeLayout>
 
@@ -148,14 +154,12 @@
                             android:id="@+id/quiz_attempt"
                             style="@style/TextStyle.Primary"
                             android:layout_marginEnd="16dp"
-                            android:layout_marginRight="16dp"
                             android:text="@string/allowed_attempts" />
 
                         <TextView
                             android:id="@+id/quiz_attempt_details"
                             style="@style/TextStyle.Secondary"
                             android:layout_toEndOf="@id/quiz_attempt"
-                            android:layout_toRightOf="@id/quiz_attempt"
                             android:textSize="18sp" />
                     </RelativeLayout>
 
@@ -173,14 +177,12 @@
                         <TextView
                             android:id="@+id/quiz_unlocked"
                             style="@style/TextStyle.Primary"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginRight="16dp" />
+                            android:layout_marginEnd="16dp" />
 
                         <TextView
                             android:id="@+id/quiz_unlocked_details"
                             style="@style/TextStyle.Secondary"
                             android:layout_toEndOf="@id/quiz_unlocked"
-                            android:layout_toRightOf="@id/quiz_unlocked"
                             android:textSize="18sp" />
                     </RelativeLayout>
 
@@ -198,14 +200,12 @@
                         <TextView
                             android:id="@+id/quiz_time_limit"
                             style="@style/TextStyle.Primary"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginRight="16dp" />
+                            android:layout_marginEnd="16dp" />
 
                         <TextView
                             android:id="@+id/quiz_time_limit_details"
                             style="@style/TextStyle.Secondary"
                             android:layout_toEndOf="@id/quiz_time_limit"
-                            android:layout_toRightOf="@id/quiz_time_limit"
                             android:textSize="18sp" />
                     </RelativeLayout>
 
@@ -224,14 +224,12 @@
                             android:id="@+id/quiz_turned_in"
                             style="@style/TextStyle.Primary"
                             android:layout_marginEnd="16dp"
-                            android:layout_marginRight="16dp"
                             android:text="@string/turnedIn" />
 
                         <TextView
                             android:id="@+id/quiz_turned_in_details"
                             style="@style/TextStyle.Secondary"
                             android:layout_toEndOf="@id/quiz_turned_in"
-                            android:layout_toRightOf="@id/quiz_turned_in"
                             android:textSize="18sp" />
                     </RelativeLayout>
 
@@ -247,18 +245,17 @@
                             android:id="@+id/next"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_marginBottom="8dp"
                             android:layout_marginEnd="4dp"
-                            android:layout_marginRight="4dp"
                             android:layout_marginTop="8dp"
                             android:background="@drawable/cv_transparent_button"
                             android:gravity="start|center_vertical"
                             android:text="@string/start"
                             android:textAllCaps="true"
                             android:textColor="@color/canvasBlue"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:visibility="gone" />
 
                         <Button
                             android:id="@+id/quiz_results"
@@ -266,7 +263,6 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
                             android:layout_toEndOf="@+id/next"
-                            android:layout_toRightOf="@+id/next"
                             android:background="@drawable/cv_transparent_button"
                             android:text="@string/viewResults"
                             android:textAllCaps="true"

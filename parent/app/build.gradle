@@ -14,6 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply from: 'jacoco.gradle' // ./gradlew testDevDebugUnitTestCoverage
@@ -21,43 +22,18 @@ apply plugin: 'com.google.gms.oss.licenses.plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-
-repositories {
-    jcenter()
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://jitpack.io" }
-    maven { url 'https://maven.google.com' }
-    flatDir {
-        dirs "../../espresso/aars"
-    }
-}
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url "https://jitpack.io" }
-        maven { url "https://maven.google.com" }
-        maven { url 'https://maven.fabric.io/public' }
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
-        classpath 'io.fabric.tools:gradle:1.+'
-        classpath 'com.uber:infer-plugin:0.7.4'
-    }
-}
-
 apply plugin: 'com.uber.infer.android' // ./gradlew inferDevDebug
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
         applicationId "com.instructure.parentapp"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
+        versionCode = 11
+        versionName = "1.2.4"
 
         multiDexEnabled = true
         testInstrumentationRunner 'com.instructure.parentapp.ui.utils.ParentInstructureRunner'
@@ -74,28 +50,33 @@ android {
         buildConfigField "String", "ROBO_TEST_USERNAME", "\"\""
 
         /* Add private data */
-        buildConfigField "String", "LOGIN_CLIENT_ID", "\"loginClientId\""
+        buildConfigField "String", "LOGIN_CLIENT_ID", "\"$loginClientId\""
         buildConfigField "String", "LOGIN_CLIENT_SECRET", "\"$loginClientSecret\""
         addManifestPlaceholders([
                 fabricApiKey:"$fabricApiKey"
         ])
     }
 
+    flavorDimensions 'default'
     productFlavors {
-
         dev {
+            dimension 'default'
             buildConfigField "String", "GAMMA_DOMAIN", "\"https://airwolf-iad-gamma.inscloudgate.net\""
         }
 
-        prod { }
+        prod {
+            dimension 'default'
+        }
 
         qa {
+            dimension 'default'
             buildConfigField "boolean", "IS_TESTING", "true"
             buildConfigField "String", "GAMMA_DOMAIN", "\"https://airwolf-iad-gamma.inscloudgate.net\""
             buildConfigField "String", "EDGE_DOMAIN", "\"https://airwolf-edge.inseng.net\""
         }
 
         robo {
+            dimension 'default'
             buildConfigField "boolean", "IS_ROBO_TEST", "true"
             buildConfigField "String", "ROBO_TEST_API_KEY", "\"$roboTestApiKey\""
             buildConfigField "String", "ROBO_TEST_USER_ID", "\"$roboTestUserId\""
@@ -151,56 +132,52 @@ android {
     at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
     https://github.com/googlecodelabs/android-testing/blob/49e2cf7584b7aee421630da07350d6e4ca2fe6f7/app/build.gradle#L91
     */
-    configurations.compile.dependencies.each { compileDependency ->
-        println "Excluding compile dependency: ${compileDependency.getName()}"
-        configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
-            configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+    configurations.implementation.dependencies.each { compileDependency ->
+        println "Excluding implementation dependency: ${compileDependency.getName()}"
+        configurations.androidTestImplementation.dependencies.each { androidTestCompileDependency ->
+            configurations.androidTestImplementation.exclude module: "${compileDependency.getName()}"
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':pandautils')
-    compile ('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
-        exclude module: 'espresso-idling-resource'
-    }
-    compile project(path: ':login-api-2', configuration: 'default')
-    compile project(':recyclerview')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    /* Modules */
+    implementation project(path: ':login-api-2')
 
     /* Butter Knife */
-    compile 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     kapt 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    compile 'com.github.rey5137:material:1.2.2'
-    compile rootProject.ext.supportDependencies.design
-    compile rootProject.ext.supportDependencies.percent
-    compile "com.android.support:multidex:$GLOBAL_MULTI_DEX_VERSION"
-    compile "com.google.android.gms:play-services-oss-licenses:$GLOBAL_PLAY_SERVICES_VERSION"
-    compile('com.github.afollestad.material-dialogs:core:0.9.4.7') {
+    /* Material Dependency */
+    implementation 'com.github.rey5137:material:1.2.2'
+
+    /* Open Source Licensing Dependency */
+    implementation Libs.PLAY_SERVICES_OSS_LICENSES
+
+    /* Android Test Dependencies */
+    androidTestImplementation Libs.JUNIT
+    androidTestImplementation project(':espresso')
+    //Needed for espresso test recorder
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+
+    /* Unit Test Dependencies */
+    testImplementation project(':espresso')
+    testImplementation Libs.JUNIT
+    testImplementation Libs.ROBOLECTRIC
+
+    /* Crashlytics */
+    implementation(Libs.CRASHLYTICS) {
         transitive = true
     }
 
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile('com.squareup.retrofit2:retrofit:2.2.0') {
-        exclude module: 'okhttp'
-    }
-
-    androidTestCompile 'junit:junit:4.12'
-    androidTestCompile project(':espresso')
-    testCompile project(':espresso')
-
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.1.4'
-    compile("com.crashlytics.sdk.android:crashlytics:$GLOBAL_CRASHLYTICS_VERSION") {
-        transitive = true;
-    }
-    //Needed for espresso test recorder
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
+    /* Support Dependencies */
+    implementation Libs.SUPPORT_DESIGN
+    implementation Libs.SUPPORT_PERCENT
+    implementation Libs.SUPPORT_CARDVIEW
 }
 
 // ./gradlew -Pcoverage firebaseJacoco

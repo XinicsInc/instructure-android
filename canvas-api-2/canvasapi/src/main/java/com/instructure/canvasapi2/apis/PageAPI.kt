@@ -35,9 +35,9 @@ object PageAPI {
         fun getFirstPagePages(
                 @Path("contextId") contextId: Long): Call<List<Page>>
 
-        @GET("{next}")
+        @GET
         fun getNextPagePagesList(
-                @Path(value = "next", encoded = false) nextURL: String): Call<List<Page>>
+                @Url nextURL: String): Call<List<Page>>
 
         @GET("{contextId}/pages/{pageId}")
         fun getDetailedPage(

@@ -18,18 +18,17 @@ package com.instructure.teacher.activities
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.util.TypedValue
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -37,14 +36,16 @@ import com.instructure.canvasapi2.utils.coerceAtLeast
 import com.instructure.canvasapi2.utils.rangeWithin
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.activities.BasePresenterActivity
+import com.instructure.pandautils.dialogs.UnsavedChangesContinueDialog
+import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.SubmissionContentAdapter
-import com.instructure.teacher.dialog.UnsavedChangesContinueDialog
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
 import com.instructure.teacher.presenters.SpeedGraderPresenter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouterParams
 import com.instructure.teacher.utils.ExoAgent
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.isTalkbackEnabled
@@ -63,22 +64,23 @@ import java.util.*
 class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGraderView>(), SpeedGraderView {
 
     /* These should be passed to the presenter factory and should not be directly referenced otherwise */
-    private val mCourse: Course by lazy { intent.extras.getParcelable<Course>(Const.COURSE) }
-    private val mAssignment: Assignment by lazy { intent.extras.getParcelable(Const.ASSIGNMENT) ?: Assignment() }
-    private val mSubmissions: ArrayList<GradeableStudentSubmission> by lazy { intent.extras.getParcelableArrayList<GradeableStudentSubmission>(Const.SUBMISSION) ?: arrayListOf() }
-    private val mDiscussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras.getParcelable<DiscussionTopicHeader>(Const.DISCUSSION_HEADER) }
+    private val courseId: Long by lazy { intent.extras.getLong(Const.COURSE_ID) }
+    private val assignmentId: Long by lazy { intent.extras.getLong(Const.ASSIGNMENT_ID) }
+    private val submissionId: Long by lazy { intent.extras.getLong(RouterParams.SUBMISSION_ID) }
+    private val submissions: ArrayList<GradeableStudentSubmission> by lazy { intent.extras.getParcelableArrayList<GradeableStudentSubmission>(Const.SUBMISSION) ?: arrayListOf() }
+    private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras.getParcelable<DiscussionTopicHeader>(Const.DISCUSSION_HEADER) }
 
-    private val mInitialSelection: Int by lazy { intent.extras.getInt(Const.SELECTED_ITEM, 0) }
-    private var mCurrentSelection = 0
-    private var mPreviousSelection = 0
+    private val initialSelection: Int by lazy { intent.extras.getInt(Const.SELECTED_ITEM, 0) }
+    private var currentSelection = 0
+    private var previousSelection = 0
 
     // Used for keeping track of the page that is asking for media permissions from SubmissionContentView
     private var assigneeId: Long = -1L
 
     // Used in the SubmissionViewFragments in the ViewPager to handle issues with sliding panel
-    var mIsCurrentlyAnnotating = false
+    var isCurrentlyAnnotating = false
 
-    private lateinit var mAdapter: SubmissionContentAdapter
+    private lateinit var adapter: SubmissionContentAdapter
 
     override fun unBundle(extras: Bundle) = Unit
 
@@ -88,11 +90,16 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         presenter?.setupData()
     }
 
+    // This is here to prevent transaction too large exceptions, possibly caused by pdfFragment's saving.
+    @SuppressLint("MissingSuperCall")
+    override fun onSaveInstanceState(outState: Bundle?) {}
+
     override fun getPresenterFactory() = SpeedGraderPresenterFactory(
-            mCourse,
-            mAssignment,
-            mSubmissions,
-            mDiscussionTopicHeader
+        courseId,
+        assignmentId,
+        submissions,
+        submissionId,
+        discussionTopicHeader
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,25 +108,26 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         if (!PSPDFKitPreferences.get(this).isAnnotationCreatorSet) {
             PSPDFKitPreferences.get(this).setAnnotationCreator(ApiPrefs.user?.name)
         }
+
         setContentView(R.layout.activity_speedgrader)
     }
 
     override fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>) {
-        mAdapter = SubmissionContentAdapter(assignment, presenter.course, submissions)
+        adapter = SubmissionContentAdapter(assignment, presenter.course, submissions)
         submissionContentPager.offscreenPageLimit = 1
         submissionContentPager.pageMargin = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics))
         submissionContentPager.setPageMarginDrawable(R.color.dividerColor)
-        submissionContentPager.adapter = mAdapter
-        submissionContentPager.setCurrentItem(mInitialSelection, false)
+        submissionContentPager.adapter = adapter
+        submissionContentPager.setCurrentItem(initialSelection, false)
         submissionContentPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-                mPreviousSelection = mCurrentSelection
-                mCurrentSelection = position
-                if (mAdapter.hasUnsavedChanges(mPreviousSelection)) {
+                previousSelection = currentSelection
+                currentSelection = position
+                if (adapter.hasUnsavedChanges(previousSelection)) {
                     UnsavedChangesContinueDialog.show(supportFragmentManager) {
-                        submissionContentPager.setCurrentItem(mPreviousSelection, true)
+                        submissionContentPager.setCurrentItem(previousSelection, true)
                     }
                 }
             }
@@ -129,7 +137,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun setupTutorialView() = weave {
-        if (BuildConfig.IS_TESTING || TeacherPrefs.hasViewedSwipeTutorial || mAdapter.count < 2 || isTalkbackEnabled()) return@weave
+        if (BuildConfig.IS_TESTING || TeacherPrefs.hasViewedSwipeTutorial || adapter.count < 2 || isTalkbackEnabled()) return@weave
 
         delay(TUTORIAL_DELAY)
         swipeTutorialView.setVisible().onClick {
@@ -165,6 +173,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         submissionContentPager.isPagingEnabled = false
     }
 
+    @Suppress("unused")
     fun lockOrientation() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
     }
@@ -188,9 +197,10 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         ExoAgent.releaseAllAgents() // Stop any media playback
     }
 
+    @Suppress("unused")
     @Subscribe
     fun onTabSelected(event: TabSelectedEvent) {
-        mAdapter.initialTabIdx = event.selectedTabIdx
+        adapter.initialTabIdx = event.selectedTabIdx
     }
 
     fun requestAudioPermissions(assigneeId: Long) {
@@ -229,29 +239,40 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == UploadFilesDialog.CAMERA_PIC_REQUEST ||
+                requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
+                requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY) {
+            //File Dialog Fragment will not be notified of onActivityResult(), alert manually
+            OnActivityResults(ActivityResult(requestCode, resultCode, data), null).postSticky()
+        }
+    }
+
     companion object {
 
-        private val TUTORIAL_DELAY = 400L
+        private const val TUTORIAL_DELAY = 400L
 
         /**
          * The number of submissions to be bundled (pre-cached) to either side of the selected
          * submission. If this value is too high it may result in Android throwing a
          * TransactionTooLargeException when creating SpeedGraderActivity.
          */
-        private val MAX_CACHED_ADJACENT = 6
+        private const val MAX_CACHED_ADJACENT = 6
 
         /**
          * The maximum submission history depth allowed for a submission to be eligible for
          * pre-caching. If this value is too high it may result in Android throwing a
          * TransactionTooLargeException when creating SpeedGraderActivity.
          */
-        private val MAX_HISTORY_THRESHOLD = 8
+        private const val MAX_HISTORY_THRESHOLD = 8
 
         @JvmStatic
-        fun makeBundle(course: Course, assignment: Assignment, submissions: List<GradeableStudentSubmission>, selectedIdx: Int): Bundle {
+        fun makeBundle(courseId: Long, assignmentId: Long, submissions: List<GradeableStudentSubmission>, selectedIdx: Int): Bundle {
             return Bundle().apply {
-                putParcelable(Const.COURSE, course as Parcelable)
-                putParcelable(Const.ASSIGNMENT, assignment as Parcelable)
+                putLong(Const.COURSE_ID, courseId)
+                putLong(Const.ASSIGNMENT_ID, assignmentId)
 
                 // Avoid TransactionTooLargeException by only bundling submissions in the cached range with shallow submission histories
                 val cachedRange = selectedIdx.rangeWithin(MAX_CACHED_ADJACENT).coerceAtLeast(0)
@@ -259,7 +280,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                     val inRange = index in cachedRange
                     val smallHistory = submission.submission?.submissionHistory?.size ?: 0 <= MAX_HISTORY_THRESHOLD
                     val smallBodies = submission.submission?.submissionHistory?.none { it?.body?.length ?: 0 > 2048 } ?: true
-                    if (inRange && smallHistory && smallBodies) {
+                    if (inRange && smallHistory && smallBodies && submission.submission != null) {
                         submission.copy(isCached = true)
                     } else {
                         submission.copy(submission = null, isCached = false)
@@ -276,6 +297,16 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             val intent = Intent(context, SpeedGraderActivity::class.java)
             intent.putExtras(route.arguments)
             return intent
+        }
+
+        @JvmStatic
+        fun createIntent(context: Context, courseId: Long, assignmentId: Long, submissionId: Long) = Intent(context, SpeedGraderActivity::class.java).apply {
+            // We've come from a push notification, we'll use these ids to grab the data we need later
+            putExtras(Bundle().apply {
+                putLong(Const.COURSE_ID, courseId)
+                putLong(Const.ASSIGNMENT_ID, assignmentId)
+                putLong(RouterParams.SUBMISSION_ID, submissionId)
+            })
         }
     }
 }

@@ -52,7 +52,8 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         // Lock to portrait orientation due to the WebView not saving state
         (context as Activity).requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-        
+
+        setShouldRouteInternally(false)
         setShouldLoadUrl(false)
         canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)

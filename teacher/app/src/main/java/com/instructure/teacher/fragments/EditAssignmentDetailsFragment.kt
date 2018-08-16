@@ -40,17 +40,17 @@ import com.instructure.canvasapi2.models.post_models.AssignmentPostBody
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.dialogs.DatePickerDialogFragment
+import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.ConfirmRemoveAssignmentOverrideDialog
-import com.instructure.teacher.dialog.DatePickerDialogFragment
-import com.instructure.teacher.dialog.TimePickerDialogFragment
 import com.instructure.teacher.events.AssigneesUpdatedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.models.DueDateGroup
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
@@ -72,7 +72,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     private var mDisplayGradeAs: String? = null
     private var mDisplayGradeAsType: GRADING_TYPE = GRADING_TYPE.POINTS
 
-    private val saveButton: TextView? get() = view?.findViewById<TextView>(R.id.menu_save)
+    private val saveButton: TextView? get() = view?.findViewById<TextView>(R.id.menuSave)
 
     val groupsMapped = hashMapOf<Long, Group>()
     val sectionsMapped = hashMapOf<Long, Section>()

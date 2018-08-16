@@ -15,9 +15,10 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.models.CanvasUser
+import com.instructure.soseedy.Assignment
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
+
 class AssignmentListPageTest : TeacherTest() {
 
     @Test
@@ -30,29 +31,38 @@ class AssignmentListPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3134487")
     fun displaysNoAssignmentsView() {
-        getToAssignmentsPage()
+        getToAssignmentsPage(0)
         assignmentListPage.assertDisplaysNoAssignmentsView()
     }
 
     @Test
     @TestRail(ID = "C3109578")
     fun displaysAssignment() {
-        getToAssignmentsPage()
-        assignmentListPage.assertHasAssignment(getNextAssignment())
+        val assignment = getToAssignmentsPage()[0]
+        assignmentListPage.assertHasAssignment(assignment)
     }
 
     @Test
     @TestRail(ID = "C3134488")
     fun displaysGradingPeriods() {
-        getToAssignmentsPage()
+        getToAssignmentsPage(gradingPeriods = true)
         assignmentListPage.assertHasGradingPeriods()
     }
 
-    private fun getToAssignmentsPage(): CanvasUser {
-        val teacher = logIn()
-        coursesListPage.openCourse(getNextCourse())
+    private fun getToAssignmentsPage(assignments: Int = 1, gradingPeriods: Boolean = false): MutableList<Assignment> {
+        val data = seedData(teachers = 1, favoriteCourses = 1, gradingPeriods = gradingPeriods)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val seededAssignments = seedAssignments(
+                courseId = course.id,
+                assignments = assignments,
+                teacherToken = teacher.token)
+
+        tokenLogin(teacher)
+
+        coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        return teacher
+        return seededAssignments.assignmentsList
     }
 }
 

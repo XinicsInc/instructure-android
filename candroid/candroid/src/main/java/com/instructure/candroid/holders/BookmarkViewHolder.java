@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.instructure.pandautils.views.RippleView;
 import com.instructure.candroid.R;
-
+@Deprecated
 public class BookmarkViewHolder extends RecyclerView.ViewHolder {
 
     public TextView title;
@@ -36,7 +36,6 @@ public class BookmarkViewHolder extends RecyclerView.ViewHolder {
 
         title = (TextView)itemView.findViewById(R.id.title);
         icon = (ImageView)itemView.findViewById(R.id.icon);
-        overflowRipple = (RippleView)itemView.findViewById(R.id.overflowRipple);
     }
 
     public static int holderResId() {

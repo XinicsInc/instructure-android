@@ -86,8 +86,9 @@ class GCloud
     # NexusLowRes is the fastest virtual device. larger screen size = slower
     # SoSeedy will break if we run on more than one device.
     @device_ids = %w[NexusLowRes]
-    @api_level  = 25
+    @api_level  = 26
 
+    # list devices: gcloud firebase test android models list
     if @robo
       type = '--type robo'
     else
@@ -105,7 +106,7 @@ class GCloud
         "--os-version-ids #{@api_level}",
         '--locales en',
         '--orientations portrait',
-        '--timeout 25m',
+        '--timeout 60m',
         sd_card_path
     ].reject &:nil?
 

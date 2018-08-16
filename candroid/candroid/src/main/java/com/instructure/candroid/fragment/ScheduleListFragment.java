@@ -17,17 +17,19 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.SyllabusRecyclerAdapter;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
 import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.Param;
 import com.instructure.candroid.view.ViewUtils;
@@ -35,14 +37,19 @@ import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.ScheduleItem;
 import com.instructure.canvasapi2.models.Tab;
+import com.instructure.canvasapi2.utils.pageview.PageView;
 import com.instructure.pandarecycler.BaseRecyclerAdapter;
 import com.instructure.pandautils.utils.Const;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 
+@PageView(url = "{canvasContext}/assignments/syllabus")
 public class ScheduleListFragment extends ParentFragment {
 
     private boolean addSyllabus;
 
     private View mRootView;
+    private Toolbar mToolbar;
     private AdapterToFragmentCallback<ScheduleItem> mAdapterToFragmentCallback;
     private BaseRecyclerAdapter mRecyclerAdapter;
 
@@ -52,10 +59,12 @@ public class ScheduleListFragment extends ParentFragment {
     }
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.MASTER; }
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.MASTER; }
 
     @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.syllabus);
     }
 
@@ -71,7 +80,7 @@ public class ScheduleListFragment extends ParentFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = getLayoutInflater().inflate(R.layout.fragment_list_syllabus, container, false);
-
+        mToolbar = mRootView.findViewById(R.id.toolbar);
         mAdapterToFragmentCallback = new AdapterToFragmentCallback<ScheduleItem>() {
             @Override
             public void onRowClicked(ScheduleItem scheduleItem, int position, boolean isOpenDetail) {
@@ -80,9 +89,9 @@ public class ScheduleListFragment extends ParentFragment {
                     ParentFragment fragment;
 
                     if (scheduleItem.getAssignment() != null) {
-                        fragment = FragUtils.getFrag(AssignmentFragment.class, AssignmentFragment.createBundle((Course)getCanvasContext(), scheduleItem.getAssignment()));
+                        fragment = FragUtils.getFrag(AssignmentFragment.class, AssignmentFragment.Companion.createBundle((Course)getCanvasContext(), scheduleItem.getAssignment()));
                     } else if (scheduleItem.getItemType() == ScheduleItem.Type.TYPE_SYLLABUS) {
-                        fragment = FragUtils.getFrag(SyllabusFragment.class, SyllabusFragment.createBundle((Course) getCanvasContext(), scheduleItem));
+                        fragment = FragUtils.getFrag(SyllabusFragment.class, SyllabusFragment.Companion.createBundle((Course) getCanvasContext(), scheduleItem));
                     } else {
                         fragment = FragUtils.getFrag(CalendarEventFragment.class, CalendarEventFragment.createBundle(getCanvasContext(), scheduleItem));
                     }
@@ -97,15 +106,23 @@ public class ScheduleListFragment extends ParentFragment {
         };
 
         mRecyclerAdapter = new SyllabusRecyclerAdapter(getContext(), getCanvasContext(), mAdapterToFragmentCallback);
-        configureRecyclerViewAsGrid(mRootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
 
         return mRootView;
     }
 
     @Override
+    public void applyTheme() {
+        setupToolbarMenu(mToolbar);
+        mToolbar.setTitle(title());
+        PandaViewUtils.setupToolbarBackButton(mToolbar, this);
+        ViewStyler.themeToolbar(getActivity(), mToolbar, getCanvasContext());
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        configureRecyclerViewAsGrid(mRootView, mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
     }
 
     @Override
@@ -123,10 +140,6 @@ public class ScheduleListFragment extends ParentFragment {
             ((SyllabusRecyclerAdapter) mRecyclerAdapter).removeCallbacks();
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void handleIntentExtras(Bundle extras) {

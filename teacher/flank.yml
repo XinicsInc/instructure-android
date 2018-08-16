@@ -1,0 +1,12 @@
+projectId: bootstraponline-awesome-sauce
+appApk: ./app/build/outputs/apk/qa/debug/app-qa-debug.apk
+testApk: ./app/build/outputs/apk/androidTest/qa/debug/app-qa-debug-androidTest.apk
+rootGcsBucket: android-teacher
+useOrchestrator: true
+disablePerformanceMetrics: true
+disableVideoRecording: false
+testTimeoutMinutes: 60
+shardCount: 1
+waitForResults: true
+testMethods:
+ - com.instructure.teacher.ui.EditQuizDetailsPageTest#removeOverride

@@ -21,22 +21,23 @@ import android.content.Intent
 import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.webkit.CookieManager
+import com.instructure.candroid.BuildConfig
 import com.instructure.candroid.R
-import com.instructure.candroid.service.PushRegistrationService
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
+import com.instructure.pandautils.services.PushNotificationRegistrationService
 
 class LoginActivity : BaseLoginInitActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        if (!PushRegistrationService.hasTokenBeenSentToServer(this)) {
-            startService(Intent(this, PushRegistrationService::class.java))//Register Push Notifications
-        }
+        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading, BuildConfig.PUSH_SERVICE_PROJECT_ID)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().flush()
         }
 
-        val intent = Intent(this, NavigationActivity.getStartActivityClass())
+        val intent = Intent(this, NavigationActivity.startActivityClass)
         if (getIntent() != null && getIntent().extras != null) {
             intent.putExtras(getIntent().extras)
         }
@@ -64,6 +65,13 @@ class LoginActivity : BaseLoginInitActivity() {
         fun createIntent(context: Context): Intent {
             val intent = Intent(context, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            return intent
+        }
+
+        fun createIntent(context: Context, route: Route): Intent {
+            val intent = Intent(context, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.putExtra(Route.ROUTE, route)
             return intent
         }
     }

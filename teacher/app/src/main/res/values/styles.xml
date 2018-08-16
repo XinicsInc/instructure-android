@@ -315,6 +315,26 @@
         <item name="android:layout_width">@integer/match_parent</item>
     </style>
 
+    <style name="NavigationDrawerItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?android:listPreferredItemHeightSmall</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:tint">@color/defaultTextDark</item>
+    </style>
+
+    <style name="NavigationDrawerIcon">
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:textColor">@color/defaultTextDark</item>
+    </style>
+
     <!--Button Styles-->
     <style name="ButtonStyle">
         <item name="android:textSize">16sp</item>

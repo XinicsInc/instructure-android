@@ -15,27 +15,9 @@
  *
  */
 
-repositories {
-    jcenter()
-    maven { url "https://jitpack.io" }
-    maven { url 'https://maven.google.com' }
-}
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://jitpack.io' }
-        maven { url "https://maven.google.com" }
-    }
-    dependencies {
-        // https://bintray.com/android/android-tools/com.android.tools.build.gradle/view
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
-    }
-}
-
 apply plugin: 'com.android.library'
 
-String isTesting() {
+static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
         "true"
     } else {
@@ -44,14 +26,12 @@ String isTesting() {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
         buildConfigField "boolean", "IS_TESTING", isTesting()
     }
@@ -64,9 +44,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation Libs.JUNIT
 
-    compile rootProject.ext.supportDependencies.recyclerView
-    compile rootProject.ext.supportDependencies.appCompat
+    implementation Libs.SUPPORT_APPCOMPAT
+    implementation Libs.SUPPORT_RECYCLERVIEW
 }

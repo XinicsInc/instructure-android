@@ -16,13 +16,10 @@
 
 package com.android.ex.chips;
 
-import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.text.util.Rfc822Token;
 import android.text.util.Rfc822Tokenizer;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Set;
 
 /**

@@ -7,8 +7,11 @@ include ':canvas-api-2'
 include ':androidcalendar'
 include ':chips'
 include ':espresso'
+include ':annotations'
+include ':rceditor'
+include ':interactions'
 
-project(':espresso').projectDir = new File(rootProject.projectDir, '/../espresso')
+project(':espresso').projectDir = new File(rootProject.projectDir, '/../automation/espresso')
 project(':login-api-2').projectDir = new File(rootProject.projectDir, '/../login-api-2')
 project(':recyclerview').projectDir = new File(rootProject.projectDir, '/../recyclerview')
 project(':pandautils').projectDir = new File(rootProject.projectDir, '/../pandautils')
@@ -16,3 +19,6 @@ project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../canv
 project(':blueprint').projectDir = new File(rootProject.projectDir, '/../blueprint')
 project(':chips').projectDir = new File(rootProject.projectDir, '/../chips')
 project(':androidcalendar').projectDir = new File(rootProject.projectDir, '/../androidcalendar')
+project(':annotations').projectDir = new File(rootProject.projectDir, '/../annotations')
+project(':rceditor').projectDir = new File(rootProject.projectDir, '/../rceditor')
+project(':interactions').projectDir = new File(rootProject.projectDir, '/../interactions')

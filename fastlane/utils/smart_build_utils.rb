@@ -35,15 +35,17 @@ class SmartBuildUtils
       ui_message "Scanning for changes in '#{app}' project"
 
       # Get destination branch, which is only specified for pull requests
-      dest_branch = get_env 'BITRISEIO_GIT_BRANCH_DEST'
+      dest_branch = get_env 'BITRISEIO_GIT_BRANCH_DEST' rescue nil
       return false if dest_branch.nil? || dest_branch.empty?
 
       # Fetch the destination branch for comparison
       cmd_fetch = "git fetch origin #{dest_branch}"
       Fastlane::Actions.sh(cmd_fetch, log: false).chomp rescue nil
 
-      # Do not skip for changes in gradle and private data dirs
+      # Do not skip for changes in gradle, fastlane, buildSrc, or private data dirs
       return false if changed? join('..', 'gradle'), dest_branch
+      return false if changed? join('..', 'fastlane'), dest_branch
+      return false if changed? join('..', 'buildSrc'), dest_branch
       return false if changed? join('..', 'private-data', app), dest_branch
 
       # Do not skip for changes in the app itself

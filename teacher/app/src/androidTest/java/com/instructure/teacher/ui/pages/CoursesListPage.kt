@@ -20,19 +20,16 @@ package com.instructure.teacher.ui.pages
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.contrib.RecyclerViewActions
-import android.support.test.espresso.matcher.ViewMatchers.withText
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.v7.widget.RecyclerView
+import com.instructure.soseedy.Course
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.Course
 import com.instructure.teacher.ui.utils.*
 import com.instructure.teacher.ui.utils.pageAssert.PageAssert
 import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
-import java.util.*
 
 @Suppress("unused")
 class CoursesListPage : BasePage(), PageAssert by SimplePageAssert() {
-
-    private val canvasLogoButton by WaitForViewWithId(R.id.logoImageView, autoAssert = true)
 
     private val toolbarTitle by WaitForToolbarTitle(R.string.courses)
 
@@ -41,8 +38,6 @@ class CoursesListPage : BasePage(), PageAssert by SimplePageAssert() {
     private val coursesTab by OnViewWithId(R.id.tab_courses)
 
     private val inboxTab by OnViewWithId(R.id.tab_inbox)
-
-    private val profileTab by OnViewWithId(R.id.tab_profile)
 
     // Only displays if the user has courses
     private val coursesLabel by WaitForViewWithId(R.id.courseLabel)
@@ -59,11 +54,11 @@ class CoursesListPage : BasePage(), PageAssert by SimplePageAssert() {
         emptyMessageLayout.assertDisplayed()
     }
 
-    fun assertHasCourses(mCourses: ArrayList<Course>) {
+    fun assertHasCourses(mCourses: List<Course>) {
         coursesLabel.assertDisplayed()
         seeAllCoursesLabel.assertDisplayed()
 
-        // Check that the recyclerview count matches course count (plus one for the header)
+        // Check that the recyclerview count matches course count
         coursesRecyclerView.check(RecyclerViewItemCountAssertion(mCourses.size))
 
         for (course in mCourses) onView(withText(course.name)).assertDisplayed()
@@ -74,7 +69,7 @@ class CoursesListPage : BasePage(), PageAssert by SimplePageAssert() {
     }
 
     fun openCourse(course: Course) {
-        waitForViewWithText(course.name).click()
+        callOnClick(withText(course.name))
     }
 
     fun openCourseAtPosition(position: Int) {

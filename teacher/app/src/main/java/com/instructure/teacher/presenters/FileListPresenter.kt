@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.presenters
 
+import android.support.constraint.solver.SolverVariable
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -23,11 +24,11 @@ import com.instructure.canvasapi2.models.CreateFolder
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.License
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.canvasapi2.utils.isValid
 import com.instructure.teacher.viewinterface.FileListView
 import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.experimental.Job
@@ -61,9 +62,11 @@ class FileListPresenter(var currentFolder: FileFolder, val mCanvasContext: Canva
                 data.addOrUpdate(folders)
             }
 
-            // Determine if this course has the usage rights feature enabled
-            val features = awaitApi<List<String>> { FeaturesManager.getEnabledFeaturesForCourse(mCanvasContext.id, forceNetwork, it) }
-            usageRights = features.contains("usage_rights_required")
+            if (!CanvasContext.Type.isUser(mCanvasContext)) {
+                // Determine if this course has the usage rights feature enabled
+                val features = awaitApi<List<String>> { FeaturesManager.getEnabledFeaturesForCourse(mCanvasContext.id, forceNetwork, it) }
+                usageRights = features.contains("usage_rights_required")
+            }
 
             if (usageRights) {
                 // Grab licenses available
@@ -87,8 +90,8 @@ class FileListPresenter(var currentFolder: FileFolder, val mCanvasContext: Canva
     }
 
     override fun compare(item1: FileFolder, item2: FileFolder): Int {
-        val name1: String = if(item1.displayName.isValid()) item1.displayName else item1.name
-        val name2: String = if(item2.displayName.isValid()) item2.displayName else item2.name
+        val name1: String = if(item1.displayName.isValid()) item1.displayName!! else item1.name.orEmpty()
+        val name2: String = if(item2.displayName.isValid()) item2.displayName!! else item2.name.orEmpty()
 
         return name1.compareTo(name2, true)
     }

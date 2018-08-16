@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -15,6 +15,7 @@
   ~     limitations under the License.
   ~
   -->
+
 <resources>
     <string name="rce_contentDescription_undo">Desfazer</string>
     <string name="rce_contentDescription_redo">Refazer</string>
@@ -50,12 +51,12 @@
 
     <string name="rce_editTextUrlHint">Link</string>
     <string name="rce_editTextALTHint">Texto</string>
-    <string name="rce_dialogDone">Terminado</string>
+    <string name="rce_dialogDone">Feito</string>
     <string name="rce_dialogCancel">Cancelar</string>
     <string name="rce_insertLink">Inserir link</string>
     <string name="rce_insertImage">Inserir imagem</string>
 
-    <string name="rce_done">Terminado</string>
+    <string name="rce_done">Feito</string>
     <string name="rce_cancel">Cancelar</string>
     <string name="rce_exit">Sair</string>
     <string name="rce_dialog_exit_title">Sair da edição da tarefa?</string>

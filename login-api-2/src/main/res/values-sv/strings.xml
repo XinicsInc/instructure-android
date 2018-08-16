@@ -1,99 +1,134 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="hello_world">Hej världen!</string>
-  <string name="action_settings">Inställningar</string>
-  <string name="mobileVerifyGeneral">Den här appen är inte tillåten</string>
-  <string name="mobileVerifyDomainUnauthorized">Servern du angav är inte behörig för den här appen.</string>
-  <string name="mobileVerifyUserAgentUnauthorized">Användaragenten för den här appen är obehörig.</string>
-  <string name="mobileVerifyUnknownError">Vi kan inte verifiera att servern kan användas med den här appen.</string>
-  <string name="unknownDevice">Okänd Enhet</string>
-  <string name="errorOccurred">Ett oväntat fel uppstod.</string>
-  <string name="pageNotFound">Sidan hittades inte.</string>
-  <string name="confirm">Bekräfta</string>
-  <string name="cancel">Avbryt</string>
-  <string name="help">Hjälp</string>
-  <string name="enterURL">Fyll i din Canvas URL:</string>
-  <string name="signIntoCanvasNetwork">Försöker du logga in på Canvas Network?</string>
-  <string name="remove">Ta bort</string>
-  <string name="exampleURLSimple">myschool.instructure.com</string>
-  <string name="masquerade">Maskering</string>
-  <string name="userId">Användar-ID</string>
-  <string name="domain">Domän</string>
-  <string name="masqueradingUserId">Maskera användar-ID</string>
-  <string name="masqueradingUserDomain">Maskera domän</string>
-  <string name="masqueradingBegin">Påbörja maskering</string>
-  <string name="masqueradingStop">Stoppa maskering</string>
-  <!--Multiple User Sign in-->
-  <string name="removeUser">Ta bort den här användaren?</string>
-  <string name="removedForever">Du måste logga in på den här användaren igen för att komma åt dess innehåll.</string>
-  <!--Content Descriptions-->
-  <string name="canvasLogo">Canvas Logo</string>
-  <string name="canvasLoginOn">Canvas_Login: PÅ</string>
-  <string name="canvasLoginOff">Canvas_Login: AV</string>
-  <string name="siteAdminLogin">inloggning för sajtadministratör: PÅ</string>
-  <string name="username">Användarnamn</string>
-  <string name="password">Lösenord</string>
-  <string name="authenticationRequired">Behörighet Krävs</string>
-  <string name="invalidEmailPassword">Ogiltig e-post eller lösenord</string>
-  <string name="login">Inloggning</string>
-  <string name="logout">Utloggning</string>
-  <!--Logout Warning Dialog-->
-  <string name="logout_warning">Är du säker på att du vill logga ut?</string>
-  <string name="logout_yes">Ja</string>
-  <string name="logout_no">Nej</string>
-  <!--Smart Login-->
-  <string name="loginNearYou">Nära Dig</string>
-  <string name="loginCanvasNetwork">Canvas Network</string>
-  <string name="loginRightBehindYou">Precis bakom dig</string>
-  <string name="loginMiles">%1$s kilometer bort</string>
-  <string name="loginCanvasHelp">Kan du inte hitta din skola? Fyll i skolans URL eller peka här för att få hjälp.</string>
-  <string name="loginCanvasHelpWithUser">Fyll i skolans URL eller peka här för att få hjälp.</string>
-  <string name="loginHint">Hitta din skola eller distrikt</string>
-  <!--Zendesk Dialog-->
-  <string name="zendesk_reportAProblem">Rapportera ett problem</string>
-  <string name="zendesk_subject">Ämne</string>
-  <string name="zendesk_description">Beskrivning</string>
-  <string name="zendesk_writeSomething">Skriv något...</string>
-  <string name="zendesk_send">Skicka</string>
-  <string name="zendesk_feedbackThankyou">Tack för att rapporterade problemet till vårt Support Team. Du kommer att få en bekräftelse och uppdatering via e-post.</string>
-  <string name="zendesk_severityText">Hur påverkar det dig?</string>
-  <string name="zendesk_casualQuestion">Bara en vanlig fråga, kommentar, idé, förslag...</string>
-  <string name="zendesk_casualQuestion_tag">bara_en_kommentar</string>
-  <string name="zendesk_needHelp">Jag behöver hjälp men det är inte bråttom.</string>
-  <string name="zendesk_needHelp_tag">inte_brådskande</string>
-  <string name="zendesk_somethingsBroken">Det är något som inte fungerar men jag kan göra det jag ska ändå.</string>
-  <string name="zendesk_somethingsBroken_tag">möjligt_att_arbeta_ändå</string>
-  <string name="zendesk_cantGetThingsDone">Jag kan inte göra något tills jag hör ifrån er.</string>
-  <string name="zendesk_cantGetThingsDone_tag">blockerar_det_jag_måste_göra</string>
-  <string name="zendesk_extremelyCritical">EXTREMT VIKTIGT!!</string>
-  <string name="zendesk_extremelyCritical_tag">extremt_viktigt</string>
-  <string name="zendesk_emailAddress">E-postadress</string>
-  <string name="zendesk_enterEmail">Fyll i din e-postadress...</string>
-  <string name="zendesk_unknown">Okänt</string>
-  <!--Distance Strings-->
-  <string name="lessThanOne">&lt; 1 mil (10 km)</string>
-  <string name="oneMile">1 mil (10 km)</string>
-  <string name="miles">Mil</string>
-  <string name="kilometers">km</string>
-  <!--String for submitting tickets-->
-  <string name="device">Enhet</string>
-  <string name="osVersion">Operativsystemets version</string>
-  <string name="previousLoginTitle">Tidigare inloggningar</string>
-  <string name="canvasNetworks">Canvas nätverk</string>
-  <string name="findMySchool">Hitta min skola</string>
-  <string name="appTypeTeacher">Lärare</string>
-  <string name="appTypeStudent">Student</string>
-  <string name="appTypeParent">Föräldrar</string>
-  <string name="canvasLowerCase">canvas</string>
-  <string name="whatsYourSchoolName">Vilket är din skolas namn?</string>
-  <string name="next">Nästa</string>
-  <string name="schoolInstructureCom">school.instructure.com</string>
-  <string name="contentDescription_removePreviousUser">Ta bort tidigare användare</string>
-  <string name="accountDomainFooter">Kan du inte hitta din skola? Försök att skriva in skolans fullständiga URL.</string>
-  <string name="accountDomainFooterLink">Tryck här för hjälp.</string>
-  <string name="login_noInternetConnectionTitle">Ingen internet-anslutning</string>
-  <string name="login_noInternetConnectionMessage">Den här åtgärden kräver en internet-anslutningen.</string>
-  <string name="empty_feedback">Ett ämne och en beskrivning krävs för att lämna återkoppling.</string>
-  <string name="versionNum">Versions-nummer</string>
-  <string name="scrollInstructions">Skrolla för att se alla detaljer</string>
+
+    <string name="hello_world">Hej världen!</string>
+    <string name="action_settings">Inställningar</string>
+    <string name="mobileVerifyGeneral">Den här appen är inte tillåten</string>
+    <string name="mobileVerifyDomainUnauthorized">Servern du skrev in är inte behörig för den här appen.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Användarombudet för den här appen är obehörig.</string>
+    <string name="mobileVerifyUnknownError">Vi kunde inte verifiera servern för användning med den här appen.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Ett oväntat fel uppstod.</string>
+    <string name="pageNotFound">Sidan hittades inte.</string>
+    <string name="confirm">Bekräfta</string>
+    <string name="cancel">Avbryt</string>
+    <string name="help">Hjälp</string>
+    <string name="enterURL">Fyll i din Canvas URL:</string>
+    <string name="signIntoCanvasNetwork">Försöker du logga in på Canvas Network?</string>
+    <string name="remove">Ta bort</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="masquerade">Maskering</string>
+    <string name="userId">Användar-ID</string>
+    <string name="domain">Domän</string>
+
+    <string name="masqueradingUserId">Maskera användar-ID</string>
+    <string name="masqueradingUserDomain">Maskera domän</string>
+    <string name="masqueradingBegin">Påbörja maskering</string>
+    <string name="masqueradingStop">Stoppa maskering</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Ta bort den här användaren?</string>
+    <string name="removedForever">Du måste logga in på den här användaren igen för att komma åt deras innehåll.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas Logo</string>
+
+    <string name="canvasLoginOn">Canvas_Login:PÅ</string>
+    <string name="canvasLoginOff">Canvas_Login:AV</string>
+    <string name="siteAdminLogin">Webbplats administratörsinloggning:PÅ</string>
+
+    <string name="username">Användarnamn</string>
+    <string name="password">Lösenord</string>
+    <string name="authenticationRequired">Autentisering krävs</string>
+    <string name="invalidEmailPassword">Ogiltig e-post eller lösenord</string>
+    <string name="login">Logga in</string>
+    <string name="logout">Logga ut</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Är du säker på att du vill logga ut?</string>
+    <string name="logout_yes">Ja</string>
+    <string name="logout_no">Nej</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">Nära Dig</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">Precis bakom dig</string>
+    <string name="loginMiles">%1$s långt borta</string>
+    <string name="loginCanvasHelp">Ser du inte din skola?Fyll i skolans URL eller peka här för att få hjälp.</string>
+    <string name="loginCanvasHelpWithUser">Fyll i skolans URL eller peka här för att få hjälp.</string>
+    <string name="loginHint">Hitta din skola eller distrikt</string>
+
+    <!-- Zendesk Dialog -->
+    <string name="zendesk_reportAProblem">Rapportera ett problem</string>
+    <string name="zendesk_subject">Ämne</string>
+    <string name="zendesk_description">Beskrivning</string>
+    <string name="zendesk_writeSomething">Skriv något&#8230;</string>
+    <string name="zendesk_send">Skicka</string>
+    <string name="zendesk_feedbackThankyou">Tack för att du rapporterade din fråga till vårt Support Team.Du kommer att få bekräftelse och uppdateringar via e-post.</string>
+    <string name="zendesk_severityText">Hur påverkar det dig?</string>
+    <string name="zendesk_casualQuestion">Bara en vanlig fråga, kommentar, idé, förslag&#8230;</string>
+    <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+    <string name="zendesk_needHelp">Jag behöver lite hjälp, men det är inte brådskande.</string>
+    <string name="zendesk_needHelp_tag">not_urgent</string>
+    <string name="zendesk_somethingsBroken">Något är trasigt, men jag kan arbeta runt det för att få det jag behöver gjort.</string>
+    <string name="zendesk_somethingsBroken_tag">möjligt_att_arbeta_ändå</string>
+    <string name="zendesk_cantGetThingsDone">Jag kan inte göra saker fören jag hör från dig.</string>
+    <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+    <string name="zendesk_extremelyCritical">EXTREMT KRITISKT NÖDFALL!!</string>
+    <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+    <string name="zendesk_emailAddress">E-postadress</string>
+    <string name="zendesk_enterEmail">Fyll i din e-postadress&#8230;</string>
+    <string name="zendesk_unknown">Okänd</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 mil (1,6 km)</string>
+    <string name="oneMile">1 mil (1,6 km)</string>
+    <string name="miles">mil</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Enhet</string>
+    <string name="osVersion">Operativsystemets version</string>
+
+    <string name="previousLoginTitle">Tidigare inloggningar</string>
+    <string name="canvasNetworks">Canvas Network</string>
+    <string name="findMySchool">Hitta min skola</string>
+    <string name="appTypeTeacher">Lärare</string>
+    <string name="appTypeStudent">Student</string>
+    <string name="appTypeParent">Föräldrar</string>
+    <string name="canvasLowerCase">Canvas</string>
+    <string name="whatsYourSchoolName">Vad heter din skola?</string>
+    <string name="next">Nästa</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Ta bort tidigare användare</string>
+    <string name="accountDomainFooter">Kan du inte hitta din skola?Försök att skriva in skolans fullständiga URL.</string>
+    <string name="accountDomainFooterLink">Tryck här för hjälp.</string>
+
+    <string name="login_noInternetConnectionTitle">Ingen internet-anslutning</string>
+    <string name="login_noInternetConnectionMessage">Den här åtgärden kräver en internet-anslutningen.</string>
+    <string name="empty_feedback">Ett ämne och en beskrivning krävs för att lämna återkoppling.</string>
+    <string name="versionNum">Versions-nummer</string>
+    <string name="scrollInstructions">SKrolla för att se alla detaljer</string>
+
+    <string name="masqueradeErrorUserId">Du måste ange ett användare-ID.</string>
+    <string name="masqueradeErrorDomain">Du måste ange en domän.</string>
+    <string name="masqueradeError">Fel vid maskeringsförsök.</string>
 </resources>

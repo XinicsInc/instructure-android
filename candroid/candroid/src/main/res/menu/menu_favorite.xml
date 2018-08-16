@@ -20,8 +20,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/selectFavorites"
-        android:title="@string/selectFavorites"
-        android:icon="@drawable/ic_cv_add_to_list"
+        android:title="@string/editFavorites"
+        android:icon="@drawable/vd_edit"
         app:showAsAction="always"/>
 
 </menu>

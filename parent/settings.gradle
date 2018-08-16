@@ -11,4 +11,4 @@ project(':login-api-2').projectDir = new File(rootProject.projectDir, '/../login
 project(':recyclerview').projectDir = new File(rootProject.projectDir, '/../recyclerview')
 project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../canvas-api-2/canvasapi')
 project(':blueprint').projectDir = new File(rootProject.projectDir, '/../blueprint')
-project(':espresso').projectDir = new File(rootProject.projectDir, '/../espresso')
+project(':espresso').projectDir = new File(rootProject.projectDir, '/../automation/espresso')

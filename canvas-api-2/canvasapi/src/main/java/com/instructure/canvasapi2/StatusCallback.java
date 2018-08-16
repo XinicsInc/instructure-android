@@ -44,33 +44,29 @@ public abstract class StatusCallback<DATA> implements Callback<DATA> {
     public StatusCallback() {}
 
     @Override
-    final public void onResponse(final Call<DATA> data, final Response<DATA> response) {
+    final public void onResponse(@NonNull final Call<DATA> data, @NonNull final Response<DATA> response) {
         mIsApiCallInProgress = true;
-        if(response != null && response.isSuccessful()) {
+        if (response.isSuccessful()) {
             publishHeaderResponseResults(response, response.raw(), APIHelper.parseLinkHeaderResponse(response.headers()));
-        } else if(response != null && response.code() == 504) {
-            //Cached response does not exist.
+        } else if (response.code() == 504) {
+            // Cached response does not exist.
             Logger.e("StatusCallback: GOT A 504");
-            //No response
+            // No response
             onCallbackFinished(ApiType.CACHE);
         } else {
-            if(response != null) {
-                onFail(data, new Throwable("StatusCallback: 40X Error"), response);
-                try {
-                    EventBus.getDefault().post(new CanvasErrorCode(response.code(), response.errorBody().string()));
-                } catch (IOException e) {}
-            } else {
-                onFail(data, new Throwable("StatusCallback: Unknown Code Error"), null);
-            }
-            //No response or no data
+            onFail(data, new Throwable("StatusCallback: 40X Error"), response);
+            try {
+                EventBus.getDefault().post(new CanvasErrorCode(response.code(), response.errorBody().string()));
+            } catch (IOException ignored) {}
+            // No response or no data
             onCallbackFinished(ApiType.API);
         }
     }
 
     @Override
-    final public void onFailure(Call<DATA> data, Throwable t) {
+    final public void onFailure(@NonNull Call<DATA> data, @NonNull Throwable t) {
         mIsApiCallInProgress = false;
-        if(data.isCanceled() || "Canceled".equals(t.getMessage())) {
+        if (data.isCanceled() || "Canceled".equals(t.getMessage())) {
             Logger.d("StatusCallback: callback(s) were cancelled");
             onCancelled();
         } else {
@@ -94,25 +90,20 @@ public abstract class StatusCallback<DATA> implements Callback<DATA> {
     }
 
     /**
-     * When all responses will report. Api or Cache.
+     * Where all responses will report. Api or Cache.
      * @param response The data of the response
      * @param linkHeaders The link headers for the response, used for pagination
      * @param type The type of response, Cache or Api
      */
-    public void onResponse(Response<DATA> response, LinkHeaders linkHeaders, ApiType type){}
+    public void onResponse(@NonNull Response<DATA> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type){}
 
-    public void onResponse(Response<DATA> response, LinkHeaders linkHeaders, ApiType type, int code){
-        onResponse(response, linkHeaders, type);
-    }
-
-    public void onFail(Call<DATA> response, Throwable error){}
-    public void onFail(Call<DATA> response, Throwable error, int code){
-        onFail(response, error);
-    }
-    public void onFail(Call<DATA> callResponse, Throwable error, Response response) {
-        if(response == null) onFail(callResponse, error, 0);
-        else onFail(callResponse, error, response.code());
-    }
+    /**
+     * The result of a failed call
+     * @param call The original call
+     * @param error The error
+     * @param response The data of the response, can be null
+     */
+    public void onFail(@Nullable Call<DATA> call, @NonNull Throwable error, @Nullable Response response) {}
     public void onCancelled(){}
     public void onStarted(){}
     public void onFinished(ApiType type){}
@@ -122,10 +113,10 @@ public abstract class StatusCallback<DATA> implements Callback<DATA> {
         final boolean isCacheResponse = APIHelper.isCachedResponse(okResponse);
         Logger.d("Is Cache Response? " + (isCacheResponse ? "YES" : "NO"));
         if (isCacheResponse) {
-            onResponse(response, linkHeaders, ApiType.CACHE, okResponse.code());
+            onResponse(response, linkHeaders, ApiType.CACHE);
             onCallbackFinished(ApiType.CACHE);
         } else {
-            onResponse(response, linkHeaders, ApiType.API, okResponse.code());
+            onResponse(response, linkHeaders, ApiType.API);
             onCallbackFinished(ApiType.API);
         }
     }

@@ -18,7 +18,7 @@
 
 package com.instructure.teacher.events
 
-import com.instructure.canvasapi2.apis.ConversationAPI
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.post_models.PendingSubmissionComment
 import com.instructure.teacher.utils.EditDateGroups
@@ -137,12 +137,12 @@ class QuizUpdatedEvent(quizId: Long, skipId: String? = null) : RationedBusEvent<
 
 /** A RationedBusEvent for updating conversations, used between InboxFragment/MessageThreadFragment
  *  @see [RationedBusEvent] */
-class ConversationUpdatedEvent(conversation: Conversation, val scope: ConversationAPI.ConversationScope, skipId: String? = null) : RationedBusEvent<Conversation>(conversation, skipId)
+class ConversationUpdatedEvent(conversation: Conversation, val scope: InboxApi.Scope, skipId: String? = null) : RationedBusEvent<Conversation>(conversation, skipId)
 
 /** A RationedBusEvent for updating conversations specifically for tablets, used between
  * InboxFragment/MessageThreadFragment.
  *  @see [RationedBusEvent] */
-class ConversationUpdatedEventTablet(position: Int, val scope: ConversationAPI.ConversationScope, skipId: String? = null) : RationedBusEvent<Int>(position, skipId)
+class ConversationUpdatedEventTablet(position: Int, val scope: InboxApi.Scope, skipId: String? = null) : RationedBusEvent<Int>(position, skipId)
 
 /** A RationedBusEvent for the deletion of conversations, used between InboxFragment/MessageThreadFragment
  *  @see [RationedBusEvent] */
@@ -186,6 +186,10 @@ class PageUpdatedEvent(page: Page, skipId: String? = null) : RationedBusEvent<Pa
 
 /** A RationedBusEvent for deleted pages. @see [RationedBusEvent] */
 class PageDeletedEvent(page: Page, skipId: String? = null) : RationedBusEvent<Page>(page, skipId)
+
+/** A RationedBusEvent for updating to do count. @see [RationedBusEvent] */
+class ToDoListUpdatedEvent(count: Int, skipId: String? = null) : RationedBusEvent<Int>(count, skipId)
+
 
 class UploadMediaCommentUpdateEvent(updatedComments: MutableMap<String, MutableList<Pair<PendingSubmissionComment, SubmissionComment?>>>, skipId: String? = null)
 : RationedBusEvent<MutableMap<String, MutableList<Pair<PendingSubmissionComment, SubmissionComment?>>>>(updatedComments, skipId)

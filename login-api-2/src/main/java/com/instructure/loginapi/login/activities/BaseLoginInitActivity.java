@@ -26,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.loginapi.login.BuildConfig;
 import com.instructure.loginapi.login.R;
 import com.instructure.loginapi.login.view.CanvasLoadingView;
 import com.instructure.pandautils.utils.ViewStyler;
@@ -74,36 +75,48 @@ public abstract class BaseLoginInitActivity extends AppCompatActivity {
      * This function checks whether or not the current user is signed in.
      */
     private void checkLoginState() {
-        final boolean isDebuggable =  (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
-        final long duration = isDebuggable ? 0 : 1750;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        final String token = ApiPrefs.getToken();
-                        if (token.isEmpty()) {
-                            //Start Login Flow
-                            startActivity(beginLoginFlowIntent());
-                        } else {
-                            //Start App
-                            Intent intent = launchApplicationMainActivityIntent();
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-
-                        finish();
-                    }
-                });
+        final boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+        if(BuildConfig.IS_TESTING || isDebuggable) {
+            final String token = ApiPrefs.getToken();
+            if (token.isEmpty()) {
+                //Start Login Flow
+                startActivity(beginLoginFlowIntent());
+            } else {
+                //Start App
+                Intent intent = launchApplicationMainActivityIntent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
-        }, duration);
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final String token = ApiPrefs.getToken();
+                            if (token.isEmpty()) {
+                                //Start Login Flow
+                                startActivity(beginLoginFlowIntent());
+                            } else {
+                                //Start App
+                                Intent intent = launchApplicationMainActivityIntent();
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+
+                            finish();
+                        }
+                    });
+                }
+            }, 1750);
+        }
     }
 
     private void applyTheme() {
         CanvasLoadingView loadingView = findViewById(R.id.progress_bar);
-        loadingView.setOverrideColor(themeColor());
-
-        ViewStyler.setStatusBarLight(this);
+        if (loadingView != null) {
+            loadingView.setOverrideColor(themeColor());
+        }
     }
 }

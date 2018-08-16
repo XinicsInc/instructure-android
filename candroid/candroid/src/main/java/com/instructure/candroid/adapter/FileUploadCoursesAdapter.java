@@ -30,7 +30,7 @@ import com.instructure.candroid.R;
 import com.instructure.candroid.binders.BaseBinder;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.utils.Logger;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +86,8 @@ public class FileUploadCoursesAdapter extends ArrayAdapter<Course> {
             viewHolder.title.setText(item.getName());
             viewHolder.title.setTypeface(null, Typeface.NORMAL);
             viewHolder.indicator.setVisibility(View.VISIBLE);
-            viewHolder.indicator.setBackgroundDrawable(BaseBinder.createIndicatorBackground(
-                    CanvasContextColor.getCachedColor(getContext(), item)));
+            viewHolder.indicator.setBackground(BaseBinder.createIndicatorBackground(
+                    ColorKeeper.getOrGenerateColor(item)));
         } else {
             viewHolder.indicator.setVisibility(View.GONE);
             viewHolder.title.setText("");
@@ -116,8 +116,8 @@ public class FileUploadCoursesAdapter extends ArrayAdapter<Course> {
         if(item != null) {
             viewHolder.title.setText(item.getName());
             viewHolder.indicator.setVisibility(View.VISIBLE);
-            viewHolder.indicator.setBackgroundDrawable(BaseBinder.createIndicatorBackground(
-                    CanvasContextColor.getCachedColor(getContext(), item)));
+            viewHolder.indicator.setBackground(BaseBinder.createIndicatorBackground(
+                    ColorKeeper.getOrGenerateColor(item)));
         } else {
             viewHolder.indicator.setVisibility(View.GONE);
             viewHolder.title.setText("");

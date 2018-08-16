@@ -32,13 +32,13 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.parcelCopy
+import com.instructure.pandautils.dialogs.DatePickerDialogFragment
+import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.LongNameArrayAdapter
 import com.instructure.teacher.dialog.ConfirmDeleteFileFolderDialog
-import com.instructure.teacher.dialog.DatePickerDialogFragment
-import com.instructure.teacher.dialog.TimePickerDialogFragment
 import com.instructure.teacher.events.FileFolderDeletedEvent
 import com.instructure.teacher.events.FileFolderUpdatedEvent
 import com.instructure.teacher.events.post

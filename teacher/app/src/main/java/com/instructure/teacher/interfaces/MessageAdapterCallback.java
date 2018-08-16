@@ -20,8 +20,8 @@ import android.support.annotation.Nullable;
 import com.instructure.canvasapi2.models.Attachment;
 import com.instructure.canvasapi2.models.BasicUser;
 import com.instructure.canvasapi2.models.Message;
+import com.instructure.pandautils.views.AttachmentView;
 import com.instructure.teacher.R;
-import com.instructure.teacher.view.AttachmentView;
 
 public interface MessageAdapterCallback {
 

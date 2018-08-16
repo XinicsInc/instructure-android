@@ -19,9 +19,14 @@ package com.instructure.candroid.util;
 
 import android.content.Context;
 import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.media.ExifInterface;
 import android.media.Image;
+import android.support.annotation.DrawableRes;
+import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -36,7 +41,7 @@ public class BitmapUtilities {
     public static void lazyLoadAvatarImage(Context context, String avatarURL, ImageView view) {
         Picasso.with(context)
                 .load(avatarURL)
-                .placeholder(R.drawable.ic_cv_student)
+                .placeholder(R.drawable.vd_profile)
                 .into(view);
     }
 
@@ -351,5 +356,27 @@ public class BitmapUtilities {
         Canvas canvas = new Canvas();
         canvas.setBitmap(toDarken);
         canvas.drawPaint(paint);
+    }
+
+    public static Bitmap getBitmapFromDrawable(Context context, @DrawableRes int drawableId) throws IllegalArgumentException {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        } else if (drawable instanceof VectorDrawableCompat || drawable instanceof VectorDrawable) {
+            Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            return bitmap;
+        } else {
+            throw new IllegalArgumentException("unsupported drawable type");
+        }
+    }
+
+    public static Bitmap addPaddingToBitmap(Bitmap bitmap, int padding) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth() + padding, bitmap.getHeight() + padding, Bitmap.Config.ARGB_8888);
+        Canvas can = new Canvas(output);
+        can.drawBitmap(bitmap, padding / 2, padding / 2, null);
+        return output;
     }
 }

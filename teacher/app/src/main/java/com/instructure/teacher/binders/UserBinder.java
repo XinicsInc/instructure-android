@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.models.Enrollment;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.teacher.holders.UserViewHolder;
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback;
-import com.instructure.teacher.utils.ProfileUtils;
+import com.instructure.pandautils.utils.ProfileUtils;
 
 import java.util.HashSet;
 
@@ -36,7 +36,7 @@ public class UserBinder {
         BasicUser basicUser = new BasicUser();
         basicUser.setName(user.getName());
         basicUser.setAvatarUrl(user.getAvatarUrl());
-        ProfileUtils.loadAvatarForUser(context, holder.studentAvatar, basicUser);
+        ProfileUtils.loadAvatarForUser(holder.studentAvatar, basicUser);
 
         // Set student name
         holder.userName.setText(user.getName());
@@ -48,7 +48,7 @@ public class UserBinder {
             }
         });
 
-        //List enrollment type(s)
+        //List enrollmentApiModel type(s)
         //get a list of strings of the enrollments
         // Use hashSet to prevent duplicate enrollments
         HashSet<String> enrollments = new HashSet<>();

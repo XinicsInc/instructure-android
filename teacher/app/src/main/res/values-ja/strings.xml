@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -23,14 +23,15 @@
     <string name="tab_questions">質問</string>
     <string name="tab_submissions">提出物</string>
     <string name="tab_assignments">課題</string>
-    <string name="tab_profile">プロファイル</string>
+    <string name="tab_profile">プロフィール</string>
     <string name="tab_people">メンバー</string>
     <string name="tab_quizzes">クイズ</string>
     <string name="tab_discussions">ディスカッション</string>
     <string name="tab_announcements">発表</string>
     <string name="tab_attendance">出席状況</string>
+    <string name="tab_pages">ページ</string>
+    <string name="tab_todo">タスク</string>
     <string name="content_description_school_logo">スクールロゴ</string>
-    <string name="content_description_avatar">アバター</string>
     <string name="search_guides">Canvas ガイドを検索する</string>
     <string name="canvas_guides">Canvas ガイド</string>
     <string name="search_guides_icon">Canvas ガイドのアイコン</string>
@@ -55,9 +56,9 @@
     <string name="location">場所</string>
     <string name="event_date">イベント日</string>
     <string name="course">コース</string>
-    <string name="profile">プロファイル</string>
+    <string name="profile">プロフィール</string>
     <string name="share">シェアする</string>
-    <string name="share_with">&#8230;とシェアする、</string>
+    <string name="share_with">と共有&#8230;</string>
 
     <!-- Compose Message -->
     <string name="no_subject">（件名なし）</string>
@@ -84,7 +85,7 @@
     <!-- Feature Request -->
     <string name="feature_subject">講師用アプリのアイデア[Android]</string>
     <string name="understand_request">次の情報は、あなたのアイデアをより良く理解するために役立ちます:</string>
-    <string name="send_mail">Eメール&#8230;を送信する、</string>
+    <string name="send_mail">メールを送信しています&#8230;</string>
 
     <string name="color_1">レッド</string>
     <string name="color_2">ホットピンク</string>
@@ -139,10 +140,10 @@
     <string name="with">と</string>
     <string name="discussion_attachment">ファイルを添付する</string>
     <string name="select_files_or_photos">ファイルまたは画像を選択</string>
-    <string name="uploading_files">ファイルを&#8230;読み込み中、</string>
+    <string name="uploading_files">ファイルをアップロード中&#8230;</string>
     <string name="no_attachment">（添付なし）</string>
     <string name="remove_attachment">添付ファイルの削除</string>
-    <string name="creating_announcement">発表&#8230;を作成中、</string>
+    <string name="creating_announcement">アナウンスメントを作成中&#8230;</string>
 
     <string name="copy_email">メールアドレスをコピー</string>
     <string name="all_grading_periods">すべての採点期間</string>
@@ -150,7 +151,7 @@
     <string name="all_submissions_graded">すべての提出が採点済み</string>
     <string name="icon">アイコン</string>
     <plurals name="grading_status_assignment">
-        <item quantity="other">%d 提出には採点が必要</item>
+        <item quantity="other">%d提出には採点が必要</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
@@ -159,14 +160,14 @@
 
     <string name="inbox_empty_title">メッセージなし</string>
     <string name="inbox_empty_starred_title">スターありメッセージはありません</string>
-    <string name="inbox_empty_message">\"+\" をタップして新しい会話を作成する</string>
+    <string name="inbox_empty_message">\"+\"  をタップして新しい会話を作成する。</string>
     <string name="inbox_empty_starred_message">メッセージのスターをタップすると、メッセージにスターが付きます。</string>
 
     <string name="download_attachment">添付をダウンロードする</string>
 
     <string name="reply">返信</string>
     <string name="replyAll">すべてに返信</string>
-    <string name="forward">早送り</string>
+    <string name="forward">転送</string>
     <string name="star">スター</string>
     <string name="archive">アーカイブ</string>
     <string name="delete">削除</string>
@@ -207,7 +208,7 @@
         <item quantity="other">+ %d メッセージ</item>
     </plurals>
     <plurals name="submissionNeedsGrading">
-        <item quantity="other">%d 提出には採点が必要</item>
+        <item quantity="other">%d提出には採点が必要</item>
     </plurals>
 
     <string name="delete_assignment_message">この課題を削除してもよろしいですか?</string>
@@ -263,14 +264,14 @@
     <string name="error_occurred">予期しないエラーが発生しました。</string>
     <string name="no_assignments_with_file_upload">このコースには、ファイルのアップロードが可能な課題がありません。</string>
     <string name="extension_not_allowed">選択されたファイルタイプは許可されていません。</string>
-    <string name="allowed_extensions">許可されている延長:&#160;</string>
+    <string name="allowed_extensions">許可された拡張子:</string>
     <string name="files_uploaded_successfully">ファイルがアップロードされました。</string>
     <string name="error_uploading_file">あなたのファイルをアップロードする際にエラーが発生しました。再度試してください。</string>
-    <string name="uploading_file">ファイル&#8230;を読み込み中、</string>
+    <string name="uploading_file">ファイルをアップロード中&#8230;</string>
     <string name="no_apps">お使いのデバイスには、このファイルを処理できるアプリケーションがインストールされていません。</string>
     <string name="turn_in">提出する</string>
     <string name="error_getting_photo">画像取得中にエラーがありました。再度試してください。</string>
-    <string name="loading_files_indeterminate">ファイル&#8230;を読み込み中、</string>
+    <string name="loading_files_indeterminate">ファイルをロード中&#8230;</string>
     <string name="no_files_uploaded">あなたはどのファイルも選択していません。</string>
     <string name="file_upload_not_supported">選択した課題にファイルをアップロードすることはできません。</string>
     <string name="one_or_more_extension_not_allowed">1つ以上のファイルのファイル拡張子が許可されていません</string>
@@ -281,18 +282,18 @@
     <string name="inbox_sent">送信済み</string>
     <string name="inbox_archived">アーカイブ済み</string>
     <string name="inbox_all_messages">すべてのメッセージ</string>
-    <string name="uploading_file_num" formatted="false">～の %d をアップロード中%d</string>
+    <string name="uploading_file_num" formatted="false">%d / %d をアップロード中</string>
     <string name="page_not_found">ページが見つかりません</string>
     <string name="no_connection">接続していません</string>
     <string name="unauthorized_access">あなたにはこれにアクセスする権限がありませんあなたに許可されていないか、まだアクセスがありません（あなたのコースはまだ始まっていません）</string>
     <string name="server_error">サーバーエラーが発生しました。</string>
     <string name="error_loading_files">あなたのファイルを読み込む際にエラーが発生しました。インテーネット接続を確認して、もう一度お試しください。</string>
     <string name="files_submitted_successfully">ファイルが提出されました。</string>
-    <string name="no_data_connection"> データの接続を確認し、やり直してください。</string>
+    <string name="no_data_connection">データの接続を確認し、やり直してください。</string>
     <string name="teacher_logout_warning">ログアウトしますか？</string>
     <string name="teacher_yes">はい</string>
     <string name="teacher_no">いいえ</string>
-    <string name="teacher_sending">g&#8230;送信中、</string>
+    <string name="teacher_sending">送信&#8230;</string>
     <string name="teacher_cancel">キャンセル</string>
     <string name="teacher_okay">OK</string>
     <string name="teacher_upload">アップロード</string>
@@ -304,14 +305,14 @@
     <!--Course Settings-->
     <string name="course_settings">コース設定</string>
     <string name="course_name">コース名</string>
-    <string name="set_home_to"> \'Home\'\'を...に設定する</string>
+    <string name="set_home_to">\'Home\'をに設定する&#8230;</string>
     <string name="course_activity_stream">コースのアクティビティ ストリーム</string>
     <string name="pages_front_page">ページ/トップ ページ</string>
+    <string name="frontPage">フロントページ</string>
     <string name="course_modules">コース モジュール</string>
     <string name="assignments_list">課題リスト</string>
     <string name="syllabus">シラバス</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">複数の締切日</string>
     <string name="everyone">全員</string>
@@ -319,8 +320,8 @@
     <string name="unknown_student">未知の受講生</string>
     <string name="closed">終了済み</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">%s期限%s</string>
-    <string name="last_post" formatted="false">最後のポスト%s</string>
+    <string name="due_date_at_time" formatted="false">%1s の %2s が期限</string>
+    <string name="last_post" formatted="false">最終掲示 %s</string>
     <string name="submission_types">提出タイプ</string>
     <string name="full_due_date_details">締め切り日の全詳細</string>
     <string name="availability_label">利用可能性：</string>
@@ -346,9 +347,9 @@
     <string name="grade">成績</string>
     <string name="calculated_by_rubric">ルブリックで計算しました</string>
     <string name="customize_grade">グレードを最適化</string>
-    <string name="out_of_points">配点%1$s</string>
+    <string name="out_of_points">%1$s から</string>
     <string name="gpa">GPA</string>
-    <string name="letter_grade">ABC...評価</string>
+    <string name="letter_grade">ABC&#8230;評価</string>
     <string name="excuse_student">学生を免除する</string>
     <string name="excuseGroup">グループを免除する</string>
     <string name="complete_grade">完了</string>
@@ -356,7 +357,7 @@
     <string name="not_graded">採点されていません</string>
     <string name="excused">免除</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
-    <string name="grade_value_format_talk_back">%1$s 中%2$s</string>
+    <string name="grade_value_format_talk_back">%1$s / %2$s</string>
     <string name="publish">公開</string>
     <string name="error_saving_assignment">課題を保存しようとしてエラーが発生しました。もう一度試してください。</string>
     <string name="error_saving_quiz">クイズを保存しようとしてエラーが発生しました。もう一度試してください。</string>
@@ -382,16 +383,16 @@
     <string name="graded">採点済み</string>
     <string name="needsGrading">採点が必要です</string>
     <string name="not_submitted">未提出</string>
-    <string name="content_description_submission_donut_graded" formatted="false">成績評価 、%s中%s</string>
-    <string name="content_description_submission_donut_needs_grading" formatted="false">採点が必要、%s中%s</string>
-    <string name="content_description_submission_donut_unsubmitted" formatted="false">未提出、%s中%s</string>
-    <string name="display_grade_as">成績を&#8230;として表示する、</string>
+    <string name="content_description_submission_donut_graded" formatted="false">成績評価 、%s 中 %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">採点が必要、%s 中 %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">未提出、%s 中 %s</string>
+    <string name="display_grade_as">成績を&#8230;として表示する</string>
     <string name="percentage">割合</string>
     <string name="complete_incomplete">完了/未完了</string>
     <string name="points">ポイント</string>
     <string name="gpa_scale">GPAスケール</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -400,7 +401,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -420,10 +421,10 @@
     <string name="submitted_late">遅れた提出</string>
     <string name="havent_submitted_yet">まだ提出されていません</string>
     <string name="havent_been_graded">まだ採点されていません</string>
-    <string name="scored_less_than">&#8230;未満のスコア、</string>
-    <string name="scored_more_than">&#8230;を超えるスコア、</string>
-    <string name="scored_less_than_value">... 未満のスコア%s</string>
-    <string name="scored_more_than_value">...を上回るスコア%s</string>
+    <string name="scored_less_than">&#8230; 未満のスコア</string>
+    <string name="scored_more_than">&#8230;を上回るスコア</string>
+    <string name="scored_less_than_value">%s 未満のスコア</string>
+    <string name="scored_more_than_value">%s を上回るスコア</string>
     <string name="add_comment">コメントを追加</string>
     <string name="editComment">コメントを編集</string>
     <string name="deleteComment">コメントを削除する</string>
@@ -435,7 +436,7 @@
     <string name="enter_custom_value">カスタム値を入力してください</string>
     <string name="success_saving_rubric_assessment">評価基準が保存されました</string>
     <string name="error_saving_rubric_assessment">ルーブリック評価を保存中にエラーが発生しました。再度試してください。</string>
-    <string name="rubric_assessment_score_out_of_total">%1$s 中%2$s</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s / %2$s</string>
     <string name="criterion_rating_customize_score">スコアをカスタマイズする</string>
     <string name="edit_criterion_comment">基準コメントを編集</string>
     <string name="sendMessageToHint">メッセージ%s</string>
@@ -444,10 +445,10 @@
     <string name="skip">スキップ</string>
 
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
-    <string name="rating_button_content_description_custom">カスタムスコア%1$s</string>
+    <string name="rating_button_content_description_custom">カスタムスコア %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">"%1$s,%2$s</string>
+    <string name="rating_button_content_description">%1$s, %2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="other">%s ポイント中</item>
@@ -466,28 +467,30 @@
     <string name="grading_periods_filter">採点期間フィルター</string>
     <string name="assignments">課題</string>
     <string name="clear_filter">フィルターをクリア</string>
-    <string name="due">期限%1$s</string>
+    <string name="due">期限 %1$s</string>
+    <string name="updated">更新済み%1$s</string>
+
     <plurals name="needsGradingCount">
-        <item quantity="other">%s 採点が必要です</item>
+        <item quantity="other">%s が採点が必要です</item>
     </plurals>
     <plurals name="needsGradingNoQuantity">
         <item quantity="other">採点が必要です</item>
     </plurals>
     <string name="at">おいて</string>
     <plurals name="quantityPointsAbbreviated">
-        <item quantity="other">%s ポイント</item>
+        <item quantity="other">%s 点</item>
     </plurals>
     <plurals name="quantityPointsFull">
-        <item quantity="other">%s ポイント</item>
+        <item quantity="other">%s 点</item>
     </plurals>
     <plurals name="people_count">
-        <item quantity="other">%d メンバー</item>
+        <item quantity="other">%d 人</item>
     </plurals>
     <plurals name="group_count">
         <item quantity="other">%d グループ</item>
     </plurals>
     <string name="cmp_closed">終了済み</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022</string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">お気に入り</string>
     <string name="content_description_not_favorite">お気に入りではない</string>
@@ -519,10 +522,9 @@
     <string name="contentDescriptionFileIcon">ファイルアイコン</string>
     <string name="contentDescriptionExpandPage">ページを拡張</string>
     <string name="contentDescriptionCollapsePage">ページを降り畳む</string>
-
     <string name="noInternetConnectionTitle">インターネット接続なし</string>
     <string name="noInternetConnectionMessage">この操作にはインターネット接続が必要です。</string>
-  
+
     <string name="emptyDetailsMessage">リスト内の項目をタップて、し詳細を表示する</string>
 
     <string name="assignmentQuizzes">課題クイズ</string>
@@ -542,7 +544,7 @@
     <string name="gradedSurvey">採点済みのサーベイ</string>
     <string name="ungradedSurvey">未採点のサーベイ</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -588,9 +590,9 @@
     <string name="immediately">ただちに</string>
     <string name="quiz_details_no_points_assigned">割当のポイントなし</string>
 
-    <string name="quiz_details_from_to"> %1$s から～まで%2$s</string>
-    <string name="quiz_details_after">後%1$s</string>
-    <string name="quiz_details_until">次の日時まで%1$s</string>
+    <string name="quiz_details_from_to">%1$s から %2$s まで</string>
+    <string name="quiz_details_after">%1$s 後</string>
+    <string name="quiz_details_until">%1$s まで</string>
     <string name="continueWithoutSavingTitle">保存せずに続行しますか？</string>
     <string name="continueWithoutSavingMessage">保存せずに続行してよろしいですか？</string>
     <string name="continueUnsaved">続行する</string>
@@ -600,11 +602,11 @@
     <string name="filterPointsMustBeSet">値を入力します。</string>
 
     <plurals name="quantityQuestions">
-        <item quantity="other">%d 質問</item>
+        <item quantity="other">%dの質問</item>
     </plurals>
 
     <plurals name="minutes">
-        <item quantity="other">%s 分</item>
+        <item quantity="other">%s分</item>
     </plurals>
 
     <string name="discussion_details">ディスカッションの詳細</string>
@@ -616,14 +618,14 @@
     <string name="discussions_unpin">固定の解除</string>
     <string name="contentDescriptionDiscussionsOverflow">その他のオプション</string>
     <string name="discussions_options">オプション</string>
-    <string name="discussions_replies" formatted="false">%s 返信</string>
+    <string name="discussions_replies" formatted="false">%s の返信</string>
     <string name="discussions_unread" formatted="false">%s 未読</string>
     <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
     <string name="discussions_delete_warning">この返信を本当に削除しますか？</string>
     <string name="discussions_replies_title">返信</string>
     <string name="discussions_reply">返信</string>
     <string name="discussions_edit">編集</string>
-    <string name="discussions_deleted" formatted="false">この返信を削除する%s</string>
+    <string name="discussions_deleted" formatted="false">この返信 %s を削除する</string>
     <string name="discussions_forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
     <string name="discussions_unknown_author">不明な作成者</string>
     <string name="discussions_delete">ディスカッションを削除</string>
@@ -637,14 +639,14 @@
     <string name="submissionIsMediaFile">この投稿はメディアファイルです</string>
     <string name="tryAgain">やり直し</string>
     <string name="couldNotPlayFormat">このメディアフォーマットはサポートされていません</string>
-    <string name="openWithAnotherApp">～にて開く...</string>
-    
+    <string name="openWithAnotherApp">～にて開く&#8230;</string>
+
     <string name="speedgraderCommentAddedSubmission">課題が提出されました。タップして表示する。</string>
     <string name="speedgraderCommentSubmittedFiles">提出済みのファイル:</string>
     <string name="no_submission_comments">提出コメントはありません。</string>
     <string name="mediaUploadAudio">メディアアップロード - 音声</string>
     <string name="mediaUploadVideo">メディアアップロード - 動画</string>
-    <string name="speedgraderCommentQuizAttempt">試行%d</string>
+    <string name="speedgraderCommentQuizAttempt">%d 試行</string>
     <string name="speedGraderTextSubmission">テキストの提出</string>
     <string name="speedGraderExternalToolSubmission">外部ツール提出</string>
     <string name="speedGraderDiscussionSubmission">ディスカッションへの提出</string>
@@ -686,7 +688,7 @@
     <string name="viewQuizSubmission">提出を見る</string>
     <string name="gradeQuizSubmission">成績提出</string>
     <string name="comment">コメント</string>
-    <string name="messageStudentsWho">&#8230;の状態の受講者にメッセージを送る、</string>
+    <string name="messageStudentsWho">次の状態の受講者にメッセージを送る&#8230;</string>
 
     <string name="on">～について</string>
 
@@ -733,7 +735,7 @@
     <string name="canvasGuides">Canvas ガイド</string>
     <string name="featureSubject">Canvas Teacher 用のアイデア[Android]</string>
     <string name="understandRequest">次の情報は、あなたのアイデアをより良く理解するために役立ちます:</string>
-    <string name="sendMail">Eメール&#8230;を送信する、</string>
+    <string name="sendMail">メールを送信しています&#8230;</string>
     <string name="editProfile">プロフィールの編集</string>
     <string name="name">名前</string>
     <string name="bio">略歴</string>
@@ -742,7 +744,7 @@
     <string name="takePhoto">写真を撮る</string>
     <string name="choosePhotoFromGallery">ギャラリーから画像を選択する</string>
     <string name="fileNotFound">ファイルがみつかりません。</string>
-    <string name="version" formatted="false">バージョン%s</string>
+    <string name="version" formatted="false">バージョン %s</string>
     <string name="tap_to_view_submissions_list">タップして提出リストを表示します。</string>
     <string name="assignmentDescriptionContentDescription">課題説明</string>
     <string name="quizDescriptionContentDescription">クイズ説明</string>
@@ -787,4 +789,90 @@
     <string name="markAllAsPresent">全員を出席としてマークする</string>
     <string name="calendar">予定表</string>
     <string name="filterSections">セクションをフィルタリングする</string>
+    <string name="addVideoComment">動画コメントを追加</string>
+    <string name="addAudioComment">音声コメントを追加</string>
+    <string name="recordingTimerDefault">0:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d 時間、%2$d 分、%3$d 秒</string>
+    <string name="recordingTimerSpeechDivider">%1$s / %2$s</string>
+    <string name="replay">再度再生</string>
+    <string name="stop">停止</string>
+    <string name="startRecordingAudio">録音開始</string>
+    <string name="stopRecordingAudio">録音開始</string>
+    <string name="startRecordingVideo">録画開始</string>
+    <string name="stopRecordingVideo">録画開始</string>
+    <string name="closeRecordingView">録画・録音ビューを閉じる</string>
+    <string name="deleteRecording">記録を削除</string>
+    <string name="videoCommentReplay">動画コメントを再度再生</string>
+    <string name="addMediaComment">メディアコメントを追加</string>
+    <string name="copyrightHolder">著作権所有者</string>
+    <string name="access">アクセス</string>
+    <string name="usageRights">使用権</string>
+    <string name="deleteFile">ファイルを削除</string>
+    <string name="holdCopyright">著作権を保有しています</string>
+    <string name="havePermission">このファイルを使用する権限を取得しています。</string>
+    <string name="publicDomain">パブリックドメインファイル</string>
+    <string name="fairUse">公正使用の例外</string>
+    <string name="creativeCommons">Creative Commons ファイル</string>
+    <string name="editFile">ファイルを編集</string>
+    <string name="deleteFolder">フォルダを削除</string>
+    <string name="editFolder">フォルダを編集</string>
+    <string name="deleteFileMessage">このファイルを削除してもよろしいですか?</string>
+    <string name="deleteFolderMessage">このフォルダを削除してもよろしいですか?このフォルダのすべてのコンテンツも削除されます。</string>
+    <string name="newFolder">新しいフォルダ</string>
+    <string name="createAFolder">フォルダを作成する</string>
+    <string name="createFolder">フォルダを作成する</string>
+    <string name="createAFile">ファイルを作成する</string>
+    <string name="createFileFolderFabContentDesc">ファイルの作成オタンとフォルダの作成ボタンを表示する</string>
+    <string name="unpublish">未公開</string>
+    <string name="restrictedAccess">制限されたアクセス</string>
+    <string name="restricted">部外秘</string>
+    <string name="hidden">非表示の内部ファイルはリンクで利用できます。</string>
+    <string name="studentsWithLink">リンク付きの受講生のみ利用可能です。受講生ファイルでは使用できません。</string>
+    <string name="scheduleAvailability">受講生の利用可能状況をスケジュール</string>
+    <string name="folderCreationError">フォルダー作成中にエラーが起こりました。</string>
+
+    <string name="setAsFrontPage">フロントページとして設定</string>
+    <string name="canEdit">編集可能</string>
+    <string name="pageDetails">ページ詳細</string>
+    <string name="pageSuccessfullyUpdated">ページは正常に更新されました。</string>
+    <string name="pageSuccessfullyCreated">ページは正常に作成されました。</string>
+    <string name="editPageTitle">ページを編集</string>
+    <string name="createPageTitle">ページを作成</string>
+    <string name="pageTitleMustBeSet">ページのタイトルを設定しなければなりません。</string>
+    <string name="pageDeleteTitle">ページを削除しますか？</string>
+    <string name="pageDelete">ページを削除</string>
+    <string name="pageDeleteMessage">これにより、ページは削除されます。この操作は元に戻すことはできません。</string>
+    <string name="errorSavingPage">この発表を保存しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="frontPageUnpublishedError">ページを先フロントページにした場合、未公開にすることはできません。</string>
+
+    <string name="onlyTeachers">講師のみ</string>
+    <string name="teachersAndStudents">講師と受講者</string>
+    <string name="anyone">全員</string>
+    <string name="groupMembers">メンバーのみ</string>
+    <string name="license">ライセンス</string>
+    <string name="availableFromAfterTo">利用可能終了日は開始日以降でなければなりません</string>
+    <string name="errorDeletingFile">このファイルを読み込む際にエラーが発生しました</string>
+    <string name="errorDeletingFolder">このフォルダを削除する際にエラーが発生しました</string>
+    <string name="errorUpdatingFile">このファイルをアップデートする際にエラーが発生しました</string>
+    <string name="errorUpdatingFolder">このフォルダをアップデートする際にエラーが発生しました</string>
+
+    <string name="toDoEmpty">他にすることはありません！\nよい一日を。</string>
+    <string name="toDoNoSubmissions">この課題を採点するための提出物はありません。</string>
+    <string name="errorToDoRouteFailed">このやるべきことの項目を表示しようとしてエラーが発生しました。</string>
+    <string name="errorIsDesigner">デザイナー登録はこれを表示できません。</string>
+
+    <string name="sections">セクション</string>
+    <string name="filterBy">フィルター要素：</string>
+    <string name="contentDescriptionFilterSection" formatted="false">%s 用</string>
+    <string name="filterBySection">セクションで分類する</string>
+    <string name="filterSubmissionsLowercase">フィルターを提出</string>
+
+    <string name="latePenalty">遅延ペナルティ</string>
+    <string name="finalGrade">最終的な成績</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="other">-%s 点</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="other">-%s 点</item>
+    </plurals>
 </resources>

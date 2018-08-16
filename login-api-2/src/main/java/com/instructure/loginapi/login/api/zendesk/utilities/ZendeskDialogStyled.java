@@ -24,6 +24,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -37,9 +38,12 @@ import android.widget.Toast;
 
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.ErrorReportManager;
+import com.instructure.canvasapi2.managers.UserManager;
+import com.instructure.canvasapi2.models.Enrollment;
 import com.instructure.canvasapi2.models.ErrorReportResult;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.canvasapi2.utils.ApiPrefsKt;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.loginapi.login.R;
@@ -207,7 +211,7 @@ public class ZendeskDialogStyled extends DialogFragment {
         TextView text;
     }
 
-    public void saveZendeskTicket() {
+    private void generateTicketInfo(@Nullable List<Enrollment> enrollments) {
         String comment = descriptionEditText.getText().toString();
         String subject = subjectEditText.getText().toString();
 
@@ -227,9 +231,15 @@ public class ZendeskDialogStyled extends DialogFragment {
         }
 
         final User user = ApiPrefs.getUser();
+
+        //If a user has an email, otherwise this will be the login ID
         String email = "";
         if(user != null) {
-            email = user.getPrimaryEmail();
+            if(user.getPrimaryEmail() == null) {
+                email = user.getLoginId();
+            } else {
+                email = user.getPrimaryEmail();
+            }
         }
         String domain = ApiPrefs.getDomain();
         if (domain.isEmpty()) {
@@ -256,11 +266,36 @@ public class ZendeskDialogStyled extends DialogFragment {
                 getString(R.string.utils_installDate) + " " + getInstallDateString() + "\n\n";
 
         comment = deviceInfo + comment;
+
+        String enrollmentTypes = "";
+        if(enrollments != null) {
+            for(Enrollment enrollment: enrollments) {
+                // we don't want a ton of duplicates, so check it
+                if(!enrollmentTypes.contains(enrollment.getType())) {
+                    enrollmentTypes += enrollment.getType() + ",";
+                }
+            }
+            //remove last comma if necessary
+            if(enrollmentTypes.endsWith(",") && enrollmentTypes.length() > 1) {
+                enrollmentTypes = enrollmentTypes.substring(0, enrollmentTypes.length()-1);
+            }
+        }
+
+        String becomeUserUrl = "";
+        if(user != null && user.getId() > 0L) {
+            becomeUserUrl = domain + "?become_user_id=" + user.getId();
+        }
+
+        String name = "";
+        if(user != null && user.getName() != null) {
+            name = user.getName();
+        }
+
         if (mUseDefaultDomain) {
-            ErrorReportManager.postGenericErrorReport(subject, domain, email, comment, getUserSeveritySelectionTag(), new StatusCallback<ErrorReportResult>() {
+            ErrorReportManager.postGenericErrorReport(subject, domain, email, comment, getUserSeveritySelectionTag(), name, enrollmentTypes, becomeUserUrl, new StatusCallback<ErrorReportResult>() {
 
                 @Override
-                public void onResponse(Response<ErrorReportResult> response, LinkHeaders linkHeaders, ApiType type) {
+                public void onResponse(@NonNull Response<ErrorReportResult> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                     resetCachedUser();
                     if(type.isAPI()) {
                         resultListener.onTicketPost();
@@ -268,7 +303,7 @@ public class ZendeskDialogStyled extends DialogFragment {
                 }
 
                 @Override
-                public void onFail(Call<ErrorReportResult> response, Throwable error) {
+                public void onFail(@Nullable Call<ErrorReportResult> call, @NonNull Throwable error, @Nullable Response response) {
                     resetCachedUser();
                     resultListener.onTicketError();
                 }
@@ -279,10 +314,10 @@ public class ZendeskDialogStyled extends DialogFragment {
                 }
             });
         } else {
-            ErrorReportManager.postErrorReport(subject, domain, email, comment, getUserSeveritySelectionTag(), new StatusCallback<ErrorReportResult>() {
+            ErrorReportManager.postErrorReport(subject, domain, email, comment, getUserSeveritySelectionTag(), name, enrollmentTypes, becomeUserUrl, new StatusCallback<ErrorReportResult>() {
 
                 @Override
-                public void onResponse(Response<ErrorReportResult> response, LinkHeaders linkHeaders, ApiType type) {
+                public void onResponse(@NonNull Response<ErrorReportResult> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                     resetCachedUser();
                     if(type.isAPI()) {
                         resultListener.onTicketPost();
@@ -290,7 +325,7 @@ public class ZendeskDialogStyled extends DialogFragment {
                 }
 
                 @Override
-                public void onFail(Call<ErrorReportResult> response, Throwable error) {
+                public void onFail(@Nullable Call<ErrorReportResult> call, @NonNull Throwable error, @Nullable Response response) {
                     resetCachedUser();
                     resultListener.onTicketError();
                 }
@@ -301,6 +336,28 @@ public class ZendeskDialogStyled extends DialogFragment {
                 }
             });
         }
+    }
+    public void saveZendeskTicket() {
+        if (ApiPrefs.getDomain().isEmpty()) {
+            // Parent uses Airwolf for api calls; No API setup for enrollments on Airwolf so skip straight to generating the ticket info
+            generateTicketInfo(null);
+            return;
+        }
+
+        // Get the enrollments for the user
+        UserManager.getSelfEnrollments(true, new StatusCallback<List<Enrollment>>() {
+            @Override
+            public void onResponse(@NonNull Response<List<Enrollment>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
+                if(type.isAPI()) {
+                    generateTicketInfo(response.body());
+                }
+            }
+
+            @Override
+            public void onFail(@Nullable Call<List<Enrollment>> call, @NonNull Throwable error, @Nullable Response response) {
+                generateTicketInfo(null);
+            }
+        });
     }
 
     private void resetCachedUser() {

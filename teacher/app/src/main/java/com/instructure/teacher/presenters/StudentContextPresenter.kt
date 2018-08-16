@@ -15,141 +15,97 @@
  */
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.managers.AnalyticsManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.SectionManager
-import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.StudentContextCardQuery
+import com.instructure.canvasapi2.StudentContextCardQuery.*
+import com.instructure.canvasapi2.managers.StudentContextManager
+import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.canvasapi2.utils.weave.WeaveJob
+import com.instructure.canvasapi2.utils.weave.awaitQLPaginated
 import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.inParallel
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.StudentContextView
 import instructure.androidblueprint.FragmentPresenter
-import kotlinx.coroutines.experimental.Job
-import java.util.*
 
 
 class StudentContextPresenter(
-        private val mStudentId: Long,
-        private val mCourseId: Long
+        private val studentId: Long,
+        private val courseId: Long
 ) : FragmentPresenter<StudentContextView>() {
 
-    private val SUBMISSION_PAGE_SIZE = 10
-    private val permissions = listOf(
-            CanvasContextPermission.MANAGE_GRADES,
-            CanvasContextPermission.SEND_MESSAGES,
-            CanvasContextPermission.VIEW_ALL_GRADES,
-            CanvasContextPermission.VIEW_ANALYTICS,
-            CanvasContextPermission.BECOME_USER
-    )
+    private lateinit var student: User
+    private lateinit var course: AsCourse
+    private lateinit var mPermissions: Permissions
+    private var studentSummary: Analytics? = null
+    private var isStudent = true
+    private val submissions: MutableList<Submission> = mutableListOf()
 
-    private lateinit var mStudent: User
-    private lateinit var mCourse: Course
-    private lateinit var mSections: List<Section>
-    private lateinit var mSubmissions: List<Submission>
-    private lateinit var mPermissions: CanvasContextPermission
-    private var mStudentSummary: StudentSummary? = null
-    private var mIsStudent = false
+    /** Whether we have loaded and displayed the data outside of the submission list (user name, avatar, grade, etc) */
+    private var isBaseDataLoaded = false
 
-    private var mIsLoaded = false
-    private var mApiJob: Job? = null
-    private var mAddedSubmissionCount = 0
+    /** Whether all pages of submission data have been loaded */
+    private var allPagesLoaded = false
+
+    private var apiJob: WeaveJob? = null
 
     override fun loadData(forceNetwork: Boolean) {
-        if (mIsLoaded) {
+        if (isBaseDataLoaded) {
             viewCallback?.onRefreshFinished()
-            viewCallback?.setData(mCourse, mSections, mStudent, mStudentSummary, mIsStudent)
-            loadMoreSubmissions(0)
+            viewCallback?.setData(course, student, studentSummary, isStudent)
+            viewCallback?.addSubmissions(submissions, course, student)
             return
         }
-        if (mApiJob?.isActive == true) return
+        if (apiJob?.isActive == true) return
         viewCallback?.onRefreshStarted()
-        mApiJob = tryWeave {
 
-            var sections: List<Section> = emptyList()
-            inParallel {
-                // Get course
-                await<Course>({ CourseManager.getCourse(mCourseId, it, forceNetwork) }) {
-                    mCourse = it
+        apiJob = tryWeave {
+            awaitQLPaginated<StudentContextCardQuery.Data> {
+                onRequest {
+                    viewCallback?.showLoadMoreIndicator(true)
+                    StudentContextManager.getStudentContext(courseId, studentId, SUBMISSION_PAGE_SIZE, forceNetwork, it)
                 }
 
-                // Get course sections
-                await<List<Section>>({ SectionManager.getAllSectionsForCourse(mCourseId, it, forceNetwork) }) {
-                    sections = it
+                onResponse { data ->
+                    course = data.course as StudentContextCardQuery.AsCourse
+                    if (!isBaseDataLoaded) {
+                        student = course.users!!.edges!!.first().user!!
+                        studentSummary = student.analytics
+                        mPermissions = course.permissions!!
+                        isStudent = student.enrollments.any { it.type == EnrollmentType.StudentEnrollment }
+                        viewCallback?.onRefreshFinished()
+                        viewCallback?.setData(course, student, studentSummary, isStudent)
+                        isBaseDataLoaded = true
+                    }
+                    val newSubmissions = course.submissions!!.edges?.mapNotNull { it.submission } ?: emptyList()
+                    submissions.addAll(newSubmissions)
+                    viewCallback?.addSubmissions(newSubmissions, course, student)
+                    viewCallback?.showLoadMoreIndicator(false)
+                    val pageInfo = course.submissions!!.pageInfo
+                    return@onResponse if (pageInfo.isHasNextPage) pageInfo.endCursor else null
                 }
 
-                // Get student in the context of this course
-                await<User>({ CourseManager.getCourseStudent(mCourseId, mStudentId, it, forceNetwork) }) {
-                    mStudent = it
-                    mIsStudent = it.enrollments.any { it.isStudent }
-                }
-
-                // Get student summary analytics
-                await<List<StudentSummary>>(
-                        managerCall = { AnalyticsManager.getStudentSummaryForCourse(mStudentId, mCourseId, it, forceNetwork) },
-                        onComplete = { mStudentSummary = it.firstOrNull() },
-                        errorCall = {
-                            /* Student summary API may return a 404. This is expected in some cases
-                               and we don't want it throw an exception which would cancel the other
-                               API calls, so we return true for 404s. */
-                            it.response?.code() == 404
-                        }
-                )
-
-                // Get student's submissions
-                await<List<Submission>>(
-                        managerCall = { SubmissionManager.getAllStudentSubmissionsForCourse(mStudentId, mCourseId, it, forceNetwork) },
-                        onComplete = {
-                            val defaultDate = Date(0)
-                            mSubmissions = it.sortedByDescending { it.submittedAt ?: defaultDate }
-                        },
-                        errorCall = {
-                            /* The submissions API will return a 401 if the specified user is not a
-                            student in the course. We'll handle this case manually instead of
-                            displaying a generic error. */
-                            mSubmissions = emptyList()
-                            it.response?.code() == 401
-                        }
-                )
-
-                // Get course permissions
-                await<CanvasContextPermission>({ CourseManager.getCoursePermissions(mCourseId, permissions, it, forceNetwork) }) {
-                    mPermissions = it
+                onComplete {
+                    allPagesLoaded = true
                 }
             }
-
-            mSections = sections.filter { section -> mStudent.enrollments.any { it.courseSectionId == section.id } }
-            viewCallback?.onRefreshFinished()
-            viewCallback?.setData(mCourse, mSections, mStudent, mStudentSummary, mIsStudent)
-            loadMoreSubmissions()
-            mIsLoaded = true
         } catch {
-            viewCallback?.onErrorLoading()
+            val isDesigner = student.enrollments.any { it.type == EnrollmentType.DesignerEnrollment } == true
+            viewCallback?.onErrorLoading(isDesigner)
+            it.printStackTrace()
         }
     }
 
-    fun loadMoreSubmissions(additionCount: Int = SUBMISSION_PAGE_SIZE) {
-        when (additionCount) {
-            0 -> viewCallback?.addSubmissions(
-                    mSubmissions.take(mAddedSubmissionCount),
-                    mCourse,
-                    mStudent
-            )
-            else -> viewCallback?.addSubmissions(
-                    mSubmissions.subList(mAddedSubmissionCount, (mAddedSubmissionCount + additionCount).coerceAtMost(mSubmissions.size)),
-                    mCourse,
-                    mStudent
-            )
-        }
-        mAddedSubmissionCount += additionCount
-        if (mAddedSubmissionCount >= mSubmissions.size) viewCallback?.showLoadMoreButton(false)
-
+    fun loadMoreSubmissions() {
+        apiJob?.next()
     }
 
     override fun refresh(forceNetwork: Boolean) {}
 
     override fun onDestroyed() {
         super.onDestroyed()
-        mApiJob?.cancel()
+        apiJob?.cancel()
+    }
+
+    companion object {
+        private const val SUBMISSION_PAGE_SIZE = 20
     }
 }

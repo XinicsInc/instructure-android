@@ -1,65 +1,51 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+/*
+ * Copyright (C) 2017 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 
 buildscript {
-    /* Global constants */
-    apply from: '../gradle/global.gradle'
-
-    apply from: '../private-data/merge-private-data.gradle'
-    mergePrivateData "candroid"
+    PrivateData.merge(project, "candroid")
 
     repositories {
         jcenter()
+        google()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
+        maven { url 'https://maven.fabric.io/public' }
     }
+
     dependencies {
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
-        classpath 'com.google.gms:google-services:3.0.0'
-        classpath "com.google.gms:oss-licenses:$GLOBAL_OSS_LICENSES_PLUGIN_VERSION"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$GLOBAL_KOTLIN_VERSION"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath Plugins.ANDROID_GRADLE_TOOLS
+        classpath Plugins.APOLLO
+        classpath Plugins.GOOGLE_SERVICES
+        classpath Plugins.OSS_LICENSES
+        classpath Plugins.KOTLIN
+        classpath Plugins.FABRIC
     }
-}
-
-plugins {
-    id "org.standardout.versioneye" version "1.4.0"
-}
-
-versioneye {
-    includeSubProjects = true
 }
 
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
+        maven {
+            credentials {
+                username pspdfMavenUser
+                password pspdfMavenPass
+            }
+            url 'https://customers.pspdfkit.com/maven/'
+        }
     }
-}
-
-ext {
-    junitVersion = '4.12'
-    compileSdkVersion = GLOBAL_COMPILE_SDK
-    buildToolsVersion = GLOBAL_BUILD_TOOLS_VERSION
-    targetSdkVersion = GLOBAL_TARGET_SDK
-    minSdkVersion = 19
-
-    versionCode = 164
-    versionName = '5.7.10'
-
-    supportLibraryVersion = GLOBAL_SUPPORT_LIBRARY_VERSION
-    googlePlayServicesVersion = GLOBAL_PLAY_SERVICES_VERSION
-
-    supportDependencies = [
-            design:            "com.android.support:design:$supportLibraryVersion",
-            recyclerView:      "com.android.support:recyclerview-v7:$supportLibraryVersion",
-            appCompat:         "com.android.support:appcompat-v7:$supportLibraryVersion",
-            supportAnnotation: "com.android.support:support-annotations:$supportLibraryVersion",
-            cardView:          "com.android.support:cardview-v7:$supportLibraryVersion",
-            supportLibV13:     "com.android.support:support-v13:$supportLibraryVersion",
-            gcm:               "com.google.android.gms:play-services-gcm:$googlePlayServicesVersion",
-            analytics:         "com.google.android.gms:play-services-analytics:$googlePlayServicesVersion",
-            vector:            "com.android.support:support-vector-drawable:${supportLibraryVersion}",
-    ]
 }

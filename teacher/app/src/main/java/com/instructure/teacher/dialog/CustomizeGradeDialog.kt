@@ -24,6 +24,7 @@ import android.support.v7.app.AppCompatDialog
 import android.support.v7.app.AppCompatDialogFragment
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.utils.ThemePrefs
@@ -82,6 +83,7 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
         gradeEditText.setText(mGrade ?: "", TextView.BufferType.EDITABLE)
         gradeEditText.setSelection(mGrade?.length ?: 0)
         gradeEditText.hint = ""
+
         when(Assignment.getGradingTypeFromAPIString(mGradingType)) {
             Assignment.GRADING_TYPE.PERCENT -> gradeTextHint.text = "%"
             Assignment.GRADING_TYPE.GPA_SCALE -> gradeTextHint.text = getString(R.string.gpa)
@@ -117,6 +119,16 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
         gradeDialog.setOnShowListener {
             gradeDialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
             gradeDialog.getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)
+        }
+
+        // Close and update the grade when the user hits the 'Done' button on the keyboard
+        gradeEditText.setOnEditorActionListener { textView, actionId, event ->
+            var handled = false
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                gradeDialog.getButton(AlertDialog.BUTTON_POSITIVE).callOnClick()
+                handled = true
+            }
+            handled
         }
 
         return gradeDialog

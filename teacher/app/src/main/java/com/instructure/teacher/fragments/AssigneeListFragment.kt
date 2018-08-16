@@ -40,7 +40,10 @@ import com.instructure.teacher.holders.AssigneeViewHolder
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.presenters.AssigneeListPresenter
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.EditDateGroups
+import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.setupCloseButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.view.EmptyPandaView
 import com.instructure.teacher.viewinterface.AssigneeListView
 import kotlinx.android.synthetic.main.fragment_assignee_list.*
@@ -63,7 +66,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
     private val assigneeRecyclerView by bind<RecyclerView>(R.id.recyclerView)
     private val swipeRefreshLayout by bind<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
     private val emptyPandaView by bind<EmptyPandaView>(R.id.emptyPandaView)
-    private val saveButton: TextView? get() = view?.findViewById<TextView>(R.id.menu_save)
+    private val saveButton: TextView? get() = view?.findViewById<TextView>(R.id.menuSave)
 
     override fun layoutResId() = R.layout.fragment_assignee_list
     override fun getList() = presenter.data

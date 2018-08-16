@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.AssignmentOverride
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.post_models.AssignmentPostBody
 import com.instructure.canvasapi2.models.post_models.OverrideBody
+import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.AssignmentUtils2
@@ -40,6 +41,12 @@ fun Assignment.getAssignmentIcon() = when {
     else -> R.drawable.vd_assignment
 }
 
+fun List<SubmissionType>?.getAssignmentIcon() = when {
+    this == null -> R.drawable.vd_assignment
+    SubmissionType.online_quiz in this -> R.drawable.vd_quiz
+    SubmissionType.discussion_topic in this -> R.drawable.vd_discussion
+    else -> R.drawable.vd_assignment
+}
 //region Grouped due dates
 
 var AssignmentPostBody.coreDates: CoreDates
@@ -133,7 +140,7 @@ fun AssignmentPostBody.setGroupedDueDates(dates: EditDateGroups) {
 }
 //endregion
 
-fun Assignment.getGradeText(submission: Submission?, context: Context, includePointsPossible: Boolean = true): String {
+fun Assignment.getGradeText(submission: Submission?, context: Context, includePointsPossible: Boolean = true, includeLatePenalty: Boolean = false): String {
     //If the submission doesn't exist, so we return an empty string
     if(submission == null) return ""
 
@@ -151,7 +158,11 @@ fun Assignment.getGradeText(submission: Submission?, context: Context, includePo
     if(submission.grade != null && submission.grade != "null") {
         return when(Assignment.getGradingTypeFromAPIString(this.gradingType)) {
             Assignment.GRADING_TYPE.POINTS ->
-                getPointsPossibleWithNoParenthesis(submission.score, this.pointsPossible)
+                if(includeLatePenalty) {
+                    getPointsPossibleWithNoParenthesis(submission.enteredScore, this.pointsPossible)
+                } else {
+                    getPointsPossibleWithNoParenthesis(submission.score, this.pointsPossible)
+                }
             //edge case, NOT_GRADED type with grade, it COULD happen
             Assignment.GRADING_TYPE.NOT_GRADED ->
                 context.getString(R.string.not_graded)
@@ -159,7 +170,7 @@ fun Assignment.getGradeText(submission: Submission?, context: Context, includePo
                 var grade = submission.grade
                 if (this.gradingType == Assignment.PERCENT_TYPE) {
                     try {
-                        val value: Double = submission.grade?.removeSuffix("%")?.toDouble() as Double
+                        val value: Double = if(includeLatePenalty) submission.enteredGrade?.removeSuffix("%")?.toDouble() as Double else submission.grade?.removeSuffix("%")?.toDouble() as Double
                         grade = NumberHelper.doubleToPercentage(value, 2)
                     } catch (e: NumberFormatException) { }
                 }
@@ -170,7 +181,11 @@ fun Assignment.getGradeText(submission: Submission?, context: Context, includePo
                         grade = context.getString(R.string.incomplete_grade)
                 }
                 if (includePointsPossible) {
-                    context.getString(R.string.grade_value_format, grade, getPointsPossibleWithParenthesis(submission.score, this.pointsPossible))
+                    if(includeLatePenalty) {
+                        context.getString(R.string.grade_value_format, grade, getPointsPossibleWithParenthesis(submission.enteredScore, this.pointsPossible))
+                    } else {
+                        context.getString(R.string.grade_value_format, grade, getPointsPossibleWithParenthesis(submission.score, this.pointsPossible))
+                    }
                 } else {
                     grade.orEmpty()
                 }
@@ -183,11 +198,89 @@ fun Assignment.getGradeText(submission: Submission?, context: Context, includePo
     }
 }
 
+fun getGradeText(
+    context: Context,
+    gradingStatus: String?,
+    gradingType: String,
+    grade: String?,
+    enteredGrade: String?,
+    score: Double?,
+    enteredScore: Double?,
+    pointsPossible: Double,
+    includePointsPossible: Boolean = true,
+    includeLatePenalty: Boolean = false
+): String {
+    if (gradingStatus == null) return ""
+
+    // Cover the first edge case: excused assignment
+    if (gradingStatus == "excused") return context.getString(R.string.excused)
+
+
+    // Cover the second edge case: NOT_GRADED type and no grade
+    if (Assignment.getGradingTypeFromAPIString(gradingType) == Assignment.GRADING_TYPE.NOT_GRADED) {
+        return context.getString(R.string.not_graded)
+    }
+
+    // First let's see if the assignment is graded
+    if (gradingStatus == "graded" && score != null && enteredScore != null) {
+        return when (Assignment.getGradingTypeFromAPIString(gradingType)) {
+            Assignment.GRADING_TYPE.POINTS ->
+                if (includeLatePenalty) {
+                    getPointsPossibleWithNoParenthesis(enteredScore, pointsPossible)
+                } else {
+                    getPointsPossibleWithNoParenthesis(score, pointsPossible)
+                }
+        // Edge case, NOT_GRADED type with grade, it COULD happen
+            Assignment.GRADING_TYPE.NOT_GRADED -> context.getString(R.string.not_graded)
+            else -> {
+                var formattedGrade = grade
+                if (gradingType == Assignment.PERCENT_TYPE) {
+                    try {
+                        val value: Double = if (includeLatePenalty) {
+                            enteredGrade?.removeSuffix("%")?.toDouble() as Double
+                        } else {
+                            grade?.removeSuffix( "%")?.toDouble() as Double
+                        }
+                        formattedGrade = NumberHelper.doubleToPercentage(value, 2)
+                    } catch (ignored: NumberFormatException) { }
+                }
+                when (grade) {
+                    "complete" ->
+                        formattedGrade = context.getString(R.string.complete_grade)
+                    "incomplete" ->
+                        formattedGrade = context.getString(R.string.incomplete_grade)
+                }
+                if (includePointsPossible) {
+                    if (includeLatePenalty) {
+                        context.getString(
+                            R.string.grade_value_format,
+                            formattedGrade,
+                            getPointsPossibleWithParenthesis(enteredScore, pointsPossible)
+                        )
+                    } else {
+                        context.getString(
+                            R.string.grade_value_format,
+                            formattedGrade,
+                            getPointsPossibleWithParenthesis(score, pointsPossible)
+                        )
+                    }
+                } else {
+                    grade.orEmpty()
+                }
+            }
+
+        }
+    } else {
+        // Return empty string for "empty" state
+        return ""
+    }
+}
+
 private fun getPointsPossibleWithNoParenthesis(points: Double, pointsPossible: Double): String {
     return NumberHelper.formatDecimal(points, 2, true) + "/" + NumberHelper.formatDecimal(pointsPossible, 2, true)
 }
 
-private fun getPointsPossibleWithParenthesis(points: Double, pointsPossible: Double): String {
+fun getPointsPossibleWithParenthesis(points: Double, pointsPossible: Double): String {
     return "(" + NumberHelper.formatDecimal(points, 2, true) + "/" + NumberHelper.formatDecimal(pointsPossible, 2, true) + ")"
 }
 
@@ -234,5 +327,15 @@ fun Assignment.getResForSubmission(submission: Submission?): Pair<Int, Int> {
             return Pair(R.string.submission_status_not_submitted, R.color.defaultTextGray)
 
         else -> return Pair(-1, -1)
+    }
+}
+
+fun getResForSubmission(submissionStatus: String?): Pair<Int, Int> {
+    return when(submissionStatus) {
+        "missing" -> Pair(R.string.submission_status_missing, R.color.submission_status_color_missing)
+        "late" -> Pair(R.string.submission_status_late, R.color.submission_status_color_late)
+        "submitted" -> Pair(R.string.submission_status_submitted, R.color.submission_status_color_submitted)
+        "unsubmitted" -> Pair(R.string.submission_status_not_submitted, R.color.defaultTextGray)
+        else -> Pair(-1, -1)
     }
 }

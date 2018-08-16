@@ -23,6 +23,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
@@ -52,7 +54,7 @@ import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked;
 import com.instructure.pandarecycler.util.GroupSortedList;
 import com.instructure.pandarecycler.util.Types;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Utils;
 
 import java.util.ArrayList;
@@ -65,6 +67,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class ModuleListRecyclerAdapter extends ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder> {
 
@@ -124,7 +127,7 @@ public class ModuleListRecyclerAdapter extends ExpandableRecyclerAdapter<ModuleO
             ModuleBinder.bindSubHeader((ModuleSubHeaderViewHolder)holder, moduleObject, moduleItem,
                     itemPosition == 0, itemPosition == groupItemCount - 1);
         } else {
-            final int courseColor = CanvasContextColor.getCachedColor(getContext(), mCanvasContext);
+            final int courseColor = ColorKeeper.getOrGenerateColor(mCanvasContext);
             final int groupItemCount = getGroupItemCount(moduleObject);
             final int itemPosition = storedIndexOfItem(moduleObject, moduleItem);
 
@@ -253,9 +256,9 @@ public class ModuleListRecyclerAdapter extends ExpandableRecyclerAdapter<ModuleO
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setContentView(R.layout.progress_dialog);
-        final int[] currentColors = CanvasContextColor.getCachedColors(context, mCanvasContext);
+        final int currentColor = ColorKeeper.getOrGenerateColor(mCanvasContext);
 
-        ((ProgressBar)dialog.findViewById(R.id.progressBar)).getIndeterminateDrawable().setColorFilter(currentColors[0], PorterDuff.Mode.SRC_ATOP);
+        ((ProgressBar)dialog.findViewById(R.id.progressBar)).getIndeterminateDrawable().setColorFilter(currentColor, PorterDuff.Mode.SRC_ATOP);
         return dialog;
     }
 
@@ -334,7 +337,7 @@ public class ModuleListRecyclerAdapter extends ExpandableRecyclerAdapter<ModuleO
                 }
 
                 @Override
-                public void onResponse(retrofit2.Response<List<ModuleItem>> response, LinkHeaders linkHeaders, ApiType type) {
+                public void onResponse(@NonNull Response<List<ModuleItem>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                     List<ModuleItem> moduleItems = response.body();
                     if(type == ApiType.API) {
                        int position = (moduleItems.size() > 0 && moduleItems.get(0) != null) ? moduleItems.get(0).getPosition() - 1 : 0;
@@ -371,7 +374,7 @@ public class ModuleListRecyclerAdapter extends ExpandableRecyclerAdapter<ModuleO
                 }
 
                 @Override
-                public void onFail(Call<List<ModuleItem>> callResponse, Throwable error, retrofit2.Response response) {
+                public void onFail(@Nullable Call<List<ModuleItem>> call, @NonNull Throwable error, @Nullable Response response) {
 
                     // Only expand if there was no cache result and no network. No connection empty cell will be displayed
                     if (response != null
@@ -400,7 +403,7 @@ public class ModuleListRecyclerAdapter extends ExpandableRecyclerAdapter<ModuleO
         mModuleObjectCallback = new StatusCallback<List<ModuleObject>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<ModuleObject>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<ModuleObject>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 List<ModuleObject> moduleObjects = response.body();
                 setNextUrl(linkHeaders.nextUrl);
 
@@ -425,7 +428,14 @@ public class ModuleListRecyclerAdapter extends ExpandableRecyclerAdapter<ModuleO
 
                 mCallback.onRefreshFinished();
             }
+
+            @Override
+            public void onFinished(ApiType type) {
+                ModuleListRecyclerAdapter.this.onCallbackFinished(type);
+            }
         };
+
+
 
     }
 

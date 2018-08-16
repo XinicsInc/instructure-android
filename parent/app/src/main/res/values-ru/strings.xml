@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2016 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,30 +16,41 @@
   -->
 
 <resources>
+
     <string name="action_settings">Настройки</string>
     <string name="canvasLogo">Логотип Canvas</string>
-    <string name="email">Email</string>
+    <string name="email">Адрес электронной почты</string>
+    <string name="emailAddress">Адрес электронной почты</string>
     <string name="parent_email">Email Родителя</string>
     <string name="confirmPassword">Подтвердить пароль</string>
     <string name="firstName">Имя</string>
     <string name="lastName">Фамилия</string>
     <string name="password">Пароль</string>
     <string name="log_in">Войти</string>
-    <string name="createAccount">Создать аккаунт</string>
-    <string name="forgotPassword">Забыли пароль</string>
+    <string name="createAccount">Создать учетную запись</string>
+    <string name="create">Создать</string>
+    <string name="forgotPassword">Забыли пароль?</string>
+    <string name="forgotPasswordWithoutQuestion">Забыли пароль</string>
+    <string name="enterAccountEmailHint">Учетная запись электронной почты</string>
     <string name="requestPassword">Запросить пароль</string>
+    <string name="resetPassword">Восстановить пароль</string>
+    <string name="requestPasswordHelpText">Мы направим вам запрос на сброс по электронной почте.</string>
+    <string name="requestPasswordSuccess">Ваш пароль был сброшен.</string>
     <string name="fullName">Полное имя</string>
-    <string name="invalidEmail">Неверный адрес электронной почты. Попробуй еще раз.</string>
+    <string name="passwordsDoNotMatch">Пароли не совпадают.</string>
+    <string name="passwordsCannotBeBlank">Поля для ввода паролей не могут быть пустыми.</string>
+    <string name="passwordResetFailed">Мы не смогли сбросить ваш пароль в данный момент.</string>
+    <string name="invalidEmail">Недействительный адрес эл. почты Повторить попытку.</string>
     <string name="next">Далее</string>
     <string name="createAccountMessage">На ваш адрес электронной почты, которую Вы предоставили, будет отправлено электронное письмо для завершения регистрации.</string>
-    <string name="accountCreationSuccess">Создание учетной записи прошло успешно. Пожалуйста, проверьте свою электронную почту для завершения регистрации.</string>
-    <string name="errorOccurred">Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз.</string>
+    <string name="accountCreationSuccess">Создание учетной записи выполнено успешно. Проверьте свою электронную почту для завершения регистрации.</string>
+    <string name="errorOccurred">Произошла непредвиденная ошибка. Попробуйте еще раз.</string>
     <string name="unknownDevice">Неизвестное устройство</string>
     <string name="addStudent">Добавить студента</string>
     <string name="school">Школа</string>
     <string name="finish">Закончить</string>
     <string name="close">Закрыть</string>
-    <string name="noStudents">В настоящее время студенты отсутствуют. Чтобы добавить студентов, нажмите на три точки в меню выше.</string>
+    <string name="noStudents">Нет доступных студентов. Для добавления студентов нажмите на три точки в меню выше.</string>
     <string name="noStudentsView">Нет студентов, связанных с вашим аккаунтом.</string>
     <string name="noCourses">У этого студента в настоящее время нет доступных курсов.</string>
     <string name="noAlerts">У этого студента нет предупреждений для просмотра.</string>
@@ -68,26 +79,26 @@
     <string name="alert">Предупреждение</string>
     <string name="weekEmptyView">Нет заданий или событий на этой неделе!</string>
     <string name="toolbar_close">Закрыть панель</string>
-    <string name="syllabus">Расписание</string>
+    <string name="syllabus">Содержание курса</string>
     <string name="emptySyllabus">У этого курса нет расписания.</string>
     <string name="noLocation">Местоположение не указано</string>
     <string name="previousAlerts">Предыдущие предупреждения</string>
     <string name="currentAlerts">Текущие предупреждения</string>
-    <string name="badDomainError">Недопустимый домен. Попробуй еще раз.</string>
+    <string name="badDomainError">Неверный домен. Повторить попытку.</string>
     <string name="unauthorized">Вы не авторизованы для доступа к этой информации.</string>
-    <string name="revokedTokenErrorContent">Вы не авторизованы для доступа к информации %1$s. Вы можете повторно авторизовать вашего студента из меню настроек.</string>
+    <string name="revokedTokenErrorContent">Вы не авторизованы для доступа к данным %1$s. Вы можете повторно авторизовать своего студента в меню настроек.</string>
     <string name="revokedTokenErrorTitle">Токен доступа отозван</string>
-    <string name="featureFlagDisabledError">Это заведение не подключило доступ к  мобильному приложению Canvas Родители.</string>
+    <string name="featureFlagDisabledError">Данное учреждение не предоставило доступ к мобильному приложению Canvas Parent.</string>
 
     <!-- Help strings -->
-    <string name="askInstructor">Задайте вопрос вашему учителю</string>
-    <string name="askInstructorDetails">Вопросы переданы вашему учителю</string>
-    <string name="searchGuides">Поиск по Справочникам Canvas </string>
-    <string name="canvasGuides">Справочники Canvas </string>
-    <string name="searchGuidesDetails">Найти ответы на основные вопросы</string>
+    <string name="askInstructor">Задать вопрос своему преподавателю</string>
+    <string name="askInstructorDetails">Вопросы направляются вашему преподавателю</string>
+    <string name="searchGuides">Поиск в руководствах Canvas</string>
+    <string name="canvasGuides">Руководства Canvas</string>
+    <string name="searchGuidesDetails">Найти ответы на общие вопросы</string>
     <string name="reportProblem">Сообщить о проблеме</string>
     <string name="reportProblemDetails">Если приложение работает с ошибками, дайте нам знать</string>
-    <string name="requestFeature">Запросить новую функцию</string>
+    <string name="requestFeature">Запросить функцию</string>
     <string name="requestFeatureDetails">Есть идея по улучшению приложения?</string>
     <string name="shareYourLove">Поделитесь своей любовью к приложению</string>
     <string name="shareYourLoveDetails">Расскажите нам о своих любимых моментах приложения</string>
@@ -100,10 +111,10 @@
     <string name="help_locale">Язык:</string>
     <string name="installDate">Дата установки:</string>
     <string name="icon">Иконка</string>
-    <string name="due">Срок: </string>
-    <string name="no_due_date">Нет срока выполнения</string>
+    <string name="due">Срок выполнения:</string>
+    <string name="no_due_date">Срок выполнения не задан</string>
     <string name="tapToSet">Нажмите, чтобы установить</string>
-    <string name="alarmNotSet">Предупреждение не может быть установлено. Попробуй еще раз.</string>
+    <string name="alarmNotSet">Невозможно поставить будильник. Повторить попытку.</string>
     <string name="could_not_route_course">Не удалось найти регистрацию на курс.</string>
     <string name="could_not_route_assignment">Не удалось найти задание.</string>
     <string name="email_already_exists">Пользователь с таким адресом электронной почты уже существует.</string>
@@ -125,18 +136,18 @@
     <string name="set_reminder">Установить напоминание</string>
     <string name="enter_student_institution">Введите заведение студента</string>
     <string name="enter_student_login">Введите логин и пароль студента</string>
-    <string name="access_not_enabled">Это заведение не подключило доступ к  мобильному приложению Canvas Родители.</string>
-    <string name="dismiss">Отклонить</string>
+    <string name="access_not_enabled">Данное учреждение не предоставило доступ к мобильному приложению Canvas Parent.</string>
+    <string name="dismiss">Отказаться</string>
     <string name="invalid_username_password">Комбинация электронной почты и пароля недействительна.</string>
-    <string name="opening">Открывается&#8230;</string>
-    <string name="locked_assignment_desc">Это задание является частью модуля %s и еще не было разблокировано.</string>
+    <string name="opening">Выполняется открытие&#8230;</string>
+    <string name="locked_assignment_desc">Данное задание является частью модуля %s и еще не было разблокировано.</string>
     <string name="locked_assignment_desc_line2">Посетите страницу модулей курса в браузере для получения информации о том, как разблокировать этот контент.</string>
     <string name="locked_assignment_not_module">Это задание заблокировано.</string>
     <string name="no_description">Нет описания для этого задания.</string>
-    <string name="cannot_view_file">Невозможно просмотреть этот файл в приложении. Пожалуйста, смотрите в браузере.</string>
+    <string name="cannot_view_file">Невозможно просмотреть этот файл в приложении. Воспользуйтесь просмотром в браузере.</string>
     <string name="calendar_event">Событие календаря</string>
     <string name="set_reminder_toggle">Установить переключение напоминания</string>
-    <string name="or">Или</string>
+    <string name="or">или</string>
     <string name="canvas_login_text">Войти через Canvas</string>
 
     <!-- Feature Request -->
@@ -144,13 +155,13 @@
     <string name="understandRequest">Следующая информация поможет нам лучше понять вашу идею:</string>
 
     <!-- Distance Strings -->
-    <string name="lessThanOne">&lt; 1 мили (1.6 км)</string>
+    <string name="lessThanOne">&lt; 1 мили (1,6 км)</string>
     <string name="oneMile">1 миля (1.6 км)</string>
     <string name="miles">миль</string>
     <string name="kilometers">км</string>
 
     <string name="grade">Оценка:</string>
-    <string name="notGraded">Еще без оценки</string>
+    <string name="notGraded">Пока без оценки</string>
     <string name="missing">Отсутствует</string>
     <string name="submitted">Отправлено</string>
     <string name="in_class">Аудиторный</string>
@@ -158,7 +169,9 @@
     <string name="late">Поздно</string>
     <string name="greaterThan9">9+</string>
 
-    <string name="onlyCanvasObservers">Только пользователи со статусом Canvas Observer могут аутентифицироваться в Canvas Parent.</string>
+    <string name="onlyCanvasObservers">Только пользователи, имеющие статус Наблюдателей Canvas, могут аутентифицироваться в Canvas Parent.</string>
+    <string name="unableToAddStudentError">Мы не можем добавить этого студента в данный момент.</string>
+
     <string name="open_source">Открытый исходный код</string>
     <string name="open_source_details">Просмотреть лицензии на ПО с открытым исходным кодом</string>
 
@@ -177,8 +190,16 @@
         <item name="germany">@string/germany</item>
         <item name="singapore">@string/singapore</item>
     </array>
-    <string name="selectChildRegion">Выбрать студента\регион нахождения студента</string>
+    <string name="selectChildRegion">Выбрать студентарегион нахождения студента</string>
     <string name="selectRegion">Выборщик региона</string>
     <string name="unauthorizedRegion">Недопустимый регион</string>
     <string name="mismatchedRegionMessage">Этот институт расположен за пределами выбранного вами региона. Для добавления студента в этот институт воспользуйтесь опцией "Region Picker" (Выборщик региона) на странице регистрации, чтобы создать учетную запись в регионе %1$s.</string>
+
+    <string name="notification_channel_name">Общие уведомления</string>
+    <string name="notification_channel_description">Уведомления для напоминания и о важной информации о вашем студенте.</string>
+
+    <string name="whatsYourStudentsSchoolName">Ввести название учебного заведения студента</string>
+    <string name="findYourStudentsSchoolHint">Найти учебное заведение или район проживания студента</string>
+    <string name="noGradeText">Н/Д</string>
+    <string name="locked">Заблокировано</string>
 </resources>

@@ -16,16 +16,16 @@
  */
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.models.FileSubmitObject
 import com.instructure.teacher.viewinterface.DiscussionsReplyView
 import instructure.androidblueprint.FragmentPresenter
-import retrofit2.Call
+import kotlinx.coroutines.experimental.Job
 import retrofit2.Response
 import java.io.File
 
@@ -34,63 +34,42 @@ class DiscussionsReplyPresenter(
         val discussionTopicHeaderId: Long,
         val discussionEntryId: Long) : FragmentPresenter<DiscussionsReplyView>() {
 
-    override fun loadData(forceNetwork: Boolean) {
+    private var postDiscussionJob: Job? = null
 
-    }
-
-    override fun refresh(forceNetwork: Boolean) {
-        mSendMessageCallback.reset()
-        mSendMessageWithAttachmentCallback.reset()
-    }
+    override fun loadData(forceNetwork: Boolean) {}
+    override fun refresh(forceNetwork: Boolean) {}
 
     fun sendMessage(message: String?) {
-        //Handle debouncing
-        if(mSendMessageWithAttachmentCallback.isCallInProgress || mSendMessageCallback.isCallInProgress) {
+        if(postDiscussionJob?.isActive == true) {
             viewCallback?.messageFailure(REASON_MESSAGE_IN_PROGRESS)
             return
         }
 
         if(message == null) {
             viewCallback?.messageFailure(REASON_MESSAGE_EMPTY)
-        } else if(attachment != null) {
-            if(discussionEntryId == discussionTopicHeaderId) {
-                DiscussionManager.postToDiscussionTopic(canvasContext, discussionTopicHeaderId, message, File(attachment!!.fullPath), mSendMessageWithAttachmentCallback)
-            } else {
-                DiscussionManager.replyToDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, message, File(attachment!!.fullPath), mSendMessageWithAttachmentCallback)
-            }
         } else {
-            if(discussionEntryId == discussionTopicHeaderId) {
-                DiscussionManager.postToDiscussionTopic(canvasContext, discussionTopicHeaderId, message, mSendMessageCallback)
-            } else {
-                DiscussionManager.replyToDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, message, mSendMessageCallback)
-            }
+            postDiscussionJob = tryWeave {
+                if (attachment == null) {
+                    if (discussionEntryId == discussionTopicHeaderId) {
+                        messageSentResponse(awaitApiResponse { DiscussionManager.postToDiscussionTopic(canvasContext, discussionTopicHeaderId, message, it) })
+                    } else {
+                        messageSentResponse(awaitApiResponse { DiscussionManager.replyToDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, message, it) })
+                    }
+                } else {
+                    if (discussionEntryId == discussionTopicHeaderId) {
+                        messageSentResponse(awaitApiResponse { DiscussionManager.postToDiscussionTopic(canvasContext, discussionTopicHeaderId, message, File(attachment!!.fullPath), attachment?.contentType ?: "multipart/form-data", it) })
+                    } else {
+                        messageSentResponse(awaitApiResponse { DiscussionManager.replyToDiscussionEntry(canvasContext, discussionTopicHeaderId, discussionEntryId, message, File(attachment!!.fullPath), attachment?.contentType  ?: "multipart/form-data", it) })
+                    }
+                }
+            } catch { }
         }
     }
 
-    private val mSendMessageCallback = object : StatusCallback<DiscussionEntry>() {
-        override fun onResponse(response: Response<DiscussionEntry>, linkHeaders: LinkHeaders, type: ApiType) {
-            if (response.code() in 200..299) {
-                viewCallback?.messageSuccess(response.body())
-            } else {
-                viewCallback?.messageFailure(REASON_MESSAGE_FAILED_TO_SEND)
-            }
-        }
-
-        override fun onFail(response: Call<DiscussionEntry>, error: Throwable) {
-            viewCallback?.messageFailure(REASON_MESSAGE_FAILED_TO_SEND)
-        }
-    }
-
-    private val mSendMessageWithAttachmentCallback = object : StatusCallback<DiscussionEntry>() {
-        override fun onResponse(response: Response<DiscussionEntry>, linkHeaders: LinkHeaders, type: ApiType) {
-            if (response.code() in 200..299) {
-                viewCallback?.messageSuccess(response.body())
-            } else {
-                viewCallback?.messageFailure(REASON_MESSAGE_FAILED_TO_SEND)
-            }
-        }
-
-        override fun onFail(response: Call<DiscussionEntry>, error: Throwable) {
+    private fun messageSentResponse(response: Response<DiscussionEntry>) {
+        if (response.code() in 200..299) {
+            response.body()?.let { viewCallback?.messageSuccess(it) }
+        } else {
             viewCallback?.messageFailure(REASON_MESSAGE_FAILED_TO_SEND)
         }
     }
@@ -112,5 +91,10 @@ class DiscussionsReplyPresenter(
         val REASON_MESSAGE_EMPTY = 2
         val REASON_MESSAGE_FAILED_TO_SEND = 3
         var attachment: FileSubmitObject? = null
+    }
+
+    override fun onDestroyed() {
+        super.onDestroyed()
+        postDiscussionJob?.cancel()
     }
 }

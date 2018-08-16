@@ -1,99 +1,134 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="hello_world">Hello world!</string>
-  <string name="action_settings">設定</string>
-  <string name="mobileVerifyGeneral">このアプリは、使用許可されていません</string>
-  <string name="mobileVerifyDomainUnauthorized">あなたが入力したサーバーは、このアプリに承認されていません。</string>
-  <string name="mobileVerifyUserAgentUnauthorized">このアプリのユーザーエージェントは承認されていません。</string>
-  <string name="mobileVerifyUnknownError">このアプリと使用するためのサーバーを確認することが出来ません。</string>
-  <string name="unknownDevice">未知のディバイス</string>
-  <string name="errorOccurred">予期しないエラーが発生しました。</string>
-  <string name="pageNotFound">ページが見つかりません</string>
-  <string name="confirm">確認</string>
-  <string name="cancel">キャンセル</string>
-  <string name="help">ヘルプ</string>
-  <string name="enterURL">Canvas URLを入力してください:</string>
-  <string name="signIntoCanvasNetwork">Canvas Network にサインインしようとしていますか?</string>
-  <string name="remove">削除</string>
-  <string name="exampleURLSimple">myschool.instructure.com</string>
-  <string name="masquerade">マスカレード</string>
-  <string name="userId">ユーザーID</string>
-  <string name="domain">ドメイン</string>
-  <string name="masqueradingUserId">マスカレード ユーザーID</string>
-  <string name="masqueradingUserDomain">マスカレード ドメイン</string>
-  <string name="masqueradingBegin">マスカレードを開始</string>
-  <string name="masqueradingStop">マスカレードを停止</string>
-  <!--Multiple User Sign in-->
-  <string name="removeUser">このユーザーを削除しますか？</string>
-  <string name="removedForever">再度、このユーザーにサインインして、彼らのコンテンツにアクセスする必要があります。</string>
-  <!--Content Descriptions-->
-  <string name="canvasLogo">Canvas ロゴ</string>
-  <string name="canvasLoginOn">Canvas_ログイン: オン</string>
-  <string name="canvasLoginOff">Canvas_ログイン: オフ</string>
-  <string name="siteAdminLogin">サイト管理者ログイン: オン</string>
-  <string name="username">ユーザー名</string>
-  <string name="password">パスワード</string>
-  <string name="authenticationRequired">認証が必須です</string>
-  <string name="invalidEmailPassword">無効のメール、またはパスワード</string>
-  <string name="login">ログイン</string>
-  <string name="logout">ログアウト</string>
-  <!--Logout Warning Dialog-->
-  <string name="logout_warning">ログアウトしますか？</string>
-  <string name="logout_yes">はい</string>
-  <string name="logout_no">いいえ</string>
-  <!--Smart Login-->
-  <string name="loginNearYou">あなたの近く</string>
-  <string name="loginCanvasNetwork">Canvas Network</string>
-  <string name="loginRightBehindYou">あなたのすぐ後ろです</string>
-  <string name="loginMiles">%1$s マイルズ先</string>
-  <string name="loginCanvasHelp">あなたの学校がありませんか？学校のURLを入力するか、ここをタップしてヘルプを利用してください。</string>
-  <string name="loginCanvasHelpWithUser">学校のURLを入力するか、ここをタップしてヘルプを利用してください。</string>
-  <string name="loginHint">あなたの学校、または地区を検索</string>
-  <!--Zendesk Dialog-->
-  <string name="zendesk_reportAProblem">レポートＡ問題</string>
-  <string name="zendesk_subject">主題</string>
-  <string name="zendesk_description">説明</string>
-  <string name="zendesk_writeSomething">何か書いてください...</string>
-  <string name="zendesk_send">送信</string>
-  <string name="zendesk_feedbackThankyou">あなたの問題をサポートチームに報告して頂き、有難うございます。証明と更新をメールでお送りします。</string>
-  <string name="zendesk_severityText">これはあなたにどのように影響しますか？</string>
-  <string name="zendesk_casualQuestion">簡単な質問、コメント、アイディア、提案...</string>
-  <string name="zendesk_casualQuestion_tag">簡単_な_コメント</string>
-  <string name="zendesk_needHelp">これは急ぎではありませんが、ヘルプが必要です。</string>
-  <string name="zendesk_needHelp_tag">急ぎでは_ありません</string>
-  <string name="zendesk_somethingsBroken">何かがおかしいのですが、それを回避して必要なことを行うことができます。</string>
-  <string name="zendesk_somethingsBroken_tag">可能な_回避法</string>
-  <string name="zendesk_cantGetThingsDone">あなたから返事がくるまで、行うことができません。</string>
-  <string name="zendesk_cantGetThingsDone_tag">私が_行う_必要の_あることを_邪魔_します</string>
-  <string name="zendesk_extremelyCritical">極度の緊急事態です！！</string>
-  <string name="zendesk_extremelyCritical_tag">極度の_緊急_事態</string>
-  <string name="zendesk_emailAddress">メールアドレス</string>
-  <string name="zendesk_enterEmail">メールアドレスを入力してください...</string>
-  <string name="zendesk_unknown">未知の</string>
-  <!--Distance Strings-->
-  <string name="lessThanOne">&lt; 1 マイル (1.6 km)</string>
-  <string name="oneMile">1 マイル (1.6 km)</string>
-  <string name="miles">マイル</string>
-  <string name="kilometers">km</string>
-  <!--String for submitting tickets-->
-  <string name="device">デバイス</string>
-  <string name="osVersion">OS バージョン</string>
-  <string name="previousLoginTitle">以前のログイン</string>
-  <string name="canvasNetworks">Canvas ネットワーク</string>
-  <string name="findMySchool">私の学校を探す</string>
-  <string name="appTypeTeacher">講師</string>
-  <string name="appTypeStudent">受講者</string>
-  <string name="appTypeParent">ペアレント（上位）</string>
-  <string name="canvasLowerCase">canvas</string>
-  <string name="whatsYourSchoolName">学校の名前は？</string>
-  <string name="next">次</string>
-  <string name="schoolInstructureCom">school.instructure.com</string>
-  <string name="contentDescription_removePreviousUser">以前のユーザーを削除</string>
-  <string name="accountDomainFooter">学校が見つかりませんか？学校の完全なURLを入力してみてください。</string>
-  <string name="accountDomainFooterLink">ここをタップしてヘルプを表示します。</string>
-  <string name="login_noInternetConnectionTitle">インターネット接続なし</string>
-  <string name="login_noInternetConnectionMessage">この操作にはインターネット接続が必要です。</string>
-  <string name="empty_feedback">フィードバックを提出するには、件名と説明は必須です。</string>
-  <string name="versionNum">バージョン番号</string>
-  <string name="scrollInstructions">スクロールしてすべての詳細を表示する</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">設定</string>
+    <string name="mobileVerifyGeneral">このアプリは、使用許可されていません</string>
+    <string name="mobileVerifyDomainUnauthorized">あなたが入力したサーバーは、このアプリには承認されていません。</string>
+    <string name="mobileVerifyUserAgentUnauthorized">このアプリのユーザーエージェントは権限がありません。</string>
+    <string name="mobileVerifyUnknownError">このアプリで使用するサーバーを確認できませんでした。</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">予期しないエラーが発生しました。</string>
+    <string name="pageNotFound">ページが見つかりません</string>
+    <string name="confirm">確認</string>
+    <string name="cancel">キャンセル</string>
+    <string name="help">ヘルプ</string>
+    <string name="enterURL">Canvas URLを入力してください:</string>
+    <string name="signIntoCanvasNetwork">Canvas Network にサインインしようとしていますか?</string>
+    <string name="remove">削除</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="masquerade">マスカレード</string>
+    <string name="userId">ユーザーID</string>
+    <string name="domain">ドメイン</string>
+
+    <string name="masqueradingUserId">マスカレード ユーザーID</string>
+    <string name="masqueradingUserDomain">マスカレード ドメイン</string>
+    <string name="masqueradingBegin">マスカレードを開始</string>
+    <string name="masqueradingStop">マスカレードを停止</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">このユーザーを削除しますか？</string>
+    <string name="removedForever">そのコンテンツにアクセスするには、再度このユーザーにログインする必要があります。</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas ロゴ</string>
+
+    <string name="canvasLoginOn">Canvas_Login:ON</string>
+    <string name="canvasLoginOff">Canvas_Login:OFF</string>
+    <string name="siteAdminLogin">サイト管理者ログイン：ON</string>
+
+    <string name="username">ユーザー名</string>
+    <string name="password">パスワード</string>
+    <string name="authenticationRequired">認証は必須です</string>
+    <string name="invalidEmailPassword">無効のメール、またはパスワード</string>
+    <string name="login">ログイン</string>
+    <string name="logout">ログアウト</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">ログアウトしますか？</string>
+    <string name="logout_yes">はい</string>
+    <string name="logout_no">いいえ</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">あなたの近く</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">あなたのすぐ後ろです</string>
+    <string name="loginMiles">後 %1$s マイル</string>
+    <string name="loginCanvasHelp">学校が見えませんか？学校のURLを入力するか、ここをタップしてヘルプを利用してください。</string>
+    <string name="loginCanvasHelpWithUser">学校のURLを入力するか、ここをタップしてヘルプを利用してください。</string>
+    <string name="loginHint">あなたの学校または地域を見つける</string>
+
+    <!-- Zendesk Dialog -->
+    <string name="zendesk_reportAProblem">レポートＡ問題</string>
+    <string name="zendesk_subject">件名</string>
+    <string name="zendesk_description">説明</string>
+    <string name="zendesk_writeSomething">何か書いてください&#8230;</string>
+    <string name="zendesk_send">送信</string>
+    <string name="zendesk_feedbackThankyou">問題をサポートチームにご報告いただきありがとうございます。メールで確認と更新を受け取られます。</string>
+    <string name="zendesk_severityText">これはあなたにどのような影響を与えるでしょうか？</string>
+    <string name="zendesk_casualQuestion">簡単な質問、コメント、アイディア、提案&#8230;</string>
+    <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+    <string name="zendesk_needHelp">助けが必要ですが、緊急ではありません。</string>
+    <string name="zendesk_needHelp_tag">not_urgent</string>
+    <string name="zendesk_somethingsBroken">故障がありますが、回避してなんとか用は足せます。</string>
+    <string name="zendesk_somethingsBroken_tag">可能な_回避法</string>
+    <string name="zendesk_cantGetThingsDone">あなたの返事が来るまで用が足せません。</string>
+    <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+    <string name="zendesk_extremelyCritical">非常に緊急な事態!!</string>
+    <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+    <string name="zendesk_emailAddress">メールアドレス</string>
+    <string name="zendesk_enterEmail">メールアドレスを入力してください&#8230;</string>
+    <string name="zendesk_unknown">不明</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 マイル (1.6 km)</string>
+    <string name="oneMile">1 マイル (1.6 km)</string>
+    <string name="miles">マイル</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">デバイス</string>
+    <string name="osVersion">OS バージョン</string>
+
+    <string name="previousLoginTitle">以前のログイン</string>
+    <string name="canvasNetworks">Canvas Network</string>
+    <string name="findMySchool">私の学校を探す</string>
+    <string name="appTypeTeacher">講師</string>
+    <string name="appTypeStudent">受講者</string>
+    <string name="appTypeParent">ペアレント（上位）</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">学校の名前は？</string>
+    <string name="next">次</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">以前のユーザーを削除</string>
+    <string name="accountDomainFooter">学校が見つかりませんか？学校の完全なURLを入力してみてください。</string>
+    <string name="accountDomainFooterLink">ここをタップしてヘルプを表示します。</string>
+
+    <string name="login_noInternetConnectionTitle">インターネット接続なし</string>
+    <string name="login_noInternetConnectionMessage">この操作にはインターネット接続が必要です。</string>
+    <string name="empty_feedback">フィードバックを提出するには、件名と説明は必須です。</string>
+    <string name="versionNum">バージョン番号</string>
+    <string name="scrollInstructions">スクロールしてすべての詳細を表示する</string>
+
+    <string name="masqueradeErrorUserId">有効なIDを入力しなければなりません。</string>
+    <string name="masqueradeErrorDomain">ドメインを入力しなければなりません。</string>
+    <string name="masqueradeError">マスカレード試行中にエラーが発生しました。</string>
 </resources>

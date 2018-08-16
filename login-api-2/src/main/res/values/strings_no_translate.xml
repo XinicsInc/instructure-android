@@ -28,4 +28,7 @@
     <string name="mobileVerify_clientId">Client Id</string>
     <string name="mobileVerify_clientSecret">Client Secret</string>
     <string name="mobileVerify_protocol">Https</string>
+    <string name="appUserTypeTeacher">Teacher</string>
+    <string name="appUserTypeStudent">Student</string>
+    <string name="appUserTypeParent">Parent</string>
 </resources>

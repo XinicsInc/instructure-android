@@ -17,138 +17,142 @@
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarStyle="outsideOverlay"
-            android:clipToPadding="false">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:scrollbarStyle="outsideOverlay">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:contentDescription="@string/scrollInstructions"
+        android:orientation="vertical"
+        android:paddingBottom="24dp"
+        android:paddingStart="24dp"
+        android:paddingTop="18dp">
 
         <LinearLayout
-            android:id="@+id/ask_instructor"
-            android:layout_height="?android:listPreferredItemHeight"
+            android:id="@+id/askInstructor"
             android:layout_width="match_parent"
-            android:orientation="vertical"
+            android:layout_height="?android:listPreferredItemHeight"
+            android:background="@drawable/borderless_item_selector"
             android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:background="@drawable/borderless_item_selector">
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Secondary.Dark"
-                android:text="@string/askInstructor"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/askInstructor" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Tertiary"
-                android:textStyle="italic"
-                android:text="@string/askInstructorDetails"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/askInstructorDetails"
+                android:textStyle="italic" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/search_guides"
-            android:layout_height="?android:listPreferredItemHeight"
+            android:id="@+id/searchGuides"
             android:layout_width="fill_parent"
-            android:layout_below="@id/ask_instructor"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:layout_height="?android:listPreferredItemHeight"
+            android:layout_below="@id/askInstructor"
+            android:background="@drawable/borderless_item_selector"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:background="@drawable/borderless_item_selector">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Secondary.Dark"
-                android:text="@string/searchGuides"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/searchGuides" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Tertiary"
-                android:textStyle="italic"
-                android:text="@string/searchGuidesDetails"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/searchGuidesDetails"
+                android:textStyle="italic" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/report_problem"
-            android:layout_height="?android:listPreferredItemHeight"
+            android:id="@+id/reportProblem"
             android:layout_width="fill_parent"
-            android:layout_below="@id/search_guides"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:layout_height="?android:listPreferredItemHeight"
+            android:layout_below="@id/searchGuides"
+            android:background="@drawable/borderless_item_selector"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:background="@drawable/borderless_item_selector">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Secondary.Dark"
-                android:text="@string/reportProblem"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reportProblem" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Tertiary"
-                android:textStyle="italic"
-                android:text="@string/reportProblemDetails"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/reportProblemDetails"
+                android:textStyle="italic" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/request_feature"
-            android:layout_height="?android:listPreferredItemHeight"
+            android:id="@+id/requestFeature"
             android:layout_width="fill_parent"
-            android:layout_below="@id/report_problem"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:layout_height="?android:listPreferredItemHeight"
+            android:layout_below="@id/reportProblem"
+            android:background="@drawable/borderless_item_selector"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:background="@drawable/borderless_item_selector">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Secondary.Dark"
-                android:text="@string/requestFeature"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/requestFeature" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Tertiary"
-                android:textStyle="italic"
-                android:text="@string/requestFeatureDetails"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/requestFeatureDetails"
+                android:textStyle="italic" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/share_love"
-            android:layout_height="?android:listPreferredItemHeight"
+            android:id="@+id/shareLove"
             android:layout_width="fill_parent"
-            android:layout_below="@id/request_feature"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:layout_height="?android:listPreferredItemHeight"
+            android:layout_below="@id/requestFeature"
+            android:background="@drawable/borderless_item_selector"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:background="@drawable/borderless_item_selector">
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Secondary.Dark"
-                android:text="@string/shareYourLove"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shareYourLove" />
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
                 style="@style/TextStyle.Tertiary"
-                android:textStyle="italic"
-                android:text="@string/shareYourLoveDetails"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shareYourLoveDetails"
+                android:textStyle="italic" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

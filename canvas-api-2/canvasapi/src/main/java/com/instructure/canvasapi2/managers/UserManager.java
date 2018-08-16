@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.apis.AvatarAPI;
 import com.instructure.canvasapi2.apis.UserAPI;
 import com.instructure.canvasapi2.builders.RestBuilder;
 import com.instructure.canvasapi2.builders.RestParams;
+import com.instructure.canvasapi2.models.AccountRole;
 import com.instructure.canvasapi2.models.CanvasColor;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Enrollment;
@@ -35,6 +36,7 @@ import com.instructure.canvasapi2.models.ParentResponse;
 import com.instructure.canvasapi2.models.RemoteFile;
 import com.instructure.canvasapi2.models.ResetParent;
 import com.instructure.canvasapi2.models.Student;
+import com.instructure.canvasapi2.models.TermsOfService;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.tests.UserManager_Test;
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback;
@@ -240,19 +242,27 @@ public class UserManager extends BaseManager {
                     .withPerPageQueryParam(true)
                     .withShouldIgnoreToken(false)
                     .build();
+
+            // We don't want the canvas context on the paginated params
+            final RestParams paginatedParams = new RestParams.Builder()
+                    .withForceReadFromNetwork(forceNetwork)
+                    .withPerPageQueryParam(true)
+                    .withShouldIgnoreToken(false)
+                    .build();
+
             final RestBuilder adapter = new RestBuilder(callback);
             StatusCallback<List<User>> depaginatedCallback = new ExhaustiveListCallback<User>(callback) {
                 @Override
                 public void getNextPage(@NonNull StatusCallback<List<User>> callback, @NonNull String nextUrl, boolean isCached) {
-                    UserAPI.getPeopleList(adapter, params, canvasContext.getId(), callback);
+                    UserAPI.getPeopleList(adapter, paginatedParams, canvasContext.getId(), callback);
                 }
             };
             adapter.setStatusCallback(depaginatedCallback);
-            UserAPI.getPeopleList(adapter, params, canvasContext.getId(), callback);
+            UserAPI.getPeopleList(adapter, params, canvasContext.getId(), depaginatedCallback);
         }
     }
 
-    public static void getAllEnrollmentsPeopleList(final CanvasContext canvasContext, StatusCallback<List<User>> callback, boolean forceNetwork) {
+    public static void getAllEnrollmentsPeopleList(final CanvasContext canvasContext, StatusCallback<List<User>> callback, final boolean forceNetwork) {
         if (isTesting() || mTesting) {
             // TODO
         } else {
@@ -262,15 +272,24 @@ public class UserManager extends BaseManager {
                     .withPerPageQueryParam(true)
                     .withShouldIgnoreToken(false)
                     .build();
+
+            // We don't want the canvas context on the paginated params
+            final RestParams paginatedParams = new RestParams.Builder()
+                    .withForceReadFromNetwork(forceNetwork)
+                    .withPerPageQueryParam(true)
+                    .withShouldIgnoreToken(false)
+                    .build();
+
             final RestBuilder adapter = new RestBuilder(callback);
             StatusCallback<List<User>> depaginatedCallback = new ExhaustiveListCallback<User>(callback) {
                 @Override
                 public void getNextPage(@NonNull StatusCallback<List<User>> callback, @NonNull String nextUrl, boolean isCached) {
-                    UserAPI.getAllPeopleList(adapter, params, canvasContext.getId(), callback);
+
+                    UserAPI.getAllPeopleList(adapter, paginatedParams, canvasContext.getId(), callback);
                 }
             };
             adapter.setStatusCallback(depaginatedCallback);
-            UserAPI.getAllPeopleList(adapter, params, canvasContext.getId(), callback);
+            UserAPI.getAllPeopleList(adapter, params, canvasContext.getId(), depaginatedCallback);
         }
     }
 
@@ -373,6 +392,25 @@ public class UserManager extends BaseManager {
         }
     }
 
+    public static void getTermsOfService(StatusCallback<TermsOfService> callback, boolean forceNetwork) {
+        if (isTesting() || mTesting) {
+            RestBuilder adapter = new RestBuilder(callback);
+            RestParams params = new RestParams.Builder()
+                    .withShouldIgnoreToken(false)
+                    .withPerPageQueryParam(false)
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build();
+            UserManager_Test.getTermsOfService(adapter, params, callback);
+        } else {
+            RestBuilder adapter = new RestBuilder(callback);
+            RestParams params = new RestParams.Builder()
+                    .withShouldIgnoreToken(false)
+                    .withPerPageQueryParam(false)
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build();
+            UserAPI.getTermsOfService(adapter, params, callback);
+        }
+    }
 
     public static void addStudentToParentAirwolf(String airwolfDomain, String parentId, String studentDomain, StatusCallback<ResponseBody> callback) {
 
@@ -561,6 +599,18 @@ public class UserManager extends BaseManager {
                     .withForceReadFromNetwork(true)
                     .build();
             UserAPI.authenticateCavnasParentAirwolf(adapter, params, domain, callback);
+        }
+    }
+
+    public static void getSelfAccountRoles(boolean forceNetwork, StatusCallback<List<AccountRole>> callback) {
+        if (isTesting()) {
+
+        } else {
+            RestBuilder adapter = new RestBuilder(callback);
+            RestParams params = new RestParams.Builder()
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build();
+            UserAPI.getSelfAccountRoles(adapter, params, callback);
         }
     }
 }

@@ -17,7 +17,7 @@
 
 package com.instructure.teacher.unit;
 
-import com.instructure.teacher.router.Route;
+import com.instructure.interactions.router.Route;
 
 import org.junit.Assert;
 import org.junit.Test;

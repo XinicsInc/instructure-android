@@ -56,8 +56,8 @@ object NotoriousManager : BaseManager() {
         if (isTesting() || mTesting) {
             // TODO
         } else {
-            val fileRequestBody = RequestBody.create(MediaType.parse(contentType), file)
-            val filePart = MultipartBody.Part.createFormData("fileData", file.name, fileRequestBody)
+            val requestBody = RequestBody.create(MediaType.parse(contentType), file)
+            val filePart = MultipartBody.Part.createFormData("fileData", file.name, requestBody)
             val adapter = RestBuilder()
             return NotoriousAPI.uploadFileSynchronous(ApiPrefs.notoriousToken, uploadToken, filePart, adapter)
         }

@@ -43,10 +43,12 @@
 
     <dimen name="gridIconSizeSmall">22dp</dimen>
 
-    <dimen name="attachment_view_width">150dp</dimen>
-    <dimen name="attachment_view_height">90dp</dimen>
+
     <dimen name="message_avatar_dimen">32dp</dimen>
     <dimen name="bottom_bar_height">56dp</dimen>
+
+    <dimen name="navigationProfileAvatarSize">64dp</dimen>
+    <dimen name="navigationDrawerWidth">320dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>

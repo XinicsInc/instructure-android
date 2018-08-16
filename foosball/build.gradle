@@ -30,8 +30,8 @@ buildscript {
     repositories {
         jcenter()
         mavenLocal()
+        google()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$GLOBAL_KOTLIN_VERSION"
@@ -48,8 +48,8 @@ allprojects {
     repositories {
         jcenter()
         mavenLocal()
+        google()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
     }
 }
 

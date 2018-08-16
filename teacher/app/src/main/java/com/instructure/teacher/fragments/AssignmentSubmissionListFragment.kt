@@ -22,23 +22,26 @@ import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.GradeableStudentSubmissionAdapter
 import com.instructure.teacher.dialog.FilterSubmissionByPointsDialog
+import com.instructure.teacher.dialog.PeopleListFilterDialog
+import com.instructure.teacher.dialog.RadioButtonDialog
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.factory.AssignmentSubmissionListPresenterFactory
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter.SubmissionListFilter
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
@@ -60,8 +63,21 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     lateinit private var mRecyclerView: RecyclerView
     private val mCourseColor by lazy { ColorKeeper.getOrGenerateColor(mCourse) }
     private var mFilter by SerializableArg(SubmissionListFilter.ALL)
+    private var mCanvasContextsSelected = ArrayList<CanvasContext>()
 
     private var mNeedToForceNetwork = false
+
+    private val mSubmissionFilters: Map<Int, String> by lazy {
+        sortedMapOf(
+                Pair(SubmissionListFilter.ALL.ordinal, getString(R.string.all_submissions)),
+                Pair(SubmissionListFilter.LATE.ordinal, getString(R.string.submitted_late)),
+                Pair(SubmissionListFilter.MISSING.ordinal, getString(R.string.not_submitted)),
+                Pair(SubmissionListFilter.NOT_GRADED.ordinal, getString(R.string.not_graded)),
+                Pair(SubmissionListFilter.BELOW_VALUE.ordinal, getString(R.string.scored_less_than)),
+                Pair(SubmissionListFilter.ABOVE_VALUE.ordinal, getString(R.string.scored_more_than))
+
+        )
+    }
 
     override fun layoutResId(): Int = R.layout.fragment_assignment_submission_list
     override fun getRecyclerView(): RecyclerView = submissionsRecyclerView
@@ -113,10 +129,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 doWithNetworkRequired(context) {
                     val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
                     val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
-                    if(BuildConfig.POINT_FOUR) {
-                        val bundle = SpeedGraderActivity.makeBundle(mCourse, mAssignment, filteredSubmissions, selectedIdx)
-                        RouteMatcher.route(context, Route(bundle, Route.RouteContext.SPEED_GRADER))
-                    }
+                    val bundle = SpeedGraderActivity.makeBundle(mCourse.id, mAssignment.id, filteredSubmissions, selectedIdx)
+                    RouteMatcher.route(context, Route(bundle, RouteContext.SPEED_GRADER))
                 }
             }
         }
@@ -162,6 +176,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     private fun setupListeners() {
         clearFilterTextView.setOnClickListener {
             presenter.setFilter(SubmissionListFilter.ALL)
+            presenter.clearFilterList()
             filterTitle.setText(R.string.all_submissions)
             clearFilterTextView.setGone()
         }
@@ -202,6 +217,41 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 )
             }
         }
+
+        filterTitle.text = filterTitle.text.toString().plus(presenter?.getSectionFilterText())
+    }
+
+    fun setFilter(filterIndex: Int) {
+        when(filterIndex) {
+            SubmissionListFilter.ALL.ordinal -> {
+                presenter.setFilter(SubmissionListFilter.ALL)
+                updateFilterTitle()
+            }
+            SubmissionListFilter.LATE.ordinal -> {
+                presenter.setFilter(SubmissionListFilter.LATE)
+                updateFilterTitle()
+            }
+            SubmissionListFilter.MISSING.ordinal -> {
+                presenter.setFilter(SubmissionListFilter.MISSING)
+                updateFilterTitle()
+            }
+            SubmissionListFilter.NOT_GRADED.ordinal -> {
+                presenter.setFilter(SubmissionListFilter.NOT_GRADED)
+                updateFilterTitle()
+            }
+            SubmissionListFilter.BELOW_VALUE.ordinal -> {
+                FilterSubmissionByPointsDialog.getInstance(fragmentManager, getString(R.string.scored_less_than), mAssignment.pointsPossible, { points ->
+                    presenter?.setFilter(SubmissionListFilter.BELOW_VALUE, points)
+                    updateFilterTitle()
+                }).show(activity.supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
+            }
+            SubmissionListFilter.ABOVE_VALUE.ordinal -> {
+                FilterSubmissionByPointsDialog.getInstance(fragmentManager, getString(R.string.scored_more_than), mAssignment.pointsPossible, { points ->
+                    presenter?.setFilter(SubmissionListFilter.ABOVE_VALUE, points)
+                    updateFilterTitle()
+                }).show(activity.supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
+            }
+        }
     }
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
@@ -213,33 +263,25 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                 presenter.loadData(false)
                 updateStatuses()
             }
-            R.id.allSubmissions -> {
-                presenter.setFilter(SubmissionListFilter.ALL)
-                updateFilterTitle()
+            R.id.filterSubmissions -> {
+                val (keys, values) = mSubmissionFilters.toList().unzip()
+                val dialog = RadioButtonDialog.getInstance(activity.supportFragmentManager, getString(R.string.filter_submissions), values as ArrayList<String>, keys.indexOf(presenter.getFilter().ordinal)) { idx ->
+                    setFilter(keys[idx])
+                }
+                dialog.show(activity.supportFragmentManager, RadioButtonDialog::class.java.simpleName)
+
             }
-            R.id.submittedLate -> {
-                presenter.setFilter(SubmissionListFilter.LATE)
-                updateFilterTitle()
-            }
-            R.id.notSubmitted -> {
-                presenter.setFilter(SubmissionListFilter.MISSING)
-                updateFilterTitle()
-            }
-            R.id.notGraded -> {
-                presenter.setFilter(SubmissionListFilter.NOT_GRADED)
-                updateFilterTitle()
-            }
-            R.id.scoredLessThan -> {
-                FilterSubmissionByPointsDialog.getInstance(fragmentManager, getString(R.string.scored_less_than), mAssignment.pointsPossible, { points ->
-                    presenter?.setFilter(SubmissionListFilter.BELOW_VALUE, points)
-                    updateFilterTitle()
-                }).show(activity.supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
-            }
-            R.id.scoredMoreThan -> {
-                FilterSubmissionByPointsDialog.getInstance(fragmentManager, getString(R.string.scored_more_than), mAssignment.pointsPossible, { points ->
-                    presenter?.setFilter(SubmissionListFilter.ABOVE_VALUE, points)
-                    updateFilterTitle()
-                }).show(activity.supportFragmentManager, FilterSubmissionByPointsDialog::class.java.simpleName)
+            R.id.filterBySection -> {
+                //let the user select the course/group they want to see
+                PeopleListFilterDialog.getInstance(activity.supportFragmentManager, presenter.getSectionListIds(), mCourse, false) { canvasContexts ->
+                    mCanvasContextsSelected = ArrayList()
+                    mCanvasContextsSelected.addAll(canvasContexts)
+
+                    presenter.setSections(canvasContexts)
+
+                    filterTitle.text = filterTitle.text.toString().plus(presenter.getSectionFilterText())
+                    clearFilterTextView.setVisible()
+                }.show(activity.supportFragmentManager, PeopleListFilterDialog::class.java.simpleName)
             }
         }
     }

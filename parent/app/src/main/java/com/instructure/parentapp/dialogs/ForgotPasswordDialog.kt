@@ -128,8 +128,8 @@ class ForgotPasswordDialog : AppCompatDialogFragment() {
     }
 
     private val statusCallback = object : StatusCallback<ResponseBody>() {
-        override fun onResponse(response: Response<ResponseBody>?, linkHeaders: LinkHeaders, type: ApiType) {
-            if (response != null && response.code() == 200) {
+        override fun onResponse(response: Response<ResponseBody>, linkHeaders: LinkHeaders, type: ApiType) {
+            if (response.code() == 200) {
                 //successfully sent, let the user know.
                 closeKeyboard()
                 callback.invoke(SUCCESS)
@@ -137,8 +137,8 @@ class ForgotPasswordDialog : AppCompatDialogFragment() {
             }
         }
 
-        override fun onFail(response: Call<ResponseBody>, error: Throwable, code: Int) {
-            if (code == 404) {
+        override fun onFail(call: Call<ResponseBody>?, error: Throwable, response: Response<*>?) {
+            if (response?.code() == 404) {
                 emailInvalidTextView?.setText(R.string.password_reset_no_user)
                 emailInvalidTextView?.visibility = View.VISIBLE
             }

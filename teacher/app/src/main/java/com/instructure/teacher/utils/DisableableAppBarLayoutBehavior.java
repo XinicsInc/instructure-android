@@ -27,6 +27,11 @@ public class DisableableAppBarLayoutBehavior extends AppBarLayout.Behavior {
         return mEnabled && super.onStartNestedScroll(parent, child, directTargetChild, target, nestedScrollAxes);
     }
 
+    @Override
+    public boolean onStartNestedScroll(CoordinatorLayout parent, AppBarLayout child, View directTargetChild, View target, int nestedScrollAxes, int type) {
+        return mEnabled && super.onStartNestedScroll(parent, child, directTargetChild, target, nestedScrollAxes, type);
+    }
+
     public boolean isEnabled() {
         return mEnabled;
     }

@@ -39,11 +39,9 @@
                 android:id="@+id/flag_question"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_bookmark_outline_grey"
-                android:layout_marginLeft="8dp"
+                app:srcCompat="@drawable/vd_navigation_bookmarks"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginRight="4dp"
                 android:layout_marginTop="8dp"
                 app:fab_size="mini"
                 app:fab_stroke_visible="false"
@@ -53,11 +51,9 @@
             <TextView
                 android:id="@+id/question_number"
                 style="@style/TextStyle.Primary.Bold"
-                android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
                 android:padding="8dp"
-                android:layout_toRightOf="@id/flag_question"
                 android:layout_toEndOf="@id/flag_question"/>
 
             <com.instructure.pandautils.views.CanvasWebView

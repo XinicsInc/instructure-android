@@ -19,6 +19,8 @@ package com.instructure.parentapp.activity
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -52,18 +54,13 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        setContentView(R.layout.activity_splash)
 
-        ViewStyler.setStatusBarLight(this)
-
-        if (ApiPrefs.token.isNotBlank()) {
-            //If they have a token
-            checkSignedIn()
-        } else if (ApiPrefs.airwolfDomain.isEmpty()) {
-            //If they do not have a token but have an airwolf domain
-            checkRegion()
-        } else {
-            //If they have no token or airwolf domain
-            navigateLoginLandingPage()
+        when {
+            ApiPrefs.token.isNotBlank() -> checkSignedIn() // They have a token
+            ApiPrefs.airwolfDomain.isEmpty() -> checkRegion() // They do not have a token but have an airwolf domain
+            else -> navigateLoginLandingPage() // They have no token or airwolf domain
         }
     }
 
@@ -81,13 +78,15 @@ class SplashActivity : AppCompatActivity() {
                 if (!TextUtils.isEmpty(parentId)) {
                     UserManager.getStudentsForParentAirwolf(ApiPrefs.airwolfDomain, parentId, object : StatusCallback<List<Student>>() {
                         override fun onResponse(response: Response<List<Student>>, linkHeaders: LinkHeaders, type: ApiType) {
-                            if (response.body() != null && !response.body().isEmpty()) {
-                                //they have students that they are observing, take them to that activity
-                                startActivity(StudentViewActivity.createIntent(ContextKeeper.appContext, response.body()))
+                            val body = response.body()
+                            if (body != null && body.isNotEmpty()) {
+                                // They have students that they are observing, take them to that activity
+                                startActivity(StudentViewActivity.createIntent(ContextKeeper.appContext, body))
                             } else {
-                                //Take the parent to the add user page.
+                                // No response or no students observable; Take the parent to the add user page.
                                 startActivity(FindSchoolActivity.createIntent(ContextKeeper.appContext, true))
                             }
+
                             finish()
                         }
                     })
@@ -114,13 +113,13 @@ class SplashActivity : AppCompatActivity() {
                 val pingMap = HashMap<String, ArrayList<Long>>()
 
                 val pingCallback = object : StatusCallback<Void>() {
-                    override fun onResponse(response: Response<Void>, linkHeaders: LinkHeaders, type: ApiType, code: Int) {
+                    override fun onResponse(response: Response<Void>, linkHeaders: LinkHeaders, type: ApiType) {
                         callbackCount++
                         checkPingTime(pingMap, response)
                         checkCount(pingMap)
                     }
 
-                    override fun onFail(response: Call<Void>, error: Throwable) {
+                    override fun onFail(call: Call<Void>?, error: Throwable, response: Response<*>?) {
                         callbackCount++
                         checkCount(pingMap)
                     }

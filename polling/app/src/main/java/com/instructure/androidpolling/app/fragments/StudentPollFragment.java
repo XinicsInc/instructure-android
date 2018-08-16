@@ -20,6 +20,8 @@ package com.instructure.androidpolling.app.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -343,7 +345,7 @@ public class StudentPollFragment extends ParentFragment {
     private void setupCallbacks() {
         pollChoiceCallback = new StatusCallback<PollChoiceResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<PollChoiceResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull retrofit2.Response<PollChoiceResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<PollChoice> pollChoices = response.body().getPollChoices();
@@ -383,7 +385,7 @@ public class StudentPollFragment extends ParentFragment {
 
         pollSubmissionCallback = new StatusCallback<PollSubmissionResponse>() {
             @Override
-            public void onResponse(Response<PollSubmissionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollSubmissionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 //successful submission, let the user know
@@ -401,7 +403,7 @@ public class StudentPollFragment extends ParentFragment {
             }
 
             @Override
-            public void onFail(Call<PollSubmissionResponse> response, Throwable error) {
+            public void onFail(@Nullable Call<PollSubmissionResponse> call, @NonNull Throwable error, @Nullable Response response) {
                 AppMsg.makeText(getActivity(), getString(R.string.errorSubmittingPoll), AppMsg.STYLE_ERROR).show();
             }
 
@@ -415,7 +417,7 @@ public class StudentPollFragment extends ParentFragment {
 
         pollSessionCallback = new StatusCallback<PollSessionResponse>() {
             @Override
-            public void onResponse(Response<PollSessionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollSessionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<PollSession> pollSessions = response.body().getPollSessions();

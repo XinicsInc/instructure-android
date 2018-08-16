@@ -23,28 +23,12 @@
         app:showAsAction="always" >
         <menu>
             <item
-                android:id="@+id/allSubmissions"
-                android:title="@string/all_submissions"
+                android:id="@+id/filterSubmissions"
+                android:title="@string/filterSubmissionsLowercase"
                 app:showAsAction="never" />
             <item
-                android:id="@+id/submittedLate"
-                android:title="@string/submitted_late"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/notSubmitted"
-                android:title="@string/havent_submitted_yet"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/notGraded"
-                android:title="@string/havent_been_graded"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/scoredLessThan"
-                android:title="@string/scored_less_than"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/scoredMoreThan"
-                android:title="@string/scored_more_than"
+                android:id="@+id/filterBySection"
+                android:title="@string/filterBySection"
                 app:showAsAction="never" />
         </menu>
     </item>

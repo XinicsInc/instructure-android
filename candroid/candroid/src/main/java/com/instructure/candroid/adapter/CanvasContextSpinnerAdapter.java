@@ -28,11 +28,10 @@ import android.widget.TextView;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.binders.BaseBinder;
-import com.instructure.canvasapi2.apis.GroupAPI;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.Group;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,8 +86,8 @@ public class CanvasContextSpinnerAdapter extends ArrayAdapter<CanvasContext> {
         if(item != null) {
             viewHolder.title.setText(item.getName());
             viewHolder.indicator.setVisibility(View.VISIBLE);
-            viewHolder.indicator.setBackgroundDrawable(BaseBinder.createIndicatorBackground(
-                    CanvasContextColor.getCachedColor(getContext(), item)));
+            viewHolder.indicator.setBackground(BaseBinder.createIndicatorBackground(
+                    ColorKeeper.getOrGenerateColor(item)));
         } else {
             viewHolder.indicator.setVisibility(View.GONE);
             viewHolder.title.setText("");
@@ -122,8 +121,8 @@ public class CanvasContextSpinnerAdapter extends ArrayAdapter<CanvasContext> {
             } else {
                 viewHolder.title.setTypeface(null, Typeface.NORMAL);
                 viewHolder.indicator.setVisibility(View.VISIBLE);
-                viewHolder.indicator.setBackgroundDrawable(BaseBinder.createIndicatorBackground(
-                        CanvasContextColor.getCachedColor(getContext(), item)));
+                viewHolder.indicator.setBackground(BaseBinder.createIndicatorBackground(
+                        ColorKeeper.getOrGenerateColor(item)));
             }
         }
 
@@ -140,20 +139,22 @@ public class CanvasContextSpinnerAdapter extends ArrayAdapter<CanvasContext> {
 
         ArrayList<CanvasContext> canvasContexts = new ArrayList<>();
 
-        Course courseSeparator = new Course();
-        courseSeparator.setName(context.getString(R.string.courses));
-        courseSeparator.setId(COURSE_SEPARATOR);
-        canvasContexts.add(courseSeparator);
+        if(!courses.isEmpty()) {
+            Course courseSeparator = new Course();
+            courseSeparator.setName(context.getString(R.string.courses));
+            courseSeparator.setId(COURSE_SEPARATOR);
+            canvasContexts.add(courseSeparator);
 
-        canvasContexts.addAll(courses);
+            canvasContexts.addAll(courses);
+        }
+        if(!groups.isEmpty()) {
+            Course groupSeparator = new Course();
+            groupSeparator.setName(context.getString(R.string.groups));
+            groupSeparator.setId(GROUP_SEPARATOR);
+            canvasContexts.add(groupSeparator);
 
-        Course groupSeparator = new Course();
-        groupSeparator.setName(context.getString(R.string.groups));
-        groupSeparator.setId(GROUP_SEPARATOR);
-        canvasContexts.add(groupSeparator);
-
-        canvasContexts.addAll(groups);
-
+            canvasContexts.addAll(groups);
+        }
         return new CanvasContextSpinnerAdapter(context, canvasContexts);
     }
 }

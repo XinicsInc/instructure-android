@@ -102,8 +102,8 @@ class SignInActivity : BaseLoginSignInActivity() {
                     ApiPrefs.airwolfDomain, ApplicationManager.getParentId(ContextKeeper.appContext), accountDomain.domain, object : StatusCallback<ResponseBody>() {
                 override fun onResponse(response: Response<ResponseBody>, linkHeaders: LinkHeaders, type: ApiType) {}
 
-                override fun onFail(callResponse: Call<ResponseBody>, error: Throwable, response: Response<*>) {
-                    if (response.code() == 302) {
+                override fun onFail(call: Call<ResponseBody>?, error: Throwable, response: Response<*>?) {
+                    if (response?.code() == 302) {
                         val headers = response.headers()
 
                         if (headers.values("Location") != null) {
@@ -112,13 +112,13 @@ class SignInActivity : BaseLoginSignInActivity() {
                             loadAuthenticationUrl("", domain, BuildConfig.LOGIN_CLIENT_ID, BuildConfig.LOGIN_CLIENT_SECRET)
                         }
 
-                    } else if (response.code() == 400 || response.code() == 401) {
+                    } else if (response?.code() == 400 || response?.code() == 401) {
                         Toast.makeText(this@SignInActivity, getString(R.string.badDomainError), Toast.LENGTH_SHORT).show()
-                    } else if (response.code() == 403) {
+                    } else if (response?.code() == 403) {
                         showAccountDisabledDialog()
-                    } else if(response.code() == 451) {
+                    } else if(response?.code() == 451) {
                         try {
-                            val json = JsonParser().parse(response.errorBody().string())
+                            val json = JsonParser().parse(response.errorBody()?.string())
                             val mismatchedRegionResponse = Gson().fromJson<MismatchedRegionResponse>(json, MismatchedRegionResponse::class.java)
                             OutOfRegionDialog.newInstance(BaseParentActivity.getReadableRegion(
                                     this@SignInActivity, mismatchedRegionResponse.studentRegion), { finish() })
@@ -160,9 +160,9 @@ class SignInActivity : BaseLoginSignInActivity() {
     }
 
     private val airwolfAuthCallback = object: StatusCallback<ParentResponse>() {
-        override fun onResponse(response: Response<ParentResponse>?, linkHeaders: LinkHeaders?, type: ApiType?) {}
+        override fun onResponse(response: Response<ParentResponse>, linkHeaders: LinkHeaders, type: ApiType) {}
 
-        override fun onFail(callResponse: Call<ParentResponse>?, error: Throwable?, response: Response<*>?) {
+        override fun onFail(call: Call<ParentResponse>?, error: Throwable, response: Response<*>?) {
             if (response?.code() == 302) {
                 val headers = response.headers()
 
@@ -240,12 +240,18 @@ class SignInActivity : BaseLoginSignInActivity() {
                 if (type == ApiType.API) {
                     //they have students that they are observing
                     clearCookies() //clear cookies for security
-                    launchIntoApplicationMainActivityIntent(response.body())
+                    response.body()?.let { launchIntoApplicationMainActivityIntent(it) }
                 }
             } else {
                 clearCookies() //clear cookies for security
-                if (response.body() != null && !response.body().isEmpty()) {
-                    launchIntoApplicationMainActivityIntent(response.body())
+                if (response.body() != null) {
+                    response.body()?.let {
+                        if (!it.isEmpty()) {
+                            launchIntoApplicationMainActivityIntent(it)
+                        } else {
+                            launchIntoFindStudentsActivityIntent()
+                        }
+                    }
                 } else {
                     //Take the parent to the add user page.
                     launchIntoFindStudentsActivityIntent()
@@ -257,7 +263,7 @@ class SignInActivity : BaseLoginSignInActivity() {
     private fun showAccountDisabledDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage(R.string.access_not_enabled)
-        builder.setPositiveButton(R.string.dismiss) { dialog, which -> dialog.dismiss() }
+        builder.setPositiveButton(R.string.dismiss) { dialog, _ -> dialog.dismiss() }
         builder.create().show()
     }
 

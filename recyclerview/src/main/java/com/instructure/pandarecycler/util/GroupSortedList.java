@@ -641,13 +641,45 @@ public class GroupSortedList<GROUP, ITEM> {
         if(items.size() == 0) {
             return;
         }
-        // TODO batched updates
+
         if (getGroup(getGroupId(group)) != group) { // assume if same object nothing changed
             addOrUpdateGroup(group);
         }
-        for (ITEM item : items) {
-            addOrUpdateItem(group, item);
+
+        SortedList<ITEM> groupItems = getGroupItems(group);
+        groupItems.beginBatchedUpdates();
+
+        // handles empty cell
+        if (groupItems.size() == 0 && isGroupExpanded(group) && mIsDisplayEmptyCell) {
+            int storedGroupPosition = mGroupObjects.indexOf(group);
+            if (storedGroupPosition != -1) {
+                if (mIsChildrenAboveGroup) {
+                    // The Empty cell will be above the group, so -1
+                    mVisualArrayCallback.onRemoved(getGroupVisualPositionFromStoredPosition(storedGroupPosition) - 1, 1); // remove the empty cell assuming an item is added
+                } else {
+                    // The Empty cell will be below the group, so +1
+                    mVisualArrayCallback.onRemoved(getGroupVisualPositionFromStoredPosition(storedGroupPosition) + 1, 1); // remove the empty cell assuming an item is added
+                }
+            }
         }
+
+        for (ITEM item : items) {
+            ItemPosition itemPosition = storedItemPosition(getItemId(item));
+            // Add or update the item
+            if (itemPosition != null) {
+                if (itemPosition.groupId == getGroupId(group)) {
+                    groupItems.updateItemAt(itemPosition.itemPosition, item);
+                } else { // handle the case where the item has changed groups
+                    SortedList<ITEM> oldGroupItems = getGroupItems(getGroup(itemPosition.groupId));
+                    oldGroupItems.removeItemAt(itemPosition.itemPosition);
+                    groupItems.add(item);
+                }
+            } else { // if its not there, just add it
+                groupItems.add(item);
+            }
+        }
+
+        groupItems.endBatchedUpdates();
     }
 
     public void addOrUpdateAllItems(GROUP group, ITEM[] items) {

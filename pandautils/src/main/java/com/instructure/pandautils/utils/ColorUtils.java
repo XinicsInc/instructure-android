@@ -65,10 +65,11 @@ public class ColorUtils {
     }
 
     public static Bitmap colorIt(int color, Bitmap map) {
-        Canvas canvas = new Canvas(map);
+        Bitmap mutableBitmap = map.copy(Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(mutableBitmap);
         Paint paint = new Paint();
         paint.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP));
-        canvas.drawBitmap(map, 0, 0, paint);
-        return map;
+        canvas.drawBitmap(mutableBitmap, 0, 0, paint);
+        return mutableBitmap;
     }
 }

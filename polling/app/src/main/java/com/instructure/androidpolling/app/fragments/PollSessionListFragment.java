@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.format.Time;
 import android.view.MenuItem;
 import android.view.View;
@@ -342,7 +344,7 @@ public class PollSessionListFragment extends PaginatedListFragment<PollSession> 
 
         pollSessionCallback = new StatusCallback<PollSessionResponse>() {
             @Override
-            public void onResponse(Response<PollSessionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollSessionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<PollSession> pollSessions = response.body().getPollSessions();
@@ -365,7 +367,7 @@ public class PollSessionListFragment extends PaginatedListFragment<PollSession> 
 
         sectionCallback = new StatusCallback<Section>() {
             @Override
-            public void onResponse(Response<Section> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<Section> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
                 sectionMap.put(response.body().getId(), response.body());
                 notifyDataSetChanged();
@@ -374,7 +376,7 @@ public class PollSessionListFragment extends PaginatedListFragment<PollSession> 
 
         pollChoiceCallback = new StatusCallback<PollChoiceResponse>() {
             @Override
-            public void onResponse(Response<PollChoiceResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<PollChoiceResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(getActivity() == null || type.isCache()) return;
 
                 List<PollChoice> pollChoices = response.body().getPollChoices();
@@ -417,7 +419,7 @@ public class PollSessionListFragment extends PaginatedListFragment<PollSession> 
 
         responseCanvasCallback = new StatusCallback<ResponseBody>() {
             @Override
-            public void onFail(Call<ResponseBody> response, Throwable error) {
+            public void onFail(@Nullable Call<ResponseBody> call, @NonNull Throwable error, @Nullable Response response) {
                 AppMsg.makeText(getActivity(), getString(R.string.errorDeletingPollSession), AppMsg.STYLE_ERROR).show();
                 //we didn't actually delete anything, but we removed the item from the list to make the animation smoother, so now
                 //lets get the poll sessions again

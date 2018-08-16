@@ -29,19 +29,18 @@ public class ModuleViewHolder extends RecyclerView.ViewHolder {
 
     public TextView title, description, date, points;
     public ImageView icon, indicator;
-    public View shadowBottom, shadowTop, clickContainer;
+    public View shadowBottom, shadowTop;
 
     public ModuleViewHolder(View itemView) {
         super(itemView);
-        title = (TextView) itemView.findViewById(R.id.title);
-        description = (TextView) itemView.findViewById(R.id.description);
-        date = (TextView) itemView.findViewById(R.id.date);
-        points = (TextView) itemView.findViewById(R.id.points);
-        icon = (ImageView) itemView.findViewById(R.id.icon);
-        indicator = (ImageView) itemView.findViewById(R.id.indicator);
+        title = itemView.findViewById(R.id.title);
+        description = itemView.findViewById(R.id.description);
+        date = itemView.findViewById(R.id.date);
+        points = itemView.findViewById(R.id.points);
+        icon = itemView.findViewById(R.id.icon);
+        indicator = itemView.findViewById(R.id.indicator);
         shadowBottom = itemView.findViewById(R.id.shadowBottom);
         shadowTop = itemView.findViewById(R.id.shadowTop);
-        clickContainer = itemView.findViewById(R.id.clickContainer);
     }
 
     public static int holderResId() {

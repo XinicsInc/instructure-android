@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.models.ScheduleItem;
 import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.utils.Logger;
 import com.instructure.pandautils.utils.AssignmentUtils2;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.parentapp.BuildConfig;
 import com.instructure.parentapp.R;
 import com.instructure.parentapp.holders.CalendarWeekViewHolder;
@@ -126,7 +126,7 @@ public class CalendarWeekBinder extends BaseBinder {
                         case(AssignmentUtils2.ASSIGNMENT_STATE_DUE):
                             //match assignment type icon
                             drawable = ViewUtils.getAssignmentIcon(assignment);
-                            holder.icon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, drawable, context.getResources().getColor(R.color.courseGrey)));
+                            holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, drawable, context.getResources().getColor(R.color.gray)));
                             holder.background.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.read_circle_background));
                             setGone(holder.status);
                             break;
@@ -140,7 +140,7 @@ public class CalendarWeekBinder extends BaseBinder {
                         //Looks like: In-Class, color, light green
                         case(AssignmentUtils2.ASSIGNMENT_STATE_IN_CLASS):
                             drawable = ViewUtils.getAssignmentIcon(assignment);
-                            holder.icon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, drawable, context.getResources().getColor(R.color.courseGrey)));
+                            holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, drawable, context.getResources().getColor(R.color.gray)));
                             holder.status.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.assignment_in_class_background));
                             holder.background.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.read_circle_background));
                             holder.status.setText(context.getString(R.string.in_class));

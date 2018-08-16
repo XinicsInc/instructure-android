@@ -17,17 +17,19 @@
 
 package com.instructure.candroid.fragment;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.ModuleListRecyclerAdapter;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.interfaces.ModuleAdapterToFragmentCallback;
 import com.instructure.candroid.util.FragUtils;
 import com.instructure.candroid.util.ModuleProgressionUtility;
@@ -37,24 +39,26 @@ import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.ModuleItem;
 import com.instructure.canvasapi2.models.ModuleObject;
 import com.instructure.canvasapi2.models.Tab;
+import com.instructure.canvasapi2.utils.pageview.PageView;
+import com.instructure.pandautils.utils.PandaViewUtils;
+import com.instructure.pandautils.utils.ViewStyler;
 
 import java.util.ArrayList;
 
-public class ModuleListFragment extends OrientationChangeFragment {
+@PageView(url="modules")
+public class ModuleListFragment extends ParentFragment {
 
-    private View mRootView;
+    private Toolbar mToolbar;
     private Course mCourse;
     private ModuleListRecyclerAdapter mRecyclerAdapter;
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Fragment Info
-    ///////////////////////////////////////////////////////////////////////////
+    @Override
+    @NonNull
+    public FragmentInteractions.Placement getFragmentPlacement() {return FragmentInteractions.Placement.MASTER; }
 
     @Override
-    public FRAGMENT_PLACEMENT getFragmentPlacement(Context context) {return FRAGMENT_PLACEMENT.MASTER; }
-
-    @Override
-    public String getFragmentTitle() {
+    @NonNull
+    public String title() {
         return getString(R.string.modules);
     }
 
@@ -67,10 +71,6 @@ public class ModuleListFragment extends OrientationChangeFragment {
         return Tab.MODULES_ID;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Lifecycle
-    ///////////////////////////////////////////////////////////////////////////
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +78,10 @@ public class ModuleListFragment extends OrientationChangeFragment {
     }
 
     @Override
-    public View populateView(LayoutInflater inflater, ViewGroup container) {
-        mRootView = getLayoutInflater().inflate(R.layout.module_list, container, false);
-        CardView cardView = (CardView)mRootView.findViewById(R.id.cardView);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = getLayoutInflater().inflate(R.layout.fragment_module_list, container, false);
+        mToolbar = rootView.findViewById(R.id.toolbar);
+        CardView cardView = rootView.findViewById(R.id.cardView);
         if(cardView != null) {
             cardView.setCardBackgroundColor(Color.WHITE);
         }
@@ -123,8 +124,15 @@ public class ModuleListFragment extends OrientationChangeFragment {
                 setRefreshing(false);
             }
         });
-        configureRecyclerView(mRootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
-        return mRootView;
+        configureRecyclerView(rootView, getContext(), mRecyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyPandaView, R.id.listView);
+        return rootView;
+    }
+
+    @Override
+    public void applyTheme() {
+        mToolbar.setTitle(title());
+        PandaViewUtils.setupToolbarBackButton(mToolbar, this);
+        ViewStyler.themeToolbar(getActivity(), mToolbar, getCanvasContext());
     }
 
     public void notifyOfItemChanged(ModuleObject object, ModuleItem item) {
@@ -137,10 +145,6 @@ public class ModuleListFragment extends OrientationChangeFragment {
     public void refreshModuleList() {
         mRecyclerAdapter.updateMasteryPathItems();
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void handleIntentExtras(Bundle extras) {

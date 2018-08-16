@@ -17,8 +17,6 @@
 
 package com.instructure.candroid.fragment;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -29,9 +27,9 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -40,8 +38,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,8 +49,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,25 +59,24 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.instructure.candroid.R;
-import com.instructure.candroid.activity.ParentActivity;
 import com.instructure.candroid.activity.VideoViewActivity;
 import com.instructure.candroid.adapter.ExpandableRecyclerAdapter;
 import com.instructure.candroid.decorations.DividerItemDecoration;
 import com.instructure.candroid.decorations.ExpandableGridSpacingDecorator;
 import com.instructure.candroid.decorations.GridSpacingDecorator;
-import com.instructure.candroid.delegate.Navigation;
+import com.instructure.interactions.Navigation;
 import com.instructure.candroid.interfaces.ConfigureRecyclerView;
-import com.instructure.candroid.util.ApplicationManager;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.candroid.util.FileUtils;
 import com.instructure.candroid.util.LoggingUtility;
 import com.instructure.candroid.util.Param;
+import com.instructure.candroid.util.StudentPrefs;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.Group;
 import com.instructure.canvasapi2.models.Tab;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.APIHelper;
-import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.Logger;
 import com.instructure.canvasapi2.utils.NetworkUtils;
 import com.instructure.pandarecycler.BaseRecyclerAdapter;
@@ -92,156 +85,66 @@ import com.instructure.pandarecycler.PandaRecyclerView;
 import com.instructure.pandarecycler.interfaces.EmptyViewInterface;
 import com.instructure.pandarecycler.util.Types;
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader;
-import com.instructure.pandautils.utils.CanvasContextColor;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.pandautils.utils.LoaderUtils;
-
+import com.instructure.pandautils.utils.PermissionUtils;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-abstract public class ParentFragment extends DialogFragment implements ConfigureRecyclerView {
+abstract public class ParentFragment extends DialogFragment implements ConfigureRecyclerView, FragmentInteractions {
 
     private CanvasContext canvasContext;
 
-    //DIALOG placement should only be used for fragments that will never link to other fragments of a different placement type.
-    public enum FRAGMENT_PLACEMENT {MASTER, DETAIL, DIALOG}
-
     private HashMap<String, String> mUrlParams;
 
-    // region OpenMediaAsyncTaskLoader
     private Bundle openMediaBundle;
     private LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> openMediaCallbacks;
     private ProgressDialog progressDialog;
-    // endregion
 
-    // region RecyclerView
     protected long mDefaultSelectedId = -1;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView.ItemDecoration mSpacingDecoration;
-    // endregion
 
-    private Toolbar mDialogToolbar;
-    private Tab taggedTab;
+    @Nullable private Tab mTab;
     private boolean mShouldUpdateTitle = true;
     private OpenMediaAsyncTaskLoader.LoadedMedia mLoadedMedia;
+    private RecyclerView.ItemDecoration mSpacingDecoration;
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Getters and Setters
-    ///////////////////////////////////////////////////////////////////////////
-
-    public abstract String getFragmentTitle();
-    public abstract FRAGMENT_PLACEMENT getFragmentPlacement(Context context);
-    public abstract boolean allowBookmarking();//Controls overflow menu bookmark item
-
-    public String getTabId() {
-        return null;
+    @Override
+    @NonNull
+    public Placement getFragmentPlacement() {
+        return Placement.MASTER;
     }
 
+    @Deprecated //Use CanvasContext.isCourseContext instead (Kotlin Extension)
     public boolean navigationContextIsCourse() {
-        if(getCanvasContext() != null && getCanvasContext().getType() == CanvasContext.Type.USER) {
+        if(getCanvasContext().getType() == CanvasContext.Type.USER) {
             return false;
         } else {
             return true;
         }
     }
 
-    public LayoutInflater layoutInflater() {
-        return getActivity().getLayoutInflater();
+    @Nullable
+    public Tab getTab() {
+        return mTab;
     }
 
-    public Tab getTaggedTab() {
-        return taggedTab;
-    }
-
-    // used if we don't want to let the fragment update the title. Currently only used in the CourseModuleProgressionFragment
-    public void setShouldUpdateTitle(boolean shouldUpdateTitle) {
-        mShouldUpdateTitle = shouldUpdateTitle;
-    }
-    public boolean shouldUpdateTitle() {
-        return mShouldUpdateTitle;
-    }
-    protected void setupTitle(String title) {
-        if(!shouldUpdateTitle()) {
-            return;
-        }
-        if (title == null) { // "" is valid, but prevent null to avoid unnecessary title change flashes.
-            return;
-        }
-        if(mDialogToolbar != null && getFragmentPlacement(getContext())== FRAGMENT_PLACEMENT.DIALOG) {
-            mDialogToolbar.setTitle(title);
-        } else {
-            ActionBar actionBar = getSupportActionBar();
-            if(actionBar != null) {
-                actionBar.setTitle(title);
-            }
-        }
-    }
-
-    protected void setupDialogToolbar(View rootView) {
-        mDialogToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        if (mDialogToolbar != null) {
-            if (getFragmentPlacement(getActivity()) == FRAGMENT_PLACEMENT.DETAIL) {
-                mDialogToolbar.setVisibility(View.GONE);
-            } else {
-                mDialogToolbar.setVisibility(View.VISIBLE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mDialogToolbar.setElevation(Const.ACTIONBAR_ELEVATION);
-                }
-
-                int color;
-                CanvasContext canvasContext = getCanvasContext();
-                if (canvasContext == null || canvasContext.getType() == CanvasContext.Type.USER) {
-                    color = getResources().getColor(R.color.defaultPrimary);
-                } else {
-                    color = CanvasContextColor.getCachedColor(getActivity(), canvasContext);
-                }
-
-                mDialogToolbar.setBackgroundColor(color);
-                setStatusBarColor(color);
-
-                mDialogToolbar.setNavigationIcon(R.drawable.ic_content_close);
-                mDialogToolbar.setNavigationContentDescription(R.string.toolbar_close);
-                mDialogToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getActivity().onBackPressed();
-                    }
-                });
-
-            }
-        }
-    }
-
-    public Toolbar getDialogToolbar() {
-        return mDialogToolbar;
-    }
-
-
-    public void onFragmentActionbarSetupComplete(FRAGMENT_PLACEMENT placement) {
-        setupTitle(getActionbarTitle());
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void setStatusBarColor(int statusBarColor) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && statusBarColor != Integer.MAX_VALUE) {
-            Dialog dialog = getDialog();
-            if(dialog != null) {
-                dialog.getWindow().setStatusBarColor(statusBarColor);
-            }
-        }
-    }
-
+    @NonNull
     public HashMap<String, String> getParamForBookmark() {
         return getCanvasContextParams();
     }
 
+    @NonNull
     public HashMap<String, String> getQueryParamForBookmark() {
         return new HashMap<>();
     }
 
-    protected HashMap<String, String> getCanvasContextParams() {
+    private HashMap<String, String> getCanvasContextParams() {
         HashMap<String, String> map = new HashMap<>();
         if(canvasContext instanceof Course || canvasContext instanceof Group) {
             map.put(Param.COURSE_ID, Long.toString(canvasContext.getId()));
@@ -251,34 +154,16 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         return map;
     }
 
+    @NonNull
     public CanvasContext getCanvasContext() {
+        if(canvasContext == null) {
+            handleIntentExtras(getArguments());
+        }
         return canvasContext;
     }
 
-    public void setCanvasContext(CanvasContext canvasContext) {
+    public void setCanvasContext(@NonNull CanvasContext canvasContext) {
         this.canvasContext = canvasContext;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // LifeCycle
-    ///////////////////////////////////////////////////////////////////////////
-
-    public void addBookmarkToMenu(Menu menu, MenuInflater inflater) {
-        menu.removeItem(R.id.bookmark);
-        if(allowBookmarking()) {
-            inflater.inflate(R.menu.bookmark_menu, menu);
-        }
-    }
-
-    public ActionBar getSupportActionBar() {
-        if(getNavigation() != null) {
-            return getNavigation().getSupportActionBar();
-        } else {
-            if(getActivity() instanceof AppCompatActivity) {
-                return ((AppCompatActivity) getActivity()).getSupportActionBar();
-            }
-        }
-        return null;
     }
 
     @Override
@@ -330,8 +215,8 @@ abstract public class ParentFragment extends DialogFragment implements Configure
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         setHasOptionsMenu(true);
     }
 
@@ -378,7 +263,6 @@ abstract public class ParentFragment extends DialogFragment implements Configure
 
     @Override
     public void onDestroyView() {
-        setupTitle("");
         if (getDialog() != null && getRetainInstance())
             getDialog().setDismissMessage(null);
         super.onDestroyView();
@@ -400,117 +284,66 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         return false;
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        if(getActivity() != null) {
-            //do not override to add menu items, use createOptionsMenu
-            if (mDialogToolbar != null && getFragmentPlacement(getActivity()) == FRAGMENT_PLACEMENT.DIALOG) {
-                menu = mDialogToolbar.getMenu();
-                mDialogToolbar.setOnMenuItemClickListener(onToolbarOptionsItemSelected);
-            }
+    //region Toolbar & Menus
 
-            menu.clear();
-
-            if (allowBookmarking()) {
-                addBookmarkToMenu(menu, getActivity().getMenuInflater());
-            }
-            createOptionsMenu(menu, getActivity().getMenuInflater());
-        }
-        super.onPrepareOptionsMenu(menu);
+    /**
+     * General setup method for toolbar menu items
+     * All menu item selections are returned to the onToolbarMenuItemClick() function
+     * @param toolbar a toolbar
+     */
+    public void setupToolbarMenu(@NonNull Toolbar toolbar) {
+        addBookmarkMenuIfAllowed(toolbar);
+        addOnMenuItemClickListener(toolbar);
     }
 
-    public void createOptionsMenu(Menu menu, MenuInflater inflater) {
-        //Override to add menu items
+    /**
+     * General setup method for toolbar menu items
+     * All menu item selections are returned to the onToolbarMenuItemClick() function
+     * @param toolbar a toolbar
+     * @param menu xml menu resource id, R.menu.matthew_rice_is_great
+     */
+    public void setupToolbarMenu(@NonNull Toolbar toolbar, @MenuRes int menu) {
+        toolbar.getMenu().clear();
+        addBookmarkMenuIfAllowed(toolbar);
+        toolbar.inflateMenu(menu);
+        addOnMenuItemClickListener(toolbar);
     }
 
-    public Toolbar.OnMenuItemClickListener onToolbarOptionsItemSelected = new Toolbar.OnMenuItemClickListener() {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            return onOptionsItemSelected(item);
+    private void addBookmarkMenuIfAllowed(@NonNull Toolbar toolbar) {
+        if (allowBookmarking() && toolbar.getMenu().findItem(R.id.bookmark) == null) {
+            toolbar.inflateMenu(R.menu.bookmark_menu);
         }
-    };
+    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    private void addOnMenuItemClickListener(@NonNull Toolbar toolbar) {
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                return onOptionsItemSelected(item);
+            }
+        });
+    }
 
-        if (item.getItemId() == R.id.bookmark) {
-            if(!APIHelper.hasNetworkConnection()) {
+    /**
+     * Override to handle toolbar menu item clicks
+     * Super() should be called most if not all of the time.
+     * @param item a menu item
+     * @return true if the menu item click was handled
+     */
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.bookmark) {
+            if(APIHelper.hasNetworkConnection()) {
+                Navigation navigation = getNavigation();
+                if(navigation != null) navigation.addBookmark();
+            } else {
                 Toast.makeText(getContext(), getContext().getString(R.string.notAvailableOffline), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            if (getActivity() instanceof Navigation) {
-                ((Navigation) getActivity()).addBookmark();
             }
             return true;
         }
-
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // ActionBar
-    ///////////////////////////////////////////////////////////////////////////
-
-    /*
-        Hide or show the indeterminate progress bar
-     */
-    public void showProgressBar() {
-        // check to see if user exited activity
-        final Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-
-        if(activity instanceof ParentActivity){
-            ((ParentActivity)activity).showProgress();
-        } else {
-            getActivity().setProgressBarIndeterminateVisibility(true);
-        }
-    }
-
-
-    public void hideProgressBar() {
-        // check to see if user exited activity
-        final Activity activity = getActivity();
-        if (activity == null) {
-            return;
-        }
-
-        //if we're removing the fragment or have already started the fragment
-        //we don't want to worry about changing the margins or removing the indeterminate progress bar.
-        //There was a problem sometimes when an fragment that you could no longer see finished an
-        //async task and would hide the progress bar and throw off the margins
-        if(this.isRemoving() && !this.isResumed()) {
-            return;
-        }
-
-        if(activity instanceof ParentActivity){
-            ((ParentActivity)activity).hideProgress();
-        } else {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-        }
-    }
-
-    @Nullable
-    protected String getActionbarTitle() {
-        return null;
-    }
-
-    public void onCallbackStarted() {
-        if (ParentActivity.isUIThread()) {
-            showProgressBar();
-        }
-    }
-
-    public void onCallbackFinished(ApiType type) {
-        if(type.isAPI() && ParentActivity.isUIThread()) {
-            hideProgressBar();
-        }
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Fragment
-    ///////////////////////////////////////////////////////////////////////////
+    //endregion
 
     /**
      * Factory method for constructing a fragment of the specified type.
@@ -527,18 +360,31 @@ abstract public class ParentFragment extends DialogFragment implements Configure
      *               avoid casting.
      * @return The fragment that was constructed.
      */
-    public static <Type extends ParentFragment> Type createFragment(Class<Type> fragmentClass, Bundle params) {
-        ParentFragment fragment = null;
+    public static <Type extends ParentFragment> Type createFragment(@NonNull Class<Type> fragmentClass, @Nullable Bundle params) {
+        Type fragment = null;
         try {
             fragment = fragmentClass.newInstance();
+            fragment.setArguments(params);
         } catch (java.lang.InstantiationException e) {
             LoggingUtility.LogException(null, e);
         } catch (IllegalAccessException e) {
             LoggingUtility.LogException(null, e);
         }
-        fragment.setArguments(params);
-        fragment.handleIntentExtras(params);
-        return (Type)fragment;
+        return fragment;
+    }
+
+
+    public static ParentFragment createParentFragment(@NonNull Class<? extends FragmentInteractions> fragmentClass, @Nullable Bundle params) {
+        ParentFragment fragment = null;
+        try {
+            fragment = (ParentFragment)fragmentClass.newInstance();
+            fragment.setArguments(params);
+        } catch (java.lang.InstantiationException e) {
+            LoggingUtility.LogException(null, e);
+        } catch (IllegalAccessException e) {
+            LoggingUtility.LogException(null, e);
+        }
+        return fragment;
     }
 
     public void loadData() {}
@@ -551,7 +397,7 @@ abstract public class ParentFragment extends DialogFragment implements Configure
     //destroyed when the root fragment gets destroyed. Override this function
     //in the appropriate activity to remove child fragments.  For example, in
     //the module progression class we call this function when onDestroyItem
-    //is called and it is implemented in the AssigmentFragment class.
+    //is called and it is implemented in the AssignmentFragment class.
     public void removeChildFragments() {}
 
     protected <I> I getModelObject() { return null; }
@@ -568,10 +414,6 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         super.startActivityForResult(intent, requestCode);
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Url Params
-    ///////////////////////////////////////////////////////////////////////////
-
     public HashMap<String, String> getUrlParams() {
         return mUrlParams;
     }
@@ -586,13 +428,10 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         return value;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Intent
-    ///////////////////////////////////////////////////////////////////////////
-
-    public void handleIntentExtras(Bundle extras) {
+    public void handleIntentExtras(@Nullable Bundle extras) {
 
         if(extras == null) {
+            setArguments(new Bundle());
             Logger.d("handleIntentExtras extras was null");
             return;
         }
@@ -608,32 +447,32 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         }
 
         if(extras.containsKey(Const.TAB)) {
-            taggedTab = extras.getParcelable(Const.TAB);
+            mTab = extras.getParcelable(Const.TAB);
         }
 
         LoggingUtility.LogBundle(getActivity(), extras);
         setCanvasContext((CanvasContext) extras.getParcelable(Const.CANVAS_CONTEXT));
     }
 
-    public static Bundle createBundle(CanvasContext canvasContext) {
+    public static Bundle createBundle(@NonNull CanvasContext canvasContext) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext);
 
         return bundle;
     }
 
-    public static Bundle createBundle(CanvasContext canvasContext, Tab tab) {
+    public static Bundle createBundle(@NonNull CanvasContext canvasContext, @Nullable Tab tab) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Const.CANVAS_CONTEXT, canvasContext);
-        bundle.putParcelable(Const.TAB, tab);
+        if(tab != null) bundle.putParcelable(Const.TAB, tab);
         return bundle;
     }
 
-    public static Bundle createBundle(CanvasContext canvasContext, HashMap<String, String> params, HashMap<String, String> queryParams, String url, Tab tab) {
+    public static Bundle createBundle(@NonNull CanvasContext canvasContext, HashMap<String, String> params, HashMap<String, String> queryParams, String url, @Nullable Tab tab) {
         Bundle bundle = createBundle(canvasContext, tab);
         bundle.putSerializable(Const.URL_PARAMS, params);
         bundle.putSerializable(Const.URL_QUERY_PARAMS, queryParams);
-        bundle.putSerializable(Const.TAB_ID, (tab == null ? null : tab.getTabId()));
+        if(tab != null) bundle.putSerializable(Const.TAB_ID, tab.getTabId());
         bundle.putSerializable(Const.URL, url);
         return bundle;
     }
@@ -644,10 +483,6 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         return bundle;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Helpers
-    ///////////////////////////////////////////////////////////////////////////
-
     public Navigation getNavigation() {
         if(getActivity() instanceof Navigation) {
             return (Navigation) getActivity();
@@ -655,35 +490,22 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         return null;
     }
 
+    public boolean isTablet() {
+        return getResources().getBoolean(R.bool.is_device_tablet);
+    }
+
+    @Deprecated
     public boolean isTablet(Context context) {
-        if(context == null) {
-            return false;
-        }
-        return context.getResources().getBoolean(R.bool.isTablet);
+        return context != null && context.getResources().getBoolean(R.bool.is_device_tablet);
     }
 
     public boolean isLandscape(Context context) {
-        if(context == null) {
-            return false;
-        }
-        return context.getResources().getBoolean(R.bool.isLandscape);
-    }
-
-    public AppCompatActivity getFragmentActivity() {
-        if(getActivity() instanceof AppCompatActivity) {
-            return ((AppCompatActivity)getActivity());
-        } else {
-            return null;
-        }
+        return context != null && context.getResources().getBoolean(R.bool.isLandscape);
     }
 
     public boolean apiCheck(){
         return isAdded();
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Data Loss Helpers
-    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * Will try to save data if some exits
@@ -694,7 +516,7 @@ abstract public class ParentFragment extends DialogFragment implements Configure
     final public void dataLossPause(final EditText editText, final String preferenceConstant) {
         if(editText != null && !TextUtils.isEmpty(editText.getText())) {
             //Data exists in message editText so we want to save it.
-            ApplicationManager.getPrefs(getContext()).save(preferenceConstant, editText.getText().toString());
+            StudentPrefs.INSTANCE.putString(preferenceConstant, editText.getText().toString());
         }
     }
 
@@ -708,7 +530,7 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         //If we have no text in our editText
         if(editText != null && TextUtils.isEmpty(editText.getText())) {
             //and we have text stored, we can restore that text
-            String messageText = ApplicationManager.getPrefs(getContext()).load(preferenceConstant, "");
+            String messageText = StudentPrefs.INSTANCE.getString(preferenceConstant, "");
             if (!TextUtils.isEmpty(messageText)) {
                 editText.setText(messageText);
                 return true;
@@ -722,7 +544,7 @@ abstract public class ParentFragment extends DialogFragment implements Configure
      * @param preferenceConstant
      */
     final public void dataLossDeleteStoredData(final String preferenceConstant) {
-        ApplicationManager.getPrefs(getContext()).remove(preferenceConstant);
+        StudentPrefs.INSTANCE.remove(preferenceConstant);
     }
 
     /**
@@ -846,8 +668,8 @@ abstract public class ParentFragment extends DialogFragment implements Configure
             int recyclerViewResId,
             String emptyViewString,
             boolean withDivider) {
-        EmptyViewInterface emptyViewInterface = (EmptyViewInterface)rootView.findViewById(emptyViewResId);
-        PandaRecyclerView recyclerView = (PandaRecyclerView)rootView.findViewById(recyclerViewResId);
+        EmptyViewInterface emptyViewInterface = rootView.findViewById(emptyViewResId);
+        PandaRecyclerView recyclerView = rootView.findViewById(recyclerViewResId);
 
         baseRecyclerAdapter.setSelectedItemId(getDefaultSelectedId());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -861,7 +683,7 @@ abstract public class ParentFragment extends DialogFragment implements Configure
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
         }
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(swipeRefreshLayoutResId);
+        mSwipeRefreshLayout = rootView.findViewById(swipeRefreshLayoutResId);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -919,7 +741,8 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         } else {
             span = 1;
         }
-        configureRecyclerViewAsGrid(rootView, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, emptyViewStringResId, span, emptyImageClickListener, emptyImage);
+
+        configureRecyclerViewAsGrid(rootView, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, emptyViewStringResId, span < 1 ? 1 : span, emptyImageClickListener, emptyImage);
     }
 
     @Override
@@ -935,8 +758,8 @@ abstract public class ParentFragment extends DialogFragment implements Configure
             Drawable...emptyImage) {
 
         final int cardPadding = getResources().getDimensionPixelOffset(R.dimen.card_outer_margin);
-        EmptyViewInterface emptyViewInterface = (EmptyViewInterface)rootView.findViewById(emptyViewResId);
-        final PandaRecyclerView recyclerView = (PandaRecyclerView)rootView.findViewById(recyclerViewResId);
+        EmptyViewInterface emptyViewInterface = rootView.findViewById(emptyViewResId);
+        final PandaRecyclerView recyclerView = rootView.findViewById(recyclerViewResId);
         baseRecyclerAdapter.setSelectedItemId(getDefaultSelectedId());
         emptyViewInterface.emptyViewText(emptyViewStringResId);
         emptyViewInterface.setNoConnectionText(getString(R.string.noConnection));
@@ -968,6 +791,7 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         if(mSpacingDecoration != null) {
             recyclerView.removeItemDecoration(mSpacingDecoration);
         }
+
         if(baseRecyclerAdapter instanceof ExpandableRecyclerAdapter) {
             mSpacingDecoration = new ExpandableGridSpacingDecorator(cardPadding);
         } else {
@@ -975,11 +799,12 @@ abstract public class ParentFragment extends DialogFragment implements Configure
         }
         recyclerView.addItemDecoration(mSpacingDecoration);
 
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setEmptyView(emptyViewInterface);
         recyclerView.setAdapter(baseRecyclerAdapter);
-        mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(swipeRefreshLayoutResId);
+        mSwipeRefreshLayout = rootView.findViewById(swipeRefreshLayoutResId);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -1021,7 +846,7 @@ abstract public class ParentFragment extends DialogFragment implements Configure
                                 Toast.makeText(getActivity(), getActivity().getResources().getString(loadedMedia.getErrorMessage()), Toast.LENGTH_LONG).show();
                             }
                         } else if (loadedMedia.isHtmlFile()) {
-                            InternalWebviewFragment.loadInternalWebView(getActivity(), (Navigation) getActivity(), loadedMedia.getBundle());
+                            InternalWebviewFragment.Companion.loadInternalWebView(getActivity(), (Navigation) getActivity(), loadedMedia.getBundle());
                         } else if (loadedMedia.getIntent() != null) {
                             if(loadedMedia.getIntent().getType().contains("pdf") && !loadedMedia.isUseOutsideApps()){
                                 //show pdf with PSPDFkit
@@ -1088,18 +913,40 @@ abstract public class ParentFragment extends DialogFragment implements Configure
     }
 
     private File downloadFileToDownloadDir(Context context, String url, String filename) throws Exception {
-        //They have to download the content first... gross.
-        //Download it if the file doesn't exist in the external cache....
-        Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "downloadFile URL: " + url);
-        File cachedFile = new File(mLoadedMedia.getIntent().getData().getPath());
+        // We should have the file cached locally at this point; We'll just move it to the user's Downloads folder
 
+        if (!PermissionUtils.hasPermissions(context, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+            requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE);
+            return null;
+        }
+
+        Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "downloadFile URL: " + url);
         File attachmentFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), mLoadedMedia.getIntent().getData().getLastPathSegment());
 
         if (!attachmentFile.exists()) {
-            //the cached file is already downloaded, so we'll rename it to be in the download directory
-            cachedFile.renameTo(attachmentFile);
+            // We've downloaded and cached this file already, so we'll just move it to the download directory
+            InputStream src = context.getContentResolver().openInputStream(mLoadedMedia.getIntent().getData());
+            OutputStream dst = new FileOutputStream(attachmentFile);
+
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = src.read(buffer)) > 0) {
+                dst.write(buffer, 0, len);
+            }
         }
         return attachmentFile;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE) {
+            if (PermissionUtils.permissionGranted(permissions, grantResults, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(getContext(), R.string.filePermissionGranted, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getContext(), R.string.filePermissionDenied, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     // ProgressDialog
@@ -1121,15 +968,33 @@ abstract public class ParentFragment extends DialogFragment implements Configure
     }
 
     public void showProgressDialog() {
-        if (progressDialog == null) {
-            initProgressDialog();
+        if (getActivity() != null && progressDialog == null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initProgressDialog();
+                }
+            });
         }
-        progressDialog.show();
+
+        if (getActivity() != null && progressDialog != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.show();
+                }
+            });
+        }
     }
 
     public void dismissProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
+        if (getActivity() != null && progressDialog != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                }
+            });
         }
     }
 

@@ -208,7 +208,7 @@
                 android:textColorHint="@color/defaultTextGray"
                 android:textSize="16sp"/>
 
-            <com.instructure.teacher.view.AttachmentLayout
+            <com.instructure.pandautils.views.AttachmentLayout
                 android:id="@+id/attachments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -27,8 +27,9 @@ import retrofit2.Response
 
 
 suspend fun inParallel(block: ParallelWaiter.() -> Unit) {
+    val originStackTrace = Thread.currentThread().stackTrace
     return suspendCancellableCoroutine { continuation ->
-        val waiter = ParallelWaiter(continuation)
+        val waiter = ParallelWaiter(continuation, originStackTrace)
         waiter.block()
         waiter.start()
     }
@@ -42,10 +43,11 @@ class ParallelCallback<T>(private val managerCall: ManagerCall<T>) : StatusCallb
 
     var onError: ErrorCall = {}
 
-    override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders?, type: ApiType?, code: Int) {
+    override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
         succeededOrFailed = true
         if (response.isSuccessful) {
-            onSuccess(response.body())
+            @Suppress("UNCHECKED_CAST")
+            onSuccess(response.body() as T)
         } else {
             onError(StatusCallbackError(response = response))
         }
@@ -55,14 +57,9 @@ class ParallelCallback<T>(private val managerCall: ManagerCall<T>) : StatusCallb
         if (!succeededOrFailed && type != ApiType.CACHE) onError(StatusCallbackError())
     }
 
-    override fun onFail(response: Call<T>?, error: Throwable?) {
+    override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
         succeededOrFailed = true
-        onError(StatusCallbackError(response, error))
-    }
-
-    override fun onFail(callResponse: Call<T>?, error: Throwable?, response: Response<*>?) {
-        succeededOrFailed = true
-        onError(StatusCallbackError(callResponse, error, response))
+        onError(StatusCallbackError(call, error, response))
     }
 
     fun startCall() {
@@ -71,7 +68,7 @@ class ParallelCallback<T>(private val managerCall: ManagerCall<T>) : StatusCallb
 
 }
 
-class ParallelWaiter(private val continuation: CancellableContinuation<Unit>) {
+class ParallelWaiter(private val continuation: CancellableContinuation<Unit>, private val originStackTrace: Array<StackTraceElement>) {
 
     private val computations = mutableListOf<ParallelCallback<*>>()
 
@@ -83,16 +80,20 @@ class ParallelWaiter(private val continuation: CancellableContinuation<Unit>) {
         val callback = ParallelCallback(managerCall)
         callback.onSuccess = { payload ->
             if (!continuation.isCancelled) {
-                onComplete(payload)
-                checkForCompletion(callback)
+                synchronized(continuation) {
+                    onComplete(payload)
+                    checkForCompletion(callback)
+                }
             }
         }
         callback.onError = { error ->
             if (!continuation.isCancelled) {
-                if (errorCall != null && errorCall(error)) {
-                    checkForCompletion(callback)
-                } else {
-                    this@ParallelWaiter.onError(error)
+                synchronized(continuation) {
+                    if (errorCall != null && errorCall(error)) {
+                        checkForCompletion(callback)
+                    } else {
+                        this@ParallelWaiter.onError(error)
+                    }
                 }
             }
         }
@@ -107,7 +108,7 @@ class ParallelWaiter(private val continuation: CancellableContinuation<Unit>) {
 
     private fun onError(error: StatusCallbackError) {
         cancelAll()
-        if (continuation.isActive) continuation.resumeSafelyWithException(error)
+        if (continuation.isActive) continuation.resumeSafelyWithException(error, originStackTrace)
     }
 
     private fun cancelAll() {

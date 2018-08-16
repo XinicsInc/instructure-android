@@ -24,14 +24,6 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class Submission {
-    public static final String NONE = "none";
-    public static final String ON_PAPER = "on_paper";
-    public static final String ONLINE_QUIZ = "online_quiz";
-    public static final String DISCUSSION_TOPIC = "discussion_topic";
-    public static final String EXTERNAL_TOOL = "external_tool";
-    public static final String ONLINE_UPLOAD = "online_upload";
-    public static final String ONLINE_TEXT_ENTRY = "online_text_entry";
-    public static final String ONLINE_URL = "online_url";
 
     public int id;
     public int attempt;

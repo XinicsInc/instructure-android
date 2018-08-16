@@ -18,7 +18,6 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Color
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.util.TypedValue
@@ -27,25 +26,19 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.MasqueradeHelper
-import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.teacher.R
-import com.instructure.teacher.activities.InitLoginActivity
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.adoptToolbarStyle
+import com.instructure.teacher.utils.isTablet
+import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
+import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_profile.*
-import java.util.*
 
-class ProfileFragment : BaseFragment(), MasqueradingDialog.OnMasqueradingSet {
-
-    private var mGestureFirstFree = true
-    private var mGestureFirst: Long = 0
-    private var mGestureSecond: Long = 0
+class ProfileFragment : BaseFragment() {
 
     override fun layoutResId() = R.layout.fragment_profile
 
@@ -64,19 +57,15 @@ class ProfileFragment : BaseFragment(), MasqueradingDialog.OnMasqueradingSet {
         setupViewableData()
     }
 
-    fun setupToolbar() {
+    private fun setupToolbar() {
         toolbar.setupMenu(R.menu.menu_settings_edit, menuItemCallback)
+        toolbar.setupBackButtonAsBackPressedOnly(this)
         titleTextView.adoptToolbarStyle(toolbar)
-        logoImageView.loadUri(Uri.parse(ThemePrefs.logoUrl), R.mipmap.canvas_logo_white)
         ViewStyler.themeToolbar(activity, toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         toolbar.requestAccessibilityFocus()
-
-        logoImageView.setOnClickListener {
-            navigationIconClick()
-        }
     }
 
-    fun setupViewableData() {
+    private fun setupViewableData() {
         val user = ApiPrefs.user
 
         if(ProfileUtils.shouldLoadAltAvatarImage(user?.avatarUrl)) {
@@ -112,39 +101,13 @@ class ProfileFragment : BaseFragment(), MasqueradingDialog.OnMasqueradingSet {
                     NoInternetConnectionDialog.show(fragmentManager)
                 }
             }
-            R.id.menu_settings -> {
-                RouteMatcher.route(context, Route(ProfileSettingsFragment::class.java, ApiPrefs.user))
-            }
         }
     }
 
-    override fun onStartMasquerading(domain: String?, userId: Long) {
-        MasqueradeHelper.startMasquerading(userId, domain, InitLoginActivity::class.java)
-    }
-
-    override fun onStopMasquerading() {
-        MasqueradeHelper.stopMasquerading(InitLoginActivity::class.java)
-    }
-
-    private fun navigationIconClick() {
-        val now = Calendar.getInstance()
-        mGestureFirstFree = !mGestureFirstFree
-
-        if (mGestureFirstFree) {
-            //if this is the first click, then there hasn't been a second
-            //click yet, also record the time
-            mGestureFirst = now.timeInMillis
-        } else {
-            //if this is the second click, record its time
-            mGestureSecond = now.timeInMillis
-        }
-
-        if (Math.abs(mGestureSecond - mGestureFirst) < 300) {
-            MasqueradingDialog.get(
-                    ApiPrefs.domain,
-                    ApiPrefs.isMasquerading,
-                    this
-            ).show(fragmentManager, MasqueradingDialog::class.java.simpleName)
+    companion object {
+        @JvmStatic
+        fun newInstance(bundle: Bundle) = ProfileFragment().apply {
+            arguments = bundle
         }
     }
 }

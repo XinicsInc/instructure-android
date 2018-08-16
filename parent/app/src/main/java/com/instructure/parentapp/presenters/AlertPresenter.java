@@ -17,6 +17,8 @@
 
 package com.instructure.parentapp.presenters;
 
+import android.support.annotation.NonNull;
+
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.AlertManager;
 import com.instructure.canvasapi2.managers.CourseManager;
@@ -101,7 +103,7 @@ public class AlertPresenter extends SyncPresenter<Alert, AlertView> {
                     alertId,
                     new StatusCallback<ResponseBody>(){
                         @Override
-                        public void onResponse(Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {
+                        public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                             if(getViewCallback() != null) {
                                 getViewCallback().markPositionAsRead(position);
                             }
@@ -119,7 +121,7 @@ public class AlertPresenter extends SyncPresenter<Alert, AlertView> {
                     alertId,
                     new StatusCallback<ResponseBody>(){
                         @Override
-                        public void onResponse(Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {}
+                        public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {}
                     }
             );
         }
@@ -139,7 +141,7 @@ public class AlertPresenter extends SyncPresenter<Alert, AlertView> {
 
     private StatusCallback<List<Alert>> mAlertsCallback = new StatusCallback<List<Alert>>() {
         @Override
-        public void onResponse(Response<List<Alert>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<Alert>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             List<Alert> alerts = new ArrayList<>();
             for(Alert alert : response.body()) {
                 //Not very efficient, adds a course to alerts for use in the Binder
@@ -167,7 +169,7 @@ public class AlertPresenter extends SyncPresenter<Alert, AlertView> {
 
     private StatusCallback<List<Course>> mCoursesCallback = new StatusCallback<List<Course>>(){
         @Override
-        public void onResponse(Response<List<Course>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<Course>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             addToMap(response.body());
             getAlerts(false);
         }

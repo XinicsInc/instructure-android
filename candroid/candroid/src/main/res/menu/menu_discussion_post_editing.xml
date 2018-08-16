@@ -21,7 +21,7 @@
 
     <item android:id="@+id/discussionPostEdit"
         android:title="@string/discussionPostEditing"
-        android:icon="@drawable/ic_cv_edit_white_thin"
+        android:icon="@drawable/vd_edit"
         app:showAsAction="ifRoom"/>
 
 </menu>

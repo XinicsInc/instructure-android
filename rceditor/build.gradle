@@ -15,27 +15,22 @@
  *
  */
 
-repositories {
-    jcenter()
-    maven { url "https://jitpack.io" }
-    maven { url 'https://maven.google.com' }
-}
-
 buildscript {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
-        maven { url 'https://maven.google.com' }
+        google()
     }
     dependencies {
-        // https://bintray.com/android/android-tools/com.android.tools.build.gradle/view
-        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
+        classpath Plugins.ANDROID_GRADLE_TOOLS
     }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
-String isTesting() {
+static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
         "true"
     } else {
@@ -44,14 +39,12 @@ String isTesting() {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
         buildConfigField "boolean", "IS_TESTING", isTesting()
         vectorDrawables.useSupportLibrary = true
 
@@ -87,14 +80,17 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    testCompile Libs.JUNIT
+
+    /* Kotlin */
+    implementation Libs.KOTLIN_STD_LIB
 
     /* Support libs */
-    compile rootProject.ext.supportDependencies.appCompat
-    compile rootProject.ext.supportDependencies.supportLibV13
-    compile rootProject.ext.supportDependencies.vector
-    compile rootProject.ext.supportDependencies.supportAnnotation
-    compile rootProject.ext.supportDependencies.design
+    compile Libs.SUPPORT_APPCOMPAT
+    compile Libs.SUPPORT_DESIGN
+    compile Libs.SUPPORT_ANNOTATION
+    compile Libs.SUPPORT_V13
+    compile Libs.SUPPORT_VECTOR
 
     compile 'jp.wasabeef:richeditor-android:1.2.2'
 }

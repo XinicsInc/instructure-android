@@ -23,6 +23,7 @@ import android.support.annotation.WorkerThread;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.builders.RestBuilder;
 import com.instructure.canvasapi2.builders.RestParams;
+import com.instructure.canvasapi2.models.AccountRole;
 import com.instructure.canvasapi2.models.CanvasColor;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Enrollment;
@@ -33,6 +34,7 @@ import com.instructure.canvasapi2.models.ParentWrapper;
 import com.instructure.canvasapi2.models.RemoteFile;
 import com.instructure.canvasapi2.models.ResetParent;
 import com.instructure.canvasapi2.models.Student;
+import com.instructure.canvasapi2.models.TermsOfService;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.APIHelper;
 
@@ -114,6 +116,12 @@ public class UserAPI {
 
         @GET
         Call<List<User>> next(@Url String nextURL);
+
+        @GET("accounts/self/terms_of_service")
+        Call<TermsOfService> getTermsOfService();
+
+        @GET("accounts/self/roles")
+        Call<List<AccountRole>> getAccountRoles();
 
         //region Airwolf
         @DELETE("student/{parentId}/{studentId}")
@@ -244,6 +252,14 @@ public class UserAPI {
         } else if (StatusCallback.moreCallsExist(callback.getLinkHeaders()) && callback.getLinkHeaders() != null) {
             callback.addCall(adapter.build(UsersInterface.class, params).next(callback.getLinkHeaders().nextUrl)).enqueue(callback);
         }
+    }
+
+    public static void getTermsOfService(RestBuilder adapter, RestParams params, StatusCallback<TermsOfService> callback) {
+        callback.addCall(adapter.build(UsersInterface.class, params).getTermsOfService()).enqueue(callback);
+    }
+
+    public static void getSelfAccountRoles(RestBuilder adapter, RestParams params, StatusCallback<List<AccountRole>> callback) {
+        callback.addCall(adapter.build(UsersInterface.class, params).getAccountRoles()).enqueue(callback);
     }
 
     private static String getEnrollmentTypeString(ENROLLMENT_TYPE enrollmentType){

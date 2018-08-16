@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/rubric_criterion_rating_points"
-        android:drawableStart="@drawable/ic_cv_chat"
+        android:drawableStart="@drawable/vd_chat"
         android:paddingStart="4dp"
         android:gravity="start|center_vertical"
         style="@style/TextStyle.Primary"/>
@@ -36,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
         android:gravity="end|center_vertical"
         style="@style/TextStyle.Primary.SingleLine"/>
 </RelativeLayout>

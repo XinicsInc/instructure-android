@@ -32,6 +32,8 @@
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
+-keep public class * extends android.app.IntentService
+-keep public class * extends android.support.v4.app.JobIntentService
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
 -keep public class * extends android.app.backup.BackupAgentHelper
@@ -190,13 +192,22 @@
 -keep class sun.misc.Unsafe { *; }
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okhttp3.**
 
 #PSPDFKit
-# Keep PSPDFKit framework classes – they are already proguarded by default.
 -keep class com.pspdfkit.** { *; }
 -dontwarn sun.misc.**
--dontwarn com.pspdfkit.ui.PSPDFYouTubeActivity
+-dontwarn com.pspdfkit.ui.PdfYouTubeActivity
 -dontwarn com.pspdfkit.media.MediaGalleryView*
+-dontwarn edu.umd.cs.findbugs.annotations.SuppressWarnings
+-dontwarn com.pspdfkit.configuration.PdfConfiguration
+-dontwarn com.pspdfkit.configuration.activity.PdfActivityConfiguration
+-dontwarn com.pspdfkit.configuration.search.SearchConfiguration
+-dontwarn com.pspdfkit.signatures.Signature
+-dontwarn com.pspdfkit.ui.dialog.DocumentSharingDialogConfiguration
+-keepnames class io.reactivex.android.schedulers.AndroidSchedulers
+-keepnames class io.reactivex.Observable
+-keepnames class android.support.v7.widget.CardView
 
 # Keep third party lib class names. PSPDFKit relies on those class names to be present.
 -keepnames class rx.android.schedulers.AndroidSchedulers
@@ -219,6 +230,12 @@
     @org.simpleframework.xml.* *;
 }
 
+# afollestad material dialogs
+-dontwarn me.zhanghai.android.materialprogressbar.**
+
+# SVGImageView
+-dontwarn com.caverock.androidsvg.**
+
 #Instructure
 
 -keep public class com.instructure.** { *; }
@@ -239,3 +256,15 @@
 
 #Fix for Samsung Light - AppCompat issue
 -keep class !android.support.v7.internal.view.menu.**,android.support.v7.** { *; }
+
+#EventBus
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}

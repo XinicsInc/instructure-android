@@ -27,6 +27,16 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="Theme.Transparent.NoAnimationOrBackground" parent="CanvasMaterialTheme_Default">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
     <style name="PSPDFKitTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/canvasRed</item>
         <item name="colorAccent">@color/canvasRed</item>
@@ -34,6 +44,31 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="SubmissionPSPDFKitTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="pspdf__contextualToolbarBackground">@color/annotationToolbarBackground</item>
+        <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
+        <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
+    </style>
+
+    <style name="AnnotationCreationToolbarIconsStyle">
+        <item name="pspdf__iconsColor">@color/white</item>
+        <item name="pspdf__highlightIcon">@drawable/vd_highlighter_icon</item>
+        <item name="pspdf__strikeoutIcon">@drawable/vd_strike_through_icon</item>
+        <item name="pspdf__noteIcon">@drawable/vd_note_icon</item>
+        <item name="pspdf__inkIcon">@drawable/vd_ink_icon</item>
+        <item name="pspdf__freeTextIcon">@drawable/vd_text_box_icon</item>
+        <item name="pspdf__squareIcon">@drawable/vd_square_icon</item>
+    </style>
+
+    <style name="AnnotationEditingToolbarIconsStyle">
+        <item name="pspdf__iconsColor">@color/white</item>
+        <item name="pspdf__deleteIcon">@drawable/vd_trash</item>
+        <item name="pspdf__editIcon">@drawable/vd_edit</item>
     </style>
 
     <style name="Theme.Notorious" parent="CanvasMaterialTheme_Default">
@@ -50,15 +85,6 @@
         <item name="android:padding">16dp</item>
     </style>
 
-    <style name="FileUploadDialogAnimation">
-        <item name="android:windowEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
-    </style>
-
-    <style name="FileDestinationDialogAnimation">
-        <item name="android:windowEnterAnimation">@anim/scale_slide_in_bottom</item>
-        <item name="android:windowExitAnimation">@anim/hs_slide_out_left</item>
-    </style>
     <!--URL Sign In-->
     <style name="UrlSignInLogo">
         <item name="android:layout_height">wrap_content</item>
@@ -183,7 +209,7 @@
 
     <style name="TermSpinner" parent="android:Widget.Holo.Light.Spinner">
         <item name="android:dropDownSelector">?android:selectableItemBackground</item>
-        <item name="android:background">@color/canvasBackgroundOffWhite</item>
+        <item name="android:background">@color/canvasBackgroundWhite</item>
         <item name="android:divider">@null</item>
         <item name="android:dividerHeight">0dp</item>
     </style>
@@ -226,6 +252,146 @@
         <item name="android:scaleType">fitCenter</item>
         <item name="android:layout_alignParentStart">true</item>
         <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name="NavigationDrawerItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?android:listPreferredItemHeightSmall</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:tint">@color/navigationDrawerTextDark</item>
+    </style>
+
+    <style name="NavigationDrawerIcon">
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:textColor">@color/navigationDrawerTextDark</item>
+    </style>
+
+    <style name="ColorPickerDialogItem">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:src">@drawable/shape_color_picker_bg</item>
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="LightStatusBarDialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="TextInputLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ThemeSpinner">
+        <!-- Default color for the dropdown arrow and line -->
+        <item name="colorControlNormal">#C7CDD1</item>
+        <item name="android:height">1dp</item>
+    </style>
+
+
+    <!--Adapter Item Styles added 2018-->
+
+    <style name="AdapterItem">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:minHeight">?android:listPreferredItemHeight</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="AdapterItemTextContainer">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="AdapterItemIcon">
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+    </style>
+
+    <style name="AdapterItemTitleText" parent="TextFont.Medium">
+        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AdapterItemDescriptionText" parent="TextFont.Regular">
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/defaultTextGray</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="AdapterItemCourseNameText" parent="TextFont.Regular">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="AdapterListHeader" parent="TextFont.Medium">
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/defaultTextGray</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="FilesHeader"  parent="TextFont.Medium">
+        <item name="android:textColor">@color/canvasTextDark</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/listHeaderHeight</item>
+        <item name="android:background">@color/canvasBackgroundMedium</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="OverrideViewTextInputLayoutDate">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1.6</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="OverrideViewTextInputLayoutTime">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="OverrideViewEditText" parent="Base.Widget.AppCompat.Spinner.Underlined">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:editable">false</item>
+        <item name="android:text">--</item>
+        <item name="android:minWidth">140dp</item>
+        <item name="android:textColorHint">@color/defaultTextGray</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

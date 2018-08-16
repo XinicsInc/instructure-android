@@ -20,10 +20,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.NotificationPreferenceResponse
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.QueryMap
+import retrofit2.http.*
 
 internal object NotificationPreferencesAPI {
 
@@ -38,6 +35,13 @@ internal object NotificationPreferencesAPI {
         fun updateMultipleNotificationPreferences(
                 @Path("communicationChannelId") communicationChannelId: Long,
                 @QueryMap notifications: Map<String, String>
+        ): Call<NotificationPreferenceResponse>
+
+        @PUT("users/self/communication_channels/{communicationChannelId}/notification_preference_categories/{category}")
+        fun updatePreferenceCategory(
+                @Path("category") categoryName: String,
+                @Path("communicationChannelId") communicationChannelId: Long,
+                @Query("notification_preferences[frequency]") frequency: String
         ): Call<NotificationPreferenceResponse>
     }
 
@@ -64,6 +68,19 @@ internal object NotificationPreferencesAPI {
         val call = adapter
                 .build(NotificationPreferencesInterface::class.java, params)
                 .updateMultipleNotificationPreferences(communicationChannelId, prefMap)
+        callback.addCall(call).enqueue(callback)
+    }
+
+    fun updatePreferenceCategory(
+            categoryName: String,
+            communicationChannelId: Long,
+            frequency: String,
+            adapter: RestBuilder,
+            params: RestParams,
+            callback: StatusCallback<NotificationPreferenceResponse>) {
+        val call = adapter
+                .build(NotificationPreferencesInterface::class.java, params)
+                .updatePreferenceCategory(categoryName, communicationChannelId, frequency)
         callback.addCall(call).enqueue(callback)
     }
 }

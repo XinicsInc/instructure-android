@@ -1,167 +1,193 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
 <resources>
-  <string name="chooseMedia">Vælg medie</string>
-  <string name="takeVideo">Tag video</string>
-  <string name="noCameraOnDevice">Intet kamera</string>
-  <!--NotoriousPicker/uploadService-->
-  <string name="notificationTitle">Uploading til Canvas</string>
-  <string name="preparingUpload">Forbereder upload</string>
-  <string name="loadingFilesIndeterminate">Loading filer...</string>
-  <string name="fileUploadSuccess">Upload vellykket.</string>
-  <string name="noNetwork">Netværk ikke tilgængelig - prøve venligst igen senere</string>
-  <string name="uploadMessage">\"Igangværende upload. Tjek notifikationer for uploadstatus.</string>
-  <string name="mediaUpload">Medie upload</string>
-  <string name="uploadingFile">Uploader fil...</string>
-  <string name="errorUploadingFile">En fejl opstod under upload af din fil. Prøv venligst igen.</string>
-  <string name="fileSubmission">Indsend fil(-er)</string>
-  <string name="uploadFiles">Upload fil(-er)</string>
-  <string name="upload">Upload</string>
-  <string name="errorSendingMessage">En fejl opstod under afsendelse af din besked. Prøv venligst igen.</string>
-  <!--Turn in Files-->
-  <string name="chooseFileSource">Vælg fil fra...</string>
-  <string name="addFile">Tilføj fil</string>
-  <string name="choose_a_file">Vælg en fil</string>
-  <string name="fromCamera">Kamera</string>
-  <string name="fromGallery">Galleri</string>
-  <string name="fromDevice">Enhed</string>
-  <string name="fromOtherApplication">Andre</string>
-  <string name="Domain">Domæne</string>
-  <string name="files">Filer</string>
-  <string name="file">Fil</string>
-  <string name="addItem">Tilføj element</string>
-  <string name="assignment">Opgave</string>
-  <string name="attachedFiles">Vedhæftede filer</string>
-  <string name="turnIn">indsende</string>
-  <string name="course">Kursus</string>
-  <string name="sending">Sender...</string>
-  <!--rating dialog-->
-  <string name="star1">En stjerne vurdering </string>
-  <string name="star2">To stjerne vurdering</string>
-  <string name="star3">Tre stjerne vurdering</string>
-  <string name="star4">Fire stjerne vurdering</string>
-  <string name="star5">Fem stjerne vurdering</string>
-  <!--Submitting files-->
-  <string name="fileQuotaExceeded">Du har for øjeblikket overskredet din fillagrings kvote.</string>
-  <string name="errorSubmittingFiles">En fejl opstod ved indsendelse af dine filer. Prøv venligst igen.</string>
-  <string name="errorLoadingFiles">En fejl opstod under indlæstning af din fil. Tjek venligst din internet forbindelse og prøv igen.</string>
-  <string name="filesUploadedSuccessfully">Filer uploaded successfuldt.</string>
-  <string name="filesSubmittedSuccessfully">Filer indsendt succesfuldt.</string>
-  <string name="messageSentSuccessfully">Besked sendt succefuldt.</string>
-  <string name="shareWithCanvas">Andre apps kan dele filer med Canvas! Se efter ikonet nedenfor i apps og tryk på Canvas.</string>
-  <string name="shareWithCanvas2">Det vil åbne denne app. Vælg blot hvilket kursus og opgave du ønsker at indsende filen til.</string>
-  <string name="contentDescriptionSocialShare">Del ikon</string>
-  <string name="submitAssignment">Indsend opgave</string>
-  <string name="assignmentHeader">Opgave:</string>
-  <string name="submittingAssignment">Indsender opgave...</string>
-  <string name="conversations">Konversationer</string>
-  <string name="inbox">Indbakke</string>
-  <string name="divider">Rumdeler</string>
-  <string name="legal">Juridisk</string>
-  <string name="completeHomework">FULDFØR dit hjemmearbejde</string>
-  <string name="takeExam">Tag en eksamen</string>
-  <string name="fileIcon">Filikon</string>
-  <string name="uploadingFileNum" formatted="false">Uploading %d af %d</string>
-  <string name="fileLocked" formatted="false">%s er blevet låst.</string>
-  <string name="filePermissionGranted">Fil er nu parat for download, prøv venligst igen.</string>
-  <string name="filePermissionDenied">Filen kan ikke blive downloadet uden der gives tilladelse.</string>
-  <string name="pleaseTryAgain">Tilladelse givet, prøv igen.</string>
-  <string name="pickVideo">Vælg en video</string>
-  <!--Errors-->
-  <string name="errorOccurred">En uventet fejl opstod.</string>
-  <string name="serverError">En serverfejl opstod.</string>
-  <string name="unauthorized">Du er ikke autoriseret til at have adgang til dette. Du har ikke tilladelse eller du har endnu ikke adgang (dit kursus er endnu ikke startet)</string>
-  <string name="fileNoLongerExists">Den fil eksisterer ikke længere.</string>
-  <string name="invalidAccessToken">Din tid er udløbet. Log venligst ind for at starte igen. </string>
-  <string name="uploadingFromSourceFailed">Upload af fil fra denne kilder kunne ikke fuldføres.</string>
-  <string name="errorGettingPhoto">Der var en fejl med at få fotoet. Prøv venligst igen.</string>
-  <string name="errorTextMissing">Tilføj tekst for at sende en besked</string>
-  <string name="fileUploadNotSupported">Du kan ikke uploade filer tili den valgte opgave.</string>
-  <string name="noCourseSelected">Vælg et fag</string>
-  <string name="selectCourse">Vælg et kursus</string>
-  <string name="selectAssignment">Vælg en opgave</string>
-  <string name="loadingAssignments">Indlæser opgaver...</string>
-  <string name="noAssignmentSelected">Vælg venligst en ogpave</string>
-  <string name="noAssignmentsWithFileUpload">Dette kursus har ingen opgaver, der tillader fil upload.</string>
-  <string name="teacherNotAllowedFileSubmission">Som lærer i dette kursu kan du ikke indsende filer</string>
-  <string name="noFilesUploaded">Du har ikke valg nogen filer.</string>
-  <string name="oneOrMoreExtensionNotAllowed">En eller flere filer har en filtype, der ikke er tilladt</string>
-  <string name="extensionNotAllowed">Den valgte filtype er ikke tilladt.</string>
-  <string name="allowedExtensions">Tilladet filtyper:</string>
-  <!--Media Task Loader-->
-  <string name="noDataConnection">Tjek venligst din dataforbindelse og prøv igen.</string>
-  <string name="noApps">Din enhed har ingen installerede applikationer, der kan håndtere denne fil. </string>
-  <string name="noAppsShort">Kan ikke åbne</string>
-  <string name="unexpectedErrorOpeningFile">En uforudset fejl opstod under forsøg på åbning af filen.</string>
-  <string name="unexpectedErrorDownloadingFile">En uforudset fejl opstod under forsøg på download af iflen.</string>
-  <string name="done">Udført</string>
-  <!--Tutorial Messages-->
-  <string name="tutorial_tipColorPickerTitle">Vælg en kursusfarve</string>
-  <string name="tutorial_tipColorPickerMessage">Du kan vælge mellem et udvalg af farver til at brugertilpasse dit kursus.</string>
-  <string name="tutorial_tipCourseGradesTitle">Se karakterer hurtigt</string>
-  <string name="tutorial_tipCourseGradesMessage">Spring til karakterer ved at klikke på kursuskarakter.</string>
-  <string name="tutorial_tipLandingPageTitle">Vælg en landingsside</string>
-  <string name="tutorial_tipLandingPageMessage">Ved at vælge en landingsside vil Canvas automatisk indlæse til den side, når app startes.</string>
-  <string name="tutorial_tipLockSlideTitle">Lås eller lås op skærmen </string>
-  <string name="tutorial_tipLockSlideMessage">Låsning af skærm tillader dig at scrolle i skærmen uden at åbne navigationsmenuen.</string>
-  <string name="tutorial_tipHideStudentNames">Skul navne mens bedømmelse indstilles</string>
-  <string name="tutorial_tipHideStudentNamesMessage">Fjern bias ved at skjule studerendes navn.</string>
-  <string name="tutorial_tipMyCoursesTitle">Mine kurser</string>
-  <string name="tutorial_tipMyCoursesMessage">Skift mellem \"Mine Kurser\" og \"Alle Kurser\" med et knips!</string>
-  <string name="tutorial_tipSwitchUsers">Skift brugere</string>
-  <string name="tutorial_tipSwitchUsersMessage">Skift nemt mellem og tilføj brugere</string>
-  <string name="tutorial_tipViewProfile">Din profil</string>
-  <string name="tutorial_tipViewProfileMessage">Se og ændre dit profil billede eller baggrund. Du kan også se dine personlige filer.</string>
-  <string name="tutorial_tipNotificationPreferences">Notifikationsindstillinger</string>
-  <string name="tutorial_tipNotificationPreferencesMessage">Filtrer dine indstillinger og afkryds boks for at aktivere eller de-aktivere en specifik notifikationstype.</string>
-  <string name="tutorial_tipNavigationShortcuts">Skift hurtigt mellem kurser</string>
-  <string name="tutorial_tipNavigationShortcutsMessage">Skift mellem dine favorit kurser.</string>
-  <!--Permissions-->
-  <string name="permissionDenied">For at benytte denne funktion, skal en tilladelse først være givet.</string>
-  <string name="noConnection">Ingen forbindelse</string>
-  <!--General-->
-  <string name="yes">Ja</string>
-  <string name="no">Nej</string>
-  <string name="inbox_all">Indbakke</string>
-  <string name="inbox_unread">Ulæst</string>
-  <string name="inbox_starred">Markeret med stjerne</string>
-  <string name="inbox_sent">Sendt</string>
-  <string name="inbox_archived">Arkiveret</string>
-  <string name="forbidden">Svar er kun synlige for dem, der har postet mindst ét svar.</string>
-  <string name="like">Synes godt om</string>
-  <string name="likes">Synes godt om</string>
-  <string name="lockedAssignmentNotModule">Denne opgave er låst.</string>
-  <string name="deletedEntryNoChildren">Denne slettede diskussionspost har intet svar.</string>
-  <string name="deleted">[Slettet]</string>
-  <string name="deleted_by">[Slettet af %1$s]</string>
-  <string name="lockedDiscussionDesc">Denne diskussion er en del af modulet %s og er ikke blevet låst op endnu.</string>
-  <string name="gradedDiscussion">Bedømt diskussion</string>
-  <string name="pointsPossible">Mulige points</string>
-  <string name="sideCommentEntry">I denne type diskussion kan du ikke kommentere nogen poster på dette niveau.</string>
-  <string name="accessibility_overflow">Overløb</string>
-  <string name="discussion_response">Kommentar</string>
-  <string name="discussion_responses">Kommentarer</string>
-  <string name="discussion_unread">Ulæst</string>
-  <string name="discussion_reply">Svar</string>
-  <string name="close">Luk</string>
-  <!--App Names-->
-  <string name="utils_canvas">Canvas</string>
-  <string name="utils_canvasTeacher">Canvas Teacher</string>
-  <string name="utils_canvasParent">Canvas Parent</string>
-  <string name="utils_polls">Canvas Polls</string>
-  <string name="utils_speedgrader">SpeedGrader</string>
-  <!--Rating Dialog-->
-  <string name="utils_howAreWeDoing">Hvordan klarer vi os?</string>
-  <string name="utils_rateUs">Hvordan vil du vurdere os?</string>
-  <string name="utils_doBetter">Hvad kan vi gøre bedre?</string>
-  <string name="utils_sendFeedback">Send feedback</string>
-  <string name="utils_suggestions">Forslag for Android</string>
-  <string name="utils_domain">Domæne</string>
-  <string name="utils_versionNum">Version:</string>
-  <string name="utils_userId">Bruger-id</string>
-  <string name="utils_email">E-mail</string>
-  <string name="utils_dontShowAgain">Vis ikke igen</string>
-  <string name="utils_installDate">Installationsdato:</string>
-  <string name="utils_device">Enhed</string>
-  <string name="utils_osVersion">OS-version</string>
-  <string name="loading">Indlæser</string>
+    <string name="chooseMedia">Vælg medie</string>
+    <string name="takeVideo">Tag video</string>
+    <string name="noCameraOnDevice">Intet kamera</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Uploading til Canvas</string>
+    <string name="preparingUpload">Forbereder upload</string>
+    <string name="loadingFilesIndeterminate">Loading filer&#8230;</string>
+    <string name="fileUploadSuccess">Upload vellykket.</string>
+    <string name="noNetwork">Netværk ikke tilgængeligt - prøv igen senere.</string>
+    <string name="uploadMessage">Upload i gang. Tjek meddelelser for uploadstatus.</string>
+    <string name="mediaUpload">Medie upload</string>
+    <string name="uploadingFile">Uploader fil&#8230;</string>
+    <string name="errorUploadingFile">En uventet fejl opstod ved overførsel af filen. Prøv igen.</string>
+    <string name="fileSubmission">Indsend fil(-er)</string>
+    <string name="uploadFiles">Upload fil(-er)</string>
+    <string name="upload">Upload</string>
+    <string name="errorSendingMessage">En uventet fejl opstod ved afsendelse af beskeden. Prøv igen.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Meddelelser for filoverførsler</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-meddelelser for løbende filuploads.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Vælg fil fra&#8230;</string>
+    <string name="addFile">Tilføj fil</string>
+    <string name="choose_a_file">Vælg en fil</string>
+
+    <string name="fromCamera">Kamera</string>
+    <string name="fromGallery">Galleri</string>
+    <string name="fromDevice">Enhed</string>
+    <string name="fromOtherApplication">Anden</string>
+    <string name="Domain">Domæne</string>
+    <string name="files">Filer</string>
+    <string name="file">Fil</string>
+    <string name="addItem">Tilføj element</string>
+    <string name="assignment">Opgave</string>
+    <string name="attachedFiles">Vedhæftede filer</string>
+    <string name="turnIn">Indsend</string>
+    <string name="course">Fag</string>
+    <string name="sending">Sender&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">En stjerne vurdering</string>
+    <string name="star2">To stjerne vurdering</string>
+    <string name="star3">Tre stjerne vurdering</string>
+    <string name="star4">Fire stjerne vurdering</string>
+    <string name="star5">Fem stjerne vurdering</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Du har for øjeblikket overskredet din fillagrings kvote.</string>
+    <string name="errorSubmittingFiles">Der opstod en fejl ved indsendelse af filen. Prøv igen.</string>
+    <string name="errorLoadingFiles">En uventet fejl opstod ved indlæsning af filen. Kontrollér din internetforbindelse, og prøv igen.</string>
+    <string name="filesUploadedSuccessfully">Filer er overført.</string>
+    <string name="filesSubmittedSuccessfully">Filer indsendt succesfuldt.</string>
+    <string name="messageSentSuccessfully">Besked er sendt.</string>
+    <string name="shareWithCanvas">Andre apps kan dele filer med Canvas! Se efter ikonet nedenfor i apps, og tryk på Canvas.</string>
+    <string name="shareWithCanvas2">Så åbnes denne app. Vælg derefter hvilket fag og opgave, du vil sende filen til.</string>
+    <string name="contentDescriptionSocialShare">Del ikon</string>
+    <string name="submitAssignment">Aflever opgave</string>
+    <string name="assignmentHeader">Opgave:</string>
+    <string name="submittingAssignment">Indsender opgave&#8230;</string>
+    <string name="conversations">Samtale </string>
+    <string name="inbox">Indbakke </string>
+    <string name="divider">Rumdeler</string>
+    <string name="legal">Juridisk</string>
+    <string name="completeHomework">FULDFØR dit hjemmearbejde</string>
+    <string name="takeExam">Tag en eksamen</string>
+    <string name="fileIcon">Filikon</string>
+    <string name="uploadingFileNum" formatted="false">Uploader %d af %d</string>
+    <string name="fileLocked" formatted="false">%s er blevet låst.</string>
+    <string name="filePermissionGranted">Fil er nu parat for download, prøv venligst igen.</string>
+    <string name="filePermissionDenied">Filen kan ikke blive downloadet uden der gives tilladelse.</string>
+    <string name="pleaseTryAgain">Tilladelse givet, prøv igen.</string>
+    <string name="pickVideo">Vælg en video</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">En uventet fejl opstod.</string>
+    <string name="serverError">En serverfejl opstod.</string>
+    <string name="unauthorized">Du har ikke autorisation til at få adgang til dette. Du har enten ikke tilladelser, eller du har ikke adgang endnu (dit fag er eksempelvis ikke startet endnu)</string>
+    <string name="fileNoLongerExists">Den fil eksisterer ikke længere.</string>
+    <string name="invalidAccessToken">Din session er udløbet. Log venligst ind for at starte en ny session.</string>
+    <string name="uploadingFromSourceFailed">Upload af fil fra denne kilder kunne ikke fuldføres.</string>
+    <string name="errorGettingPhoto">Der opstod en fejl ved hentning af fotoet. Prøv igen.</string>
+    <string name="errorTextMissing">Tilføj tekst for at sende en besked</string>
+
+    <string name="fileUploadNotSupported">Du kan ikke overføre filer til den valgte opgave.</string>
+    <string name="noCourseSelected">Vælg et fag</string>
+    <string name="selectCourse">Vælg et fag</string>
+    <string name="selectAssignment">Vælg en opgave</string>
+    <string name="loadingAssignments">Indlæser opgaver&#8230;</string>
+    <string name="noAssignmentSelected">Vælg venligst en ogpave</string>
+    <string name="noAssignmentsWithFileUpload">Dette fag har ingen opgaver, der tillader filoverførsel.</string>
+    <string name="teacherNotAllowedFileSubmission">Som lærer i dette fag kan du ikke indsende filer</string>
+    <string name="noFilesUploaded">Du har ikke valgt nogen filer.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Der er én eller flere filer med et ikke tilladt filtypenavn</string>
+    <string name="extensionNotAllowed">Den valgte filtype er ikke tilladt.</string>
+    <string name="allowedExtensions">Tilladet filtyper: </string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Kontrollér din dataforbindelse, og prøv igen. </string>
+    <string name="noApps">Der er ingen app på enheden, der kan åbne denne fil.</string>
+    <string name="noAppsShort">Kan ikke åbne</string>
+    <string name="unexpectedErrorOpeningFile">En uforudset fejl opstod under forsøg på åbning af filen.</string>
+    <string name="unexpectedErrorDownloadingFile">En uforudset fejl opstod under forsøg på download af iflen.</string>
+
+    <string name="done">Udført</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">For at benytte denne funktion, skal en tilladelse først være givet.</string>
+    <string name="noConnection">Ingen forbindelse</string>
+
+    <!--General-->
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+
+    <string name="inbox_all">Indbakke</string>
+    <string name="inbox_unread">Ulæst</string>
+    <string name="inbox_starred">Markeret med stjerne</string>
+    <string name="inbox_sent">Sendt</string>
+    <string name="inbox_archived">Arkiveret</string>
+
+    <string name="forbidden">Svar er kun synlige for dem, der har lagt mindst ét svar ud.</string>
+
+    <string name="like">Synes godt om</string>
+    <string name="likes">Synes godt om</string>
+    <string name="lockedAssignmentNotModule">Denne opgave er låst.</string>
+    <string name="deletedEntryNoChildren">Denne slettede diskussionspost har intet svar.</string>
+    <string name="deleted">[Slettet]</string>
+    <string name="deleted_by">[Slettet af %1$s]</string>
+    <string name="lockedDiscussionDesc">Denne diskussion er en del af modulet %s og er ikke blevet låst op endnu.</string>
+    <string name="gradedDiscussion">Bedømt diskussion</string>
+    <string name="pointsPossible">Mulige point</string>
+    <string name="sideCommentEntry">I denne type diskussion kan du ikke kommentere nogen poster på dette niveau.</string>
+
+    <string name="accessibility_overflow">Overløb</string>
+
+    <string name="discussion_response">Kommentar</string>
+    <string name="discussion_responses">Kommentarer</string>
+    <string name="discussion_unread">Ulæst</string>
+    <string name="discussion_reply">Svar</string>
+    <string name="close">Luk</string>
+
+    <string name="noInternetConnectionTitle">Ingen internetforbindelse</string>
+    <string name="noInternetConnectionMessage">Denne handling kræver en internetforbindelse.</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="formattedAvatarAction">Se brugeroplysninger for %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
+    <string name="utils_speedgrader">SpeedGrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Hvordan klarer vi os?</string>
+    <string name="utils_rateUs">Hvordan vil du vurdere os?</string>
+    <string name="utils_doBetter">Hvad kan vi gøre bedre?</string>
+    <string name="utils_sendFeedback">Send feedback</string>
+    <string name="utils_suggestions">Forslag for Android</string>
+    <string name="utils_domain">Domæne</string>
+    <string name="utils_versionNum">Version:</string>
+    <string name="utils_userId">Bruger-id</string>
+    <string name="utils_email">E-mail</string>
+    <string name="utils_dontShowAgain">Vis ikke igen</string>
+    <string name="utils_installDate">Installationsdato:</string>
+    <string name="utils_device">Enhed</string>
+    <string name="utils_osVersion">OS-version</string>
+    <string name="loading">Indlæser</string>
+    <string name="save">Gem</string>
+    <string name="cropInstructions">Klem og træk for at justere billedet.</string>
+
 </resources>

@@ -30,7 +30,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.events.FileFolderDeletedEvent
 import com.instructure.teacher.events.FileFolderUpdatedEvent
 import com.instructure.teacher.models.EditableFile
-import com.instructure.teacher.router.Route
+import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import kotlinx.android.synthetic.main.fragment_unsupported_file_type.*
@@ -42,7 +42,7 @@ class ViewUnsupportedFileFragment : Fragment() {
     private var mDisplayName by StringArg()
     private var mContentType by StringArg()
     private var mPreviewUri by ParcelableArg(Uri.EMPTY)
-    private var mFallbackIcon by IntArg(R.drawable.vd_attachment)
+    private var mFallbackIcon by IntArg(R.drawable.vd_utils_attachment)
     private var mEditableFile: EditableFile? by NullableParcelableArg()
     private var mToolbarColor by IntArg(0)
 

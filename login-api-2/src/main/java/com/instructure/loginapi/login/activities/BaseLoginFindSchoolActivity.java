@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -284,7 +285,7 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
     private StatusCallback<List<AccountDomain>> mAccountDomainCallback = new StatusCallback<List<AccountDomain>>() {
 
         @Override
-        public void onResponse(Response<List<AccountDomain>> response, LinkHeaders linkHeaders, ApiType type) {
+        public void onResponse(@NonNull Response<List<AccountDomain>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             if(type.isCache()) return;
 
             List<AccountDomain> domains = response.body();

@@ -17,5 +17,5 @@
 package com.instructure.teacher.viewinterface;
 
 public interface InitActivityView {
-
+    void updateTodoCount(int todoCount);
 }

@@ -21,10 +21,6 @@ import com.instructure.canvasapi2.utils.*
 
 object TeacherPrefs : PrefManager(AppManager.PREF_FILE_NAME) {
 
-    /* Temporary URI used in FileUploadDialog */
-    @JvmStatic
-    var tempCaptureUri by StringPref()
-
     @JvmStatic
     var isConfirmedTeacher by BooleanPref()
 

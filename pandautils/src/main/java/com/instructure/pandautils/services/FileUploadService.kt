@@ -14,7 +14,6 @@
  *     limitations under the License.
  *
  */
-
 package com.instructure.pandautils.services
 
 import android.app.IntentService
@@ -33,20 +32,36 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.models.FileSubmitObject
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.*
 import java.util.*
+import kotlin.collections.ArrayList
 
+/**
+ * A service to upload files for various parts of canvas. All results of this service are posted sticky via an EventBus event.
+ * The event posted is a [FileUploadEvent] which contains a [FileUploadNotification].
+ * [FileUploadNotification] May contain a nullable intent and arrayList of [Attachment] objects.
+ * [Attachment] objects are the lowest common denominator for file object types used in Canvas. Data loss may be a side effect.
+ */
 class FileUploadService @JvmOverloads constructor(name: String = FileUploadService::class.java.simpleName) : IntentService(name) {
 
     private var uploadCount: Int = 0
+    private var isCanceled = false
 
     lateinit private var notificationBuilder: NotificationCompat.Builder
     private val notificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Handle 'cancel' action in onStartCommand instead of onHandleIntent, because threading.
+        if (ACTION_CANCEL_UPLOAD == intent?.action) isCanceled = true
+        return super.onStartCommand(intent, flags, startId)
+    }
+
     override fun onHandleIntent(intent: Intent) {
         val action = intent.action
         val bundle = intent.extras
+
+        if (isCanceled) return
+
         val fileSubmitObjects = bundle.getParcelableArrayList<FileSubmitObject>(Const.FILES) ?: return
         val assignment = bundle.getParcelable<Assignment>(Const.ASSIGNMENT)
 
@@ -56,7 +71,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         if (assignment != null && assignment.groupCategoryId != 0L) {
             // This is a group assignment, we need to get the list of groups before starting uploads
             GroupManager.getGroupsSynchronous(true)
-                    ?.find { it.groupCategoryId == assignment.groupCategoryId }
+                    .find { it.groupCategoryId == assignment.groupCategoryId }
                     ?.let { startUploads(action, fileSubmitObjects, bundle, it.id) }
                     ?: broadcastError(getString(R.string.errorSubmittingFiles))
         } else {
@@ -68,18 +83,11 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
     private fun startUploads(action: String, fileSubmitObjects: ArrayList<FileSubmitObject>, bundle: Bundle, groupId: Long?) {
         val courseId = bundle.getLong(Const.COURSE_ID)
         val assignment = bundle.getParcelable<Assignment>(Const.ASSIGNMENT)
-        val conversationId = bundle.getLong(Const.CONVERSATION)
-        val quizQuestionId = bundle.getLong(Const.QUIZ_ANSWER_ID, -1)
+        val quizQuestionId = bundle.getLong(Const.QUIZ_ANSWER_ID, INVALID_ID)
         val quizId = bundle.getLong(Const.QUIZ)
         val position = bundle.getInt(Const.POSITION)
-        val messageText = bundle.getString(Const.MESSAGE)
-        val subject = bundle.getString(Const.SUBJECT)
-        val isGroup = bundle.getBoolean(Const.IS_GROUP)
-        val userIds = bundle.getStringArrayList(Const.USER_IDS)
-        val contextId = bundle.getString(Const.CONTEXT_ID)
         val parentFolderId = if (bundle.containsKey(Const.PARENT_FOLDER_ID)) bundle.getLong(Const.PARENT_FOLDER_ID) else null
 
-        val attachmentsIds = mutableListOf<Long>()
         val attachments = mutableListOf<Attachment>()
 
         try {
@@ -89,19 +97,19 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
                 when (action) {
                     ACTION_ASSIGNMENT_SUBMISSION -> {
                         val uploadContext = if (groupId == null) SubmissionUploadContext(courseId, assignment!!.id) else GroupUploadContext(groupId)
-                        attachmentsIds += FileUploadManager.uploadFileSynchronous(uploadContext, config)!!.id
+                        attachments += FileUploadManager.uploadFileSynchronous(uploadContext, config)!!
                     }
                     ACTION_COURSE_FILE -> {
                         config.parentFolderId = parentFolderId
-                        attachmentsIds += FileUploadManager.uploadFileSynchronous(CourseUploadContext(courseId), config)!!.id
+                        attachments += FileUploadManager.uploadFileSynchronous(CourseUploadContext(courseId), config)!!
                     }
                     ACTION_USER_FILE -> {
                         config.parentFolderId = parentFolderId
-                        attachmentsIds += FileUploadManager.uploadFileSynchronous(UserUploadContext(), config)!!.id
+                        attachments += FileUploadManager.uploadFileSynchronous(UserUploadContext(), config)!!
                     }
-                    ACTION_MESSAGE_ATTACHMENTS, ACTION_NEW_MESSAGE_ATTACHMENTS -> {
+                    ACTION_MESSAGE_ATTACHMENTS -> {
                         config.parentFolderPath = MESSAGE_ATTACHMENT_PATH
-                        attachmentsIds += FileUploadManager.uploadFileSynchronous(UserUploadContext(), config)!!.id
+                        attachments += FileUploadManager.uploadFileSynchronous(UserUploadContext(), config)!!
                     }
                     ACTION_QUIZ_FILE -> {
                         attachments += FileUploadManager.uploadFileSynchronous(QuizUploadContext(courseId, quizId), config)!!
@@ -110,24 +118,29 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
                         config.parentFolderPath = DISCUSSION_ATTACHMENT_PATH
                         attachments += FileUploadManager.uploadFileSynchronous(UserUploadContext(), config)!!
                     }
+                    ACTION_SUBMISSION_COMMENT -> {
+                        val uploadContext = SubmissionCommentUploadContext(courseId, assignment!!.id)
+                        attachments += FileUploadManager.uploadFileSynchronous(uploadContext, config)!!
+                    }
                 }
                 broadcastUploadCompleted(fso)
             }
             // Submit fileIds to the assignment
+            val attachmentsIds = attachments.map { it.id }
             when (action) {
-                ACTION_ASSIGNMENT_SUBMISSION -> submitAttachmentsForSubmission(courseId, assignment, attachmentsIds)
-                ACTION_MESSAGE_ATTACHMENTS -> submitAttachmentsForMessage(conversationId, messageText, attachmentsIds)
+                ACTION_ASSIGNMENT_SUBMISSION -> submitAttachmentsForSubmission(courseId, assignment, attachments, attachmentsIds)
                 ACTION_DISCUSSION_ATTACHMENT -> broadcastDiscussionSuccess(attachments)
                 ACTION_QUIZ_FILE -> broadcastQuizSuccess(attachments[0], quizQuestionId, position)
-                ACTION_NEW_MESSAGE_ATTACHMENTS -> submitAttachmentsForNewMessage(messageText, subject, userIds, contextId, isGroup, attachmentsIds)
+                ACTION_MESSAGE_ATTACHMENTS -> broadcastAllUploadsCompleted(attachments)
+                ACTION_SUBMISSION_COMMENT -> broadcastSubmissionCommentSuccess(attachments)
                 else -> {
+                    FileUploadEvent(FileUploadNotification(null, attachments)).postSticky()
                     updateNotificationComplete()
-                    broadCastAllUploadsCompleted()
                 }
             }
         } catch (exception: Exception) {
             updateNotification(getString(R.string.errorUploadingFile))
-            if (quizQuestionId != -1L) {
+            if (quizQuestionId != INVALID_ID) {
                 broadcastQuizError(exception.message.orEmpty(), quizQuestionId, position)
             } else {
                 broadcastError(exception.message.orEmpty())
@@ -137,24 +150,10 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         stopSelf()
     }
 
-    private fun submitAttachmentsForMessage(conversationID: Long, messageText: String?, attachmentsIds: List<Long>) {
-        ConversationManager.addMessageToConversationSynchronous(conversationID, messageText, attachmentsIds)?.let {
-            updateMessageComplete()
-            broadCastMessageSuccess(it)
-        } ?: broadcastError(getString(R.string.errorSendingMessage))
-    }
-
-    private fun submitAttachmentsForNewMessage(messageText: String?, subject: String?, userIds: List<String>, contextId: String?, isGroup: Boolean, attachmentsIds: List<Long>) {
-        ConversationManager.createConversationWithAttachmentSynchronous(messageText, subject, userIds, contextId, isGroup, attachmentsIds)?.let {
-            updateMessageComplete()
-            broadCastNewMessageSuccess()
-        } ?: broadcastError(getString(R.string.errorSendingMessage))
-    }
-
-    private fun submitAttachmentsForSubmission(courseId: Long, assignment: Assignment, attachmentsIds: List<Long>) {
+    private fun submitAttachmentsForSubmission(courseId: Long, assignment: Assignment, attachments: List<Attachment>, attachmentsIds: List<Long>) {
         SubmissionManager.postSubmissionAttachmentsSynchronous(courseId, assignment.id, attachmentsIds)?.let {
             updateSubmissionComplete()
-            broadCastAllUploadsCompleted()
+            broadcastAllUploadsCompleted(attachments)
         } ?: broadcastError(getString(R.string.errorSubmittingFiles))
     }
     // endregion Upload
@@ -165,22 +164,30 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         bundle.putParcelable(Const.FILENAME, fso)
         val status = Intent(UPLOAD_COMPLETED)
         status.putExtras(bundle)
-        sendBroadcast(status)
+        FileUploadEvent(FileUploadNotification(status, ArrayList<Attachment>(1).apply { add(fso.toAttachment()) })).postSticky()
     }
 
-    private fun broadCastAllUploadsCompleted() {
+    private fun broadcastAllUploadsCompleted(attachments: List<Attachment>) {
         val status = Intent(ALL_UPLOADS_COMPLETED)
-        sendBroadcast(status)
+        status.putParcelableArrayListExtra(Const.ATTACHMENTS, ArrayList(attachments))
+        FileUploadEvent(FileUploadNotification(status, attachments)).postSticky()
     }
 
-    private fun broadCastMessageSuccess(conversation: Conversation) {
+    private fun broadcastMessageSuccess(conversation: Conversation) {
         val status = Intent(ALL_UPLOADS_COMPLETED)
         status.putExtra(Const.CONVERSATION, conversation as Parcelable)
-        sendBroadcast(status)
+        FileUploadEvent(FileUploadNotification(status, ArrayList(0))).postSticky()
     }
 
-    private fun broadCastNewMessageSuccess() {
+    private fun broadcastNewMessageSuccess() {
         val status = Intent(ALL_UPLOADS_COMPLETED)
+        FileUploadEvent(FileUploadNotification(status, ArrayList(0))).postSticky()
+    }
+
+    private fun broadcastSubmissionCommentSuccess(attachments: List<Attachment>) {
+        updateNotificationComplete()
+        val status = Intent(ALL_UPLOADS_COMPLETED)
+        status.putParcelableArrayListExtra(Const.ATTACHMENTS, ArrayList(attachments))
         sendBroadcast(status)
     }
 
@@ -188,7 +195,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         updateNotificationComplete()
         val status = Intent(ALL_UPLOADS_COMPLETED)
         status.putParcelableArrayListExtra(Const.ATTACHMENTS, ArrayList(attachments))
-        sendBroadcast(status)
+        FileUploadEvent(FileUploadNotification(status, attachments)).postSticky()
     }
 
     private fun broadcastQuizSuccess(attachment: Attachment, quizQuestionId: Long, position: Int) {
@@ -197,7 +204,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         status.putExtra(Const.ATTACHMENT, attachment as Parcelable)
         status.putExtra(Const.QUIZ_ANSWER_ID, quizQuestionId)
         status.putExtra(Const.POSITION, position)
-        sendBroadcast(status)
+        FileUploadEvent(FileUploadNotification(status, ArrayList<Attachment>(1).apply { add(attachment) })).postSticky()
     }
 
     private fun broadcastQuizError(message: String, quizQuestionId: Long, position: Int) {
@@ -208,17 +215,16 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         status.putExtra(Const.POSITION, position)
         bundle.putString(Const.MESSAGE, message)
         status.putExtras(bundle)
-        sendBroadcast(status)
+        FileUploadEvent(FileUploadNotification(status, ArrayList(0))).postSticky()
     }
 
     private fun broadcastError(message: String) {
         updateNotificationError(message)
         val bundle = Bundle()
         val status = Intent(UPLOAD_ERROR)
-
         bundle.putString(Const.MESSAGE, message)
         status.putExtras(bundle)
-        sendBroadcast(status)
+        FileUploadEvent(FileUploadNotification(status, ArrayList(0))).postSticky()
     }
 
     private fun showNotification(size: Int) {
@@ -288,13 +294,13 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
     // endregion Notifications
 
     override fun onDestroy() {
-        notificationBuilder.setOngoing(false)
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
-        FileUploadUtils.deleteDirectory(FileUploadUtils.getTempFolder(this))
+        shutDown(applicationContext)
+        super.onDestroy()
     }
 
     companion object {
         private const val NOTIFICATION_ID = 1
+        private const val INVALID_ID = -1L
         const val CHANNEL_ID = "fileUploadChannel"
 
         // Upload broadcasts
@@ -306,14 +312,21 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         // Upload Actions
         const val ACTION_ASSIGNMENT_SUBMISSION = "ACTION_ASSIGNMENT_SUBMISSION"
         const val ACTION_MESSAGE_ATTACHMENTS = "ACTION_MESSAGE_ATTACHMENTS"
-        const val ACTION_NEW_MESSAGE_ATTACHMENTS = "ACTION_NEW_MESSAGE_ATTACHMENTS"
         const val ACTION_COURSE_FILE = "ACTION_COURSE_FILE"
         const val ACTION_USER_FILE = "ACTION_USER_FILE"
         const val ACTION_QUIZ_FILE = "ACTION_QUIZ_FILE"
         const val ACTION_DISCUSSION_ATTACHMENT = "ACTION_DISCUSSION_ATTACHMENT"
+        const val ACTION_SUBMISSION_COMMENT = "ACTION_SUBMISSION_COMMENT"
 
         private const val MESSAGE_ATTACHMENT_PATH = "conversation attachments"
         private const val DISCUSSION_ATTACHMENT_PATH = "discussion attachments"
+        const val ACTION_CANCEL_UPLOAD = "ACTION_CANCEL_UPLOAD"
+
+        @JvmStatic
+        fun shutDown(context: Context) {
+            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(NOTIFICATION_ID)
+            FileUploadUtils.deleteTempDirectory(context)
+        }
 
         @JvmStatic
         fun getUserFilesBundle(
@@ -389,6 +402,17 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             putString(Const.MESSAGE, messageText)
             putBoolean(Const.IS_GROUP, isGroup)
             putString(Const.CONTEXT_ID, contextId)
+        }
+
+        @JvmStatic
+        fun getSubmissionCommentBundle(
+                fileSubmitObjects: ArrayList<FileSubmitObject>,
+                courseId: Long,
+                assignment: Assignment
+        ) = Bundle().apply {
+            putParcelableArrayList(Const.FILES, fileSubmitObjects)
+            putLong(Const.COURSE_ID, courseId)
+            putParcelable(Const.ASSIGNMENT, assignment)
         }
     }
 }

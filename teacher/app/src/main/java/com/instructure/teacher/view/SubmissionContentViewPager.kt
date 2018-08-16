@@ -20,6 +20,7 @@ import android.content.Context
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
+import com.instructure.canvasapi2.utils.tryOrNull
 
 class SubmissionContentViewPager @JvmOverloads
     constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
@@ -27,10 +28,10 @@ class SubmissionContentViewPager @JvmOverloads
     var isPagingEnabled = true
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
-        return isPagingEnabled && super.onTouchEvent(ev)
+        return isPagingEnabled && tryOrNull { super.onTouchEvent(ev) } ?: false
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return isPagingEnabled && super.onInterceptTouchEvent(ev)
+        return isPagingEnabled && tryOrNull { super.onInterceptTouchEvent(ev) } ?: false
     }
 }

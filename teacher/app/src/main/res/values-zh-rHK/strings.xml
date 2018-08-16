@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -29,8 +29,9 @@
     <string name="tab_discussions">討論區</string>
     <string name="tab_announcements">通告</string>
     <string name="tab_attendance">考勤</string>
+    <string name="tab_pages">頁面</string>
+    <string name="tab_todo">待辦事項</string>
     <string name="content_description_school_logo">學校圖標</string>
-    <string name="content_description_avatar">頭像</string>
     <string name="search_guides">搜尋 Canvas 指南</string>
     <string name="canvas_guides">Canvas 指南</string>
     <string name="search_guides_icon">Canvas 指南圖標</string>
@@ -57,7 +58,7 @@
     <string name="course">課程</string>
     <string name="profile">個人檔案</string>
     <string name="share">分享</string>
-    <string name="share_with">與 &#8230; 分享</string>
+    <string name="share_with">分享給：</string>
 
     <!-- Compose Message -->
     <string name="no_subject">（無主題）</string>
@@ -84,7 +85,7 @@
     <!-- Feature Request -->
     <string name="feature_subject">關於教師應用程式 [Android] 的想法</string>
     <string name="understand_request">下列信息能幫我們好好理解您的想法：</string>
-    <string name="send_mail">發送電子郵件&#8230;</string>
+    <string name="send_mail">發送電郵&#8230;&#8230;</string>
 
     <string name="color_1">紅色</string>
     <string name="color_2">亮粉色</string>
@@ -139,10 +140,10 @@
     <string name="with">與</string>
     <string name="discussion_attachment">添加檔案</string>
     <string name="select_files_or_photos">選擇檔案或照片</string>
-    <string name="uploading_files">正在上傳檔案&#8230;</string>
+    <string name="uploading_files">檔案上傳中&#8230;&#8230;</string>
     <string name="no_attachment">（無附件）</string>
     <string name="remove_attachment">刪除附件</string>
-    <string name="creating_announcement">正在建立通告&#8230;</string>
+    <string name="creating_announcement">創建通告中&#8230;</string>
 
     <string name="copy_email">複製電郵地址</string>
     <string name="all_grading_periods">所有評分時段</string>
@@ -150,7 +151,7 @@
     <string name="all_submissions_graded">所有已評分提交項目</string>
     <string name="icon">圖標</string>
     <plurals name="grading_status_assignment">
-        <item quantity="other">%d 個提交項目需要評分</item>
+        <item quantity="other">%d 個提交件需要評分</item>
     </plurals>
 
     <plurals name="assignees_without_grades">
@@ -159,7 +160,7 @@
 
     <string name="inbox_empty_title">無訊息</string>
     <string name="inbox_empty_starred_title">無已加星號訊息</string>
-    <string name="inbox_empty_message">按下 \"+\" 創建新交談（conversation）。</string>
+    <string name="inbox_empty_message">按下 \"+\" 創建新交談。</string>
     <string name="inbox_empty_starred_message">點按星號標記訊息</string>
 
     <string name="download_attachment">下載附件</string>
@@ -207,7 +208,7 @@
         <item quantity="other">+ %d 訊息</item>
     </plurals>
     <plurals name="submissionNeedsGrading">
-        <item quantity="other">%d 個提交項目需要評分</item>
+        <item quantity="other">%d 個提交件需要評分</item>
     </plurals>
 
     <string name="delete_assignment_message">是否確定要刪除此任務？</string>
@@ -263,14 +264,14 @@
     <string name="error_occurred">意外錯誤出現。</string>
     <string name="no_assignments_with_file_upload">該課程沒有允許文檔上傳的任務。</string>
     <string name="extension_not_allowed">選中的文檔類型不被允許。</string>
-    <string name="allowed_extensions">允許的擴展名:&#160;</string>
+    <string name="allowed_extensions">允許的擴展名：</string>
     <string name="files_uploaded_successfully">文檔以成功上傳。</string>
     <string name="error_uploading_file">上傳檔案時發生錯誤。請重試。</string>
-    <string name="uploading_file">正在上傳檔案&#8230;</string>
+    <string name="uploading_file">文檔上傳中&#8230;&#8230;</string>
     <string name="no_apps">您的設備沒有安裝可處理此檔案的應用程式。</string>
     <string name="turn_in">提交</string>
     <string name="error_getting_photo">載入照片時發生錯誤。請重試。</string>
-    <string name="loading_files_indeterminate">載入檔案&#8230;</string>
+    <string name="loading_files_indeterminate">載入文檔&#8230;&#8230;</string>
     <string name="no_files_uploaded">您尚未選擇任何檔案。</string>
     <string name="file_upload_not_supported">您無法上傳檔案到選定的任務。</string>
     <string name="one_or_more_extension_not_allowed">一個或多個檔案中含有不允許的檔案擴展名</string>
@@ -281,18 +282,18 @@
     <string name="inbox_sent">已發送</string>
     <string name="inbox_archived">已存檔</string>
     <string name="inbox_all_messages">所有訊息</string>
-    <string name="uploading_file_num" formatted="false">正在上傳第 %d / 個檔案%d</string>
+    <string name="uploading_file_num" formatted="false">正在上傳第 %d / %d 個檔案</string>
     <string name="page_not_found">無法找到該頁。</string>
     <string name="no_connection">無連接</string>
     <string name="unauthorized_access">您未獲得存取權限。您沒有獲得授權或尚未獲得權限（例如您的課程尚未開始）</string>
     <string name="server_error">伺服器發生錯誤。</string>
     <string name="error_loading_files">載入檔案時發生錯誤。請檢查您的互聯網連接然後重試。</string>
     <string name="files_submitted_successfully">文檔已成功提交。</string>
-    <string name="no_data_connection"> 請檢查您的網絡連接並重試。</string>
+    <string name="no_data_connection">請檢查您的網絡連接並重試。</string>
     <string name="teacher_logout_warning">是否確定登出？</string>
     <string name="teacher_yes">是</string>
     <string name="teacher_no">不是</string>
-    <string name="teacher_sending">發送&#8230;</string>
+    <string name="teacher_sending">發送中&#8230;</string>
     <string name="teacher_cancel">取消</string>
     <string name="teacher_okay">確定</string>
     <string name="teacher_upload">上傳</string>
@@ -302,16 +303,16 @@
     <string name="empty_speedgrader_content">空白 SpeedGrader（快速評分器），需添加設計</string>
 
     <!--Course Settings-->
-    <string name="course_settings">課程設置</string>
+    <string name="course_settings">課程設定</string>
     <string name="course_name">課程名稱</string>
-    <string name="set_home_to">將「\Home\」設為…</string>
+    <string name="set_home_to">將「Home」設為&#8230;</string>
     <string name="course_activity_stream">課程活動流</string>
     <string name="pages_front_page">網頁標題版</string>
+    <string name="frontPage">標題版</string>
     <string name="course_modules">課程單元</string>
     <string name="assignments_list">任務列表</string>
     <string name="syllabus">教學大綱</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">多個截止日期</string>
     <string name="everyone">所有人</string>
@@ -319,8 +320,8 @@
     <string name="unknown_student">未知學生</string>
     <string name="closed">已關閉</string>
     <string name="no_date_filler">--</string>
-    <string name="due_date_at_time" formatted="false">截止於 %s%s</string>
-    <string name="last_post" formatted="false">最後發布%s</string>
+    <string name="due_date_at_time" formatted="false">截止 %1s 於 %2s</string>
+    <string name="last_post" formatted="false">上次發帖 %s</string>
     <string name="submission_types">提交件類型</string>
     <string name="full_due_date_details">所有截止日期詳情</string>
     <string name="availability_label">可用性：</string>
@@ -346,7 +347,7 @@
     <string name="grade">評分</string>
     <string name="calculated_by_rubric">以評分標準計算</string>
     <string name="customize_grade">自訂評分</string>
-    <string name="out_of_points">總分%1$s</string>
+    <string name="out_of_points">總分：%1$s</string>
     <string name="gpa">GPA</string>
     <string name="letter_grade">成績等級</string>
     <string name="excuse_student">豁免學生</string>
@@ -356,7 +357,7 @@
     <string name="not_graded">未評分</string>
     <string name="excused">已免除</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
-    <string name="grade_value_format_talk_back">%1$s 總分%2$s</string>
+    <string name="grade_value_format_talk_back">得分：%1$s；總分：%2$s</string>
     <string name="publish">發佈</string>
     <string name="error_saving_assignment">嘗試儲存作業時發生錯誤。請再試一次。</string>
     <string name="error_saving_quiz">嘗試儲存測驗時發生錯誤。請再試一次。</string>
@@ -382,16 +383,16 @@
     <string name="graded">已評分</string>
     <string name="needsGrading">需要評分</string>
     <string name="not_submitted">未提交</string>
-    <string name="content_description_submission_donut_graded" formatted="false">已評分，%s %s</string>
-    <string name="content_description_submission_donut_needs_grading" formatted="false">需要評分，%s %s</string>
-    <string name="content_description_submission_donut_unsubmitted" formatted="false">未提交，%s %s</string>
+    <string name="content_description_submission_donut_graded" formatted="false">已評分，%s / %s 份</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">需要評分，%s / %s 份</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">未提交，%s / %s 份</string>
     <string name="display_grade_as">將評分顯示為&#8230;</string>
     <string name="percentage">百分比</string>
     <string name="complete_incomplete">完成/未完成</string>
     <string name="points">分數</string>
     <string name="gpa_scale">GPA 量表系統</string>
 
-    <string-array name="display_grade_as_types">
+    <string-array name="display_grade_as_types" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -400,7 +401,7 @@
         <item>@string/not_graded</item>
     </string-array>
 
-    <string-array name="display_grade_as_types_discussion">
+    <string-array name="display_grade_as_types_discussion" translatable="false">
         <item>@string/percentage</item>
         <item>@string/complete_incomplete</item>
         <item>@string/points</item>
@@ -422,8 +423,8 @@
     <string name="havent_been_graded">尚未評分</string>
     <string name="scored_less_than">得分低於&#8230;</string>
     <string name="scored_more_than">得分高於&#8230;</string>
-    <string name="scored_less_than_value">得分低於%s</string>
-    <string name="scored_more_than_value">得分高於%s</string>
+    <string name="scored_less_than_value">得分低於 %s</string>
+    <string name="scored_more_than_value">得分高於 %s</string>
     <string name="add_comment">添加評論</string>
     <string name="editComment">編輯評論</string>
     <string name="deleteComment">刪除評論</string>
@@ -435,19 +436,19 @@
     <string name="enter_custom_value">輸入自訂數值</string>
     <string name="success_saving_rubric_assessment">已存評分標準評估</string>
     <string name="error_saving_rubric_assessment">儲存分標準評估時發生錯誤。請重試。</string>
-    <string name="rubric_assessment_score_out_of_total">%1$s 總分%2$s</string>
+    <string name="rubric_assessment_score_out_of_total">得分：%1$s；總分：%2$s</string>
     <string name="criterion_rating_customize_score">自訂分數</string>
     <string name="edit_criterion_comment">編輯評論標準</string>
-    <string name="sendMessageToHint">訊息%s</string>
+    <string name="sendMessageToHint">訊息 %s</string>
     <string name="save_comment">儲存評論</string>
     <string name="cancel_editing_comment">關閉編輯評論</string>
     <string name="skip">跳過</string>
 
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
-    <string name="rating_button_content_description_custom">自訂分數%1$s</string>
+    <string name="rating_button_content_description_custom">自訂分數 %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
-    <string name="rating_button_content_description">"%1$s，%2$s</string>
+    <string name="rating_button_content_description">%1$s，%2$s</string>
 
     <plurals name="submission_points_possible">
         <item quantity="other">總分為 %s 分</item>
@@ -466,28 +467,30 @@
     <string name="grading_periods_filter">評分期篩選器</string>
     <string name="assignments">作業列表</string>
     <string name="clear_filter">清除篩選器</string>
-    <string name="due">截止日期%1$s</string>
+    <string name="due">截止於 %1$s</string>
+    <string name="updated">於 %1$s 已更新</string>
+
     <plurals name="needsGradingCount">
-        <item quantity="other">%s 需要評分</item>
+        <item quantity="other">%s 個需要分級</item>
     </plurals>
     <plurals name="needsGradingNoQuantity">
         <item quantity="other">需要評分</item>
     </plurals>
     <string name="at">於</string>
     <plurals name="quantityPointsAbbreviated">
-        <item quantity="other">%s 分數</item>
+        <item quantity="other">%s 分</item>
     </plurals>
     <plurals name="quantityPointsFull">
-        <item quantity="other">%s 分數</item>
+        <item quantity="other">%s分數</item>
     </plurals>
     <plurals name="people_count">
-        <item quantity="other">%d 成員</item>
+        <item quantity="other">%d 個人</item>
     </plurals>
     <plurals name="group_count">
-        <item quantity="other">%d 群組</item>
+        <item quantity="other">%d 個群組</item>
     </plurals>
     <string name="cmp_closed">已關閉</string>
-    <string name="dot_with_spaces">\u0020\u0020\u2022\u0020\u0020</string>
+    <string name="dot_with_spaces">  \u0022</string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
     <string name="content_description_favorite">我的最愛</string>
     <string name="content_description_not_favorite">並非最愛</string>
@@ -519,10 +522,9 @@
     <string name="contentDescriptionFileIcon">檔案圖標</string>
     <string name="contentDescriptionExpandPage">展開內容頁</string>
     <string name="contentDescriptionCollapsePage">收起內容頁</string>
-
     <string name="noInternetConnectionTitle">沒有網絡連線</string>
     <string name="noInternetConnectionMessage">此動作需要網絡連線。</string>
-  
+
     <string name="emptyDetailsMessage">點擊清單項目，檢視詳細資料</string>
 
     <string name="assignmentQuizzes">任務測驗</string>
@@ -542,7 +544,7 @@
     <string name="gradedSurvey">已評分的調查</string>
     <string name="ungradedSurvey">未評分的調查</string>
 
-    <string-array name="quizTypes">
+    <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
         <item>@string/gradedQuiz</item>
         <item>@string/gradedSurvey</item>
@@ -588,9 +590,9 @@
     <string name="immediately">立即</string>
     <string name="quiz_details_no_points_assigned">未安排分數</string>
 
-    <string name="quiz_details_from_to">由 %1$s 至%2$s</string>
-    <string name="quiz_details_after">之後%1$s</string>
-    <string name="quiz_details_until">直到%1$s</string>
+    <string name="quiz_details_from_to">自 %1$s 至 %2$s</string>
+    <string name="quiz_details_after">在 %1$s 之後</string>
+    <string name="quiz_details_until">直到 %1$s</string>
     <string name="continueWithoutSavingTitle">繼續操作而不儲存？</string>
     <string name="continueWithoutSavingMessage">您確定要繼續操作而不儲存嗎？</string>
     <string name="continueUnsaved">繼續</string>
@@ -600,7 +602,7 @@
     <string name="filterPointsMustBeSet">輸入數值。</string>
 
     <plurals name="quantityQuestions">
-        <item quantity="other">%d 問題</item>
+        <item quantity="other">%d 個問題</item>
     </plurals>
 
     <plurals name="minutes">
@@ -616,14 +618,14 @@
     <string name="discussions_unpin">取消釘選</string>
     <string name="contentDescriptionDiscussionsOverflow">更多選項</string>
     <string name="discussions_options">選項</string>
-    <string name="discussions_replies" formatted="false">%s 回覆</string>
-    <string name="discussions_unread" formatted="false">%s 未讀</string>
+    <string name="discussions_replies" formatted="false">%s 個回覆</string>
+    <string name="discussions_unread" formatted="false">%s 個未讀</string>
     <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
     <string name="discussions_delete_warning">您是否確定要刪除此回覆？</string>
     <string name="discussions_replies_title">回覆</string>
     <string name="discussions_reply">回覆</string>
     <string name="discussions_edit">編輯</string>
-    <string name="discussions_deleted" formatted="false">已刪除此回覆%s</string>
+    <string name="discussions_deleted" formatted="false">已刪除此回覆 %s</string>
     <string name="discussions_forbidden">只有曾發送一個或以上回覆的才能查閱回覆。</string>
     <string name="discussions_unknown_author">未知作者</string>
     <string name="discussions_delete">刪除討論區</string>
@@ -638,13 +640,13 @@
     <string name="tryAgain">請再試一次</string>
     <string name="couldNotPlayFormat">並不支援該媒體格式</string>
     <string name="openWithAnotherApp">以其他應用程式開啟</string>
-    
+
     <string name="speedgraderCommentAddedSubmission">任務已提交。點擊檢視。</string>
     <string name="speedgraderCommentSubmittedFiles">已提交檔案：</string>
     <string name="no_submission_comments">並無提交項目評論</string>
     <string name="mediaUploadAudio">媒體上載 — 音頻</string>
     <string name="mediaUploadVideo">媒體上載 — 視訊</string>
-    <string name="speedgraderCommentQuizAttempt">嘗試%d</string>
+    <string name="speedgraderCommentQuizAttempt">嘗試 %d</string>
     <string name="speedGraderTextSubmission">文字提交提交項目</string>
     <string name="speedGraderExternalToolSubmission">外部工具提交項目</string>
     <string name="speedGraderDiscussionSubmission">討論區提交項目</string>
@@ -733,7 +735,7 @@
     <string name="canvasGuides">Canvas 指南</string>
     <string name="featureSubject">關於 Canvas 教師 [Android] 的想法</string>
     <string name="understandRequest">下列信息能幫我們好好理解您的想法：</string>
-    <string name="sendMail">發送電子郵件&#8230;</string>
+    <string name="sendMail">發送電郵&#8230;&#8230;</string>
     <string name="editProfile">編輯個人檔案</string>
     <string name="name">名稱</string>
     <string name="bio">個人簡介</string>
@@ -742,7 +744,7 @@
     <string name="takePhoto">拍攝照片</string>
     <string name="choosePhotoFromGallery">從圖片庫選取照片</string>
     <string name="fileNotFound">無法找到檔案。</string>
-    <string name="version" formatted="false">版本%s</string>
+    <string name="version" formatted="false">版本 %s</string>
     <string name="tap_to_view_submissions_list">輕點以檢視提交件清單。</string>
     <string name="assignmentDescriptionContentDescription">作業描述</string>
     <string name="quizDescriptionContentDescription">測驗描述</string>
@@ -787,4 +789,90 @@
     <string name="markAllAsPresent">全部標記為出席</string>
     <string name="calendar">月曆</string>
     <string name="filterSections">篩選分班</string>
+    <string name="addVideoComment">添加視頻評論</string>
+    <string name="addAudioComment">添加音頻評論</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d 小時，%2$d 分鐘，%3$d 秒</string>
+    <string name="recordingTimerSpeechDivider">得分：%1$s；總分：%2$s</string>
+    <string name="replay">重播</string>
+    <string name="stop">停止</string>
+    <string name="startRecordingAudio">開始錄製音頻</string>
+    <string name="stopRecordingAudio">停止錄製音頻</string>
+    <string name="startRecordingVideo">開始錄製視頻</string>
+    <string name="stopRecordingVideo">停止錄製視頻</string>
+    <string name="closeRecordingView">關閉錄製畫面</string>
+    <string name="deleteRecording">刪除錄製內容</string>
+    <string name="videoCommentReplay">視頻評論重播</string>
+    <string name="addMediaComment">添加媒體評論</string>
+    <string name="copyrightHolder">版權持有人</string>
+    <string name="access">訪問</string>
+    <string name="usageRights">使用權</string>
+    <string name="deleteFile">刪除檔案 </string>
+    <string name="holdCopyright">我持有該版權</string>
+    <string name="havePermission">我擁有該檔案的使用權限。</string>
+    <string name="publicDomain">公用網域檔案</string>
+    <string name="fairUse">合理使用例外情況</string>
+    <string name="creativeCommons">Creative Commons 檔案</string>
+    <string name="editFile">編輯檔案</string>
+    <string name="deleteFolder">刪除資料夾</string>
+    <string name="editFolder">編輯資料夾</string>
+    <string name="deleteFileMessage">您是否確定要刪除此檔案？</string>
+    <string name="deleteFolderMessage">您是否確定要刪除此資料夾？資料夾內的所有內容亦會遭刪除。</string>
+    <string name="newFolder">新資料夾</string>
+    <string name="createAFolder">創建資料夾</string>
+    <string name="createFolder">創建資料夾</string>
+    <string name="createAFile">創建檔案</string>
+    <string name="createFileFolderFabContentDesc">顯示創建檔案與創建資料夾按鈕</string>
+    <string name="unpublish">取消發佈</string>
+    <string name="restrictedAccess">訪問受限</string>
+    <string name="restricted">受限</string>
+    <string name="hidden">透過連結可獲取裡面隱藏的文件。</string>
+    <string name="studentsWithLink">只有持有連結的學生方可使用。不包括於學生檔案。</string>
+    <string name="scheduleAvailability">排程學生可用性</string>
+    <string name="folderCreationError">創建資料夾時發生錯誤。</string>
+
+    <string name="setAsFrontPage">設定為標題頁</string>
+    <string name="canEdit">可編輯</string>
+    <string name="pageDetails">頁面詳情</string>
+    <string name="pageSuccessfullyUpdated">已成功更新頁面。</string>
+    <string name="pageSuccessfullyCreated">已成功創建頁面。</string>
+    <string name="editPageTitle">編輯頁面</string>
+    <string name="createPageTitle">創建頁面</string>
+    <string name="pageTitleMustBeSet">必須設定頁面標題。</string>
+    <string name="pageDeleteTitle">刪除頁面？</string>
+    <string name="pageDelete">刪除頁面</string>
+    <string name="pageDeleteMessage">將刪除此頁面。此操作無法撤消。</string>
+    <string name="errorSavingPage">嘗試儲存此頁面時發生錯誤。請再試一次。</string>
+    <string name="frontPageUnpublishedError">內容頁不能為標題頁面並未經發佈。</string>
+
+    <string name="onlyTeachers">僅限教師</string>
+    <string name="teachersAndStudents">教師和學生</string>
+    <string name="anyone">任何人</string>
+    <string name="groupMembers">僅成員</string>
+    <string name="license">許可</string>
+    <string name="availableFromAfterTo">可用結束日期必須遲於開始日期</string>
+    <string name="errorDeletingFile">刪除此檔案時發生錯誤。</string>
+    <string name="errorDeletingFolder">刪除此資料夾時發生錯誤。</string>
+    <string name="errorUpdatingFile">更新此檔案時發生錯誤。</string>
+    <string name="errorUpdatingFolder">更新此資料夾時發生錯誤。</string>
+
+    <string name="toDoEmpty">沒有待辦事項！\n祝您愉快。</string>
+    <string name="toDoNoSubmissions">沒有針對該作業的提交項目可供評分。</string>
+    <string name="errorToDoRouteFailed">嘗試檢視此待辦事項時發生錯誤。</string>
+    <string name="errorIsDesigner">設計師註冊無法檢視此項。</string>
+
+    <string name="sections">章節</string>
+    <string name="filterBy">篩選條件為&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">針對 %s</string>
+    <string name="filterBySection">按分班篩選</string>
+    <string name="filterSubmissionsLowercase">篩選提交項目</string>
+
+    <string name="latePenalty">逾期懲罰</string>
+    <string name="finalGrade">最終評分</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="other">-%s 分</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="other">-%s 分</item>
+    </plurals>
 </resources>

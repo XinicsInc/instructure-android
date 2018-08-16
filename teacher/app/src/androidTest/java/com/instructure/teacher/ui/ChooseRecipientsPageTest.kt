@@ -16,13 +16,14 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.teacher.ui.models.Course
-import com.instructure.teacher.ui.utils.*
+import com.instructure.soseedy.SeededData
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.clickInboxTab
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class ChooseRecipientsPageTest: TeacherTest() {
-    private lateinit var mCourse: Course
-
     @Test
     override fun displaysPageObjects() {
         getToChooseRecipients()
@@ -37,21 +38,24 @@ class ChooseRecipientsPageTest: TeacherTest() {
 
     @Test
     fun addRecipient() {
-        getToChooseRecipients()
-        val student = getNextStudent(mCourse)
+        val student = getToChooseRecipients().studentsList[0]
         chooseRecipientsPage.clickStudentCategory()
         chooseRecipientsPage.clickStudent(student)
         chooseRecipientsPage.clickDone()
         addMessagePage.assertHasStudentRecipient(student)
     }
 
-    private fun getToChooseRecipients() {
-        logIn()
-        mCourse = getNextCourse()
+    private fun getToChooseRecipients(): SeededData {
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val course = data.coursesList[0]
+        val teacher = data.teachersList[0]
+        tokenLogin(teacher)
+
         coursesListPage.clickInboxTab()
         inboxPage.clickAddMessageFAB()
         addMessagePage.clickCourseSpinner()
-        addMessagePage.selectCourseFromSpinner(mCourse)
+        addMessagePage.selectCourseFromSpinner(course)
         addMessagePage.clickAddContacts()
+        return data
     }
 }

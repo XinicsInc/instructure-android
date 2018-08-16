@@ -16,28 +16,54 @@
   ~
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="?android:listPreferredItemHeight">
+    android:minHeight="?android:listPreferredItemHeight"
+    android:paddingBottom="12dp"
+    android:paddingEnd="12dp"
+    android:paddingStart="16dp"
+    android:paddingTop="16dp">
 
-    <CheckBox
-        android:id="@+id/checkbox"
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_gravity="end|center_vertical"
-        android:layout_marginEnd="@dimen/card_header_checkbox_margins"
-        android:layout_marginRight="@dimen/card_header_checkbox_margins" />
+        android:layout_marginStart="16dp"/>
 
-    <TextView
-        android:id="@+id/text1"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:layout_marginLeft="@dimen/card_header_margins"
-        android:layout_marginStart="@dimen/card_header_margins"
-        android:layout_marginRight="64dp"
-        android:layout_marginEnd="64dp"
-        style="@style/TextStyle.Primary"/>
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/toggle"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/title"
+            style="@style/TextFont.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/toggle"
+            android:textSize="16sp"
+            tools:text="Administrative Notifications"/>
+
+        <TextView
+            android:id="@+id/description"
+            style="@style/TextFont.Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/defaultTextGray"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="Instructor &amp; Admin only. Get notified about course enrollments, reports generated, content exported, migration reports, new account users, and new student groups."
+            tools:visibility="visible"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

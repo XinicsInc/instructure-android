@@ -152,7 +152,7 @@ class SpeedGraderCommentsPresenter(
                 }
 
                 val submission = awaitApi<Submission> {
-                    SubmissionManager.postSubmissionComment(courseId, assignmentId, userId, comment.pendingComment.comment, groupMessage, it)
+                    SubmissionManager.postSubmissionComment(courseId, assignmentId, userId, comment.pendingComment.comment, groupMessage, null, it)
                 }
 
                 submission.submissionComments.lastOrNull()?.let {

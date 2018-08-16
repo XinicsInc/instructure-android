@@ -17,28 +17,31 @@
 
 package com.instructure.candroid.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatEditText;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.instructure.candroid.R;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.apis.UserAPI;
-import com.instructure.canvasapi2.managers.ConversationManager;
+import com.instructure.canvasapi2.managers.InboxManager;
 import com.instructure.canvasapi2.managers.CourseManager;
 import com.instructure.canvasapi2.managers.UserManager;
 import com.instructure.canvasapi2.models.Conversation;
@@ -46,12 +49,15 @@ import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.pandautils.utils.ThemePrefs;
+import com.instructure.pandautils.utils.ViewStyler;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class AskInstructorDialogStyled extends DialogFragment {
 
@@ -101,15 +107,27 @@ public class AskInstructorDialogStyled extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(getActivity())
+                                  .setTitle(getActivity().getString(R.string.instructor_question))
+                                  .setPositiveButton(getActivity().getString(R.string.send), new DialogInterface.OnClickListener() {
+                                      @Override
+                                      public void onClick(DialogInterface dialog, int which) {
+                                          if(canClickSend) {
+                                              if (message == null || message.getText().toString().trim().equals("")) {
+                                                  Toast.makeText(getActivity(), getString(R.string.emptyMessage), Toast.LENGTH_SHORT).show();
+                                              } else {
+                                                  progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.sending));
+                                                  loadTeacherData();
+                                              }
+                                          }
+                                      }
+                                  });
 
-        MaterialDialog.Builder builder =
-                new MaterialDialog.Builder(getActivity())
-                                  .title(getActivity().getString(R.string.instructor_question))
-                                  .positiveText(getActivity().getString(R.string.send));
 
-
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.ask_instructor, null);
-        courseSpinner = (Spinner)view.findViewById(R.id.course_spinner);
+        @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
+        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.ask_instructor, null);
+        courseSpinner = view.findViewById(R.id.courseSpinner);
 
         ArrayList<Course> loadingIndicator = new ArrayList<Course>();
         Course loading = new Course();
@@ -119,37 +137,29 @@ public class AskInstructorDialogStyled extends DialogFragment {
         //we haven't set an onItemSelectedListener, so selecting the item shouldn't do anything
         courseSpinner.setAdapter(courseAdapter);
 
-        message = (EditText)view.findViewById(R.id.message);
+        message = view.findViewById(R.id.message);
 
-        builder.customView(view, true);
+        builder.setView(view);
 
-        builder.callback(new MaterialDialog.ButtonCallback() {
+        final AlertDialog dialog = builder.create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onPositive(MaterialDialog dialog) {
-                super.onPositive(dialog);
+            public void onShow(DialogInterface worthless) {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.getBrandColor());
+                ViewStyler.themeEditText(getContext(), (AppCompatEditText) message, ThemePrefs.getBrandColor());
 
-                if(canClickSend) {
-                    if (message == null || message.getText().toString().trim().equals("")) {
-                        Toast.makeText(getActivity(), getString(R.string.emptyMessage), Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.sending));
-                        loadTeacherData();
-                    }
-                }
             }
         });
 
-        MaterialDialog dialog = builder.build();
         dialog.setCanceledOnTouchOutside(true);
+
         return dialog;
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // LifeCycle
     ///////////////////////////////////////////////////////////////////////////
-
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -190,43 +200,37 @@ public class AskInstructorDialogStyled extends DialogFragment {
 
         private ArrayList<Course> courses = new ArrayList<Course>();
 
-        public CourseSpinnerAdapter(Context context, int textViewResourceId,
-                                    ArrayList<Course> courses) {
+        CourseSpinnerAdapter(Context context, int textViewResourceId,
+                             ArrayList<Course> courses) {
             super(context, textViewResourceId, courses);
             this.courses = courses;
         }
 
         @Override
         public View getDropDownView(int position, View convertView,
-                                    ViewGroup parent) {
-
-            return getCustomView(position, convertView, parent);
+                                    @NonNull ViewGroup parent) {
+            return getCustomView(position, convertView);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            return getCustomView(position, convertView, parent);
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            return getCustomView(position, convertView);
         }
 
-        public View getCustomView(int position, View convertView, ViewGroup parent) {
+        View getCustomView(int position, View convertView) {
+            CourseViewHolder holder;
 
-
-            CourseViewHolder holder = null;
-
-            if ( convertView == null )
-            {
+            if ( convertView == null ) {
 				/* There is no view at this position, we create a new one.
 		           In this case by inflating an xml layout */
-                convertView = (LinearLayout)(inflater.inflate(R.layout.spinner_row_courses, null));
+                convertView = inflater.inflate(R.layout.spinner_row_courses, null);
 
                 holder = new CourseViewHolder();
-                holder.courseName = (TextView)convertView.findViewById(R.id.courseName);
+                holder.courseName = convertView.findViewById(R.id.courseName);
 
                 convertView.setTag (holder);
-            }
-            else
-            {
+            } else {
 				/* We recycle a View that already exists */
                 holder = (CourseViewHolder) convertView.getTag ();
             }
@@ -234,6 +238,7 @@ public class AskInstructorDialogStyled extends DialogFragment {
             if(courses.get(position) != null) {
                 holder.courseName.setText(courses.get(position).getName());
             }
+
             return convertView;
         }
     }
@@ -247,7 +252,7 @@ public class AskInstructorDialogStyled extends DialogFragment {
     public void setUpCallbacks(){
         getFavoriteCoursesCallback = new StatusCallback<List<Course>>() {
             @Override
-            public void onResponse(retrofit2.Response<List<Course>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<Course>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 //only add courses in which the user isn't a teacher
                 if(!isAdded()){return;}
                 for(Course course : response.body()) {
@@ -277,7 +282,7 @@ public class AskInstructorDialogStyled extends DialogFragment {
 
         getPeopleCallback = new StatusCallback<List<User>>() {
             @Override
-            public void onResponse(retrofit2.Response<List<User>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<User>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 nextURL = linkHeaders.nextUrl;
                 hasLoadedFirstPage = true;
                 List<User> users = response.body();
@@ -317,12 +322,12 @@ public class AskInstructorDialogStyled extends DialogFragment {
                         ids.add(Long.toString(user.getId()));
                     }
 
-                    ConversationManager.createConversation(ids, messageText, "", course.getContextId(), null, true, sendMessageCanvasCallback);
+                    InboxManager.createConversation(ids, messageText, "", course.getContextId(), null, true, sendMessageCanvasCallback);
                 }
             }
 
             @Override
-            public void onFail(Call<List<User>> response, Throwable error) {
+            public void onFail(@Nullable Call<List<User>> call, @NonNull Throwable error, @Nullable Response response) {
                 hasLoadedFirstPage = false;
                 progressDialog.dismiss();
             }
@@ -331,7 +336,7 @@ public class AskInstructorDialogStyled extends DialogFragment {
         sendMessageCanvasCallback = new StatusCallback<List<Conversation>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<Conversation>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<Conversation>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 //close progress dialog
                 progressDialog.dismiss();
                 //close this dialog
@@ -339,12 +344,13 @@ public class AskInstructorDialogStyled extends DialogFragment {
             }
 
             @Override
-            public void onFail(Call<List<Conversation>> response, Throwable error) {
-                //Croutons are shown in the background, which makes them hard to see. Use a dialog instead
-                FatalErrorDialogStyled fatalErrorDialog = FatalErrorDialogStyled.newInstance(R.string.error, R.string.errorSendingMessage, R.drawable.ic_cv_alert, true);
+            public void onFail(@Nullable Call<List<Conversation>> call, @NonNull Throwable error, @Nullable Response response) {
+                // Croutons are shown in the background, which makes them hard to see. Use a dialog instead
+                FatalErrorDialogStyled fatalErrorDialog = FatalErrorDialogStyled.Companion.newInstance(R.string.error, R.string.errorSendingMessage, true);
                 if(getActivity() == null) {
                     return;
                 }
+
                 fatalErrorDialog.show(getActivity().getSupportFragmentManager(), FatalErrorDialogStyled.TAG);
             }
         };

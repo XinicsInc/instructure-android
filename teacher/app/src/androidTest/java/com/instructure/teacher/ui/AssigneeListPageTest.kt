@@ -15,10 +15,9 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.soseedy.SeededData
+import com.instructure.soseedy.SubmissionType
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.data.Data.getAllStudents
-import com.instructure.teacher.ui.models.CanvasUser
-import com.instructure.teacher.ui.models.Course
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
@@ -29,23 +28,24 @@ class AssigneeListPageTest : TeacherTest() {
         assigneeListPage.assertPageObjects()
     }
 
-    @Test fun displaysEveryoneItem() {
+    @Test
+    fun displaysEveryoneItem() {
         getToAssigneeListPage()
         assigneeListPage.assertDisplaysAssigneeOptions(sectionNames = listOf("Everyone"))
     }
 
-    @Test fun displaysStudentItems() {
-        val (_, course) = getToAssigneeListPage()
-        val students = getAllStudents(course)
+    @Test
+    fun displaysStudentItems() {
+        val students = getToAssigneeListPage(students = 2).studentsList
         assigneeListPage.assertDisplaysAssigneeOptions(
                 sectionNames = listOf("Everyone"),
                 studentNames = students.map { it.name }
         )
     }
 
-    @Test fun selectsStudents() {
-        val (_, course) = getToAssigneeListPage()
-        val studentNames = getAllStudents(course).map { it.name }
+    @Test
+    fun selectsStudents() {
+        val studentNames = getToAssigneeListPage(students = 2).studentsList.map{ it.name }
         assigneeListPage.assertDisplaysAssigneeOptions(
                 sectionNames = listOf("Everyone"),
                 studentNames = studentNames
@@ -59,16 +59,36 @@ class AssigneeListPageTest : TeacherTest() {
         for (assignee in expectedAssignees) assignText.assertContainsText(assignee)
     }
 
-    private fun getToAssigneeListPage(): Pair<CanvasUser, Course> {
-        val teacher = logIn()
-        val assignment = getNextAssignment()
-        val course = getNextCourse()
+    private fun getToAssigneeListPage(
+            assignments: Int = 1,
+            withDescription: Boolean = false,
+            lockAt: String = "",
+            unlockAt: String = "",
+            students: Int = 0,
+            submissionTypes: List<SubmissionType> = emptyList(),
+            submissions: List<Pair<String, Int>> = emptyList()): SeededData {
+
+        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val assignment = seedAssignments(
+                assignments = assignments,
+                courseId = course.id,
+                withDescription = withDescription,
+                lockAt = lockAt,
+                unlockAt = unlockAt,
+                submissionTypes = submissionTypes,
+                teacherToken = teacher.token)
+
+        tokenLogin(teacher)
+
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(assignment)
+        assignmentListPage.clickAssignment(assignment.assignmentsList[0])
+
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.editAssignees()
-        return Pair(teacher, course)
+        return data
     }
 
 }

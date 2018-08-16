@@ -31,9 +31,9 @@ public class PageViewHolder extends RecyclerView.ViewHolder {
 
     public PageViewHolder(View itemView) {
         super(itemView);
-        title = (TextView)itemView.findViewById(R.id.title);
-        modifiedDate = (TextView)itemView.findViewById(R.id.modified_date);
-        icon = (ImageView) itemView.findViewById(R.id.icon);
+        title = itemView.findViewById(R.id.title);
+        modifiedDate = itemView.findViewById(R.id.modified);
+        icon = itemView.findViewById(R.id.icon);
     }
 
     public static int holderResId() {

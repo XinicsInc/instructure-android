@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -143,7 +145,7 @@ public class PublishPollActivity extends AppCompatActivity {
 
                 SectionManager.getAllSectionsForCourse(course.getId(), new StatusCallback<List<Section>>() {
                     @Override
-                    public void onResponse(retrofit2.Response<List<Section>> response, com.instructure.canvasapi2.utils.LinkHeaders linkHeaders, ApiType type) {
+                    public void onResponse(@NonNull retrofit2.Response<List<Section>> response, @NonNull com.instructure.canvasapi2.utils.LinkHeaders linkHeaders, @NonNull ApiType type) {
                         setupSectionAdapter(response.body());
                         ApplicationManager.saveSections(PublishPollActivity.this, response.body(), ((Course)coursesSpinner.getSelectedItem()).getId());
 
@@ -259,14 +261,14 @@ public class PublishPollActivity extends AppCompatActivity {
                     for(int i = 0; i < sessionCreatedCount; i++) {
                         PollsManager.createPollSession(pollID, course.getId(), sections.get(i).getId(), new StatusCallback<PollSessionResponse>(){
                             @Override
-                            public void onResponse(retrofit2.Response<PollSessionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+                            public void onResponse(@NonNull retrofit2.Response<PollSessionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                                 List<PollSession> pollSession = response.body().getPollSessions();
                                 if(pollSession.size() > 0) {
                                     singlePollSession = pollSession.get(0);
                                     //publish all the sessions
                                     PollsManager.openPollSession(pollID, pollSession.get(0).getId(), new StatusCallback<ResponseBody>() {
                                         @Override
-                                        public void onResponse(Response<ResponseBody> response, LinkHeaders linkHeaders, ApiType type) {
+                                        public void onResponse(@NonNull Response<ResponseBody> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                                             sessionCount++;
                                             //publish all the sessions
                                             if(sessionCount == sessionCreatedCount) {
@@ -289,7 +291,7 @@ public class PublishPollActivity extends AppCompatActivity {
                                         }
 
                                         @Override
-                                        public void onFail(Call<ResponseBody> response, Throwable error) {
+                                        public void onFail(@Nullable Call<ResponseBody> call, @NonNull Throwable error, @Nullable Response response) {
                                             publishPoll.setEnabled(true);
                                         }
                                     }, true);
@@ -475,7 +477,7 @@ public class PublishPollActivity extends AppCompatActivity {
 
         openPollSessionCallback = new StatusCallback<PollSessionResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<PollSessionResponse> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull retrofit2.Response<PollSessionResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 if(type.isCache()) return;
 
                 List<PollSession> pollSessions = response.body().getPollSessions();

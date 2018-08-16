@@ -21,7 +21,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.instructure.candroid.fragment.AssignmentFragment;
-import com.instructure.candroid.fragment.DetailedDiscussionFragment;
+import com.instructure.candroid.fragment.DiscussionDetailsFragment;
 import com.instructure.candroid.fragment.FileDetailsFragment;
 import com.instructure.candroid.fragment.InternalWebviewFragment;
 import com.instructure.candroid.fragment.MasteryPathLockedFragment;
@@ -86,7 +86,7 @@ public class ModuleUtility {
 
             Uri uri =  Uri.parse(moduleItem.getHtml_url()).buildUpon().appendQueryParameter("display", "borderless").build();
 
-            Bundle bundle = InternalWebviewFragment.createBundle(course, uri.toString(), moduleItem.getTitle(), true, true, true);
+            Bundle bundle = InternalWebviewFragment.Companion.createBundle(course, uri.toString(), moduleItem.getTitle(), true, true, true);
             return ParentFragment.createFragment(InternalWebviewFragment.class, bundle);
         }
 
@@ -107,7 +107,7 @@ public class ModuleUtility {
         //Discussions
         if(moduleItem.getType().equals("Discussion")) {
             Bundle bundle = getDiscussionBundle(moduleItem, course);
-            return ParentFragment.createFragment(DetailedDiscussionFragment.class, bundle);
+            return ParentFragment.createFragment(DiscussionDetailsFragment.class, bundle);
         }
 
         if(moduleItem.getType().equals("Locked")) {
@@ -150,7 +150,7 @@ public class ModuleUtility {
             }
 
         }
-        return PageDetailsFragment.createBundle(pageName, course);
+        return PageDetailsFragment.Companion.createBundle(pageName, course);
     }
 
     private static Bundle getAssignmentBundle(ModuleItem moduleItem, Course course) {
@@ -164,7 +164,7 @@ public class ModuleUtility {
                 assignmentId = getIdFromUrl(url, index);
             }
         }
-        return AssignmentFragment.createBundle(course, assignmentId);
+        return AssignmentFragment.Companion.createBundle(course, assignmentId);
     }
 
     private static Bundle getDiscussionBundle(ModuleItem moduleItem, Course course) {
@@ -178,7 +178,7 @@ public class ModuleUtility {
                 topicId = getIdFromUrl(url, index);
             }
         }
-        return DetailedDiscussionFragment.createBundle(course, topicId, false);
+        return DiscussionDetailsFragment.makeBundle(course, topicId, false);
     }
 
     private static Bundle getLockedBundle(ModuleItem moduleItem, Course course) {

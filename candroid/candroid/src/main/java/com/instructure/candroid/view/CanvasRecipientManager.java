@@ -23,13 +23,13 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.ex.chips.BaseRecipientAdapter;
 import com.android.ex.chips.RecipientEntry;
 import com.android.ex.chips.RecipientManager;
-import com.instructure.candroid.fragment.ProfileFragment;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Recipient;
@@ -49,6 +49,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Response;
 
 /**
  * Default implementation of {@link RecipientManager} that fetches recipients and
@@ -200,10 +202,9 @@ public class CanvasRecipientManager implements RecipientManager {
         recipientSuggestionsCallback = new StatusCallback<List<Recipient>>() {
 
             @Override
-            public void onResponse(retrofit2.Response<List<Recipient>> response, LinkHeaders linkHeaders, ApiType type) {
+            public void onResponse(@NonNull Response<List<Recipient>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 for(Recipient recipient : response.body()){
                     // TODO : modify the recipient entry to display canvas course info. Currently displaying recipient course id instead of an "address"
-
                     RecipientEntry entry = new RecipientEntry(recipient.getIdAsLong(), recipient.getName(), recipient.getStringId(), "", recipient.getAvatarURL(), recipient.getUserCount(), recipient.getItemCount(), true,
                             recipient.getCommonCourses() != null ? recipient.getCommonCourses().keySet() : null,
                             recipient.getCommonGroups() != null ?  recipient.getCommonGroups().keySet() : null);
@@ -257,18 +258,26 @@ public class CanvasRecipientManager implements RecipientManager {
      */
     @Override
     public void populatePhotoBytesAsync(final RecipientEntry entry, final RecipientPhotoCallback callback) {
-        final Uri photoThumbnailUri = Uri.parse(entry.getAvatarUrl());
+        if(ProfileUtils.shouldLoadAltAvatarImage(entry.getAvatarUrl())) {
+            Bitmap avatar = ProfileUtils.getInitialsAvatarBitMap(getContext(), entry.getName());
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            avatar.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            entry.setPhotoBytes(stream.toByteArray());
+            if(callback != null){
+                callback.onPhotoBytesAsynchronouslyPopulated();
+            }
+        } else {
+            final Uri photoThumbnailUri = Uri.parse(entry.getAvatarUrl());
 
-        if (photoThumbnailUri != null) {
-            if(isDefaultImage(photoThumbnailUri.toString())){
-                generateDefaultImage(entry, callback);
+            if (photoThumbnailUri != null) {
+                if (isDefaultImage(photoThumbnailUri.toString())) {
+                    generateDefaultImage(entry, callback);
+                } else {
+                    downloadImageWithGlide(entry, callback);
+                }
+            } else if (callback != null) {
+                callback.onPhotoBytesAsyncLoadFailed();
             }
-            else{
-                downloadImageWithGlide(entry, callback);
-            }
-        }
-        else if (callback != null) {
-            callback.onPhotoBytesAsyncLoadFailed();
         }
     }
 
@@ -325,7 +334,7 @@ public class CanvasRecipientManager implements RecipientManager {
 
     //TODO : Better way to determine if a user has an avatar set. (needs api work)
     private boolean isDefaultImage(String avatarUrl){
-        if(avatarUrl != null && (avatarUrl.contains(Const.PROFILE_URL) || avatarUrl.contains(ProfileFragment.noPictureURL))){
+        if(avatarUrl != null && (avatarUrl.contains(Const.PROFILE_URL) || avatarUrl.contains(Const.NO_PICTURE_URL))){
             return true;
         }
         return false;

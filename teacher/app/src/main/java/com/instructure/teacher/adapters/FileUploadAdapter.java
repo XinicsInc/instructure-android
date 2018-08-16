@@ -29,8 +29,8 @@ import android.widget.TextView;
 import com.instructure.pandautils.models.FileSubmitObject;
 import com.instructure.pandautils.utils.ColorUtils;
 import com.instructure.pandautils.utils.ThemePrefs;
+import com.instructure.pandautils.views.AttachmentView;
 import com.instructure.teacher.R;
-import com.instructure.teacher.view.AttachmentView;
 
 import java.util.List;
 import java.util.Locale;
@@ -111,7 +111,7 @@ public class FileUploadAdapter extends BaseAdapter {
             holder.uploadProgress.setVisibility(View.GONE);
             holder.fileIcon.setVisibility(View.VISIBLE);
         } else if (fso.getCurrentState() == FileSubmitObject.STATE.NORMAL) {
-            holder.remove.setImageResource(R.drawable.vd_close);
+            holder.remove.setImageResource(R.drawable.vd_utils_close);
             holder.remove.setContentDescription(mContext.getString(R.string.remove_attachment));
             holder.remove.setOnClickListener(new View.OnClickListener() {
                 @Override

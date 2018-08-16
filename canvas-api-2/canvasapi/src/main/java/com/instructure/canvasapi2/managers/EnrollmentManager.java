@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.managers;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.apis.EnrollmentAPI;
@@ -86,6 +87,36 @@ public class EnrollmentManager extends BaseManager {
             };
             adapter.setStatusCallback(depaginatedCallback);
             EnrollmentAPI.getFirstPageEnrollmentsForUserInCourse(adapter, params, courseId, userId, depaginatedCallback);
+        }
+    }
+
+    public static void getSelfEnrollments(final @Nullable List<String> types, final @Nullable List<String> states, boolean forceNetwork, @NonNull StatusCallback<List<Enrollment>> callback) {
+        if (isTesting() || mTesting) {
+
+        } else {
+            final RestBuilder adapter = new RestBuilder(callback);
+            final RestParams params = new RestParams.Builder()
+                    .withPerPageQueryParam(true)
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build();
+            StatusCallback<List<Enrollment>> depaginatedCallback = new ExhaustiveListCallback<Enrollment>(callback) {
+                @Override
+                public void getNextPage(@NonNull StatusCallback<List<Enrollment>> callback, @NonNull String nextUrl, boolean isCached) {
+                    EnrollmentAPI.getSelfEnrollments(types, states, adapter, params, callback);
+                }
+            };
+            adapter.setStatusCallback(depaginatedCallback);
+            EnrollmentAPI.getSelfEnrollments(types, states, adapter, params, callback);
+        }
+    }
+
+    public static void handleInvite(long courseId, long enrollmentId, boolean acceptInvite, @NonNull StatusCallback<Void> callback) {
+        if (isTesting() || mTesting) {
+
+        } else {
+            final RestBuilder adapter = new RestBuilder(callback);
+            final RestParams params = new RestParams.Builder().build();
+            EnrollmentAPI.handleInvite(courseId, enrollmentId, acceptInvite, adapter, params, callback);
         }
     }
 }

@@ -209,11 +209,11 @@ public class BaseBinder {
         }
         int drawable = 0;
         if(assignment.getSubmissionTypes().contains(Assignment.SUBMISSION_TYPE.ONLINE_QUIZ)) {
-            drawable = R.drawable.ic_cv_quizzes_fill;
+            drawable = R.drawable.vd_quiz;
         }else if(assignment.getSubmissionTypes().contains(Assignment.SUBMISSION_TYPE.DISCUSSION_TOPIC)) {
-            drawable = R.drawable.ic_cv_discussions_fill;
+            drawable = R.drawable.vd_discussion;
         } else {
-            drawable = R.drawable.ic_cv_assignments_fill;
+            drawable = R.drawable.vd_assignment;
         }
         return drawable;
     }

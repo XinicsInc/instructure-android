@@ -58,9 +58,17 @@ object PageManager : BaseManager() {
                     .withShouldIgnoreToken(false)
                     .withForceReadFromNetwork(forceNetwork)
                     .build()
+
+            val depaginatedParams = RestParams.Builder()
+                    .withPerPageQueryParam(false)
+                    .withShouldIgnoreToken(false)
+                    .withForceReadFromNetwork(forceNetwork)
+                    .build()
+
+
             val depaginatedCallback = object : ExhaustiveListCallback<Page>(callback) {
                 override fun getNextPage(callback: StatusCallback<List<Page>>, nextUrl: String, isCached: Boolean) {
-                    PageAPI.getNextPagePages(adapter, params, nextUrl, callback)
+                    PageAPI.getNextPagePages(adapter, depaginatedParams, nextUrl, callback)
                 }
             }
             adapter.statusCallback = depaginatedCallback

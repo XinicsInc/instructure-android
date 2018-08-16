@@ -26,7 +26,7 @@ import com.instructure.candroid.interfaces.AdapterToFragmentCallback;
 import com.instructure.canvasapi2.models.Assignment;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.MasteryPathAssignment;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 
 
 public class MasteryPathOptionsRecyclerAdapter extends BaseListRecyclerAdapter<MasteryPathAssignment, MasteryAssignmentViewHolder> {
@@ -38,7 +38,7 @@ public class MasteryPathOptionsRecyclerAdapter extends BaseListRecyclerAdapter<M
     /* This is the real constructor and should be called to create instances of this adapter */
     public MasteryPathOptionsRecyclerAdapter(Context context, CanvasContext canvasContext, MasteryPathAssignment[] assignments, AdapterToFragmentCallback<Assignment> adapterToFragmentCallback) {
         this(context, canvasContext, assignments, adapterToFragmentCallback, false);
-        mCourseColor = CanvasContextColor.getCachedColor(context, canvasContext);
+        mCourseColor = ColorKeeper.getOrGenerateColor(canvasContext);
     }
 
     /* This overloaded constructor is for testing purposes ONLY, and should not be used to create instances of this adapter. */

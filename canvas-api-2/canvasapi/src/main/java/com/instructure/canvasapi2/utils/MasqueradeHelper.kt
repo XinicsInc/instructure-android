@@ -20,6 +20,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
 import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -47,7 +48,7 @@ object MasqueradeHelper {
     }
 
     @JvmStatic
-    fun <ACTIVITY : Activity> startMasquerading(masqueradingUserId: Long, masqueradingDomain: String?, startingClass: Class<ACTIVITY>) {
+    fun <ACTIVITY : Activity> startMasquerading(masqueradingUserId: Long, masqueradingDomain: String?, startingClass: Class<out ACTIVITY>) {
         //Check to see if they're trying to switch domain as site admin
         if (!masqueradingDomain.isNullOrBlank()) {
             // If we don't set isMasquerading to true here the original domain will be set to the masquerading domain, even if trying to
@@ -60,16 +61,16 @@ object MasqueradeHelper {
 
         try {
             UserManager.getUser(masqueradingUserId, object : StatusCallback<User>() {
-                override fun onResponse(response: Response<User>?, linkHeaders: LinkHeaders?, type: ApiType?) {
-                    if (response?.body() != null) {
+                override fun onResponse(response: Response<User>, linkHeaders: LinkHeaders, type: ApiType) {
+                    if (response.body() != null) {
                         cleanupMasquerading(ContextKeeper.appContext)
                         ApiPrefs.masqueradeUser = response.body()
-                        ApiPrefs.domain = ApiPrefs.originalDomain
                         restartApplication(startingClass)
                     }
                 }
 
-                override fun onFail(callResponse: Call<User>?, error: Throwable?, response: Response<*>?) {
+                override fun onFail(call: Call<User>?, error: Throwable, response: Response<*>?) {
+                    Logger.e("Error failed to masquerade: " + error.message)
                     stopMasquerading(startingClass)
                 }
             }, true)
@@ -84,8 +85,12 @@ object MasqueradeHelper {
         val initActivity = Intent(ContextKeeper.appContext, startingClass)
         val pendingIntent = PendingIntent.getActivity(ContextKeeper.appContext, 6660, initActivity, PendingIntent.FLAG_CANCEL_CURRENT)
         val alarmManager = ContextKeeper.appContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 200, pendingIntent)
-        System.exit(0)
+        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pendingIntent)
+
+        //Delays the exit long enough for all the shared preferences to be saved and caches to be cleared.
+        Handler().postDelayed({
+            System.exit(0)
+        }, 500)
     }
 
     /** Appends the masquerade ID to the provided URL (if currently masquerading) */

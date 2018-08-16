@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.CommunicationChannel;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.GET;
@@ -40,7 +41,7 @@ public class CommunicationChannelsAPI {
         Call<List<CommunicationChannel>> getCommunicationChannels(@Path("user_id") long userId);
 
         @POST("users/self/communication_channels?communication_channel[type]=push")
-        Call<Void> addPushCommunicationChannel(@Query("communication_channel[token]") String registrationId);
+        Call<ResponseBody> addPushCommunicationChannel(@Query("communication_channel[token]") String registrationId);
     }
 
     public static void getCommunicationChannels(
@@ -51,11 +52,19 @@ public class CommunicationChannelsAPI {
         callback.addCall(adapter.build(CommunicationChannelInterface.class, params).getCommunicationChannels(userId)).enqueue(callback);
     }
 
-    public static Response<Void> addNewPushCommunicationChannelSynchronous(String registrationId, @NonNull RestBuilder adapter, @NonNull RestParams params) {
+    public static Response<ResponseBody> addNewPushCommunicationChannelSynchronous(String registrationId, @NonNull RestBuilder adapter, @NonNull RestParams params) {
         try {
             return adapter.build(CommunicationChannelInterface.class, params).addPushCommunicationChannel(registrationId).execute();
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static void addNewPushCommunicationChannel(
+            @NonNull String registrationId,
+            @NonNull StatusCallback<ResponseBody> callback,
+            @NonNull RestBuilder adapter,
+            @NonNull RestParams params) {
+        callback.addCall(adapter.build(CommunicationChannelInterface.class, params).addPushCommunicationChannel(registrationId)).enqueue(callback);
     }
 }

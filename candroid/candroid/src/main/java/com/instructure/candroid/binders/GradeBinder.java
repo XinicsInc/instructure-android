@@ -18,9 +18,11 @@
 package com.instructure.candroid.binders;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import com.instructure.candroid.R;
 import com.instructure.candroid.adapter.GradesListRecyclerAdapter;
 import com.instructure.candroid.dialog.WhatIfDialogStyled;
 import com.instructure.candroid.holders.GradeViewHolder;
@@ -29,7 +31,7 @@ import com.instructure.canvasapi2.models.Assignment;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.Submission;
 import com.instructure.canvasapi2.utils.DateHelper;
-import com.instructure.pandautils.utils.CanvasContextColor;
+import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
 
 public class GradeBinder extends BaseBinder {
@@ -56,7 +58,7 @@ public class GradeBinder extends BaseBinder {
         holder.title.setText(assignment.getName());
 
         final int drawable = getAssignmentIcon(assignment);
-        holder.icon.setImageDrawable(CanvasContextColor.getColoredDrawable(context, drawable, courseColor));
+        holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, drawable, courseColor));
 
         holder.pendingReviewIcon.setVisibility(View.GONE);
 
@@ -79,6 +81,7 @@ public class GradeBinder extends BaseBinder {
 
         //configures whatIf editing boxes and listener for dialog
         if (isEdit) {
+            holder.edit.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_edit, Color.BLACK));
             holder.edit.setVisibility(View.VISIBLE);
             holder.edit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,7 +91,7 @@ public class GradeBinder extends BaseBinder {
                             assignment.getPointsPossible(),
                             dialogStyled,
                             assignment,
-                            CanvasContextColor.getCachedColor(context, course), holder.getAdapterPosition());
+                            ColorKeeper.getOrGenerateColor(course), holder.getAdapterPosition());
                 }
             });
         } else {
