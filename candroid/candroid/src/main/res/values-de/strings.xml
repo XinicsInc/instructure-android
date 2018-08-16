@@ -23,7 +23,7 @@
 
     <!--Content Descriptions-->
     <string name="canvasLogo">Canvas Logo</string>
-    <string name="app_name" translatable="false">Canvas Student</string>
+    <string name="app_name" translatable="false">LearningX Student</string>
     <string name="enterURL">Geben Sie Ihre Canvas URL ein:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Sie versuchen sich im Canvas Network anzumelden?</string>

@@ -114,8 +114,9 @@
     <string name="appTypeTeacher">Profesor</string>
     <string name="appTypeStudent">Alumno</string>
     <string name="appTypeParent">Padre</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="canvasLowerCase">Learning X</string>
     <string name="whatsYourSchoolName">¿Cuál es el nombre de su escuela?</string>
+    <string name="previous">Anterior</string>
     <string name="next">Siguiente</string>
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Eliminar usuario anterior</string>

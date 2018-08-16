@@ -116,6 +116,16 @@ open class InternalWebViewFragment : BaseFragment() {
         canvasWebView.settings.displayZoomControls = false
         canvasWebView.settings.setSupportZoom(true)
 
+        canvasWebView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
+            override fun onProgressChangedCallback(view: WebView?, newProgress: Int) {
+                if (newProgress == 100) {
+                    loading?.setGone()
+                }
+            }
+        }
+
+        canvasWebView.addVideoClient(activity)
+
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(activity, url)

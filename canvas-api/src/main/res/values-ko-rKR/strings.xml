@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+ ~ Copyright (C) 2017 - present Instructure, Inc.
+ ~
+ ~     Licensed under the Apache License, Version 2.0 (the "License");
+ ~     you may not use this file except in compliance with the License.
+ ~     You may obtain a copy of the License at
+ ~
+ ~     http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~     Unless required by applicable law or agreed to in writing, software
+ ~     distributed under the License is distributed on an "AS IS" BASIS,
+ ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~     See the License for the specific language governing permissions and
+ ~     limitations under the License.
+ ~
+ -->
+ <resources>
+
+   <!--Modules-->
+   <string name="mustComplete">"먼저 완료해야 합니다 :"</string>
+   <string name="unlockedAt">"다음 위치에서 잠금 해제됩니다."</string>
+   <string name="goToModules">"모듈로 이동"</string>
+
+   <!--Events-->
+   <string name="Starts">"시작"</string>
+   <string name="Ends">"끝"</string>
+   <string name="allDayEvent">"종일 이벤트"</string>
+   <string name="at">"at"</string>
+   <string name="to">"to"</string>
+
+   <!--StreamItems-->
+   <string name="Message">"메시지"</string>
+   <string name="Loading">"로드 중 ..."</string>
+   <string name="Deleted">"삭제됨"</string>
+
+   <!-- Assignment Module -->
+   <string name="canvasAPI_online">"온라인"</string>
+   <string name="canvasAPI_onPaper">"오프라인 제출"</string>
+   <string name="canvasAPI_discussion">"토론"</string>
+   <string name="canvasAPI_quiz">"시험 및 설문"</string>
+   <string name="canvasAPI_externalTool">"외부 도구"</string>
+   <string name="canvasAPI_none">"없음"</string>
+
+   <string name="canvasAPI_passFail">"통과 실패"</string>
+   <string name="canvasAPI_percent">"퍼센트"</string>
+   <string name="canvasAPI_letterGrade">"알파벳 성적"</string>
+   <string name="canvasAPI_points">"점수"</string>
+   <string name="canvasAPI_gpaScale">"GPA 등급"</string>
+   <string name="canvasAPI_notGraded">"미평가"</string>
+
+   <string name="canvasAPI_onlineQuiz">"온라인 퀴즈"</string>
+   <string name="canvasAPI_discussionTopic">"토론 주제"</string>
+   <string name="canvasAPI_onlineUpload">"온라인 업로드"</string>
+   <string name="canvasAPI_onlineTextEntry">"온라인 텍스트 입력"</string>
+   <string name="canvasAPI_onlineURL">"온라인 URL"</string>
+   <string name="canvasAPI_mediaRecording">"미디어 레코딩"</string>
+   <string name="canvasAPI_attendance">"출석"</string>
+   <string name="andMore">"\u0020 %d 개 이상"</string>
+
+
+
+ </resources>

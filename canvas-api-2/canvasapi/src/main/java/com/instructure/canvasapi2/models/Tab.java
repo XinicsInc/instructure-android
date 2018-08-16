@@ -32,6 +32,8 @@ public class Tab extends CanvasModel<Tab> implements Parcelable {
     public static final String TYPE_INTERNAL = "internal";
     public static final String TYPE_EXTERNAL = "external";
 
+    public static final String TYPE_EXTERNAL_PREFIX = "context_external_tool_";
+
     // id constants (these should never change in the API)
     public static final String SYLLABUS_ID = "syllabus";
     public static final String AGENDA_ID = "agenda";

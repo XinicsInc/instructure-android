@@ -42,10 +42,10 @@
 
             <ImageView
                 android:id="@+id/canvasLogo"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/vd_canvas_logo" />
+                app:srcCompat="@drawable/vd_find_school" />
 
             <Button
                 android:id="@+id/findMySchool"
@@ -53,16 +53,6 @@
                 android:layout_width="240dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/findMySchool" />
-
-            <TextView
-                android:id="@+id/canvasNetwork"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?android:selectableItemBackground"
-                android:padding="8dp"
-                android:text="@string/canvasNetworks"
-                android:textColor="@color/login_grayText"
-                android:textSize="16sp" />
 
         </LinearLayout>
 

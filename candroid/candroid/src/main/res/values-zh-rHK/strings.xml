@@ -23,7 +23,7 @@
 
     <!--Content Descriptions-->
     <string name="canvasLogo">Canvas 標誌</string>
-    <string name="app_name" translatable="false">Canvas Student</string>
+    <string name="app_name" translatable="false">LearningX Student</string>
     <string name="enterURL">請輸入您的Canvas URL：</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">嘗試登入 Canvas Network？</string>

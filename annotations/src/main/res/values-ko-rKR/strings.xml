@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+ ~ Copyright (C) 2018 - present Instructure, Inc.
+ ~
+ ~     Licensed under the Apache License, Version 2.0 (the "License");
+ ~     you may not use this file except in compliance with the License.
+ ~     You may obtain a copy of the License at
+ ~
+ ~     http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~     Unless required by applicable law or agreed to in writing, software
+ ~     distributed under the License is distributed on an "AS IS" BASIS,
+ ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~     See the License for the specific language governing permissions and
+ ~     limitations under the License.
+ ~
+ -->
+<resources>
+    <string name="inputText">"텍스트 입력"</string>
+    <string name="cancel">"취소"</string>
+    <string name="comment">"댓글"</string>
+    <string name="skip">"건너뛰기"</string>
+    <string name="comments">"댓글"</string>
+    <string name="error_loading_submission">"제출물을 로드하는 도중에 문제가 발생했습니다."</string>
+    <string name="retry">"재시도"</string>
+    <string name="annotationErrorOccurred">"주석을 로드하는 도중에 예기치 않은 오류가 발생했습니다."</string>
+    <string name="annotationError">"주석 오류"</string>
+    <string name="annotationDialogMessage">"주석이 다른 곳에서 삭제되었습니다."</string>
+    <string name="errorSendingMessage">"메시지를 보낼 수 없습니다. 다시 시도하려면 탭 하십시오."</string>
+    <string name="addAnnotationComment">"댓글 추가"</string>
+    <string name="editComment">"댓글 편집"</string>
+    <string name="deleteComment">"댓글 삭제"</string>
+    <string name="deleteAnnotation">"주석 삭제"</string>
+    <string name="deleteCommentConfirmation">"이 댓글을 삭제하시겠습니까?"</string>
+    <string name="deleteHeadCommentConfirmation">"이 댓글을 삭제하면 주석과 관련된 모든 댓글들이 삭제됩니다. 작업을 진행하시겠습니까?"</string>
+    <string name="sendingSimple">"보내는 중"</string>
+</resources>

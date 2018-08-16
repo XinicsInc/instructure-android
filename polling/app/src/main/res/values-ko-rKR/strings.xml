@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (C) 2017 - present  Instructure, Inc.
+ ~
+ ~     This program is free software: you can redistribute it and/or modify
+ ~     it under the terms of the GNU General Public License as published by
+ ~     the Free Software Foundation, version 3 of the License.
+ ~
+ ~     This program is distributed in the hope that it will be useful,
+ ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ~     GNU General Public License for more details.
+ ~
+ ~     You should have received a copy of the GNU General Public License
+ ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ~
+ -->
+ <resources>
+
+   <string name="app_name">"Canvas 설문 조사"</string>
+
+   <string name="action_settings">"설정"</string>
+   <string name="title_activity_poll_list">"PollListActivity"</string>
+   <string name="polls">"설문"</string>
+   <string name="poll">"설문"</string>
+   <string name="no_poll_text_student">"설문 조사가 없습니다. 아무도 당신의 의견을 듣고 싶지 않다고 생각해보십시오."</string>
+   <string name="no_poll_text_teacher">"설문 조사 만들기"</string>
+   <string name="tap_here">"여기를 탭하세요."</string>
+
+   <string name="current_polls">"현재"</string>
+   <string name="closed_polls">"마감됨"</string>
+   <string name="loading">"로드 중 ..."</string>
+   <string name="noItemsToDisplayShort">"표시 할 항목이 없습니다."</string>
+   <string name="coursesTitle">"과목"</string>
+   <string name="addQuestion">"질문 추가"</string>
+   <string name="whatIsYourQuestion">"귀하의 질문은 무엇인가?"</string>
+   <string name="questionComplete">"질문 완료"</string>
+   <string name="logout">"로그 아웃"</string>
+   <string name="enterResponse">"여기에 답변을 입력하십시오."</string>
+   <string name="addAnswer">"답변 추가"</string>
+   <string name="msgAddQuestion">"질문을 추가하십시오."</string>
+   <string name="answersComplete">"답변 완료"</string>
+   <string name="twoAnswersRequired">"질문에 대한 답변이 2 개 이상 있어야합니다."</string>
+
+   <string name="publishPoll">"설문 조사 시작"</string>
+   <string name="republishPoll">"다시 시작"</string>
+   <string name="closePoll">"설문 조사 중지"</string>
+   <string name="shareResults">"결과 공유"</string>
+   <string name="hideResults">"결과 숨기기"</string>
+
+   <string name="selectCourse">"과목 선택"</string>
+   <string name="course">"과목"</string>
+   <string name="section">"섹션"</string>
+   <string name="entireCourse">"전체 과목"</string>
+
+   <string name="pleaseSelectCourse">"과목을 선택하십시오"</string>
+   <string name="pleaseSelectSection">"섹션을 선택하십시오."</string>
+   <string name="editPoll">"설문 조사 수정"</string>
+   <string name="submitPoll">"설문 조사 제출"</string>
+
+   <string name="youAnswered">"답변하였습니다."</string>
+   <string name="mustSelect">"답변을 선택해야합니다."</string>
+   <string name="noDataConnection">"데이터 연결 없음"</string>
+   <string name="teacherView">"설문 만들기"</string>
+   <string name="studentView">"설문 조사 가져 오기"</string>
+
+   <string name="successfullySubmitted">"설문 조사를 제출했습니다."</string>
+   <string name="successfullyClosed">"설문 조사를 성공적으로 마감했습니다."</string>
+   <string name="errorSubmittingPoll">"설문 조사를 제출하는 중 오류가 발생했습니다."</string>
+
+   <string name="uploadCSV">"CSV 업로드"</string>
+   <string name="generatedCSVFolderName">"canvas_polling_csv"</string>
+   <string name="errorGeneratingCSV">"CSV 파일을 생성하는 동안 오류가 발생했습니다."</string>
+   <string name="shareCSV">"CSV 공유 ..."</string>
+
+   <string name="errorDeletingPoll">"설문 조사를 삭제하는 중에 오류가 발생했습니다."</string>
+   <string name="emptyViewPublishPoll">"아직 설문 조사를 게시하지 않았습니다. 시작하려면 아래 버튼을 탭하십시오!"</string>
+   <string name="alreadyPublishedForSection">"이 섹션에 대해 이미 설문 세션이 생성되었습니다."</string>
+   <string name="errorDeletingPollSession">"설문 조사 세션을 삭제하는 중에 오류가 발생했습니다."</string>
+
+   <string name="delete">"삭제?"</string>
+   <string name="confirmDelete">"삭제 하시겠습니까?"</string>
+   <string name="yes">"예"</string>
+   <string name="no">"아니오"</string>
+   <string name="alreadyAnswered">"이 설문 조사에 응답하셨습니다"</string>
+   <string name="answeredPolls">"답변된 설문 조사"</string>
+   <string name="unansweredPolls">"답변 없는 설문 조사"</string>
+   <string name="closedPoll">"이 설문 조사는 마감되었습니다."</string>
+
+   <string name="retry">"재시도"</string>
+   <string name="createPoll">"설문 만들기"</string>
+   <string name="pollQuestions">"설문 조사 질문"</string>
+
+
+   <!-- Analytics -->
+   <string name="login">"로그인"</string>
+   <string name="teacher">"선생님"</string>
+   <string name="student">"학생"</string>
+   <string name="other">"기타"</string>
+
+   <!-- Time bomb -->
+   <string name="expired">"만료됨"</string>
+   <string name="appExpired">"초기 액세스 버전이 만료되었습니다. 이 버전의 앱을 삭제하고 Play 스토어에서 새 앱을 다운로드하십시오."</string>
+
+   <string name="active">"활성"</string>
+   <string name="inactive">"비활성"</string>
+   <string name="draft">"초안"</string>
+   <string name="save">"저장"</string>
+
+
+   <string name="pollRunning">"설문 조사 진행 중"</string>
+   <string name="pollEnded">"설문 조사 종료"</string>
+
+   <string name="courseTermInactive">"이 과목의 학기가 끝났습니다."</string>
+   <!-- Content Descriptions -->
+
+   <string name="no_data_connection">"데이터 연결을 확인하고 다시 시도하십시오."</string>
+
+ </resources>

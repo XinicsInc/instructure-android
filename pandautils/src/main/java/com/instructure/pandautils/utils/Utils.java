@@ -110,9 +110,22 @@ public class Utils {
 
     public static Map<String, String> getReferer(Context context){
         Map<String, String> extraHeaders = new HashMap<>();
-        extraHeaders.put("Referer", ApiPrefs.getDomain());
+        if(!ApiPrefs.getDomain().contains(ApiPrefs.getProtocol()))
+            extraHeaders.put("Referer", ApiPrefs.getProtocol() + "://" + ApiPrefs.getDomain());
+        else
+            extraHeaders.put("Referer", ApiPrefs.getDomain());
 
         return extraHeaders;
+    }
+
+    public static String getRefererString(Context context){
+        String refererString = "";
+        if(!ApiPrefs.getDomain().contains(ApiPrefs.getProtocol()))
+            refererString = ApiPrefs.getProtocol() + "://" + ApiPrefs.getDomain();
+        else
+            refererString = ApiPrefs.getDomain();
+
+        return refererString;
     }
 
     public static Map<String, String> getRefererAndAuthentication(Context context) {

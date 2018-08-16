@@ -891,5 +891,12 @@
     <string name="fileDownloadedSuccessfully">File downloaded successfully.</string>
     <string name="tapToView">Tap to view</string>
     <string name="errorDownloadingFile">An error occurred downloading your file. Please try again.</string>
-    
+
+    <!--lti-->
+    <string name="ltiCourseBuilder">LectureContents</string>
+    <string name="ltiCourseResource">LectureResources</string>
+    <string name="ltiOpenBoard">OpenBoard</string>
+    <string name="ltiQNABoard">QNABoard</string>
+    <string name="ltiClassMix">ClassMix</string>
+    <string name="ltiOnlineAttendance">Online Attendance</string>
 </resources>

@@ -56,20 +56,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:importantForAccessibility="no"
-                    app:civ_fill_color="@color/avatarGray"/>
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/navigationDrawerInstitutionImage"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_alignBottom="@+id/navigationDrawerProfileImage"
-                    android:layout_alignEnd="@+id/navigationDrawerProfileImage"
-                    android:layout_marginBottom="-4dp"
-                    android:layout_marginEnd="-12dp"
-                    android:background="@drawable/navigation_drawer_institution_background"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitCenter"
-                    tools:srcCompat="@drawable/vd_canvas_logo_red"/>
+                    app:civ_fill_color="@color/avatarGray" />
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/navigationDrawerSettings"
@@ -82,7 +69,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@string/settings"
                     android:padding="8dp"
-                    app:srcCompat="@drawable/vd_navigation_settings"/>
+                    app:srcCompat="@drawable/vd_navigation_settings" />
 
             </RelativeLayout>
 
@@ -97,7 +84,7 @@
                 android:paddingStart="16dp"
                 android:textColor="@color/navigationDrawerTextDark"
                 android:textSize="24sp"
-                tools:text="Allen Thomas"/>
+                tools:text="Allen Thomas" />
 
             <TextView
                 android:id="@+id/navigationDrawerUserEmail"
@@ -111,7 +98,7 @@
                 android:paddingStart="16dp"
                 android:textColor="@color/navigationDrawerTextLight"
                 android:textSize="16sp"
-                tools:text="allen-thomas187@gmail.com"/>
+                tools:text="allen-thomas187@gmail.com" />
 
             <!--Navigation Items-->
 
@@ -122,14 +109,14 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_files"/>
+                    app:srcCompat="@drawable/vd_navigation_files" />
 
                 <TextView
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/files"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -142,14 +129,14 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_gauge"/>
+                    app:srcCompat="@drawable/vd_navigation_gauge" />
 
                 <TextView
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/gauge"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -160,14 +147,14 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_bookmarks"/>
+                    app:srcCompat="@drawable/vd_navigation_bookmarks" />
 
                 <TextView
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/bookmarks"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -179,7 +166,7 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_show_grades"/>
+                    app:srcCompat="@drawable/vd_navigation_show_grades" />
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -188,12 +175,12 @@
                     android:layout_weight="1"
                     android:labelFor="@+id/navigationDrawerShowGradesSwitch"
                     android:text="@string/showGrades"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/navigationDrawerShowGradesSwitch"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -201,7 +188,7 @@
             <FrameLayout
                 android:id="@+id/navigationDrawerLaunchDefinitions"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/navigationDrawerItem_changeUser"
@@ -210,14 +197,14 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_change_user"/>
+                    app:srcCompat="@drawable/vd_navigation_change_user" />
 
                 <TextView
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/changeUser"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -228,21 +215,21 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_logout"/>
+                    app:srcCompat="@drawable/vd_navigation_logout" />
 
                 <TextView
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/logout"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:id="@+id/navigationDrawerItem_startMasquerading"
@@ -253,14 +240,14 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_masquerade"/>
+                    app:srcCompat="@drawable/vd_masquerade" />
 
                 <TextView
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/actAsUser"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -272,14 +259,14 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_masquerade"/>
+                    app:srcCompat="@drawable/vd_masquerade" />
 
                 <TextView
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/stopMasquerading"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -292,7 +279,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:textColor="@color/navigationDrawerTextLight"
-                tools:text="v. 1.2.3"/>
+                tools:text="v. 1.2.3" />
 
         </LinearLayout>
 

@@ -49,10 +49,6 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
         return FindSchoolActivity.createIntent(this)
     }
 
-    override fun beginCanvasNetworkFlow(url: String): Intent {
-        return SignInActivity.createIntent(this, AccountDomain(url))
-    }
-
     override fun appTypeName(): Int {
         return R.string.appUserTypeStudent
     }

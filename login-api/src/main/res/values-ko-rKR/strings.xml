@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+ ~ Copyright (C) 2016 - present Instructure, Inc.
+ ~
+ ~     Licensed under the Apache License, Version 2.0 (the "License");
+ ~     you may not use this file except in compliance with the License.
+ ~     You may obtain a copy of the License at
+ ~
+ ~     http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~     Unless required by applicable law or agreed to in writing, software
+ ~     distributed under the License is distributed on an "AS IS" BASIS,
+ ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~     See the License for the specific language governing permissions and
+ ~     limitations under the License.
+ ~
+ -->
+ <resources>
+
+   <string name="app_name">"로그인 API"</string>
+   <string name="hello_world">"안녕하세요!"</string>
+   <string name="action_settings">"설정"</string>
+   <string name="mobileVerifyGeneral">"이 앱은 사용 권한이 없습니다."</string>
+   <string name="mobileVerifyDomainUnauthorized">"입력한 서버가 이 앱에 대해 승인되지 않았습니다."</string>
+   <string name="mobileVerifyUserAgentUnauthorized">"이 앱의 사용자 에이전트가 승인되지 않았습니다."</string>
+   <string name="mobileVerifyUnknownError">"이 앱을 사용하기 위한 서버를 확인할 수 없습니다."</string>
+   <string name="unknownDevice">"알려지지 않은 장치"</string>
+   <string name="errorOccurred">"예기치 않은 오류가 발생했습니다."</string>
+   <string name="pageNotFound">"페이지를 찾을 수 없습니다."</string>
+   <string name="okay">"확인"</string>
+   <string name="confirm">"확인"</string>
+   <string name="cancel">"취소"</string>
+   <string name="help">"도움말"</string>
+   <string name="enterURL">"Canvas캔버스 URL 입력 :"</string>
+   <string name="signIntoCanvasNetwork">"Canvas Network에 로그인하려는 중입니까?"</string>
+   <string name="remove">"제거"</string>
+   <string name="exampleURLSimple">"myschool.instructure.com"</string>
+
+
+   <!--Multiple User Sign in -->
+   <string name="removeUser">"이 사용자를 삭제하시겠습니까?"</string>
+   <string name="removedForever">"콘텐츠에 액세스하려면 이 사용자로 다시 로그인해야합니다."</string>
+
+   <!--Content Descriptions-->
+   <string name="canvasLogo">"Canvas 로고"</string>
+
+   <string name="canvasLoginOn">"Canvas_Login : ON"</string>
+   <string name="canvasLoginOff">"Canvas_Login : OFF"</string>
+   <string name="siteAdminLogin">"사이트 관리자 로그인 : 사용"</string>
+
+   <string name="username">"사용자 이름"</string>
+   <string name="password">"암호"</string>
+   <string name="authenticationRequired">"인증 필요"</string>
+   <string name="invalidEmailPassword">"이메일 또는 비밀번호가 잘못되었습니다."</string>
+   <string name="login">"로그인"</string>
+   <string name="logout">"로그 아웃"</string>
+
+   <!--Logout Warning Dialog-->
+   <string name="logout_warning">"로그 아웃 하시겠습니까?"</string>
+   <string name="logout_yes">"예"</string>
+   <string name="logout_no">"아니오"</string>
+
+   <!--Smart Login-->
+
+   <string name="loginNearYou">"근처"</string>
+   <string name="loginCanvasNetwork">"Canvas Network"</string>
+   <string name="loginRightBehindYou">"바로 뒤"</string>
+   <string name="loginMiles">"%1$s 마일 거리"</string>
+   <string name="loginCanvasHelp">"학교를 찾을 수 없습니까? 학교 URL을 입력하거나 도움말을 보려면 여기를 누르십시오."</string>
+   <string name="loginCanvasHelpWithUser">"학교 URL을 입력하거나 도움말을 보려면 여기를 누르십시오."</string>
+   <string name="loginHint">"학교 또는 지역 찾기"</string>
+
+   <!-- Rating Dialog -->
+   <string name="howAreWeDoing">"안녕하세요?"</string>
+   <string name="rateUs">"이 앱을 어떻게 평가하십니까?"</string>
+   <string name="doBetter">"개선이 필요한 점이 있습니까?"</string>
+   <string name="sendFeedback">"의견 보내기"</string>
+   <string name="suggestions">"Android에 대한 제안"</string>
+   <string name="domain">"도메인"</string>
+   <string name="versionNum">"버전:"</string>
+   <string name="userId">"사용자 ID"</string>
+   <string name="email">"이메일"</string>
+   <string name="dontShowAgain">"다시 표시하지 않음"</string>
+
+   <!-- Zendesk Dialog -->
+   <string name="zendesk_reportAProblem">"문제 보고"</string>
+   <string name="zendesk_subject">"제목"</string>
+   <string name="zendesk_description">"설명"</string>
+   <string name="zendesk_writeSomething">"내용 쓰기…"</string>
+   <string name="zendesk_send">"보내기"</string>
+   <string name="zendesk_feedbackThankyou">"문제를 Google 지원팀에 알려 주셔서 감사합니다. 이메일을 통해 확인 및 업데이트를 받게됩니다."</string>
+   <string name="zendesk_severityText">"당신에게 어떤 영향을 미칩니 까?"</string>
+   <string name="zendesk_casualQuestion">"가벼운 질문, 의견, 아이디어, 제안 ..."</string>
+   <string name="zendesk_casualQuestion_tag">"just_a_comment"</string>
+   <string name="zendesk_needHelp">"도움이 필요하지만 긴급하지는 않습니다."</string>
+   <string name="zendesk_needHelp_tag">"not_urgent"</string>
+   <string name="zendesk_somethingsBroken">"문제가 발생하였지만 회피 방법이 있습니다."</string>
+   <string name="zendesk_somethingsBroken_tag">"workaround_possible"</string>
+   <string name="zendesk_cantGetThingsDone">"처리을 위해서는 당신으로부터의 정보가 필요합니다."</string>
+   <string name="zendesk_cantGetThingsDone_tag">"blocks_what_i_need_to_do"</string>
+   <string name="zendesk_extremelyCritical">"매우 심각한 긴급 상황"</string>
+   <string name="zendesk_extremelyCritical_tag">"extreme_critical_emergency"</string>
+   <string name="zendesk_emailAddress">"이메일 주소"</string>
+   <string name="zendesk_enterEmail">"당신의 이메일 주소를 입력 해주세요…"</string>
+   <string name="zendesk_unknown">"알 수 없음"</string>
+
+   <!-- Distance Strings -->
+   <string name="lessThanOne">"&lt;1 마일 (1.6km)"</string>
+   <string name="oneMile">"1 마일 (1.6km)"</string>
+   <string name="miles">"마일"</string>
+   <string name="kilometers">"km"</string>
+
+   <!-- String for submitting tickets -->
+   <string name="device">"장치"</string>
+   <string name="osVersion">"OS 버전"</string>
+   <string name="empty_feedback">"피드백을 제출하려면 제목과 설명이 필요합니다."</string>
+
+ </resources>

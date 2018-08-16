@@ -39,6 +39,7 @@
     <string name="frenchCanada" translatable="false">Français (Canada)</string>
     <string name="german" translatable="false">Deutsch</string>
     <string name="japanese" translatable="false">日本語</string>
+    <string name="korean" translatable="false">한국어</string>
     <string name="maori" translatable="false">Reo Māori</string>
     <string name="norwegian" translatable="false">Norwegian (Bokmål)</string>
     <string name="polish" translatable="false">Polski</string>

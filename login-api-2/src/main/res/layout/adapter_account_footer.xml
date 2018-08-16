@@ -33,17 +33,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:textColor="@color/login_mediumText"
-        android:textSize="16sp"
-        android:text="@string/accountDomainFooter"/>
-
-    <TextView
-        android:id="@+id/helpLink"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
         android:textColor="@color/login_helpLinkBlue"
         android:textSize="16sp"
-        android:text="@string/accountDomainFooterLink"/>
+        android:text="@string/accountDomainFooter"/>
 
 </LinearLayout>

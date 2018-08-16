@@ -21,8 +21,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.text.TextUtils;
 
 import com.instructure.candroid.R;
@@ -33,15 +35,16 @@ import com.instructure.candroid.fragment.AssignmentFragment;
 import com.instructure.candroid.fragment.AssignmentListFragment;
 import com.instructure.candroid.fragment.BasicQuizViewFragment;
 import com.instructure.candroid.fragment.CalendarListViewFragment;
-import com.instructure.candroid.fragment.DashboardFragment;
 import com.instructure.candroid.fragment.CourseModuleProgressionFragment;
+import com.instructure.candroid.fragment.CourseSettingsFragment;
+import com.instructure.candroid.fragment.DashboardFragment;
 import com.instructure.candroid.fragment.DiscussionDetailsFragment;
 import com.instructure.candroid.fragment.DiscussionListFragment;
 import com.instructure.candroid.fragment.FileListFragment;
 import com.instructure.candroid.fragment.GradesListFragment;
+import com.instructure.candroid.fragment.InboxConversationFragment;
 import com.instructure.candroid.fragment.InboxFragment;
 import com.instructure.candroid.fragment.InternalWebviewFragment;
-import com.instructure.candroid.fragment.InboxConversationFragment;
 import com.instructure.candroid.fragment.ModuleListFragment;
 import com.instructure.candroid.fragment.NotificationListFragment;
 import com.instructure.candroid.fragment.PageDetailsFragment;
@@ -50,14 +53,13 @@ import com.instructure.candroid.fragment.PeopleDetailsFragment;
 import com.instructure.candroid.fragment.PeopleListFragment;
 import com.instructure.candroid.fragment.QuizListFragment;
 import com.instructure.candroid.fragment.ScheduleListFragment;
-import com.instructure.candroid.fragment.CourseSettingsFragment;
 import com.instructure.candroid.fragment.UnSupportedFeatureFragment;
 import com.instructure.candroid.fragment.UnSupportedTabFragment;
-import com.instructure.interactions.FragmentInteractions;
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.canvasapi2.models.Tab;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.Logger;
+import com.instructure.interactions.FragmentInteractions;
 import com.instructure.pandautils.utils.Const;
 
 import org.jetbrains.annotations.Nullable;
@@ -522,6 +524,14 @@ public class RouterUtils {
             }
         }
         // endregion
+
+        /**
+         * 라우트 규칙을 반환한다.
+         * @return
+         */
+        public String getmRoute() {
+            return this.mRoute;
+        }
 
         /**
          * When a route is a match, the paramsHash, queryParamsHash, and Uri are set.

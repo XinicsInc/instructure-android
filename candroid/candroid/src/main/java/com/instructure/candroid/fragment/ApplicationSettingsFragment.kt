@@ -68,29 +68,13 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun setupViews() {
-        profileSettings.onClick { addFragment(ProfileSettingsFragment()) }
         accountPreferences.onClick { addFragment(AccountPreferencesFragment()) }
-        legal.onClick { LegalDialogStyled().show(fragmentManager, LegalDialogStyled.TAG) }
-        help.onClick { HelpDialogStyled.show(activity, true) }
-        pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
         pushNotifications.onClick {
             Analytics.trackAppFlow(activity, NotificationPreferencesActivity::class.java)
             startActivity(Intent(activity, NotificationPreferencesActivity::class.java))
         }
 
-        about.onClick {
-            AlertDialog.Builder(context)
-                    .setTitle(R.string.about)
-                    .setView(R.layout.dialog_about)
-                    .show()
-                    .apply {
-                        domain.text = ApiPrefs.domain
-                        loginId.text = ApiPrefs.user!!.loginId
-                        email.text = ApiPrefs.user!!.email ?: ApiPrefs.user!!.primaryEmail
-                        version.text = "${getString(R.string.canvasVersionNum)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
-                    }
-        }
     }
 
     private fun addFragment(fragment: Fragment) {

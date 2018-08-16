@@ -24,6 +24,7 @@
     <string name="mobileVerifyDomainUnauthorized">The server you entered is not authorized for this app.</string>
     <string name="mobileVerifyUserAgentUnauthorized">The user agent for this app is unauthorized.</string>
     <string name="mobileVerifyUnknownError">We were unable to verify the server for use with this app.</string>
+    <string name="failedToFetchSchoolList">Failed to fetch school list</string>
     <string name="unknownDevice">UnknownDevice</string>
     <string name="errorOccurred">An unexpected error occurred.</string>
     <string name="pageNotFound">Page not found.</string>
@@ -107,8 +108,9 @@
     <string name="previousLoginTitle">Previous Logins</string>
     <string name="canvasNetworks">Canvas Network</string>
     <string name="findMySchool">Find my school</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="canvasLowerCase">Learning X</string>
     <string name="whatsYourSchoolName">What\'s your school\'s name?</string>
+    <string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">Remove Previous User</string>

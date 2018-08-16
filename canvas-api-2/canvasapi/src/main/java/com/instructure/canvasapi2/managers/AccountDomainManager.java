@@ -19,9 +19,13 @@ package com.instructure.canvasapi2.managers;
 
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.apis.AccountDomainAPI;
+import com.instructure.canvasapi2.apis.XinicsAccountDomainAPI;
 import com.instructure.canvasapi2.models.AccountDomain;
+import com.instructure.canvasapi2.models.XinicsXmlAccountDomain;
 
 import java.util.List;
+
+import retrofit2.Callback;
 
 public class AccountDomainManager extends BaseManager {
 
@@ -38,5 +42,13 @@ public class AccountDomainManager extends BaseManager {
      */
     public static void searchAccounts(String query, StatusCallback<List<AccountDomain>> callback) {
         AccountDomainAPI.searchAccounts(query, callback);
+    }
+
+    /**
+     * Xinics 도메인 리스트를 받아온다.
+     * @param callback Any valid status callback
+     */
+    public static void getAllXinicsAccountDomains(Callback<XinicsXmlAccountDomain> callback) {
+        XinicsAccountDomainAPI.getAllAccountDomains(callback);
     }
 }

@@ -31,7 +31,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
-
 import com.instructure.teacher.utils.TeacherPrefs
 
 class InitLoginActivity : BaseLoginInitActivity() {
@@ -39,6 +38,7 @@ class InitLoginActivity : BaseLoginInitActivity() {
     override fun beginLoginFlowIntent(): Intent = LoginLandingPageActivity.createIntent(this)
     override fun launchApplicationMainActivityIntent(): Intent = createLaunchApplicationMainActivityIntent(this, intent?.extras)
     override fun themeColor(): Int = ContextCompat.getColor(this, R.color.login_teacherAppTheme)
+
 
     override fun finish() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

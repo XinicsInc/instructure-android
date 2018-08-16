@@ -19,16 +19,22 @@
 
 package com.instructure.candroid.fragment
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.text.Html
 import android.text.SpannedString
 import android.view.MenuItem
 import android.view.View
+import android.webkit.JavascriptInterface
+import android.webkit.WebView
 import android.widget.Toast
 import com.instructure.candroid.R
+import com.instructure.candroid.util.RouterUtils
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
@@ -42,7 +48,9 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.experimental.Job
+import org.apache.commons.text.StringEscapeUtils
 import org.json.JSONObject
 
 @PageView
@@ -54,6 +62,7 @@ open class LTIWebViewFragment : InternalWebviewFragment() {
     private var sessionLessLaunch: Boolean by BooleanArg()
     private var externalUrlToLoad: String? = null
     private var sessionAuthJob: Job? = null
+    private var needRefreshToFirsePage: Boolean by BooleanArg()
 
     @PageViewUrl
     private fun makePageViewUrl() = ltiTab?.externalUrl ?: ApiPrefs.fullDomain + canvasContext.toAPIString() + "/external_tools"
@@ -61,7 +70,68 @@ open class LTIWebViewFragment : InternalWebviewFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setShouldRouteInternally(false)
+        needRefreshToFirsePage = true
     }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getCanvasWebView()?.addJavascriptInterface(JSInterface(), "HtmlViewer")
+
+        getCanvasWebView()?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                openMedia(canvasContext, url)
+            }
+
+            override fun onPageFinishedCallback(webView: WebView, url: String) {
+                getCanvasLoading()?.visibility = View.GONE
+
+                //check for a successful arc submission
+                if (url.contains("success/external_tool_dialog")) {
+
+                    webView.loadUrl("javascript:HtmlViewer.showHTML" + "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
+                }
+            }
+
+            override fun onPageStartedCallback(webView: WebView, url: String) {
+                getCanvasLoading()?.visibility = View.VISIBLE
+            }
+
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                return getShouldRouteInternally() && !getIsUnsupportedFeature() && RouterUtils.canRouteInternally(activity, url, ApiPrefs.domain, false)
+            }
+
+            override fun routeInternallyCallback(url: String) {
+                RouterUtils.canRouteInternally(activity, url, ApiPrefs.domain, true)
+            }
+        }
+
+        getCanvasWebView()?.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
+            override fun requestStartActivityForResult(intent: Intent, requestCode: Int) {
+                startActivityForResult(intent, requestCode)
+            }
+
+            override fun permissionsGranted(): Boolean {
+                return if (PermissionUtils.hasPermissions(activity, *PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE))) {
+                    true
+                } else {
+                    requestFilePermissions()
+                    false
+                }
+            }
+        })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if ((getCanvasWebView()?.handleOnActivityResult(requestCode, resultCode, data)) != true) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun requestFilePermissions() {
+        requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA), PermissionUtils.PERMISSION_REQUEST_CODE)
+    }
+
 
     override fun title(): String {
         if(title.isNullOrBlank() && ltiUrl.isBlank()) {
@@ -98,39 +168,45 @@ open class LTIWebViewFragment : InternalWebviewFragment() {
         }
         return super.handleBackPressed()
     }
+    override fun onPause() {
+        super.onPause()
+        needRefreshToFirsePage = false
+    }
 
     override fun onResume() {
         super.onResume()
-        try {
-            if(ltiTab != null) {
-                getLtiUrl(ltiTab)
-            } else {
-                if (ltiUrl.isNotBlank()) {
-                    //modify the url
-                    if (ltiUrl.startsWith("canvas-courses://")) {
-                        ltiUrl = ltiUrl.replaceFirst("canvas-courses".toRegex(), ApiPrefs.protocol)
-                    }
-
-                    if (sessionLessLaunch) {
-                        getSessionlessLtiUrl(ApiPrefs.fullDomain + "/api/v1/accounts/self/external_tools/sessionless_launch?url=" + ltiUrl)
-                    } else {
-                        externalUrlToLoad = ltiUrl
-
-                        loadUrl(Uri.parse(ltiUrl).buildUpon()
-                                .appendQueryParameter("display", "borderless")
-                                .appendQueryParameter("platform", "android")
-                                .build()
-                                .toString())
-                    }
-                } else if (ltiUrl.isNotBlank()) {
-                    getSessionlessLtiUrl(ltiUrl)
+        if(needRefreshToFirsePage) {
+            try {
+                if(ltiTab != null) {
+                    getLtiUrl(ltiTab)
                 } else {
-                    loadDisplayError()
+                    if (ltiUrl.isNotBlank()) {
+                        //modify the url
+                        if (ltiUrl.startsWith("canvas-courses://")) {
+                            ltiUrl = ltiUrl.replaceFirst("canvas-courses".toRegex(), ApiPrefs.protocol)
+                        }
+
+                        if (sessionLessLaunch) {
+                            getSessionlessLtiUrl(ApiPrefs.fullDomain + "/api/v1/accounts/self/external_tools/sessionless_launch?url=" + ltiUrl)
+                        } else {
+                            externalUrlToLoad = ltiUrl
+
+                            loadUrl(Uri.parse(ltiUrl).buildUpon()
+                                    .appendQueryParameter("display", "borderless")
+                                    .appendQueryParameter("platform", "android")
+                                    .build()
+                                    .toString())
+                        }
+                    } else if (ltiUrl.isNotBlank()) {
+                        getSessionlessLtiUrl(ltiUrl)
+                    } else {
+                        loadDisplayError()
+                    }
                 }
+            } catch (e: Exception) {
+                //if it gets here we're in trouble and won't know what the tab is, so just display an error message
+                loadDisplayError()
             }
-        } catch (e: Exception) {
-            //if it gets here we're in trouble and won't know what the tab is, so just display an error message
-            loadDisplayError()
         }
     }
 
@@ -327,4 +403,31 @@ open class LTIWebViewFragment : InternalWebviewFragment() {
             return extras
         }
     }
+
+    internal inner class JSInterface {
+
+        @Suppress("unused")
+        @JavascriptInterface
+        fun showHTML(html: String) {
+
+            val mark = "@id\":\""
+            val index = html.indexOf(mark)
+            if (index != -1) {
+                val endIndex = html.indexOf(",", index)
+                var url = html.substring(index + mark.length, endIndex - 1)
+                url = StringEscapeUtils.unescapeJava(url)
+
+                val intent = Intent(Const.ARC_SUBMISSION)
+                val extras = Bundle()
+                extras.putString(Const.URL, url)
+
+                intent.putExtras(extras)
+                //let the add submission fragment know that we have an arc submission
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+                //close this page
+                navigation?.popCurrentFragment()
+            }
+        }
+    }
+
 }

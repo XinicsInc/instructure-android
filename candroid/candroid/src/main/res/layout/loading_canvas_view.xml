@@ -40,12 +40,11 @@
             android:layout_gravity="center_horizontal|bottom"
             style="@style/TextFont.Medium"/>
 
-        <com.instructure.loginapi.login.view.CanvasLoadingView
+        <ProgressBar
             android:layout_width="42dp"
             android:layout_height="42dp"
-            app:clv_override_color="@color/login_studentAppTheme"
-            android:layout_gravity="center"/>
-
+            android:layout_gravity="center" />
+        
     </android.support.v7.widget.CardView>
 
 </merge>

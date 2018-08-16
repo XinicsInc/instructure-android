@@ -38,7 +38,6 @@ public class DomainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface DomainEvents {
         void onDomainClick(AccountDomain account);
-        void onHelpClick();
     }
 
     private List<AccountDomain> mOriginalAccounts = new ArrayList<>();
@@ -75,16 +74,6 @@ public class DomainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 public void onClick(View v) {
                     if (mCallback != null) {
                         mCallback.onDomainClick(mDisplayAccounts.get(holder.getAdapterPosition()));
-                    }
-                }
-            });
-        } else if(holder instanceof FooterViewHolder) {
-            FooterViewHolder viewHolder = (FooterViewHolder) holder;
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(mCallback != null) {
-                        mCallback.onHelpClick();
                     }
                 }
             });
@@ -141,7 +130,7 @@ public class DomainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         mDisplayAccounts = new ArrayList<>();
                     }
 
-                    if(constraint != null && constraint.length() >= 3) {
+                    if(constraint != null) {
                         //Help Footer
                         mDisplayAccounts.add(new AccountDomain());
                     }

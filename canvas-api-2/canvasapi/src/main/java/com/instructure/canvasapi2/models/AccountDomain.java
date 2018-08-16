@@ -22,19 +22,46 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 import java.util.Date;
 
 
+@Root(name = "site")
 public class AccountDomain extends CanvasModel<AccountDomain> {
+    @Attribute(name = "id")
+    private String id;
 
-    private String domain;
+    @Element(name = "name")
     private String name;
+
+    @Element(name = "domain")
+    private String domain;
+
+    @Element(name = "learningx_domain")
+    private String learningXDomain;
+
+    @Element(name = "distance")
     private double distance;
+
     @SerializedName("authentication_provider")
+    @Element(name = "authentication_provider")
     private String authenticationProvider;
+
+    @Element(name = "logo_url")
+    private String logo_url;
 
     public String getDomain() {
         return domain;
+    }
+
+    public String getLearningXDomain() {
+        // learningX 도메인이 /로 끝나지 않으면 /를 붙여준다.
+        if(!learningXDomain.endsWith("/"))
+            learningXDomain = learningXDomain.trim().concat("/");
+        return learningXDomain;
     }
 
     public String getName() {
@@ -85,6 +112,9 @@ public class AccountDomain extends CanvasModel<AccountDomain> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.domain);
+        dest.writeString(this.learningXDomain);
+        dest.writeString(this.id);
+        dest.writeString(this.logo_url);
         dest.writeString(this.name);
         dest.writeDouble(this.distance);
         dest.writeString(this.authenticationProvider);
@@ -99,6 +129,9 @@ public class AccountDomain extends CanvasModel<AccountDomain> {
 
     private AccountDomain(Parcel in) {
         this.domain = in.readString();
+        this.learningXDomain = in.readString();
+        this.id = in.readString();
+        this.logo_url = in.readString();
         this.name = in.readString();
         this.distance = in.readDouble();
         this.authenticationProvider = in.readString();

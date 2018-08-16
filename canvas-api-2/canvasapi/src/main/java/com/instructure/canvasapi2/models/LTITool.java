@@ -27,6 +27,7 @@ public class LTITool extends CanvasModel<LTITool>{
     private long id;
     private String name;
     private String url;
+    private String description;
 
     ///////////////////////////////////////////////////////////////////////////
     // Getters and Setters
@@ -57,6 +58,14 @@ public class LTITool extends CanvasModel<LTITool>{
         this.url = url;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // Required Overrides
     ///////////////////////////////////////////////////////////////////////////
@@ -83,12 +92,14 @@ public class LTITool extends CanvasModel<LTITool>{
         dest.writeLong(this.id);
         dest.writeString(this.name);
         dest.writeString(this.url);
+        dest.writeString(this.description);
     }
 
     private LTITool(Parcel in) {
         this.id = in.readLong();
         this.name = in.readString();
         this.url = in.readString();
+        this.description = in.readString();
     }
 
     public static Creator<LTITool> CREATOR = new Creator<LTITool>() {

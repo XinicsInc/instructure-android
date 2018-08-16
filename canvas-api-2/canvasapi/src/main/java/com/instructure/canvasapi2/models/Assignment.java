@@ -45,6 +45,17 @@ public class Assignment extends CanvasModel<Assignment> {
     public static final String GPA_SCALE_TYPE = "gpa_scale";
     public static final String NOT_GRADED_TYPE = "not_graded";
 
+    // Canvas Assignment ID
+    public static final String CANVAS_ASSIGNMENTS = "assignments";
+
+    // Xinics Assignment Group ID.
+    public static final String COURSE_BUILDER = "courseBuilder";
+    public static final String COURSE_RESOURCE = "LectureResource";
+    public static final String OPEN_BOARD = "openBoard";
+    public static final String QNA_BOARD = "qnaBoard";
+    public static final String CLASS_MIX = "classMix";
+    public static final String ONLINE_ATTENDANCE = "onlineAttendance";
+
     private long id;
     private String name;
     private String description;

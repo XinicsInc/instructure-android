@@ -16,9 +16,11 @@
  */
 package com.instructure.loginapi.login.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -36,6 +38,7 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
+import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -59,6 +62,7 @@ import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.canvasapi2.utils.Logger;
 import com.instructure.loginapi.login.R;
 import com.instructure.loginapi.login.api.MobileVerifyAPI;
+import com.instructure.loginapi.login.api.XinicsMobileVerifyAPI;
 import com.instructure.loginapi.login.dialog.AuthenticationDialog;
 import com.instructure.loginapi.login.model.DomainVerificationResult;
 import com.instructure.loginapi.login.model.SignedInUser;
@@ -138,6 +142,13 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         mWebView.getSettings().setDomStorageEnabled(true);
         mWebView.getSettings().setUserAgentString(com.instructure.pandautils.utils.Utils.generateUserAgent(this, userAgent()));
         mWebView.setWebViewClient(mWebViewClient);
+        // webview에 alert창 띄우도록 함.
+        mWebView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                return super.onJsAlert(view, url, message, result);
+            }
+        });
 
         if((0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))) {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -272,6 +283,8 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
 
     protected void beginSignIn(final AccountDomain accountDomain) {
         final String url = accountDomain.getDomain();
+        final String learningXUrl = accountDomain.getLearningXDomain();
+
         if(mCanvasLogin == MOBILE_VERIFY_FLOW) { //Skip Mobile Verify
             final View view = LayoutInflater.from(BaseLoginSignInActivity.this).inflate(R.layout.dialog_skip_mobile_verify, null);
             final EditText protocolEditText = view.findViewById(R.id.mobileVerifyProtocol);
@@ -308,7 +321,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
             });
             dialog.show();
         } else {
-            MobileVerifyAPI.mobileVerify(url, mMobileVerifyCallback);
+            XinicsMobileVerifyAPI.mobileVerify(url, learningXUrl, mMobileVerifyCallback, getApplicationName());
         }
     }
 
@@ -345,16 +358,8 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         @Override
         public void onResponse(@NonNull Response<DomainVerificationResult> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             if(type.isCache()) return;
+
             DomainVerificationResult domainVerificationResult = response.body();
-
-            //로그인 URL을 만들기 위해 값을 하드코딩함
-            domainVerificationResult.setApi_key("TOMOu3w6eXzduFgAjHt6tM7jZYVStoB3t4gIVl34R5PD4TnAoi3y48zPJPACIsNJ");
-            domainVerificationResult.setAuthorized(true);
-            domainVerificationResult.setBase_url("http://xgcanvas2.westus2.cloudapp.azure.com");
-            domainVerificationResult.setClient_id("10000000000003");
-            domainVerificationResult.setClient_secret("TOMOu3w6eXzduFgAjHt6tM7jZYVStoB3t4gIVl34R5PD4TnAoi3y48zPJPACIsNJ");
-            domainVerificationResult.setResult(DomainVerificationResult.DomainVerificationCode.Success);
-
 
             if (domainVerificationResult.getResult() == DomainVerificationResult.DomainVerificationCode.Success) {
                 //Domain is now verified.
@@ -407,6 +412,13 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
             }
         }
     };
+
+    private String getApplicationName() {
+        Context context = getApplicationContext();
+        PackageManager packageManager = context.getPackageManager();
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        return (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "Unknown");
+    }
 
     final protected void loadAuthenticationUrl(final String apiProtocol, final String domain, final String clientId, final String clientSecret) {
         mClientId = clientId;
@@ -477,12 +489,12 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
             //Skip mobile verify
             builder.appendQueryParameter("redirect_uri", "urn:ietf:wg:oauth:2.0:oob");
         } else {
-            builder.appendQueryParameter("redirect_uri", "http://xgcanvas2.westus2.cloudapp.azure.com/login/oauth2/auth");
+            builder.appendQueryParameter("redirect_uri", protocol + "://" + domain + "/login/oauth2/auth");
         }
 
         //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
         String authenticationProvider = accountDomain.getAuthenticationProvider();
-        if(authenticationProvider != null && authenticationProvider.length() > 0) {
+        if(authenticationProvider != null && authenticationProvider.length() > 0 && !authenticationProvider.equals("xinics")) {
             Logger.d("authentication_provider=" + authenticationProvider);
             builder.appendQueryParameter("authentication_provider", authenticationProvider);
         }

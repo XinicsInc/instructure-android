@@ -16,7 +16,9 @@
  */
 package com.instructure.loginapi.login.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
@@ -49,8 +51,10 @@ import android.widget.Toast;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.AccountDomainManager;
 import com.instructure.canvasapi2.models.AccountDomain;
+import com.instructure.canvasapi2.models.XinicsXmlAccountDomain;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.canvasapi2.utils.Logger;
 import com.instructure.loginapi.login.R;
 import com.instructure.loginapi.login.adapter.DomainAdapter;
 import com.instructure.loginapi.login.api.zendesk.utilities.ZendeskDialogStyled;
@@ -60,6 +64,8 @@ import com.instructure.pandautils.utils.ViewStyler;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity implements ZendeskDialogStyled.ZendeskDialogResultListener {
@@ -69,7 +75,6 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
     private Toolbar mToolbar;
     private EditText mDomainInput;
     private DomainAdapter mDomainAdapter;
-    private TextView mNextActionButton;
     private Handler mDelayFetchAccountHandler = new Handler();
     protected @Nullable TextView mWhatsYourSchoolName;
     private TextView mLoginFlowLogout;
@@ -91,18 +96,8 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
         mWhatsYourSchoolName = findViewById(R.id.whatsYourSchoolName);
         mLoginFlowLogout = findViewById(R.id.loginFlowLogout);
         mToolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.ic_action_arrow_back));
+        mToolbar.setTitle(R.string.previous);
         mToolbar.setNavigationContentDescription(R.string.close);
-        mToolbar.inflateMenu(R.menu.menu_next);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId() == R.id.next) {
-                    validateDomain(new AccountDomain(mDomainInput.getText().toString()));
-                    return true;
-                }
-                return false;
-            }
-        });
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,13 +118,8 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
             }, 500);
         }
 
-        mNextActionButton = findViewById(R.id.next);
-        mNextActionButton.setEnabled(false);
-        mNextActionButton.setTextColor(ContextCompat.getColor(BaseLoginFindSchoolActivity.this, R.color.login_grayCanvasLogo));
-
         mDomainInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                validateDomain(new AccountDomain(mDomainInput.getText().toString()));
                 return true;
             }
         });
@@ -145,19 +135,6 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
             public void afterTextChanged(Editable s) {
                 if (mDomainAdapter != null) {
                     mDomainAdapter.getFilter().filter(s);
-                    fetchAccountDomains();
-                }
-
-                if(mNextActionButton != null) {
-                    if (TextUtils.isEmpty(s.toString())) {
-                        mNextActionButton.setEnabled(false);
-                        mNextActionButton.setTextColor(ContextCompat.getColor(
-                                BaseLoginFindSchoolActivity.this, R.color.login_grayCanvasLogo));
-                    } else {
-                        mNextActionButton.setEnabled(true);
-                        mNextActionButton.setTextColor(ContextCompat.getColor(
-                                BaseLoginFindSchoolActivity.this, R.color.login_loginFlowBlue));
-                    }
                 }
             }
         });
@@ -170,18 +147,14 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
                 validateDomain(account);
             }
 
-            @Override
-            public void onHelpClick() {
-                ZendeskDialogStyled dialog = new ZendeskDialogStyled();
-                dialog.setArguments(ZendeskDialogStyled.createBundle(true, true));
-                dialog.show(getSupportFragmentManager(), ZendeskDialogStyled.TAG);
-            }
         });
 
         RecyclerView recyclerView = findViewById(R.id.findSchoolRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, RecyclerView.VERTICAL));
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(mDomainAdapter);
+
+        fetchAccountDomains();
     }
 
     /**
@@ -250,14 +223,6 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
     }
 
     protected void applyTheme() {
-        final int color = themeColor();
-
-        View view =  LayoutInflater.from(this).inflate(R.layout.login_toolbar_icon, null, false);
-        ImageView icon = view.findViewById(R.id.loginLogo);
-        icon.setImageDrawable(ColorUtils.colorIt(color, icon.getDrawable()));
-
-        mToolbar.addView(view);
-
         ViewStyler.setStatusBarLight(this);
     }
 
@@ -276,11 +241,48 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
         @Override
         public void run() {
             if(mDomainInput != null) {
-                String query = mDomainInput.getText().toString();
-                AccountDomainManager.searchAccounts(query, mAccountDomainCallback);
+                AccountDomainManager.getAllXinicsAccountDomains(mXinicsAccountDomainCallback);
             }
         }
     };
+
+    Callback<XinicsXmlAccountDomain> mXinicsAccountDomainCallback = (new Callback<XinicsXmlAccountDomain>() {
+        @Override
+        public void onResponse(Call<XinicsXmlAccountDomain> call, Response<XinicsXmlAccountDomain> response) {
+            if (!response.isSuccessful()) {
+                alertFailToFetchSchoolList();
+                return;
+            }
+            
+            List<AccountDomain> domains = response.body().getSites();
+
+            if (mDomainAdapter != null) {
+                mDomainAdapter.setItems(domains);
+                mDomainAdapter.getFilter().filter(mDomainInput.getText().toString());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<XinicsXmlAccountDomain> call, Throwable t) {
+            // 응답 실패(네트워크 오류 등)
+            Logger.e("Callback: Failure: " + t.getMessage());
+            alertFailToFetchSchoolList();
+        }
+    });
+
+    /**
+     * 학교 리스트를 불러오는 데에 실패했다는 메시지를 띄운다.
+     */
+    private void alertFailToFetchSchoolList() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(BaseLoginFindSchoolActivity.this);
+        dialog.setMessage(R.string.failedToFetchSchoolList)
+            .setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }).create().show();
+    }
 
     private StatusCallback<List<AccountDomain>> mAccountDomainCallback = new StatusCallback<List<AccountDomain>>() {
 
@@ -301,9 +303,6 @@ public abstract class BaseLoginFindSchoolActivity extends AppCompatActivity impl
                 domains.add(4, createAccountForDebugging("clare.instructure.com"));
                 domains.add(5, createAccountForDebugging("mobileqa.test.instructure.com"));
             }
-
-            //Debuga모드일 때만 우리 사이트를 찾을 수 있도록 도메인 코드를 추가함
-            domains.add(6, createAccountForDebugging("http://xgcanvas2.westus2.cloudapp.azure.com"));
 
             if (mDomainAdapter != null) {
                 mDomainAdapter.setItems(domains);

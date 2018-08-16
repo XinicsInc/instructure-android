@@ -16,6 +16,8 @@
  */
 package com.instructure.candroid.adapter
 
+import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.graphics.drawable.DrawableCompat
@@ -26,13 +28,14 @@ import android.view.ViewGroup
 import com.instructure.candroid.R
 import com.instructure.candroid.util.TabHelper
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.utils.color
 import kotlinx.android.synthetic.main.adapter_course_browser.view.*
 import kotlinx.android.synthetic.main.adapter_course_browser_home.view.*
 import kotlinx.android.synthetic.main.adapter_course_browser_web_view.view.*
 
-class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContext, val callback: (Tab) -> Unit, private val homePageTitle: String? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CourseBrowserAdapter(val items: List<Tab>, val externalTools: List<LTITool>, val context : Context ,val canvasContext: CanvasContext, val callback: (Tab) -> Unit, private val homePageTitle: String? = null) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
         return if(viewType == HOME) {
@@ -56,7 +59,7 @@ class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContex
         if(tab.tabId == Tab.HOME_ID && holder is CourseBrowserHomeViewHolder) {
             holder.bind(holder, tab, callback)
         } else if(holder is CourseBrowserViewHolder) {
-            holder.bind(tab, callback)
+            holder.bind(context, tab, externalTools, callback)
         } else if(holder is CourseBrowserWebViewHolder) {
             holder.bind(tab, callback)
         }
@@ -138,7 +141,7 @@ class CourseBrowserWebViewHolder(view: View, val color: Int) : RecyclerView.View
 
 class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHolder(view) {
 
-    fun bind(tab: Tab, clickedCallback: (Tab) -> Unit) {
+    fun bind(context: Context, tab: Tab, externalTools: List<LTITool>, clickedCallback: (Tab) -> Unit) {
         val res: Int = when (tab.tabId) {
             Tab.ASSIGNMENTS_ID -> R.drawable.vd_assignment
             Tab.QUIZZES_ID -> R.drawable.vd_quiz
@@ -158,8 +161,22 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
             else -> {
                 //Determine if its the attendance tool
                 if(tab.type == Tab.TYPE_EXTERNAL) {
-                    R.drawable.vd_lti
-                } else R.drawable.vd_canvas_logo
+                    // tabId를 이용해 external Id를 얻는다.
+                    var externalToolId = tab.tabId.toString().replace(Tab.TYPE_EXTERNAL_PREFIX, "")
+                    // external id를 가지는 LTITool 객체를 얻는다.
+                    var externalTool = externalTools.find { it.id.toString() == externalToolId }
+                    // LTITool 객체의 dexcription에 따라 LTI 아이콘을 적용시켜준다.
+                    var externalToolDescriptions = context.resources.getStringArray(R.array.external_tool_descriptions)
+                    when(externalTool?.description) {
+                        externalToolDescriptions[0] -> R.drawable.vd_lti_course_builder
+                        externalToolDescriptions[1] -> R.drawable.vd_lti_course_resource
+                        externalToolDescriptions[2] -> R.drawable.vd_lti_open_board
+                        externalToolDescriptions[3] -> R.drawable.vd_lti_qna_board
+                        externalToolDescriptions[4] -> R.drawable.vd_lti_classmix
+                        externalToolDescriptions[5] -> R.drawable.vd_lti_online_attendance
+                        else -> R.drawable.vd_lti
+                    }
+                } else R.drawable.vd_collaborations
             }
         }
 

@@ -37,7 +37,6 @@ import com.instructure.annotations.AnnotationDialogs.FreeTextDialog
 import com.instructure.annotations.FileCaching.DocumentListenerSimpleDelegate
 import com.instructure.candroid.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.candroid.R
-import com.instructure.candroid.activity.StudentSubmissionActivity
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*

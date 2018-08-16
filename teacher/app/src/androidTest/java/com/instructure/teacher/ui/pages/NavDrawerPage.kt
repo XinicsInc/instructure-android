@@ -11,7 +11,7 @@ import com.instructure.teacher.ui.utils.pageAssert.SimplePageAssert
 
 class NavDrawerPage: BasePage(), PageAssert by SimplePageAssert() {
 
-    private val logo by OnViewWithId(R.id.navigationDrawerInstitutionImage)
+//    private val logo by OnViewWithId(R.id.navigationDrawerInstitutionImage)
     private val settings by OnViewWithId(R.id.navigationDrawerSettings)
     private val userName by OnViewWithId(R.id.navigationDrawerUserName)
     private val userEmail by OnViewWithId(R.id.navigationDrawerUserEmail)

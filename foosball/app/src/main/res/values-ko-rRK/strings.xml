@@ -1,0 +1,137 @@
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">"테이블 풋볼"</string>
+    <string name="loading">"로드 중"</string>
+    <string name="wins">"승리"</string>
+    <string name="losses">"패배"</string>
+    <string name="pick_a_table">"테이블 선택"</string>
+    <string name="pick_a_user">"사용자 선택"</string>
+    <string name="pick_a_team">"팀 선택"</string>
+    <string name="start_game">"게임 시작"</string>
+    <string name="okay">"확인"</string>
+    <string name="winner_winner">"승리자 승리자!"</string>
+    <string name="won">"%s 승리!"</string>
+    <string name="all_done">"모두 완료"</string>
+    <string name="swap_sides">"옆으로 밀기"</string>
+    <string name="quit_game">"게임 종료"</string>
+    <string name="leaderboard_wins">"%d 회 승리"</string>
+    <string name="leaderboard_losses">"%d 회 패배"</string>
+    <string name="leaderboard">"리더 보드"</string>
+    <string name="foos_rank">"랭킹"</string>
+    <string name="team_leaderboard">"팀"</string>
+    <string name="individual">"개인"</string>
+    <string name="foos_rank_leaderboard">"시간별 랭킹"</string>
+    <string name="add_player">"플레이어 추가"</string>
+    <string name="add_team">"팀 추가"</string>
+    <string name="create_player">"플레이어 생성"</string>
+    <string name="reset_teams">"팀 재설정"</string>
+    <string name="change_avatar">"아바타 변경"</string>
+    <string name="error_uploading_photo">"사진을 업로드하는 중 오류가 발생했습니다. 다시 시도하십시오."</string>
+    <string name="uploading">"업로드 중 ..."</string>
+    <string name="crop_instructions">"확대/축소하여 사진을 조정하십시오."</string>
+    <string name="cancel">"취소"</string>
+    <string name="done">"완료"</string>
+    <string name="create_new_player">"새 플레이어 만들기"</string>
+    <string name="display_name">"표시 이름"</string>
+    <string name="email">"이메일"</string>
+    <string name="confirm_email">"이메일 확인"</string>
+    <string name="add_avatar">"+\n 아바타 추가"</string>
+    <string name="please_assign_teams">"팀을 지정하십시오."</string>
+    <string name="assigning_team">"팀 지정 중 ..."</string>
+    <string name="assigned_to">"할당"</string>
+    <string name="something_broke">"문제가 발생하였으며, 귀하의 잘못일 수 있습니다."</string>
+    <string name="win_rate_label">"승률"</string>
+    <string name="foos_rank_label">"랭킹"</string>
+    <string name="no_ranking">"N/A"</string>
+    <string name="win_rate_format">"% .1f %%"</string>
+    <string name="create_pin">"핀 만들기"</string>
+    <string name="maybe_later">"나중에"</string>
+    <string name="disable_pin">"내 계정 사용 안함"</string>
+    <string name="disable_pin_confirmation_message">"PIN 보호 기능을 비활성화 하시겠습니까?"</string>
+    <string name="pin_has_been_disabled">"계정의 PIN 보호가 사용 중지되었습니다."</string>
+    <string name="pin_dialog_info_message">"이제 플레이어 계정을 4자리 PIN으로 보호 할 수 있습니다. 이렇게 하면 동료가 악의적으로 아바타를 바꾸거나 실수로 귀하를 다른 팀으로 할당하는 것을 방지할 수 있습니다."</string>
+    <string name="enter_pin">"4자리 PIN 입력"</string>
+    <string name="confirm_pin">"PIN 확인"</string>
+    <string name="pin_mismatch">"PIN이 일치하지 않습니다. 다시 시도하십시오."</string>
+    <string name="incorrect_pin">"잘못된 PIN"</string>
+    <string name="pin_reset_info">"PIN을 재설정하려면 엔지니어에게 문의하세요."</string>
+    <string name="pin_saved">"PIN이 저장되었습니다."</string>
+    <string name="syncing_table_info">"테이블 정보 동기화 중"</string>
+    <string name="new_game">"새 게임"</string>
+    <string name="cutthroat">"치열한 경쟁"</string>
+    <string name="resume_game">"게임 재개"</string>
+    <string name="leaderboard_subtitle">"순위를 매기기 위해서는 적어도 %d 게임이 필요합니다."</string>
+    <string name="foosrank_subtitle">"더 나은 점수를 위해서는 실패를 줄여야 합니다."</string>
+    <string name="foos_rank_description">"ELO 시스템을 기반으로하는 플레이어 순위"</string>
+    <string name="enter_team_name">"팀 이름 입력"</string>
+    <string name="best_of">"베스트 오브"</string>
+    <string name="rounds">"라운드"</string>
+    <string name="points_per_round">"라운드 당 점수"</string>
+    <string name="uneven_teams">"실력이 고르지 못한 팀"</string>
+    <string name="uneven_teams_content">"팀의 선수 수가 홀수입니다. 그래도 이 게임을 시작하시겠습니까?"</string>
+    <string name="avg_win_rate_formatted">"평균 승리율 : % .1f %%"</string>
+    <string name="pause_game">"게임 일시 중지"</string>
+    <string name="game_paused">"게임 일시 중지됨"</string>
+    <string name="confirm_quit_game">"이 게임을 종료 하시겠습니까? 나중에 다시 시작할 수는 없습니다."</string>
+    <string name="starting_next_round_in">"다음 라운드 시작 ..."</string>
+    <string name="undo_last_goal">"마지막 골 취소"</string>
+    <string name="swap_now">"바꾸기 \ n 지금"</string>
+    <string name="round">"라운드"</string>
+    <string name="of">"of"</string>
+    <string name="points_to_win">"승리를 위한 점수"</string>
+    <string name="team_win_round">"이번 라운드는 %s 의 승리입니다.!"</string>
+    <string name="team_win_game">"%s 가 게임에서 승리했습니다!"</string>
+    <string name="best_of_increment">"최고 %d"</string>
+    <string name="end_game">"게임 종료"</string>
+    <string name="cannot_edit_guests">"게스트 계정을 편집 할 수 없습니다."</string>
+    <string name="goal_timer">"목표 타이머"</string>
+    <string name="serving">"서브 중"</string>
+    <string name="round_timer">"라운드 타이머"</string>
+    <string name="game_timer">"게임 타이머"</string>
+    <string name="motivosity_welcome">"&lt;![CDATA[Like the system?&lt;br&gt;&lt;font color=\"#444444\" face=\"sans-serif-medium\"&gt;Jordan Marshall&lt;/font&gt; and &lt;font color=\"#444444\" face=\"sans-serif-medium\"&gt;Brady Larson&lt;/font&gt; welcome your Motivosity love."</string>
+    <string name="_3_players_minimum">"최소 3 명"</string>
+    <string name="force_rotation_after">"강제 회전"</string>
+    <string name="points">"점수"</string>
+    <string name="new_cut_throat_game">"새 컷스로트 게임"</string>
+    <string name="cut_throat_results_note">"참고 : 현재 컷스포트 경기 결과는 기록되지 않습니다. 플레이어의 승리율은 영향을 받지 않습니다."</string>
+    <string name="edit_player">"플레이어 편집"</string>
+    <string name="custom_team_assignment_phrase">"사용자 정의 팀 지정 문구"</string>
+    <string name="custom_victory_phrase">"맞춤식 승리 문구"</string>
+    <string name="save_changes">"변경 사항을 저장"</string>
+    <string name="enable_pin_protection">"PIN 보호 사용"</string>
+    <string name="change_pin">"PIN 변경"</string>
+    <string name="search">"검색"</string>
+    <string name="timeWasters">"시간 낭비자"</string>
+    <string name="mostRoundsPlayed">"대부분의 라운드 플레이 함"</string>
+    <string name="roundsPlayedLabel">"라운드"</string>
+    <string name="hoursWastedFormatted">"% .2f 시간 낭비"</string>
+    <string name="fourPlayersRequired">"4 플레이어 필요"</string>
+    <string name="teamTwister">"팀 트위스터"</string>
+    <string name="teamTwisterRules">"어떤 플레이어가 최고의 팀을 만들 수 있습니까? \ n2 명의 플레이어가 각 목표를 달성 한 후에 가능한 모든 팀 조합을 포함하도록 팀을 바꿉니다. 첫 팀은 4점 승리입니다. \ n랭크되지 않음"</string>
+    <string name="newTeamTwisterGame">"새로운 팀 트위스터 게임"</string>
+    <string name="tableKing">"테이블 왕"</string>
+    <string name="tableKingRules">"테이블의 왕은 누구입니까? \ n 플레이어는 3 라운드마다 팀을 변경합니다. 게임이 끝나면 가장 많은 골을 가진 플레이어가 우승합니다. \ n랭크되지 않음."</string>
+    <string name="newTableKingGame">"테이블 게임의 새로운 왕"</string>
+    <string name="sets">"세트"</string>
+    <string name="totalRoundsFormatted">"총 %d 회"</string>
+    <string name="durationRange">"기간 : %1$d 에서 %2$d 골"</string>
+    <string name="durationRangeNoMax">"기간 : 최소 %s 골"</string>
+</resources>

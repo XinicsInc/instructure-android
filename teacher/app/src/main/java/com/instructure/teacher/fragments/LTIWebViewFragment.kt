@@ -90,6 +90,11 @@ class LTIWebViewFragment : InternalWebViewFragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        skipReload = true
+    }
+
     override fun onResume() {
         super.onResume()
         // After we request permissions to access files (like in Arc) this webview will reload and call onResume again. In order to not break any other LTI things, this flag should skip

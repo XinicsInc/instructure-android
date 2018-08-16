@@ -85,6 +85,11 @@ android {
             dimension "icecream"
         }
 
+        xinicsProd {
+            dimension 'icecream'
+            applicationIdSuffix ".xinics.production"
+        }
+
         qa {
             dimension "icecream"
             buildConfigField "boolean", "IS_TESTING", "true"
@@ -121,7 +126,7 @@ android {
             buildConfigField "boolean", "POINT_SEVEN", "false"
             buildConfigField "boolean", "POINT_EIGHT", "false"
             buildConfigField "boolean", "POINT_NINE", "false"
-
+            signingConfig signingConfigs.release
         }
     }
 

@@ -228,22 +228,15 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 R.id.navigationDrawerItem_startMasquerading -> {
                     MasqueradingDialog.show(supportFragmentManager, ApiPrefs.domain, null, !isTablet)
                 }
-                R.id.navigationDrawerSettings -> {
-                    RouteMatcher.route(this@InitActivity, Route(SettingsFragment::class.java, ApiPrefs.user))
-                }
             }
         }
     }
 
     fun attachNavigationDrawer(toolbar: Toolbar) {
-        ColorUtils.colorIt(ThemePrefs.primaryColor, navigationDrawerInstitutionImage.background)
-        navigationDrawerInstitutionImage.loadUri(Uri.parse(ThemePrefs.logoUrl), R.mipmap.ic_launcher_foreground)
-
         // Navigation items
         navigationDrawerItem_files.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_changeUser.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_logout.setOnClickListener(navDrawerOnClick)
-        navigationDrawerSettings.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_stopMasquerading.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_startMasquerading.setOnClickListener(navDrawerOnClick)
 

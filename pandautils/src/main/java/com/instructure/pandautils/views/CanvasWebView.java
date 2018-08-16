@@ -83,6 +83,7 @@ import com.instructure.pandautils.video.VideoWebChromeClient;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -97,6 +98,16 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     private static final int SHARE_LINK_ID = 9358;
 
     private final String encoding = "UTF-8";
+    // LTI fragment 이름
+    private final String LTI_FRAGMENT_NAME = "LTIWebViewFragment";
+    // xinics LTI Weblink 유형 구분자
+    private final String LTI_WEBLINK_URL = "redirect=true";
+    
+    private boolean mNeedGoBackTwice = false;
+
+    // assignmentTab을 통해 들어왔는지 여부
+    private boolean mIsWebviewFromAssignmentTab = false;
+    private long mAssignmentId = 0;
 
     private int mLastY;
     private final int[] mScrollOffset = new int[2];
@@ -218,6 +229,12 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         }
 
         addViewTreeObserver();
+
+        // 웹링크 유형 사용 시 사용 할 flag 초기화
+        mNeedGoBackTwice = false;
+        // assignment 탭을 통해 들어왔는지 여부에 사용 할 flag 초기화
+        mIsWebviewFromAssignmentTab = false;
+        mAssignmentId = 0;
     }
 
     private void addViewTreeObserver() {
@@ -346,10 +363,25 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         if (mWebChromeClient != null && mWebChromeClient.isVideoFullscreen()) {
             return mWebChromeClient.onBackPressed();
         } else if (super.canGoBack()) {
+            // 웹링크 유형을 시청 하고 BackButton을 눌렀을 때에 redirect 하는 것을 막기 위해 뒤로가기를 두 번 해준다.
+            if(mNeedGoBackTwice) {
+                mNeedGoBackTwice = false;
+                super.goBack();
+            }
             super.goBack();
             return true;
         }
         return false;
+    }
+
+    public void setIsWebviewFromAssignmentTab(boolean isWebviewFromAssignmentTab) {
+        mIsWebviewFromAssignmentTab = isWebviewFromAssignmentTab;
+    }
+
+    public void setAssignmentId(Long assignmentID) {
+        if(assignmentID != null) {
+            mAssignmentId = assignmentID;
+        }
     }
 
     @Deprecated
@@ -437,6 +469,11 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
             // Default headers
             Map<String, String> extraHeaders = Utils.getReferer(getContext());
 
+            // 웹링크 유형을 시청 하고 BackButton을 눌렀을 때에 redirect 하는 것을 막기 위해 뒤로가기를 두 번 해준다.
+            if(url.contains(LTI_WEBLINK_URL) && url.contains(Utils.getRefererString(getContext()))) {
+                mNeedGoBackTwice = true;
+            }
+
             if (url.contains("yellowdig") && yellowdigInstalled()) {
                 // Pertaining to the Yellowdig LTI:
                 //  This is a yellowdig URL, they have a special condition on their end
@@ -449,6 +486,36 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
 
             // Check if the URL has a scheme that we aren't handling
             Uri uri = Uri.parse(url);
+            // 다른 App을 launch 하려고 할 때에 들어오는 URL 처리.
+            if (url.startsWith("intent://")) {
+                try {
+                    Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+
+                    if (intent != null) {
+                        PackageManager packageManager = getContext().getPackageManager();
+                        ResolveInfo info = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                        if (info != null) {
+                            getContext().startActivity(intent);
+                            return true;
+                        }
+
+                        Intent marketIntent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("market://details?id=" + intent.getPackage()));
+
+                        if (marketIntent.resolveActivity(packageManager) != null) {
+                            getContext().startActivity(marketIntent);
+                            return true;
+                        }
+                        else {
+                            // Do nothing
+//                            return true;
+                        }
+
+                    }
+                } catch (URISyntaxException e) {
+                    Logger.e("Callback: Failure: " + e.getMessage());
+                }
+            }
+
             if (!uri.getScheme().equals("http") && !uri.getScheme().equals("https")) {
                 // Special scheme, send URL to app that can handle it
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -464,10 +531,14 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
             }
 
             if (mCanvasWebViewClientCallback != null) {
-                //Is the URL something we can link to inside our application?
-                if (mCanvasWebViewClientCallback.canRouteInternallyDelegate(url)) {
-                    mCanvasWebViewClientCallback.routeInternallyCallback(url);
-                    return true;
+                // 만약 CanvasWebview를 사용하는 Fragment가 assignment tab을 통해 들어왔으면 라우팅을 다시 하지 않도록 함.
+                // 라우팅을 다시 하면 UnSupportedWebviewFragment가 또 생성됨.
+                if (!mIsWebviewFromAssignmentTab) {
+                    //Is the URL something we can link to inside our application?
+                    if (mCanvasWebViewClientCallback.canRouteInternallyDelegate(url)) {
+                        mCanvasWebViewClientCallback.routeInternallyCallback(url);
+                        return true;
+                    }
                 }
             }
 
@@ -488,6 +559,10 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
 
             if (url.startsWith("blob:")) return false; // MBL-9546 (Don't remove me, I'll break an LTI tool if you do.)
 
+            // assignment id를 가지고 있는 경우, queryString으로 assignmentid를 붙여준다.
+            if(mIsWebviewFromAssignmentTab) {
+                url = url + "&assignment_id=" + mAssignmentId;
+            }
             view.loadUrl(url, extraHeaders);
             //we're handling the url ourselves, so return true.
             return true;
@@ -697,11 +772,41 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
                 mFilePathCallback.onReceiveValue(null);
             }
             mFilePathCallback = filePath;
-            startVideoChooser(VIDEO_PICKER_RESULT_CODE);
+
+            // LTI file Chooser일 경우 갤러리 및 파일 을 선택할 수 있도록 한다.
+            if(mVideoPickerCallback.getClass().getName().contains(LTI_FRAGMENT_NAME)) {
+                startLTIFileChooser(VIDEO_PICKER_RESULT_CODE);
+            }
+            else {// 기존 Canvas에서 사용했던(ArcWebviewFragment) FileChooser는 유지하자
+                startVideoChooser(VIDEO_PICKER_RESULT_CODE);
+            }
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * LTI로 들어왔을 때에 사용하는 FileChooser
+    */
+    private void startLTIFileChooser(final int requestCode) {
+        // 이미지 및 비디오 선택 intent
+        Intent contentSelectionIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        contentSelectionIntent.setType("image/*,video/*");
+
+        // 파일 선택 intent
+        Intent fileSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        fileSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        fileSelectionIntent.setType("*/*");
+
+        Intent[] intentArray;
+        intentArray = new Intent[]{fileSelectionIntent};
+
+        Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+        chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+
+        mVideoPickerCallback.requestStartActivityForResult(chooserIntent, requestCode);
     }
 
     private void startVideoChooser(final int requestCode) {

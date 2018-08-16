@@ -114,8 +114,9 @@
     <string name="appTypeTeacher">講師</string>
     <string name="appTypeStudent">受講者</string>
     <string name="appTypeParent">ペアレント（上位）</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="canvasLowerCase">Learning X</string>
     <string name="whatsYourSchoolName">学校の名前は？</string>
+    <string name="previous">前</string>
     <string name="next">次</string>
     <string name="schoolInstructureCom">school.instructure.com</string>
     <string name="contentDescription_removePreviousUser">以前のユーザーを削除</string>

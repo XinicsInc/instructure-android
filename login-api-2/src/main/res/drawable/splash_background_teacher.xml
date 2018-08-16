@@ -16,11 +16,14 @@
   -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <color android:color="#FFF"/>
+        <bitmap
+            android:src="@drawable/splash_background"
+            android:tileMode="repeat"
+            android:gravity="center_horizontal|center_vertical"/>
     </item>
     <item>
         <bitmap
-            android:src="@drawable/ic_splash_icon_teacher"
+            android:src="@drawable/ic_find_school_teacher"
             android:gravity="center_horizontal|center_vertical"/>
     </item>
 </layer-list>

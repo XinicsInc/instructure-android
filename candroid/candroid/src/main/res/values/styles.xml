@@ -37,24 +37,6 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="PSPDFKitTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/canvasRed</item>
-        <item name="colorAccent">@color/canvasRed</item>
-        <item name="colorPrimaryDark">@color/canvasRed</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionModeOverlay">true</item>
-    </style>
-
-    <style name="SubmissionPSPDFKitTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="pspdf__contextualToolbarBackground">@color/annotationToolbarBackground</item>
-        <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
-        <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
-    </style>
-
     <style name="AnnotationCreationToolbarIconsStyle">
         <item name="pspdf__iconsColor">@color/white</item>
         <item name="pspdf__highlightIcon">@drawable/vd_highlighter_icon</item>

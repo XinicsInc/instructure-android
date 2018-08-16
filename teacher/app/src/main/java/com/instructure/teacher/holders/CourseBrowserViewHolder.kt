@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.holders
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.graphics.drawable.DrawableCompat
@@ -36,7 +37,7 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
         const val holderResId = R.layout.adapter_course_browser
     }
 
-    fun bind(tab: Tab, clickedCallback: (Tab) -> Unit) {
+    fun bind(tab: Tab, clickedCallback: (Tab) -> Unit, context: Context) {
         val res: Int = when (tab.tabId) {
             Tab.ASSIGNMENTS_ID -> R.drawable.vd_assignment
             Tab.QUIZZES_ID -> R.drawable.vd_quiz
@@ -51,7 +52,17 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
                 if(attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
                     R.drawable.vd_attendance
                 } else if(tab.type == Tab.TYPE_EXTERNAL) {
-                    R.drawable.vd_lti
+                    var tabLableIndex = context.resources.getStringArray(R.array.lti_menu_array).indexOf(tab.label)
+                    tabLableIndex = tabLableIndex % 6
+                    when(tabLableIndex) {
+                        0 -> R.drawable.vd_lti_course_builder
+                        1 -> R.drawable.vd_lti_course_resource
+                        2 -> R.drawable.vd_lti_open_board
+                        3 -> R.drawable.vd_lti_qna_board
+                        4 -> R.drawable.vd_lti_classmix
+                        5 -> R.drawable.vd_lti_online_attendance
+                        else -> R.drawable.vd_lti
+                    }
                 } else R.drawable.vd_canvas_logo
             }
         }

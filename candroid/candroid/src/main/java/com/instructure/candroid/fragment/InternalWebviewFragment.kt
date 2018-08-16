@@ -38,6 +38,7 @@ import com.instructure.candroid.util.FragUtils
 import com.instructure.candroid.util.RouterUtils
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
@@ -72,6 +73,10 @@ open class InternalWebviewFragment : ParentFragment() {
     private var externalLTIUrl: String? = null
     private var assignmentLtiUrl: String? = null    //if we're coming from an lti assignment we need the original assignment url, not the sessionless one
 
+    // Assignment Tab 에서 접근한 경우 Assignment를 멤버변수로 가지도록 하였다.
+    // 강의콘텐츠로 올린 자료 > 외부도구로 이동 시에 Assignment Id를 필요로 하기 때문에 만들어줌.
+    // CanvasWebView에서 사용 할 것이다.
+    private var assignment: Assignment? = null
     private var shouldRouteInternally = true
     private var shouldLoadUrl = true
     private var sessionAuthJob: Job? = null
@@ -124,6 +129,11 @@ open class InternalWebviewFragment : ParentFragment() {
                     webViewLoading?.setGone()
                 }
             }
+
+            // assignment 객체를 가지고 있으면 canvasWebview를 assignment tab에서부터 온 객체라고 flag 설정
+            assignment?.let { canvasWebView.setIsWebviewFromAssignmentTab(true) } ?: canvasWebView.setIsWebviewFromAssignmentTab(false)
+            // assignment객체가 있으면 assignment의 id 값을, 없으면 null을 반환한다.
+            canvasWebView.setAssignmentId(assignment?.id)
 
             // open a new page to view some types of embedded video content
             canvasWebView.addVideoClient(activity)
@@ -328,6 +338,7 @@ open class InternalWebviewFragment : ParentFragment() {
             isLTITool = it.getBoolean(Const.IS_EXTERNAL_TOOL)
             shouldAuthenticate = it.getBoolean(Const.AUTHENTICATE)
             assignmentLtiUrl = it.getString(Const.API_URL)
+            assignment = it.getParcelable(Const.ASSIGNMENT)
         }
         super.handleIntentExtras(extras)
     }
@@ -397,6 +408,18 @@ open class InternalWebviewFragment : ParentFragment() {
             return extras
         }
 
+        // Assignment Tab 생성한 bundle인 경우에 Assignment 객체도 함깨 받아오도록 함.
+        fun createBundle(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean, isUnsupportedFeature: Boolean, isLTITool: Boolean, ltiUrl: String, assignment: Assignment): Bundle {
+            val extras = ParentFragment.createBundle(canvasContext)
+            extras.putString(Const.INTERNAL_URL, url)
+            extras.putString(Const.ACTION_BAR_TITLE, title)
+            extras.putBoolean(Const.AUTHENTICATE, authenticate)
+            extras.putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
+            extras.putBoolean(Const.IS_EXTERNAL_TOOL, isLTITool)
+            extras.putString(Const.API_URL, ltiUrl)
+            extras.putParcelable(Const.ASSIGNMENT, assignment)
+            return extras
+        }
         fun createBundle(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean): Bundle {
             val extras = ParentFragment.createBundle(canvasContext)
             extras.putString(Const.INTERNAL_URL, url)

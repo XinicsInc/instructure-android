@@ -60,7 +60,6 @@ import android.widget.Toast;
 
 import com.instructure.candroid.R;
 import com.instructure.candroid.activity.InternalWebViewActivity;
-import com.instructure.candroid.activity.StudentSubmissionActivity;
 import com.instructure.candroid.util.AppManager;
 import com.instructure.candroid.util.DownloadMedia;
 import com.instructure.candroid.util.FragUtils;
@@ -76,11 +75,9 @@ import com.instructure.canvasapi2.models.Attachment;
 import com.instructure.canvasapi2.models.Author;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.DiscussionTopic;
-import com.instructure.canvasapi2.models.GradeableStudentSubmission;
 import com.instructure.canvasapi2.models.LTITool;
 import com.instructure.canvasapi2.models.MediaComment;
 import com.instructure.canvasapi2.models.NotoriousConfig;
-import com.instructure.canvasapi2.models.StudentAssignee;
 import com.instructure.canvasapi2.models.Submission;
 import com.instructure.canvasapi2.models.SubmissionComment;
 import com.instructure.canvasapi2.utils.APIHelper;
@@ -667,12 +664,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
                         if(submission.getSubmissionType().equals("online_upload") || submission.getSubmissionType().equals("media_recording")) {
                             if(submission.getAttachments().size() == 1) {
                                 //makes more sense to open the file since they should already have it on their device
-                                if(submission.getAttachments().get(0).getContentType().contains("pdf")) {
-                                    startActivity(StudentSubmissionActivity.createIntent(getActivity(), course, assignment, new GradeableStudentSubmission(new StudentAssignee(ApiPrefs.getUser(), ApiPrefs.getUser().getId(), ApiPrefs.getUser().getName()), null, false)));
-                                } else {
-                                    openMedia(submission.getAttachments().get(0).getContentType(), submission.getAttachments().get(0).getUrl(), submission.getAttachments().get(0).getFilename());
-                                }
-
+                                openMedia(submission.getAttachments().get(0).getContentType(), submission.getAttachments().get(0).getUrl(), submission.getAttachments().get(0).getFilename());
                             } else if (submission.getMediaComment() != null){
                                 MediaComment mediaComment = submission.getMediaComment();
                                 openMedia(mediaComment.getContentType(), mediaComment.getUrl(), mediaComment.get_fileName());
@@ -860,14 +852,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
             public void onItemClick(AdapterView<?> adapter, View view, int position,
                                     long id) {
                 Attachment attachment = (Attachment)adapter.getAdapter().getItem(position);
-
-                // If this is a pdf, we want to make sure we disable annotations/etc
-                if(attachment.getContentType().contains("pdf")) {
-                    openMedia(true, attachment.getContentType(), attachment.getUrl(), attachment.getFilename());
-                } else {
-                    openMedia(attachment.getContentType(), attachment.getUrl(), attachment.getFilename());
-                }
-
+                openMedia(attachment.getContentType(), attachment.getUrl(), attachment.getFilename());
             }
         });
         dlg.show();
@@ -1531,7 +1516,9 @@ public class SubmissionDetailsFragment extends ParentFragment {
                         .build();
 
                 // Do NOT authenticate or the LTI tool won't load.
-                InternalWebviewFragment.Companion.loadInternalWebView(getActivity(), ((Navigation) getActivity()), InternalWebviewFragment.Companion.createBundle(getCanvasContext(), uri.toString(), ltiTool.getName(), false, false, true, assignment.getUrl()));
+                // 강의콘텐츠 > 외부 도구로 등록한 유형일 경우에 assignment id도 함께 전달해주기 위하여,
+                // InternalWebViewFragment를 생성 할 때에 bundle로 assignment객체도 함께 전달하도록 하였다.
+                InternalWebviewFragment.Companion.loadInternalWebView(getActivity(), ((Navigation) getActivity()), InternalWebviewFragment.Companion.createBundle(getCanvasContext(), uri.toString(), ltiTool.getName(), false, false, true, assignment.getUrl(), assignment));
             }
 
             @Override

@@ -259,7 +259,11 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
     private Uri attemptConnection(String url) throws IOException {
         Uri uri = null;
         final HttpURLConnection hc = (HttpURLConnection) new URL(url).openConnection();
+        // alpha에서 정상적으로 파일을 다운받기 위해 헤더에 Referer를 추가해준다.
+        hc.setRequestProperty("Referer", Utils.getRefererString(getContext()));
         final HttpURLConnection connection = HttpHelper.redirectURL(hc);
+        // alpha에서 정상적으로 파일을 다운받기 위해 헤더에 Referer를 추가해준다.
+        connection.setRequestProperty("Referer", Utils.getRefererString(getContext()));
 
         if(connection != null) {
             final String connectedUrl = connection.getURL().toString();
@@ -322,8 +326,8 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
         ContentResolver contentResolver = context.getContentResolver();
         Uri fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + Const.FILE_PROVIDER_AUTHORITY, file);
         intent.setDataAndType(fileUri, contentResolver.getType(fileUri));
-        //We know that we can always handle pdf intents with pspdfkit, so we don't want to error out here
-        if (!isIntentHandledByActivity(intent) && !mimeType.equals("application/pdf") ) {
+
+        if (!isIntentHandledByActivity(intent)) {
             loadedMedia.setErrorMessage(R.string.noApps);
             loadedMedia.errorType = ERROR_TYPE.NO_APPS;
         } else {
@@ -336,12 +340,16 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
         //create the new connection
         URL url = new URL(url2);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        // alpha에서 정상적으로 파일을 다운받기 위해 헤더에 Referer를 추가해준다.
+        urlConnection.setRequestProperty("Referer", Utils.getRefererString(getContext()));
         //set up some things on the connection
         urlConnection.setRequestMethod("GET");
 
         //and connect!
         urlConnection.connect();
         HttpURLConnection connection = HttpHelper.redirectURL(urlConnection);
+        // alpha에서 정상적으로 파일을 다운받기 위해 헤더에 Referer를 추가해준다.
+        connection.setRequestProperty("Referer", Utils.getRefererString(getContext()));
 
         //this will be used to write the downloaded uri into the file we created
         String name = toWriteTo.getName();

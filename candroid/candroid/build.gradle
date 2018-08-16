@@ -113,6 +113,11 @@ android {
         prod {
             dimension 'default'
         }
+        
+        xinicsProd {
+            dimension 'default'
+            applicationIdSuffix ".xinics.production"
+        }
     }
 
     // Always show the result of every unit test, even if it passes.

@@ -114,9 +114,9 @@ public abstract class BaseLoginInitActivity extends AppCompatActivity {
     }
 
     private void applyTheme() {
-        CanvasLoadingView loadingView = findViewById(R.id.progress_bar);
-        if (loadingView != null) {
-            loadingView.setOverrideColor(themeColor());
-        }
+//        CanvasLoadingView loadingView = findViewById(R.id.progress_bar);
+//        if (loadingView != null) {
+//            loadingView.setOverrideColor(themeColor());
+//        }
     }
 }

@@ -371,8 +371,6 @@ object RouteMatcher : BaseRouteMatcher() {
             fragment = AddMessageFragment.newInstance(route.arguments)
         } else if (MessageThreadFragment::class.java.isAssignableFrom(cls)) {
             fragment = getMessageThreadFragment(route)
-        } else if (ViewPdfFragment::class.java.isAssignableFrom(cls)) {
-            fragment = ViewPdfFragment.newInstance(route.arguments)
         } else if (ViewImageFragment::class.java.isAssignableFrom(cls)) {
             fragment = ViewImageFragment.newInstance(route.arguments)
         } else if (ViewMediaFragment::class.java.isAssignableFrom(cls)) {
@@ -528,13 +526,7 @@ object RouteMatcher : BaseRouteMatcher() {
                             val args = ViewHtmlFragment.newInstance(loadedMedia.bundle.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle.getString(Const.ACTION_BAR_TITLE)!!).arguments
                             RouteMatcher.route(activity, Route(ViewHtmlFragment::class.java, null, args))
                         } else if (loadedMedia.intent != null) {
-                            if (loadedMedia.intent.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
-                                //show pdf with PSPDFkit
-                                val uri = loadedMedia.intent.data
-                                val args = ViewPdfFragment.newInstance((loader as OpenMediaAsyncTaskLoader).url, 0).arguments
-                                RouteMatcher.route(activity, Route(ViewPdfFragment::class.java, null, args))
-
-                            } else if (loadedMedia.intent.type == "video/mp4") {
+                            if (loadedMedia.intent.type == "video/mp4") {
                                 val bundle = ViewMediaActivity.makeBundle(loadedMedia.intent.data!!.toString(), null, "video/mp4", loadedMedia.intent.dataString, true)
                                 RouteMatcher.route(activity, Route(bundle, RouteContext.MEDIA))
 

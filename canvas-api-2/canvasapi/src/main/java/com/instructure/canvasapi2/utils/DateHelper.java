@@ -210,6 +210,9 @@ public class DateHelper {
     }
 
     public static SimpleDateFormat getFullMonthAndDateFormat() {
+        if(Locale.getDefault().getLanguage() == "ko") {
+            return new SimpleDateFormat("MMMM dd일", Locale.getDefault());
+        }
         return new SimpleDateFormat("MMMM dd", Locale.getDefault());
     }
 

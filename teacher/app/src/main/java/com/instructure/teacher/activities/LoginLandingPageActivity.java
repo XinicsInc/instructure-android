@@ -45,11 +45,6 @@ public class LoginLandingPageActivity extends BaseLoginLandingPageActivity {
     }
 
     @Override
-    protected Intent beginCanvasNetworkFlow(String url) {
-        return SignInActivity.createIntent(this, new AccountDomain(url));
-    }
-
-    @Override
     protected int appTypeName() {
         return R.string.appUserTypeTeacher;
     }

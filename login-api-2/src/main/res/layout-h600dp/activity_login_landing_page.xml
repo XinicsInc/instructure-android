@@ -42,26 +42,16 @@
 
             <ImageView
                 android:id="@+id/canvasLogo"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginBottom="-8dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/vd_canvas_logo" />
-
-            <TextView
-                android:id="@+id/canvasName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/canvasLowerCase"
-                android:textColor="@color/login_grayCanvasLogo"
-                android:textSize="56sp" />
+                app:srcCompat="@drawable/vd_find_school" />
 
             <TextView
                 android:id="@+id/appDescriptionType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-8dp"
+                android:layout_marginTop="-5dp"
                 android:fontFamily="sans-serif-black"
                 android:text="@string/appUserTypeTeacher"
                 android:textAllCaps="true"
@@ -75,17 +65,6 @@
                 android:layout_width="240dp"
                 android:layout_marginTop="30dp"
                 android:text="@string/findMySchool" />
-
-            <TextView
-                android:id="@+id/canvasNetwork"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="?android:selectableItemBackground"
-                android:padding="8dp"
-                android:text="@string/canvasNetworks"
-                android:textColor="@color/login_grayText"
-                android:textSize="16sp" />
 
         </LinearLayout>
 

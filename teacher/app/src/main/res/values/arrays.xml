@@ -4,4 +4,21 @@
         <item>@string/complete_grade</item>
         <item>@string/incomplete_grade</item>
     </string-array>
+
+    <string-array name="lti_menu_array">
+        <!--korean-->
+        <item>강의콘텐츠</item>
+        <item>강의자료실</item>
+        <item>열린게시판</item>
+        <item>문의게시판</item>
+        <item>ClassMix</item>
+        <item>온라인 출결 현황</item>
+        <!--english-->
+        <item>LectureContents</item>
+        <item>LectureResources</item>
+        <item>OpenBoard</item>
+        <item>QnA Board</item>
+        <item>ClassMix</item>
+        <item>Online Attendance</item>
+    </string-array>
 </resources>

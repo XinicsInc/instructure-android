@@ -53,6 +53,8 @@ abstract class BaseRouterActivity : CallbackActivity() {
     private var routeModuleProgressionJob: Job? = null
     private var routeLTIJob: Job? = null
 
+    // Assignment Group 체크를 해야하는지 여부
+    private var needToCheckAssignmentGroup: Boolean = true
     protected abstract fun routeFragment(fragment: ParentFragment)
     protected abstract fun existingFragmentCount(): Int
     protected abstract fun loadLandingPage(clearBackStack: Boolean = false)
@@ -87,6 +89,9 @@ abstract class BaseRouterActivity : CallbackActivity() {
         setIntent(intent)
         Logger.d("BaseRouterActivity: onNewIntent()")
         parse(intent)
+
+        // Assignment Group 체크를 해야하는지 여부 flag 초기화
+        needToCheckAssignmentGroup = true
     }
 
     //region OpenMediaAsyncTaskLoader
@@ -113,12 +118,7 @@ abstract class BaseRouterActivity : CallbackActivity() {
                             } else if (loadedMedia.isHtmlFile) {
                                 InternalWebviewFragment.loadInternalWebView(this@BaseRouterActivity, this@BaseRouterActivity as Navigation, loadedMedia.bundle)
                             } else if (loadedMedia.intent != null) {
-                                if (loadedMedia.intent.type!!.contains("pdf")) {
-                                    val uri = loadedMedia.intent.data
-                                    FileUtils.showPdfDocument(uri, loadedMedia, context)
-                                } else {
-                                    context.startActivity(loadedMedia.intent)
-                                }
+                                context.startActivity(loadedMedia.intent)
                             }
                         } catch (e: ActivityNotFoundException) {
                             Toast.makeText(context, R.string.noApps, Toast.LENGTH_LONG).show()
@@ -156,6 +156,13 @@ abstract class BaseRouterActivity : CallbackActivity() {
                     return
                 }
 
+                // Assignment로 라우팅 하는 경우
+                if (route.getmRoute() == "/(?:courses|groups)/:course_id/assignments/:assignment_id"
+                        && route.tabId == Tab.ASSIGNMENTS_ID && needToCheckAssignmentGroup) {
+                    // Assignment Group을 확인하고 LTI Group 이면 LTI로 라우팅한다.
+                    checkAssignmentGroupAndRoute(courseId!!, route)
+                    return
+                }
 
                 if (RouterUtils.ROUTE_TYPE.LTI == route.routeType) {
                     routeLTI(courseId!!, route)
@@ -201,6 +208,87 @@ abstract class BaseRouterActivity : CallbackActivity() {
             LoggingUtility.LogExceptionPlusCrashlytics(this@BaseRouterActivity, e)
             Logger.e("Could not parse and route url in BaseRouterActivity")
             routeToCourseGrid()
+        }
+        return
+    }
+
+    /**
+     * Assignment Group Name을 확인해, LTI로 생성된 Group Name 이면 LTI 탭으로 라우팅 하고,
+     * 아니면 기존 라우팅 하던 방법으로 라우팅 한다.
+     */
+    private fun checkAssignmentGroupAndRoute(courseId: Long, route: RouterUtils.Route) {
+        tryWeave {
+            showLoadingIndicator()
+
+            val assignmentId = route.paramsHash.getValue("assignment_id")
+            val assignment = awaitApi<Assignment> { AssignmentManager.getAssignment(assignmentId.toLong(), courseId, true, it) }
+            val assignmentGroup = awaitApi<AssignmentGroup> { AssignmentManager.getAssignmentGroup(courseId, assignment.assignmentGroupId, true, it) }
+            var assignmentGroupName = assignmentGroup.name
+
+            // Assignment Group Name을 이용해 해당 Assignment가 어느 구릅에 속해있는지 확인한다.
+            var groupNameIndex = baseContext.resources.getStringArray(R.array.lti_assignment_group_name).indexOf(assignmentGroupName);
+            groupNameIndex = groupNameIndex % 3;
+            var assignmentGroupId = when(groupNameIndex) {
+                0 -> Assignment.COURSE_BUILDER
+                1 -> Assignment.COURSE_RESOURCE
+                else -> Assignment.CANVAS_ASSIGNMENTS
+            }
+
+            // Assignment Group이 LTI에서 이용하는 그룹이라면
+            if(assignmentGroupId != Assignment.CANVAS_ASSIGNMENTS) {
+                // LTI로 라우팅
+                routeAssignmentToLTIForCourse(courseId, assignmentGroupId, route)
+            }
+            else {
+                // LTI에서 사용하는 Assignment Group이 아니니 다시 라우팅
+                needToCheckAssignmentGroup = false
+                handleRoute(route)
+            }
+            hideLoadingIndicator()
+        } catch {
+            hideLoadingIndicator()
+            Logger.e("Error routing to LTI for course: " + it.message)
+        }
+    }
+
+    /**
+     * Assignment 로 라우팅 하려 했던 것을 LTI 로 라우팅한다.
+     */
+    private fun routeAssignmentToLTIForCourse(courseId: Long, assignmentGroupId: String, route: RouterUtils.Route) {
+        Logger.d("BaseRouterActivity: routeAssignmentToLTIForCourse()")
+        routeLTIJob = tryWeave {
+            showLoadingIndicator()
+            val course = awaitApi<Course?> { CourseManager.getCourseWithGrade(courseId, it, false) }
+            if(course == null) {
+                showMessage(getString(R.string.could_not_route_course))
+            } else {
+                // 해당 코스에 속하는 Tab 정보 가져옴.
+                val tabs = awaitApi<List<Tab>> { TabManager.getTabs(course, it, false) }
+                // 해당 코스에 속하는 external tool 정보 가져옴.
+                val externalTools = awaitApi<List<LTITool>> { ExternalToolManager.getExternalToolsForCanvasContext(course, it, false) }
+                // assignmentGroupId와 상응하는 externalTool의 Description을 가져온다.
+                val externalToolDescription = getExternalToolDescriptionFromAssignmentGroupId(assignmentGroupId)
+                // externalToolDescription을 가지는 Tab의 Id를 가져온다.
+                val tabId = getTabIdFromExternalToolDescription(externalTools, externalToolDescription)
+                // 해당 tabId를 가지는 Tab 객체가 실제로 존재하는지 확인한다.
+                val tabExists = tabs.any { it.tabId == tabId }
+
+                // 해당 tabId를 가지는 탭이 존재하면 해당 탭으로 라우팅 한다.
+                if(tabExists) {
+                    val tab = tabs.find { it.tabId == tabId}
+                    // 해당 Tab으로 라우팅한다.
+                    routeFragment(TabHelper.getFragmentByTab(tab, course))
+                }
+                else { // 탭이 존재하지 않으면, 기존 라우팅 하던 방법대로 다시 라우팅한다.
+                    // LTI에서 사용하는 Assignment Group이 아니니 다시 라우팅
+                    needToCheckAssignmentGroup = false
+                    handleRoute(route)
+                }
+            }
+            hideLoadingIndicator()
+        } catch {
+            hideLoadingIndicator()
+            Logger.e("Error routing to LTI for course: " + it.message)
         }
     }
 
@@ -256,6 +344,27 @@ abstract class BaseRouterActivity : CallbackActivity() {
             hideLoadingIndicator()
             Logger.e("Error routing to LTI for course: " + it.message)
         }
+    }
+
+    /**
+     * assignmentGroupId에 따라 해당하는 External Tool의 Description을 가져온다.
+     */
+    private fun getExternalToolDescriptionFromAssignmentGroupId(assignmentGroupId: String): String {
+        val externalToolDescriptions = baseContext.resources.getStringArray(R.array.external_tool_descriptions);
+        return when(assignmentGroupId) {
+            Assignment.COURSE_BUILDER -> externalToolDescriptions[0]
+            Assignment.COURSE_RESOURCE -> externalToolDescriptions[1]
+            else -> externalToolDescriptions[0]
+        }
+    }
+
+    /**
+     * externalTools 중 description을 externalToolDescription로 가지는 externalTool의 id를 이용해,
+     * tab ID로 변환하여(TYPE_EXTERNAL_PREFIX 를 붙여서) 반환한다.
+     */
+    private fun getTabIdFromExternalToolDescription(externalTools: List<LTITool>, externalToolDescription: String): String {
+        val externalTool = externalTools.find { it.description == externalToolDescription }
+        return Tab.TYPE_EXTERNAL_PREFIX + externalTool!!.id
     }
 
     private fun routeLTIForGroup(groupId: Long, route: RouterUtils.Route) {

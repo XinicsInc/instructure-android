@@ -37,6 +37,7 @@
         <item>@string/frenchCanada</item>
         <item>@string/german</item>
         <item>@string/japanese</item>
+        <item>@string/korean</item>
         <item>@string/maori</item>
         <item>@string/norwegian</item>
         <item>@string/polish</item>
@@ -47,4 +48,23 @@
         <item>@string/swedish</item>
     </string-array>
 
+    <string-array name="external_tool_descriptions">
+        <item>Xinics CourseBuilder</item>
+        <item>Xinics CourseResource</item>
+        <item>Xinics Open Board</item>
+        <item>Xinics QnA Board</item>
+        <item>Xinics ClassMix</item>
+        <item>Xinics OnlineAttendance</item>
+    </string-array>
+
+    <string-array name="lti_assignment_group_name">
+        <!--korean-->
+        <item>주차학습</item>
+        <item>강의자료실</item>
+        <item>과제</item>
+        <!--english-->
+        <item>LectureContents</item>
+        <item>LectureResource</item>
+        <item>Assignment</item>
+    </string-array>
 </resources>

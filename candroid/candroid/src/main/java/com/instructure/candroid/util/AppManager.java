@@ -43,10 +43,8 @@ import com.instructure.canvasapi2.models.CanvasErrorCode;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.Logger;
 import com.instructure.pandautils.utils.ColorKeeper;
-import com.pspdfkit.PSPDFKit;
-import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException;
-import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -66,7 +64,6 @@ public class AppManager extends com.instructure.canvasapi2.AppManager implements
     @Override
     public void onCreate() {
         super.onCreate();
-        initPSPDFKit();
 
         Crashlytics crashlyticsKit = new Crashlytics.Builder()
                 .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
@@ -87,6 +84,25 @@ public class AppManager extends com.instructure.canvasapi2.AppManager implements
         }
 
         loadLanguage(getApplicationContext());
+
+        // EventBus 등록. api response로 unauthorized 받을 경우 이벤트 받아서 처리해주기 위함.
+        try {
+            EventBus.getDefault().register(this);
+        } catch (Exception e) {
+            Logger.e(e.getMessage());
+        }
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+
+        // EventBus 등록 해지
+        try {
+            EventBus.getDefault().unregister(this);
+        } catch (Exception e) {
+            Logger.e(e.getMessage());
+        }
     }
 
     @Override
@@ -214,16 +230,6 @@ public class AppManager extends com.instructure.canvasapi2.AppManager implements
 
     //endregion
 
-    private void initPSPDFKit() {
-        try {
-            PSPDFKit.initialize(this, BuildConfig.PSPDFKIT_LICENSE_KEY);
-        } catch (PSPDFKitInitializationFailedException e) {
-            Logger.e("Current device is not compatible with PSPDFKIT!");
-        } catch (InvalidPSPDFKitLicenseException e) {
-            Logger.e("Invalid or Trial PSPDFKIT License!");
-        }
-    }
-
     /**
      * Pass the current context to load the stored language
      * @param context
@@ -292,20 +298,22 @@ public class AppManager extends com.instructure.canvasapi2.AppManager implements
             case 12:
                 return "ja";
             case 13:
-                return "mi";
+                return "ko";
             case 14:
-                return "nb";
+                return "mi";
             case 15:
-                return "pl";
+                return "nb";
             case 16:
-                return "pt";
+                return "pl";
             case 17:
-                return "pt_BR";
+                return "pt";
             case 18:
-                return "ru";
+                return "pt_BR";
             case 19:
-                return "es";
+                return "ru";
             case 20:
+                return "es";
+            case 21:
                 return "sv";
              //aka system default
             default:
@@ -313,9 +321,10 @@ public class AppManager extends com.instructure.canvasapi2.AppManager implements
         }
     }
 
+    // api 요청 response가 401 unauthorized일 경우에 로그아웃 시켜준다.
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    private void onUserNotAuthorized(CanvasErrorCode event) {
+    public void onUserNotAuthorized(CanvasErrorCode event) {
         if(event.getCode() == 401) {
             UserManager.getSelf(true, new StatusCallback<User>(){
                 @Override

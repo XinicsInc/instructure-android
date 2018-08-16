@@ -31,7 +31,7 @@ class CourseBrowserAdapter(
 
     override fun bindHolder(tab: Tab, holder: CourseBrowserViewHolder, position: Int) {
         context?.let {
-            holder.bind(tab, mCallback)
+            holder.bind(tab, mCallback, context!!)
         }
     }
 

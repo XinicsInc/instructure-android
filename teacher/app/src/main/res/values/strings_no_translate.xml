@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <string name="app_name" translatable="false">Canvas Teacher</string>
+    <string name="app_name" translatable="false">LearningX Teacher</string>
     <string name="help_domain" translatable="false">Domain:</string>
     <string name="help_versionNum" translatable="false">Version:</string>
     <string name="help_userId" translatable="false">User ID:</string>

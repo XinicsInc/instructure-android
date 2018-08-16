@@ -31,13 +31,11 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.ViewMediaActivity
 import com.instructure.teacher.fragments.ViewHtmlFragment
 import com.instructure.teacher.fragments.ViewImageFragment
-import com.instructure.teacher.fragments.ViewPdfFragment
 import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
 import com.instructure.teacher.models.EditableFile
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.teacher.router.RouteMatcher
-import com.pspdfkit.ui.PdfFragment
 
 fun Parcel.writeBoolean(bool: Boolean) = writeByte((if (bool) 1 else 0).toByte())
 fun Parcel.readBoolean() = readByte() != 0.toByte()
@@ -88,12 +86,6 @@ fun Attachment.view(context: Context) {
 fun viewMedia(context: Context, filename: String, contentType: String, url: String?, thumbnailUrl: String?, displayName: String?, iconRes: Int, toolbarColor: Int = 0, editableFile: EditableFile? = null) {
     val extension = filename.substringAfterLast('.')
     when {
-    // PDF
-        contentType == "application/pdf" -> {
-            PdfFragment()
-            val bundle = ViewPdfFragment.newInstance(url ?: "", toolbarColor, editableFile).nonNullArgs
-            RouteMatcher.route(context, Route(null, ViewPdfFragment::class.java, null, bundle))
-        }
     // Audio/Video
         contentType.startsWith("video") || contentType.startsWith("audio") -> {
             val bundle = ViewMediaActivity.makeBundle(url.orEmpty(), thumbnailUrl, contentType, displayName, true, editableFile)

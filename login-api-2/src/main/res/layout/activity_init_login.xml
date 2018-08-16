@@ -23,11 +23,10 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <com.instructure.loginapi.login.view.CanvasLoadingView
+    <ProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center"
-        app:clv_override_color="@android:color/black"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
 </FrameLayout>

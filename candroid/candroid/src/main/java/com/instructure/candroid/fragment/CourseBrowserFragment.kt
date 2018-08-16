@@ -31,6 +31,7 @@ import com.instructure.candroid.adapter.CourseBrowserAdapter
 import com.instructure.interactions.Navigation
 import com.instructure.candroid.util.Const
 import com.instructure.candroid.util.TabHelper
+import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.*
@@ -146,12 +147,13 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
             }
 
             val tabs = awaitApi<List<Tab>> { TabManager.getTabs(canvasContext, it, isRefresh) }.filter { !(it.isExternal && it.isHidden) }
+            val externalTools = awaitApi<List<LTITool>> { ExternalToolManager.getExternalToolsForCanvasContext(canvasContext, it, false) }
 
             //Finds the home tab so we can reorder them if necessary
             val sortedTabs = tabs.toMutableList()
             sortedTabs.sortBy { if (TabHelper.isHomeTab(it)) -1 else 1 }
 
-            courseBrowserRecyclerView.adapter = CourseBrowserAdapter(sortedTabs, canvasContext, { tab ->
+            courseBrowserRecyclerView.adapter = CourseBrowserAdapter(sortedTabs, externalTools, getContext(), canvasContext, { tab ->
                 if(isHomeAPage && TabHelper.isHomeTab(tab, canvasContext)) {
                     //Load Pages List
                     if(tabs.any { it.tabId == Tab.PAGES_ID }) {

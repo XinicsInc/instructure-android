@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,120 +14,118 @@
   ~     limitations under the License.
   ~
   -->
-
 <resources>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="mobileVerifyGeneral">This app is not authorized for use</string>
-    <string name="mobileVerifyDomainUnauthorized">The server you entered is not authorized for this app.</string>
-    <string name="mobileVerifyUserAgentUnauthorized">The user agent for this app is unauthorized.</string>
-    <string name="mobileVerifyUnknownError">We were unable to verify the server for use with this app.</string>
-    <string name="unknownDevice">UnknownDevice</string>
-    <string name="errorOccurred">An unexpected error occurred.</string>
-    <string name="pageNotFound">Page not found.</string>
-    <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
-    <string name="help">Help</string>
-    <string name="enterURL">Enter your Canvas URL:</string>
-    <string name="signIntoCanvasNetwork">Trying to sign into Canvas Network?</string>
-    <string name="remove">Remove</string>
-    <string name="exampleURLSimple">myschool.instructure.com</string>
-    <string name="masquerade">Masquerade</string>
-    <string name="userId">User ID</string>
-    <string name="domain">Domain</string>
-
-    <string name="masqueradingUserId">Masquerade User ID</string>
-    <string name="masqueradingUserDomain">Masquerade Domain</string>
-    <string name="masqueradingBegin">Begin Masquerading</string>
-    <string name="masqueradingStop">Stop Masquerading</string>
+    <string name="hello_world">"안녕하세요!"</string>
+    <string name="action_settings">"설정"</string>
+    <string name="mobileVerifyGeneral">"이 앱은 사용 권한이 없습니다."</string>
+    <string name="mobileVerifyDomainUnauthorized">"입력한 서버가 이 앱에 대해 승인되지 않았습니다."</string>
+    <string name="mobileVerifyUserAgentUnauthorized">"이 앱의 사용자 에이전트가 승인되지 않았습니다."</string>
+    <string name="mobileVerifyUnknownError">"이 앱을 사용하기 위한 서버를 확인할 수 없습니다."</string>
+    <string name="failedToFetchSchoolList">학교 리스트를 불러오는데에 실패했습니다.</string>
+    <string name="unknownDevice">"UnknownDevice"</string>
+    <string name="errorOccurred">"예기치 않은 오류가 발생했습니다."</string>
+    <string name="pageNotFound">"페이지를 찾을 수 없습니다."</string>
+    <string name="confirm">"확인"</string>
+    <string name="cancel">"취소"</string>
+    <string name="help">"도움말"</string>
+    <string name="enterURL">"Canvas URL 입력 :"</string>
+    <string name="signIntoCanvasNetwork">"Canvas Network에 로그인하려는 중입니까?"</string>
+    <string name="remove">"제거"</string>
+    <string name="exampleURLSimple">"myschool.instructure.com"</string>
+    <string name="userId">"사용자 ID"</string>
+    <string name="domain">"도메인"</string>
+    <string name="actAsUser">"가상 로그인"</string>
+    <string name="stopActAsUser">"가상 로그인 중지"</string>
 
     <!--Multiple User Sign in -->
-    <string name="removeUser">Remove this user?</string>
-    <string name="removedForever">You\'ll have to sign into this user again to access their content.</string>
+    <string name="removeUser">"이 사용자를 삭제하시겠습니까?"</string>
+    <string name="removedForever">"콘텐츠에 액세스하려면 이 사용자로 다시 로그인해야합니다."</string>
 
     <!--Content Descriptions-->
-    <string name="canvasLogo">Canvas Logo</string>
+    <string name="canvasLogo">"Canvas 로고"</string>
 
-    <string name="canvasLoginOn">Canvas_Login: ON</string>
-    <string name="canvasLoginOff">Canvas_Login: OFF</string>
-    <string name="siteAdminLogin">Site Admin Login: ON</string>
+    <string name="canvasLoginOn">"Canvas_Login : 사용"</string>
+    <string name="canvasLoginOff">"Canvas_Login : 사용안함"</string>
+    <string name="siteAdminLogin">"사이트 관리자 로그인 : 사용"</string>
 
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="authenticationRequired">Authentication Required</string>
-    <string name="invalidEmailPassword">Invalid email or password</string>
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
+    <string name="username">"사용자 이름"</string>
+    <string name="password">"암호"</string>
+    <string name="authenticationRequired">"인증 필요"</string>
+    <string name="invalidEmailPassword">"이메일 또는 비밀번호가 잘못되었습니다."</string>
+    <string name="login">"로그인"</string>
+    <string name="logout">"로그 아웃"</string>
 
     <!--Logout Warning Dialog-->
-    <string name="logout_warning">Are you sure you want to logout?</string>
-    <string name="logout_yes">Yes</string>
-    <string name="logout_no">No</string>
+    <string name="logout_warning">"로그 아웃 하시겠습니까?"</string>
+    <string name="logout_yes">"예"</string>
+    <string name="logout_no">"아니오"</string>
 
     <!--Smart Login-->
 
-    <string name="loginNearYou">Near You</string>
-    <string name="loginCanvasNetwork">Canvas Network</string>
-    <string name="loginRightBehindYou">Right behind you</string>
-    <string name="loginMiles">%1$s miles away</string>
-    <string name="loginCanvasHelp">Don\'t see your school? Enter the school URL or tap here for help.</string>
-    <string name="loginCanvasHelpWithUser">Enter the school URL or tap here for help.</string>
-    <string name="loginHint">Find your school or district</string>
+    <string name="loginNearYou">"근처"</string>
+    <string name="loginCanvasNetwork">"Canvas Network"</string>
+    <string name="loginRightBehindYou">"바로 뒤"</string>
+    <string name="loginMiles">"%1$s 마일 거리"</string>
+    <string name="loginCanvasHelp">"학교를 찾을 수 없습니까? 학교 URL을 입력하거나 도움말을 보려면 여기를 누르십시오."</string>
+    <string name="loginCanvasHelpWithUser">"학교 URL을 입력하거나 도움말을 보려면 여기를 누르십시오."</string>
+    <string name="loginHint">"학교 또는 지역 찾기"</string>
 
     <!-- Zendesk Dialog -->
-    <string name="zendesk_reportAProblem">Report A Problem</string>
-    <string name="zendesk_subject">Subject</string>
-    <string name="zendesk_description">Description</string>
-    <string name="zendesk_writeSomething">Write Something…</string>
-    <string name="zendesk_send">Send</string>
-    <string name="zendesk_feedbackThankyou">Thank you for reporting your issue to our Support Team.  You will receive verification and updates via email.</string>
-    <string name="zendesk_severityText">How is this affecting you?</string>
-    <string name="zendesk_casualQuestion">Just a casual question, comment, idea, suggestion…</string>
-    <string name="zendesk_casualQuestion_tag">just_a_comment</string>
-    <string name="zendesk_needHelp">I need some help but it\'s not urgent.</string>
-    <string name="zendesk_needHelp_tag">not_urgent</string>
-    <string name="zendesk_somethingsBroken">Something\'s broken but I can work around it to get what I need done.</string>
-    <string name="zendesk_somethingsBroken_tag">workaround_possible</string>
-    <string name="zendesk_cantGetThingsDone">I can\'t get things done until I hear back from you.</string>
-    <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
-    <string name="zendesk_extremelyCritical">EXTREME CRITICAL EMERGENCY!!</string>
-    <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
-    <string name="zendesk_emailAddress">Email Address</string>
-    <string name="zendesk_enterEmail">Enter your email address…</string>
-    <string name="zendesk_unknown">Unknown</string>
+    <string name="zendesk_reportAProblem">"문제 보고"</string>
+    <string name="zendesk_subject">"제목"</string>
+    <string name="zendesk_description">"설명"</string>
+    <string name="zendesk_writeSomething">"내용 쓰기…"</string>
+    <string name="zendesk_send">"보내기"</string>
+    <string name="zendesk_feedbackThankyou">"문제를 Google 지원팀에 알려 주셔서 감사합니다. 이메일을 통해 확인 및 업데이트를 받게됩니다."</string>
+    <string name="zendesk_severityText">"당신에게 어떤 영향을 미칩니까?"</string>
+    <string name="zendesk_casualQuestion">"가벼운 질문, 의견, 아이디어, 제안 ..."</string>
+    <string name="zendesk_casualQuestion_tag">"just_a_comment"</string>
+    <string name="zendesk_needHelp">"도움이 필요하지만 긴급하지는 않습니다."</string>
+    <string name="zendesk_needHelp_tag">"not_urgent"</string>
+    <string name="zendesk_somethingsBroken">"문제가 발생하였지만 회피 방법이 있습니다."</string>
+    <string name="zendesk_somethingsBroken_tag">"해결 방법"</string>
+    <string name="zendesk_cantGetThingsDone">"처리을 위해서는 당신으로부터의 정보가 필요합니다."</string>
+    <string name="zendesk_cantGetThingsDone_tag">"blocks_what_i_need_to_do"</string>
+    <string name="zendesk_extremelyCritical">"매우 심각한 긴급 상황"</string>
+    <string name="zendesk_extremelyCritical_tag">"매우 심각한 긴급 상황"</string>
+    <string name="zendesk_emailAddress">"이메일 주소"</string>
+    <string name="zendesk_enterEmail">"당신의 이메일 주소를 입력해주세요…"</string>
+    <string name="zendesk_unknown">"알 수 없음"</string>
 
     <!-- Distance Strings -->
-    <string name="lessThanOne">&lt; 1 mile (1.6 km)</string>
-    <string name="oneMile">1 mile (1.6 km)</string>
-    <string name="miles">miles</string>
-    <string name="kilometers">km</string>
+    <string name="lessThanOne">"&lt;1 마일 (1.6km)"</string>
+    <string name="oneMile">"1 마일 (1.6km)"</string>
+    <string name="miles">"마일"</string>
+    <string name="kilometers">"km"</string>
 
     <!-- String for submitting tickets -->
-    <string name="device">Device</string>
-    <string name="osVersion">OS Version</string>
+    <string name="device">"장치"</string>
+    <string name="osVersion">"OS 버전"</string>
 
-    <string name="previousLoginTitle">과거 로그인</string>
-    <string name="canvasNetworks">캔버스 네트워크</string>
-    <string name="findMySchool">내 학교 찾기</string>
-    <string name="appTypeTeacher">선생</string>
-    <string name="appTypeStudent">학생</string>
-    <string name="appTypeParent">부모</string>
-    <string name="canvasLowerCase">캔버스</string>
-    <string name="whatsYourSchoolName">니 학교 이름은 모니?</string>
-    <string name="next">Next</string>
-    <string name="schoolInstructureCom">school.instructure.com</string>
-    <string name="contentDescription_removePreviousUser">전 사용자 삭제하기</string>
-    <string name="accountDomainFooter">학교를 못찾겠니? 학교 전체 URL을 쳐봐.</string>
-    <string name="accountDomainFooterLink">여기 누르면 도와드림.</string>
+    <string name="previousLoginTitle">"이전 로그인"</string>
+    <string name="canvasNetworks">"Canvas Network"</string>
+    <string name="findMySchool">"내 학교 찾기"</string>
+    <string name="canvasLowerCase">Learning X</string>
+    <string name="whatsYourSchoolName">"학교 이름이 무엇입니까?"</string>
+    <string name="previous">"이전"</string>
+    <string name="next">"다음"</string>
+    <string name="schoolInstructureCom">"school.instructure.com"</string>
+    <string name="contentDescription_removePreviousUser">"이전 사용자 삭제"</string>
+    <string name="accountDomainFooter">"학교를 찾을 수 없습니까? 학교의 전체 URL을 입력 해보십시오."</string>
+    <string name="accountDomainFooterLink">"도움이 필요하면 여기를 탭 하세요."</string>
 
-    <string name="login_noInternetConnectionTitle">No Internet Connection</string>
-    <string name="login_noInternetConnectionMessage">This action requires an internet connection.</string>
-    <string name="empty_feedback">A subject and description are required to submit feedback.</string>
-    <string name="versionNum">Version Number</string>
-    <string name="scrollInstructions">Scroll to see all details</string>
+    <string name="login_noInternetConnectionTitle">"인터넷에 연결되지 않음"</string>
+    <string name="login_noInternetConnectionMessage">"이 작업을 수행하려면 인터넷에 연결되어 있어야합니다."</string>
+    <string name="empty_feedback">"피드백을 제출하려면 제목과 설명이 필요합니다."</string>
+    <string name="versionNum">"버전 번호"</string>
+    <string name="scrollInstructions">"모든 세부 사항을 보려면 스크롤하십시오."</string>
 
-    <string name="masqueradeErrorUserId">You must enter a user id.</string>
-    <string name="masqueradeErrorDomain">You must enter a domain.</string>
-    <string name="masqueradeError">Error trying to masquerade.</string>
+    <string name="masqueradeErrorUserId">"사용자 ID를 입력해야합니다."</string>
+    <string name="masqueradeErrorDomain">"유효한 도메인을 입력해야합니다."</string>
+    <string name="masqueradeError">"가상 로그인 중 오류가 발생했습니다."</string>
+    <string name="masqueradeInfo">"\"가상 로그인\"은 암호없이 해당 사용자로 로그인 합니다. 이 사용자인 것처럼 행동하고 다른 사용자의 관점에서 볼 때 이 사용자가 수행 한 것처럼 행동 할 수 있습니다. 그러나 로그에는 해당 사용자를 대신하여 귀하가 작업을 수행하였음이 기록됩니다."</string>
+    <string name="masqueradingAs">"%s 로 행동 중입니다."</string>
+    <string name="stopActingAsTitle">"가상 로그인 중지 ..."</string>
+    <string name="stopActingAsMessage">"%s 로의 가상 로그인을 끝내고 내 계정으로 돌아갑니다."</string>
 </resources>

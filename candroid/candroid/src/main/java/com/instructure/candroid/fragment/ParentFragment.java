@@ -67,7 +67,6 @@ import com.instructure.candroid.decorations.GridSpacingDecorator;
 import com.instructure.interactions.Navigation;
 import com.instructure.candroid.interfaces.ConfigureRecyclerView;
 import com.instructure.interactions.FragmentInteractions;
-import com.instructure.candroid.util.FileUtils;
 import com.instructure.candroid.util.LoggingUtility;
 import com.instructure.candroid.util.Param;
 import com.instructure.candroid.util.StudentPrefs;
@@ -848,13 +847,11 @@ abstract public class ParentFragment extends DialogFragment implements Configure
                         } else if (loadedMedia.isHtmlFile()) {
                             InternalWebviewFragment.Companion.loadInternalWebView(getActivity(), (Navigation) getActivity(), loadedMedia.getBundle());
                         } else if (loadedMedia.getIntent() != null) {
-                            if(loadedMedia.getIntent().getType().contains("pdf") && !loadedMedia.isUseOutsideApps()){
-                                //show pdf with PSPDFkit
-                                Uri uri = loadedMedia.getIntent().getData();
-                                FileUtils.showPdfDocument(uri, loadedMedia, getContext());
-                            } else if (loadedMedia.getIntent().getType().equals("video/mp4")){
+                            if (loadedMedia.getIntent().getType().equals("video/mp4")){
                                 getActivity().startActivity(VideoViewActivity.createIntent(getContext(), loadedMedia.getIntent().getDataString()));
                             } else {
+                                // 파일 > pdf 선택 시
+                                // 학생이 제출한 과제 볼 때에
                                 getActivity().startActivity(loadedMedia.getIntent());
                             }
                         }

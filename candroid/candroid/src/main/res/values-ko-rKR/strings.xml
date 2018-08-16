@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -15,745 +14,863 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-
 <resources>
 
     <!--Profile Fragment Strings -->
-    <string name="canvasVersionNum">Version:</string>
+    <string name="canvasVersionNum">"버전:"</string>
 
     <!--Content Descriptions-->
-    <string name="canvasLogo">Canvas Logo</string>
-    <string name="app_name" translatable="false">Canvas Student</string>
-    <string name="enterURL">Enter your Canvas URL:</string>
-    <string name="exampleURLSimple">myschool.instructure.com</string>
-    <string name="signIntoCanvasNetwork">Trying to sign into Canvas Network?</string>
-    <string name="mobileVerifyGeneral">This app is not authorized for use</string>
-    <string name="mobileVerifyDomainUnauthorized">The server you entered is not authorized for this app.</string>
-    <string name="mobileVerifyUserAgentUnauthorized">The user agent for this app is unauthorized.</string>
-    <string name="mobileVerifyUnknownError">We were unable to verify the server for use with this app.</string>
-    <string name="okay">Okay</string>
-    <string name="options">Options</string>
+    <string name="canvasLogo">"Canvas 로고"</string>
+    <string name="app_name" translatable="false">"LearningX Student"</string>
+    <string name="enterURL">"Canvas URL 입력 :"</string>
+    <string name="exampleURLSimple">"myschool.instructure.com"</string>
+    <string name="signIntoCanvasNetwork">"Canvas Network에 로그인하려는 중입니까?"</string>
+    <string name="mobileVerifyGeneral">"이 앱은 사용 권한이 없습니다."</string>
+    <string name="mobileVerifyDomainUnauthorized">"입력한 서버가 이 앱에 대해 승인되지 않았습니다."</string>
+    <string name="mobileVerifyUserAgentUnauthorized">"이 앱의 사용자 에이전트가 승인되지 않았습니다."</string>
+    <string name="mobileVerifyUnknownError">"이 앱을 사용하기 위한 서버를 확인할 수 없습니다."</string>
+    <string name="okay">"확인"</string>
+    <string name="options">"옵션"</string>
 
-    <string name="discussionAttachment">Attach a file</string>
-    <string name="discussionUpload">Upload video or audio</string>
-    <string name="discussionPostEditing">Edit</string>
+    <string name="discussionAttachment">"파일 첨부"</string>
+    <string name="discussionUpload">"비디오 또는 오디오 업로드"</string>
+    <string name="discussionPostEditing">"편집"</string>
 
     <!--Multiple User Sign in -->
-    <string name="removeUser">Remove this user?</string>
-    <string name="removedForever">You\'ll have to sign into this user again to access their content.</string>
+    <string name="removeUser">"이 사용자를 삭제하시겠습니까?"</string>
+    <string name="removedForever">"콘텐츠에 액세스하려면 이 사용자로 다시 로그인해야합니다."</string>
 
-    <string name="bookmarksTitle">Bookmarks</string>
-    <string name="addBookmark">Add Bookmark</string>
-    <string name="bookmarkName">Label</string>
-    <string name="bookmarkTitleRequired">A Label is Required</string>
-    <string name="bookmarkAddedSuccess">Bookmark Created</string>
-    <string name="bookmarkAddedFailure">Bookmark could not be created</string>
-    <string name="bookmarkShortcut">Select a Bookmark</string>
-    <string name="bookmarkDeleted">Bookmark Removed</string>
-    <string name="bookmarkDelete">Remove Bookmark?</string>
-    <string name="bookmarkEdit">Edit Bookmark</string>
-    <string name="bookmarkUpdated">Bookmark Updated</string>
-    <string name="no_bookmarks">Create a bookmark then view it here!</string>
+    <string name="bookmarksTitle">"북마크"</string>
+    <string name="addBookmark">"북마크 추가"</string>
+    <string name="bookmarkName">"라벨"</string>
+    <string name="bookmarkTitleRequired">"라벨이 필요합니다."</string>
+    <string name="bookmarkAddedSuccess">"북마크 생성됨"</string>
+    <string name="bookmarkAddedFailure">"북마크를 만들지 못했습니다."</string>
+    <string name="bookmarkShortcut">"북마크 선택"</string>
+    <string name="bookmarkDeleted">"북마크 삭제됨"</string>
+    <string name="bookmarkDelete">"북마크를 제거하시겠습니까?"</string>
+    <string name="bookmarkEdit">"북마크 편집"</string>
+    <string name="bookmarkUpdated">"업데이트된 북마크"</string>
+    <string name="no_bookmarks">"북마크를 만들면 여기에 표시됩니다!"</string>
 
     <!--Date strings-->
-    <string name="today">Today</string>
-    <string name="past">Past</string>
-    <string name="noDate">No Date</string>
-    <string name="future">Future</string>
-    <string name="next7Days">Next 7 Days</string>
-    <string name="days">Days</string>
+    <string name="today">"오늘"</string>
+    <string name="past">"과거"</string>
+    <string name="noDate">"날짜 없음"</string>
+    <string name="future">"미래"</string>
+    <string name="next7Days">"다음 7 일"</string>
+    <string name="days">"일"</string>
 
     <!--Assignments-->
-    <string name="assignmentDue">Due</string>
-    <string name="assignmentDueColon">Due: </string>
-    <string name="assignmentLastSubmission">Last Submission</string>
-    <string name="assignmentNoSubmission">None</string>
-    <string name="assignmentTabDetails">Details</string>
-    <string name="assignmentTabSubmission">Submissions</string>
-    <string name="assignmentTabGrade">Grade</string>
-    <string name="assignmentLocked">Locked</string>
-    <string name="assignments">Assignments</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s pts</string>
-    <string name="noRubric">There is no rubric for this assignment.</string>
-    <string name="noDescription">There is no description for this assignment</string>
-    <string name="noAssignmentsInGroup">No Assignments in this group</string>
-    <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
-    <string name="droppedAssignment">This assignment is dropped and will not be considered in the total calculation</string>
-    <string name="excused">EX</string>
-    <string name="mutedText">Grades are unavailable because the instructor is working on them.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;to &gt; %s pts</string>
+    <string name="assignmentDue">"마감"</string>
+    <string name="assignmentDueColon">"마감: "</string>
+    <string name="assignmentLastSubmission">"마지막 제출"</string>
+    <string name="assignmentNoSubmission">"없음"</string>
+    <string name="assignmentTabDetails">"상세"</string>
+    <string name="assignmentTabSubmission">"제출"</string>
+    <string name="assignmentTabGrade">"성적"</string>
+    <string name="assignmentLocked">"잠김"</string>
+    <string name="assignments">"과제 및 평가"</string>
+    <string name="freeFormRubricPoints" formatted="false">"%s / %s "</string>
+    <string name="noRubric">"이 과제에 대한 루브릭이 없습니다."</string>
+    <string name="noDescription">"이 과제에 대한 설명이 없습니다."</string>
+    <string name="noAssignmentsInGroup">"이 그룹에 과제가 없습니다."</string>
+    <string name="excusedAssignment">"이 과제는 면제되고, 총 계산에서 고려되지 않습니다."</string>
+    <string name="droppedAssignment">"이 과제는 삭제되며 전체 계산에서 고려되지 않습니다."</string>
+    <string name="excused">"EX"</string>
+    <string name="mutedText">"교수자가 작업 중이므로 성적을 표시할 수 없습니다."</string>
+    <string name="rubricRangePointsText" formatted="false">" ~&gt; %s 점"</string>
+    <string name="contentDescriptionRubricRangePointsText" formatted="false">"%s 에서&gt; %s 점까지"</string>
 
     <!-- Assignment editing -->
-    <string name="points">Points\u0020</string>
-    <string name="assignmentGroup">Assignment Group:\u0020</string>
-    <string name="gradingType">Grading Type:\u0020</string>
-    <string name="submissionType">Submission Type:\u0020</string>
-    <string name="editAssignment">Edit Assignment</string>
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
-    <string name="sendNotification">Notify users that this content has changed</string>
+    <string name="points">"점수\u0020"</string>
+    <string name="assignmentGroup">"과제 그룹 : \u0020"</string>
+    <string name="gradingType">"성적 유형 : \u0020"</string>
+    <string name="submissionType">"제출 유형 : \u0020"</string>
+    <string name="editAssignment">"과제 편집"</string>
+    <string name="save">"저장"</string>
+    <string name="cancel">"취소"</string>
+    <string name="sendNotification">"이 콘텐츠가 변경되었음을 사용자에게 알립니다."</string>
 
     <!--Discussions-->
-    <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
+    <string name="forbidden">"댓글은 최소한 하나 이상의 댓글을 게시한 사용자에게만 표시됩니다."</string>
 
     <!--Events-->
-    <string name="Starts">Starts</string>
-    <string name="Ends">Ends</string>
-    <string name="allDayEvent">All Day Event</string>
-    <string name="at">at</string>
-    <string name="PersonalCalendar">Personal Calendar</string>
-    <string name="noLocation">No Location Specified</string>
+    <string name="Starts">"시작"</string>
+    <string name="Ends">"끝"</string>
+    <string name="allDayEvent">"종일 이벤트"</string>
+    <string name="at">"at"</string>
+    <string name="PersonalCalendar">"개인 캘린더"</string>
+    <string name="noLocation">"위치 지정 없음"</string>
 
-    <string name="discussion">Discussions</string>
-    <string name="closed_discussion">Closed for Comments</string>
-    <string name="discussionUploadDialog">Discussion Upload</string>
-    <string name="totalScore">Total:</string>
-    <string name="noGradeText">N/A</string>
-    <string name="checkBoxFinalGradeOption">Base on graded assignments</string>
-    <string name="checkBoxWhatIfGradeOption">Show What-If Score</string>
-    <string name="whatIfDialogText">What-If Score</string>
-    <string name="inbox">Inbox</string>
-    <string name="unread">Unread</string>
-    <string name="archived">Archived</string>
-    <string name="sent">Sent</string>
-    <string name="grade">Grade</string>
-    <string name="monologue">Monologue</string>
-    <string name="noItemsToDisplayShort">No items to display</string>
-    <string name="emptyCalendarDate">Nothing Planned For</string>
-    <string name="emptyCalendarWeek">Nothing Planned For The Week</string>
-    <string name="emptyCalendarMonth">Nothing Planned For The Month</string>
-    <string name="selectCanvasCalendars">Select Up To 10 Calendars</string>
-    <string name="contentDesc_colored_calendar_indicator">Colored calendar indicator</string>
-    <string name="noDatesSelected">Please select a date</string>
-    <string name="Todo">To-do</string>
-    <string name="Event">Event</string>
-    <string name="eventSuccessfulCreation">Event was successfully created</string>
-    <string name="eventSuccessfulDeletion">Event was successfully deleted</string>
-    <string name="newEvent">New Event</string>
-    <string name="enterTitle">Enter Title</string>
-    <string name="enterLocation">Enter Location</string>
-    <string name="addNote">Add Note</string>
-    <string name="titleIconDescription">Title Icon</string>
-    <string name="dateIconDescription">Date Icon</string>
-    <string name="locationIconDescription">Location Icon</string>
-    <string name="noteIconDescription">Note Icon</string>
-    <string name="toDoTurnIn">Turn in</string>
-    <string name="toDoNoDueDate">No Due Date</string>
+    <string name="discussion">"토론"</string>
+    <string name="closed_discussion">"댓글 마감된 토론"</string>
+    <string name="discussionUploadDialog">"토론 업로드"</string>
+    <string name="totalScore">"합계:"</string>
+    <string name="noGradeText">"N/A"</string>
+    <string name="checkBoxFinalGradeOption">"채점된 과제물 기반"</string>
+    <string name="checkBoxWhatIfGradeOption">"What-If 점수 표시"</string>
+    <string name="whatIfDialogText">"What-If 점수"</string>
+    <string name="inbox">"받은 편지함"</string>
+    <string name="unread">"읽지않은 메시지"</string>
+    <string name="archived">"보관 메시지"</string>
+    <string name="sent">"보낸 메시지"</string>
+    <string name="grade">"성적"</string>
+    <string name="clearFilter">"필터 지우기"</string>
+    <string name="addMessage">"메시지 추가"</string>
+    <string name="monologue">"모놀로그"</string>
+    <string name="noItemsToDisplayShort">"표시할 항목이 없습니다."</string>
+    <string name="emptyCalendarDate">"계획 없음"</string>
+    <string name="emptyCalendarWeek">"금주 계획 없음"</string>
+    <string name="emptyCalendarMonth">"금월 계획 없음"</string>
+    <string name="selectCanvasCalendars">"최대 10개의 캘린더 선택"</string>
+    <string name="contentDesc_colored_calendar_indicator">"컬러 캘린더 표시기"</string>
+    <string name="noDatesSelected">"날짜를 선택하십시오."</string>
+    <string name="Todo">"할 일"</string>
+    <string name="Event">"이벤트"</string>
+    <string name="eventSuccessfulCreation">"이벤트가 성공적으로 생성되었습니다."</string>
+    <string name="eventSuccessfulDeletion">"이벤트가 성공적으로 삭제되었습니다."</string>
+    <string name="newEvent">"새로운 이벤트"</string>
+    <string name="enterTitle">"제목 입력"</string>
+    <string name="enterLocation">"위치 입력"</string>
+    <string name="addNote">"메모 추가"</string>
+    <string name="titleIconDescription">"제목 아이콘"</string>
+    <string name="dateIconDescription">"날짜 아이콘"</string>
+    <string name="timeIconDescription">"시간 아이콘"</string>
+    <string name="locationIconDescription">"위치 아이콘"</string>
+    <string name="noteIconDescription">"메모 아이콘"</string>
+    <string name="toDoTurnIn">"제출"</string>
+    <string name="toDoNoDueDate">"마감일 없음"</string>
 
-    <string name="dueAt">Due at</string>
-    <string name="toDoDue">Due</string>
+    <string name="dueAt">"마감일"</string>
+    <string name="toDoDue">"마감"</string>
+    <string name="due">"마감일 : %1$s"</string>
     <plurals name="to_do_needs_grading">
-        <item quantity="one">%d needs grading</item>
-        <item quantity="other">%d need grading</item>
+        <item quantity="one">"%d 채점 필요"</item>
+        <item quantity="other">"%d 채점 필요"</item>
     </plurals>
-    <string name="myFiles">Files</string>
-    <string name="settings">Settings</string>
-    <string name="name">Name</string>
-    <string name="email">Email</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="authenticationRequired">Authentication Required</string>
-    <string name="invalidEmailPassword">Invalid email or password</string>
-    <string name="loginId">Login ID</string>
-    <string name="domain">Domain</string>
-    <string name="sendFeedback">Send Feedback</string>
-    <string name="sendMail">Send Email&#8230;</string>
-    <string name="edit">Edit</string>
+    <string name="myFiles">"파일"</string>
+    <string name="createAFolder">"폴더 만들기"</string>
+    <string name="createFolder">"폴더 만들기"</string>
+    <string name="createAFile">"파일 만들기"</string>
+    <string name="createFileFolderFabContentDesc">"파일 생성 및 폴더 생성 버튼 표시"</string>
+    <string name="folderCreationError">"폴더를 만드는 동안 오류가 발생했습니다."</string>
+    <string name="rename">"이름 바꾸기"</string>
+    <string name="renameFile">"파일명 변경"</string>
+    <string name="renameFolder">"폴더 이름 바꾸기"</string>
+    <string name="blankName">"이름을 입력하십시오."</string>
+    <string name="confirmDeleteFile">"' %s '파일을 정말로 삭제 하시겠습니까? 이 작업은 실행 취소 할 수 없습니다."</string>
+    <string name="confirmDeleteEmptyFolder">"' %s '폴더를 삭제 하시겠습니까? 이 작업은 실행 취소 할 수 없습니다."</string>
+    <plurals name="confirmDeleteFolder">
+        <item quantity="one">"%2$d 항목을 포함하여 ' %1$s '폴더를 삭제 하시겠습니까? 이 작업은 실행 취소 할 수 없습니다."</item>
+        <item quantity="other">"%2$d 항목을 포함하여 ' %1$s '폴더를 삭제 하시겠습니까? 이 작업은 실행 취소 할 수 없습니다."</item>
+    </plurals>
+
+    <string name="settings">"설정"</string>
+    <string name="name">"이름"</string>
+    <string name="email">"이메일"</string>
+    <string name="username">"사용자 이름"</string>
+    <string name="password">"암호"</string>
+    <string name="authenticationRequired">"인증 필요"</string>
+    <string name="invalidEmailPassword">"이메일 또는 비밀번호가 잘못되었습니다."</string>
+    <string name="loginId">"로그인 ID"</string>
+    <string name="domain">"도메인"</string>
+    <string name="sendFeedback">"의견 보내기"</string>
+    <string name="sendMail">"이메일 보내기…"</string>
+    <string name="edit">"편집"</string>
     <plurals name="item_count">
-        <item quantity="one">%d item</item>
-        <item quantity="other">%d items</item>
+        <item quantity="one">"%d 항목"</item>
+        <item quantity="other">"항목 %d 개"</item>
     </plurals>
-    <string name="archive">Archive</string>
-    <string name="moveToInbox">Move to Inbox</string>
-    <string name="markAsUnread">Mark as Unread</string>
-    <string name="selectPeopleInbox">Select People</string>
-    <string name="delete">Delete</string>
-    <string name="deleteEvent">Delete Event</string>
-    <string name="selected">Selected</string>
-    <string name="errorSendingMessage">An error occurred trying to send your message. Please try again.</string>
-    <string name="errorPostingComment">An error occurred trying to post your submission comment. Please try again.</string>
-    <string name="deletedConversation">That conversation has been deleted.</string>
-    <string name="uploadAvatarFailMsg">New avatar picture failed to upload</string>
-    <string name="fileNotFound">File not found.</string>
+    <string name="addToHomescreen">"홈에 추가"</string>
+    <string name="archive">"보관"</string>
+    <string name="moveToInbox">"받은 편지함으로 이동"</string>
+    <string name="markAsUnread">"읽지 않은 상태로 표시"</string>
+    <string name="selectPeopleInbox">"사용자 선택"</string>
+    <string name="delete">"삭제"</string>
+    <string name="deleteEvent">"이벤트 삭제"</string>
+    <string name="selected">"선택됨"</string>
+    <string name="errorSendingMessage">"메시지를 보내는 중에 오류가 발생했습니다. 다시 시도하십시오."</string>
+    <string name="errorPostingComment">"제출물 댓글을 게시하는 중에 오류가 발생했습니다. 다시 시도하십시오."</string>
+    <string name="deletedConversation">"대화가 삭제되었습니다."</string>
+    <string name="uploadAvatarFailMsg">"새 아바타 그림을 업로드하지 못했습니다."</string>
+    <string name="editPhoto">"사진 편집"</string>
+    <string name="invalidUsername">"해당 사용자 이름이 유효하지 않습니다."</string>
+    <string name="usernameChangeSuccess">"사용자 이름이 성공적으로 업데이트 되었습니다!"</string>
+    <string name="takePhoto">"사진 찍기"</string>
+    <string name="choosePhotoFromGallery">"갤러리에서 사진 선택"</string>
+    <string name="fileNotFound">"파일을 찾을 수 없습니다."</string>
 
     <!-- Conversations -->
-    <string name="reply">Reply&#8230;</string>
-    <string name="writeAMessage">Write a message…</string>
-    <string name="compose">Compose</string>
-    <string name="composeMessage">Compose Message</string>
-    <string name="successSendingMessage">Message was successfully sent.</string>
-    <string name="emptyMessage">The message cannot be blank!</string>
-    <string name="noRecipients">No Recipients</string>
-    <string name="send">Send</string>
-    <string name="users">Users</string>
-    <string name="individually">Individually</string>
-    <string name="versionNum">Version:</string>
-    <string name="allCourses">All Courses</string>
-    <string name="open">Open</string>
-    <string name="openAlternate">Open with alternate app</string>
-    <string name="opening">Opening File&#8230;</string>
-    <string name="download">Download</string>
-    <string name="hideExtras">Hide Extras</string>
-    <string name="showExtras">Show Extras</string>
-    <string name="messageAttachments">Message Attachments</string>
-    <string name="discussionAttachmentLabel">Attachment</string>
-    <string name="ok">OK</string>
-    <string name="with">with</string>
-    <string name="starConversation">Star Conversation</string>
-    <string name="deleteConversation">Delete Conversation</string>
-    <string name="sharedWith">Shared with \u0020</string>
-    <string name="sharedWithYou">Shared with you</string>
+    <string name="reply">"댓글 작성"</string>
+    <string name="writeAMessage">"메시지 쓰기 ..."</string>
+    <string name="compose">"작성"</string>
+    <string name="composeMessage">"메시지 작성"</string>
+    <string name="successSendingMessage">"메시지를 보냈습니다."</string>
+    <string name="emptyMessage">"메시지를 입력하세요!"</string>
+    <string name="noRecipients">"수신자 없음"</string>
+    <string name="send">"보내다"</string>
+    <string name="users">"사용자"</string>
+    <string name="individually">"개별적으로"</string>
+    <string name="versionNum">"버전:"</string>
+    <string name="version" formatted="false">"v. %s"</string>
+    <string name="allCourses">"모든 과목"</string>
+    <string name="allGroups">"모든 그룹"</string>
+    <string name="courseOptions">"과목 옵션"</string>
+    <string name="editNickname">"닉네임 수정"</string>
+    <string name="editCourseColor">"과목 색상 편집"</string>
+    <string name="open">"열기"</string>
+    <string name="openAlternate">"대체 앱으로 열기"</string>
+    <string name="opening">"파일 여는 중 ..."</string>
+    <string name="download">"다운로드"</string>
+    <string name="hideExtras">"추가 사항 숨기기"</string>
+    <string name="showExtras">"추가 사항 표시"</string>
+    <string name="messageAttachments">"메시지 첨부 파일"</string>
+    <string name="discussionAttachmentLabel">"첨부"</string>
+    <string name="attachmentIcon">"첨부 파일 아이콘"</string>
+    <string name="ok">"확인"</string>
+    <string name="with">"with"</string>
+    <string name="starConversation">"대화 별표 지정"</string>
+    <string name="deleteConversation">"대화 삭제"</string>
+    <string name="sharedWith">"\u0020와 (과) 공유했습니다."</string>
+    <string name="sharedWithYou">"나와 공유함"</string>
+    <string name="inboxEmptyMessage">"'+'을 탭하여 새 대화를 만듭니다."</string>
+    <string name="inboxAllMessages">"모든 메시지"</string>
+    <string name="inboxEmptyStarredMessage">"메일 내의 별표를 탭하여 메일을 별표로 표시합니다."</string>
+    <string name="filterInbox">"받은 편지함 필터링"</string>
+    <string name="selectCanvasContext">"과목 또는 그룹 선택"</string>
+    <string name="inboxEmptyTitle">"메시지 없음"</string>
+    <string name="inboxEmptyStarredTitle">"별표 표시된 메일 없음"</string>
+    <string name="removeAttachment">"첨부 파일 제거"</string>
+    <string name="downloadAttachment">"첨부 파일 다운로드"</string>
+    <string name="messageOptions">"메시지 옵션"</string>
+    <string name="forward">"전달"</string>
+    <string name="replyAll">"전체 회신"</string>
+    <string name="unarchive">"보관 취소"</string>
+    <string name="confirmDeleteMessage">"이 메시지의 사본을 삭제 하시겠습니까? 이 작업은 실행 취소 할 수 없습니다."</string>
+    <string name="confirmDeleteConversation">"이 대화의 사본을 삭제 하시겠습니까? 이 작업은 실행 취소 할 수 없습니다."</string>
+    <string name="errorConversationGeneric">"이 작업을 수행 할 수 없습니다. 연결을 확인하고 다시 시도하십시오."</string>
+    <string name="conversationArchived">"보관된 메시지"</string>
+    <string name="conversationUnarchived">"대화가 보관되지 않음"</string>
+    <string name="messageDeleted">"메시지가 삭제되었습니다."</string>
+    <string name="sendIndividualMessage">"각 수신자에게 개별 메시지 보내기"</string>
+    <string name="newMessage">"새로운 메시지"</string>
+    <string name="forwardMessage">"메시지 전달"</string>
+    <string name="addMorePeopleToMessage">"다른 받는 사람을 추가하십시오. 자신에게만 보내는 메시지는 전송할 수 없습니다."</string>
+    <string name="selectRecipients">"받는 사람 선택"</string>
+
+    <plurals name="people_count">
+        <item quantity="one">"%d 명"</item>
+        <item quantity="other">"%d 명"</item>
+    </plurals>
+
+    <plurals name="group_count">
+        <item quantity="one">"그룹 %d"</item>
+        <item quantity="other">"그룹 %d 개"</item>
+    </plurals>
+
+    <string name="exitWithoutSavingTitle">"저장하지 않고 종료 하시겠습니까?"</string>
+    <string name="exitWithoutSavingMessage">"저장하지 않고 종료 하시겠습니까?"</string>
+    <string name="exitUnsaved">"출구"</string>
 
     <!-- Groups -->
-    <string name="groupDialogTitle">Group Message?</string>
-    <string name="groupDialogMessage">Add everyone to a single group conversation, or message everyone individually?</string>
-    <string name="group">Group</string>
-    <string name="groups">Groups</string>
-    <string name="groupMembers">Group Members</string>
+    <string name="groupDialogTitle">"그룹 메시지?"</string>
+    <string name="groupDialogMessage">"모든 사람을 단일 그룹 대화에 추가하거나 모두에게 개별적으로 메시지를 보내시겠습니까?"</string>
+    <string name="group">"그룹"</string>
+    <string name="groups">"그룹"</string>
+    <string name="groupMembers">"그룹 회원"</string>
 
-    <string name="loading">Loading&#8230;</string>
-    <string name="select_item_to_display">Select from the list</string>
+    <string name="loading">"로드 중 ..."</string>
+    <string name="select_item_to_display">"목록에서 선택하십시오."</string>
 
-    <string name="syllabus">Syllabus</string>
-    <string name="coursePeople">People</string>
-    <string name="teachersTas">Teachers &amp; TAs</string>
-    <string name="students">Students</string>
-    <string name="observers">Observers</string>
+    <string name="syllabus">"강의 계획서"</string>
+    <string name="coursePeople">"사용자 및 그룹"</string>
+    <string name="teachersTas">"교사 및 TA"</string>
+    <string name="students">"학생"</string>
+    <string name="observers">"옵저버"</string>
+    <string name="syllabusMissing">"강의 요강이 추가되지 않았습니다."</string>
 
-    <string name="canvas">Canvas</string>
-    <string name="chooseRecipient">Choose Recipient(s)</string>
-    <string name="messageHasNoRecipients">This message currently has no recipients.</string>
-    <string name="sendMessage">Send Message</string>
-    <string name="userAvatar">User Avatar</string>
+    <string name="canvas">"Canvas"</string>
+    <string name="chooseRecipient">"수신자 선택"</string>
+    <string name="messageHasNoRecipients">"수신인을 지정해야 합니다."</string>
+    <string name="sendMessage">"문자 보내기"</string>
+    <string name="userAvatar">"사용자 아바타"</string>
 
-    <string name="calendarIcon">Calendar Icon</string>
-    <string name="assignmentIcon">Assignment Icon</string>
-    <string name="announcementIcon">Announcement Icon</string>
-    <string name="conversationIcon">Conversation Icon</string>
-    <string name="defaultIcon">Default Icon</string>
-    <string name="discussionIcon">Discussion Icon</string>
-    <string name="gradesIcon">Grades Icon</string>
-    <string name="grades">Grades</string>
-    <string name="allGradingPeriods">All Grading Periods</string>
-    <string name="calendar">Calendar</string>
-    <string name="bookmarks">Bookmarks</string>
-    <string name="showGrades">Show Grades</string>
-    <string name="gradesAreHidden">Grades are not visible for this course.</string>
+    <string name="calendarIcon">"캘린더 아이콘"</string>
+    <string name="assignmentIcon">"과제 아이콘"</string>
+    <string name="announcementIcon">"공지 사항 아이콘"</string>
+    <string name="conversationIcon">"대화 아이콘"</string>
+    <string name="defaultIcon">"기본 아이콘"</string>
+    <string name="discussionIcon">"토론 아이콘"</string>
+    <string name="gradesIcon">"성적 아이콘"</string>
+    <string name="grades">"성적"</string>
+    <string name="allGradingPeriods">"모든 채점 기간"</string>
+    <string name="calendar">"캘린더"</string>
+    <string name="bookmarks">"북마크"</string>
+    <string name="showGrades">"성적 표시"</string>
+    <string name="gradesAreHidden">"이 과정에서는 성적이 보이지 않습니다."</string>
 
-    <string name="entireGroupSelected">This entire group has already been selected.</string>
-    <string name="noUsersInGroup">There are no users in this group</string>
+    <string name="entireGroupSelected">"전체 그룹이 이미 선택되었습니다."</string>
+    <string name="noUsersInGroup">"이 그룹에 사용자가 없습니다."</string>
 
     <!--Notifications-->
-    <string name="deleted">[Deleted]</string>
-    <string name="gradedDiscussion">Graded Discussion.</string>
-    <string name="pointsPossible">Points Possible.</string>
-    <string name="pointsPossibleNoPeriod">Points Possible</string>
+    <string name="deleted">"[삭제됨]"</string>
+    <string name="gradedDiscussion">"평가용 토론"</string>
+    <string name="pointsPossible">"가능 점수"</string>
+    <string name="pointsPossibleNoPeriod">"가능 점수"</string>
 
-    <string name="deletedEntryNoChildren">This deleted discussion entry has no replies.</string>
-    <string name="sideCommentEntry">In this type of discussion, you can\'t comment on any entry on this level.</string>
-    <string name="contentDescriptionFiles">File icon</string>
+    <string name="deletedEntryNoChildren">"삭제된 이 토론 항목에는 답글이 없습니다."</string>
+    <string name="sideCommentEntry">"이런 유형의 토론에서는 이 수준의 항목에 대해서는 댓글을 달 수 없습니다."</string>
+    <string name="contentDescriptionFiles">"파일 아이콘"</string>
 
-    <string name="loadingCanvas">Loading Canvas Content&#8230;</string>
+    <string name="loadingCanvas">"Canvas 콘텐츠 로딩 중..."</string>
 
-    <string name="unknownDevice">UnknownDevice</string>
+    <string name="unknownDevice">"UnknownDevice"</string>
 
-    <string name="differentDomainFromLink">The link selected is for a different domain than the one you are signed into.</string>
+    <string name="differentDomainFromLink">"선택한 링크는 귀하가 로그인 한 도메인과는 다른 도메인을 위한 것입니다.                    "</string>
 
-    <string name="pages">Pages</string>
-    <string name="noPageFound">There is no page information available.</string>
-    <string name="noPagesInContext">There are no pages available for this</string>
-    <string name="modified">Last Modified:</string>
+    <string name="pages">"페이지"</string>
+    <string name="noPageFound">"사용할 수있는 페이지 정보가 없습니다."</string>
+    <string name="noPagesInContext">"사용할 수있는 페이지가 없습니다."</string>
+    <string name="modified">"최종 수정일 :"</string>
+    <string name="lastModified">"최종 수정일 : %1$s"</string>
 
-    <string name="masqueradeUserId">Masquerade User ID</string>
-    <string name="startMasquerading">Start Masquerading</string>
-    <string name="stopMasquerading">Stop Masquerading</string>
-    <string name="userId">User ID</string>
-    <string name="masqueradeFail">There was an error when trying to masquerade</string>
+    <string name="masqueradeUserId">"가상 로그인 사용자 ID"</string>
+    <string name="startMasquerading">"가상 로그인 시작"</string>
+    <string name="stopMasquerading">"가상 로그인 종료"</string>
+    <string name="userId">"사용자 ID"</string>
+    <string name="masqueradeFail">"가상 로그인 시도 중 오류가 발생했습니다."</string>
 
-    <string name="emptyId">The ID cannot be blank</string>
+    <string name="emptyId">"ID를 입력하십시오."</string>
 
-    <string name="goToQuiz">Go To Quiz</string>
-    <string name="goToExternalTool">Go To External Tool</string>
+    <string name="goToQuiz">"퀴즈로 이동"</string>
+    <string name="goToExternalTool">"외부 도구로 이동"</string>
 
-    <string name="pastDueDate">Past Due Date</string>
+    <string name="pastDueDate">"마감일 지남"</string>
 
-    <string name="goToDiscussion">Go To Discussion</string>
-    <string name="quizzes">Quizzes</string>
+    <string name="goToDiscussion">"토론으로 이동"</string>
+    <string name="quizzes">"시험 및 설문"</string>
 
-    <string name="lastDiscussionPost">Last post</string>
+    <string name="lastDiscussionPost">"마지막 게시"</string>
 
-    <string name="newAnnouncement">New Announcement</string>
-    <string name="newDiscussion">New Discussion</string>
-    <string name="composeDiscussion">Create Discussion</string>
-    <string name="composeAnnouncement">Create Announcement</string>
+    <string name="newAnnouncement">"새 공지"</string>
+    <string name="newDiscussion">"새 토론"</string>
+    <string name="composeDiscussion">"토론 만들기"</string>
+    <string name="composeAnnouncement">"공지 사항 작성"</string>
 
-    <string name="postAnnouncement">Post Announcement</string>
-    <string name="postDiscussion">Post Discussion</string>
+    <string name="postAnnouncement">"공지 게시"</string>
+    <string name="postDiscussion">"토론 게시"</string>
 
-    <string name="postAnnouncementSuccess">The announcement was posted successfully.</string>
-    <string name="postDiscussionSuccess">The discussion was posted successfully.</string>
-    <string name="updateDiscussionSuccess">The discussion was updated successfully.</string>
-    <string name="draftDiscussionSuccess">Discussion draft created successfully.</string>
+    <string name="postAnnouncementSuccess">"공지가 성공적으로 게시되었습니다."</string>
+    <string name="postDiscussionSuccess">"토론이 성공적으로 게시되었습니다."</string>
+    <string name="updateDiscussionSuccess">"토론이 성공적으로 업데이트되었습니다."</string>
+    <string name="draftDiscussionSuccess">"토론 초안이 성공적으로 작성되었습니다."</string>
 
-    <string name="errorPostingAnnouncement">There was an error posting the announcement.</string>
-    <string name="errorPostingDiscussion">There was an error posting the discussion.</string>
-    <string name="allowThreading">Allow Threaded Replies</string>
-    <string name="message">Message</string>
-    <string name="title">Title</string>
+    <string name="errorPostingAnnouncement">"공지 사항을 게시하는 중 오류가 발생했습니다."</string>
+    <string name="errorPostingDiscussion">"토론을 게시하는 중에 오류가 발생했습니다."</string>
+    <string name="allowThreading">"스레드 답변 허용"</string>
+    <string name="message">"메시지"</string>
+    <string name="title">"제목"</string>
 
 
-    <string name="messageBlank">The message cannot be blank.</string>
+    <string name="messageBlank">"메시지를 입력하세요!"</string>
 
-    <string name="notAuthorizedAnnouncement">Sorry. You are not authorized to post announcements in this course.</string>
-    <string name="notAuthorizedDiscussion">Sorry. You are not authorized to post discussions in this course.</string>
+    <string name="notAuthorizedAnnouncement">"죄송합니다. 귀하는이 과정에서 공지 사항을 게시 할 수있는 권한이 없습니다."</string>
+    <string name="notAuthorizedDiscussion">"죄송합니다. 귀하는이 과정에서 토론을 게시 할 수있는 권한이 없습니다."</string>
 
-    <string name="announcements">Announcements</string>
+    <string name="announcements">"공지 사항"</string>
 
-    <string name="titleBlank">The title cannot be blank.</string>
+    <string name="titleBlank">"제목을 입력하세요."</string>
 
     <!-- Modules -->
-    <string name="modules">Modules</string>
-    <string name="moduleItemMustView">View this item</string>
-    <string name="moduleItemViewed">You have viewed this item</string>
-    <string name="moduleItemSubmit">Must submit assigment</string>
-    <string name="moduleItemSubmitted">Assignment submitted</string>
-    <string name="moduleItemContribute">Contribute to this page</string>
-    <string name="moduleItemContributed">You have contributed</string>
-    <string name="moduleItemMinScore">Score at least a</string>
-    <string name="moduleItemMinScoreMet">Minimum score met</string>
-    <string name="prerequisites">Prerequisites:</string>
-    <string name="unlocked">Unlocked:</string>
-    <string name="locked">Locked</string>
-    <string name="lockedAssignmentDesc">This assignment is part of the module %s and hasn\'t been unlocked yet.</string>
-    <string name="lockedPageDesc">This page is part of the module %s and hasn\'t been unlocked yet.</string>
-    <string name="lockedFileDesc">This file is part of the module %s and hasn\'t been unlocked yet.</string>
-    <string name="lockedQuizDesc">This quiz is part of the module %s and hasn\'t been unlocked yet.</string>
-    <string name="lockedDiscussionDesc">This discussion is part of the module %s and hasn\'t been unlocked yet.</string>
-    <string name="lockedAssignmentDescLine2">Visit the course modules page for information on how to unlock this content.</string>
-    <string name="mustComplete">You must first complete:</string>
-    <string name="unlockedAt">It will be unlocked at:</string>
-    <string name="goToModules">Go To Modules</string>
-    <string name="markDone">Mark done</string>
+    <string name="modules">"모듈"</string>
+    <string name="moduleItemMustView">"이 항목 보기"</string>
+    <string name="moduleItemViewed">"이 항목을 보았습니다."</string>
+    <string name="moduleItemSubmit">"제출물을 제출해야합니다."</string>
+    <string name="moduleItemSubmitted">"과제가 제출되었습니다."</string>
+    <string name="moduleItemContribute">"이 페이지에 참여하십시오."</string>
+    <string name="moduleItemContributed">"첨여하였습니다."</string>
+    <string name="moduleItemMinScore">"최소 점수"</string>
+    <string name="moduleItemMinScoreMet">"최소 점수 충족"</string>
+    <string name="prerequisites">"선수 과목 :"</string>
+    <string name="unlocked">"잠금 해제 됨 :"</string>
+    <string name="locked">"잠김"</string>
+    <string name="lockedAssignmentDesc">"이 과제는 모듈 %s의 일부이며 아직 수행할 수 없습니다.(잠금 상태)"</string>
+    <string name="lockedPageDesc">"이 페이지는 %s 모듈의 일부이며 아직 잠금 해제되지 않았습니다."</string>
+    <string name="lockedFileDesc">"이 파일은 %s 모듈의 일부이며 아직 잠금 해제되지 않았습니다."</string>
+    <string name="lockedQuizDesc">"이 퀴즈는 모듈 %s의 일부이며 아직 잠금 해제되지 않았습니다."</string>
+    <string name="lockedDiscussionDesc">"이 토론은 %s 모듈의 일부이며 아직 잠금 해제되지 않았습니다."</string>
+    <string name="lockedAssignmentDescLine2">"이 콘텐츠를 잠금 해제하는 방법에 대한 정보는 과목 모듈 페이지를 방문하십시오."</string>
+    <string name="mustComplete">"먼저 완료해야 합니다 :"</string>
+    <string name="unlockedAt">"잠금 해제 시기:"</string>
+    <string name="goToModules">"모듈로 이동"</string>
+    <string name="markDone">"완료로 표시"</string>
 
-    <string name="help">Help</string>
-    <string name="instructor_question">Instructor Question</string>
-    <string name="link">Link</string>
+    <string name="help">"도움말"</string>
+    <string name="instructor_question">"교수 질문"</string>
+    <string name="link">"링크"</string>
 
     <!-- LockInfoHTMLHelper Strings -->
-    <string name="lockedAssignmentNotModule">This assignment is locked.</string>
+    <string name="lockedAssignmentNotModule">"이 과제는 잠겨 있습니다."</string>
 
     <!--New Course Layout Strings -->
-    <string name="myCourses">My Courses</string>
+    <string name="myCourses">"내 과목"</string>
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Text Entry</string>
-    <string name="onlineURL"> Online URL</string>
-    <string name="enterTextEntry">Enter Text Entry</string>
-    <string name="fileUpload"> File Upload</string>
-    <string name="oneFileOnly">This submission only accepts one file upload</string>
+    <string name="textEntry">" 텍스트 입력"</string>
+    <string name="onlineURL">" 온라인 URL"</string>
+    <string name="enterTextEntry">"텍스트 입력"</string>
+    <string name="fileUpload">" 파일 업로드"</string>
+    <string name="oneFileOnly">"이 제출에는 하나의 파일만 업로드 할 수 있습니다."</string>
 
 
-    <string name="submit">Submit</string>
-    <string name="blankSubmission">The submission cannot be blank.</string>
-    <string name="errorPostingSubmission">There was an error posting the submission.</string>
-    <string name="successPostingSubmission">Successfully posted the submission.</string>
+    <string name="submit">"제출"</string>
+    <string name="blankSubmission">"제출 내용을 입력하십시오."</string>
+    <string name="errorPostingSubmission">"제출물을 게시하는 중에 오류가 발생했습니다."</string>
+    <string name="successPostingSubmission">"제출물을 게시했습니다."</string>
 
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
+    <string name="exampleSubmissionURL">"http://www.example.com"</string>
 
 
     <!--DataLoss Fragment Strings -->
-    <string name="unsavedProgress">Unsaved Progress</string>
-    <string name="informationLost">Unsaved information will be lost. Do you want to continue?</string>
-    <string name="slash"> / </string>
+    <string name="unsavedProgress">"저장되지 않은 진행률"</string>
+    <string name="informationLost">"저장되지 않은 정보는 손실됩니다. 계속 하시겠습니까?"</string>
+    <string name="slash">" / "</string>
 
     <!--Delete Notification Strings -->
-    <string name="confirm">Confirm</string>
+    <string name="confirm">"확인"</string>
 
     <!--Dismiss To do String-->
-    <string name="markAsDone">Mark as done</string>
+    <string name="markAsDone">"완료로 표시"</string>
 
     <!--Submission Details Strings -->
-    <string name="next">Next</string>
-    <string name="addSubmission">Turn in</string>
-    <string name="addAnotherSubmission">Turn in again</string>
-    <string name="turnedIn">Turned In:&#160;</string>
-    <string name="addComment">Add a comment&#8230;</string>
-    <string name="addCommentNoEllipsis">Add a comment</string>
-    <string name="subTypeOnlineText">Online Text Entry</string>
-    <string name="subTypeFileUpload">Online eFile Upload</string>
-    <string name="subTypeOnlineURL">Website URL</string>
-    <string name="subTypeOnlineQuiz">Online Quiz</string>
-    <string name="subTypeMediaRecording">Media Recording</string>
-    <string name="sub_type_lti_launch">LTI Launch</string>
-    <string name="turnInByHand">You must turn this assignment in by hand</string>
-    <string name="noSubRequired">No submission required</string>
-    <string name="noTurnInOnMobile">Mobile submission unsupported</string>
+    <string name="next">"다음"</string>
+    <string name="addSubmission">"제출"</string>
+    <string name="addAnotherSubmission">"다시 제출"</string>
+    <string name="turnedIn">"제출: "</string>
+    <string name="addComment">"댓글 추가"</string>
+    <string name="addCommentNoEllipsis">"댓글 추가"</string>
+    <string name="subTypeOnlineText">"온라인 텍스트 입력"</string>
+    <string name="subTypeFileUpload">"온라인 전자 파일 업로드"</string>
+    <string name="subTypeOnlineURL">"웹 사이트 주소"</string>
+    <string name="subTypeOnlineQuiz">"온라인 퀴즈"</string>
+    <string name="subTypeMediaRecording">"미디어 레코딩"</string>
+    <string name="sub_type_lti_launch">"LTI 실행"</string>
+    <string name="turnInByHand">"이 과제는 직접 제출해야 합니다."</string>
+    <string name="noSubRequired">"제출 필요 없음"</string>
+    <string name="noTurnInOnMobile">"모바일 제출 지원하지 않음"</string>
 
-    <string name="home">Home</string>
-    <string name="Notifications">Notifications</string>
+    <string name="home">"홈"</string>
+    <string name="Notifications">"알림"</string>
 
-    <string name="icon">Icon</string>
-    <string name="rootUser">Root User Folder</string>
-    <string name="rootCourse">Root Course Folder</string>
-    <string name="rootGroup">Root Group Folder</string>
+    <string name="icon">"아이콘"</string>
+    <string name="rootUser">"사용자 최상위 폴더"</string>
+    <string name="rootCourse">"과목 최상위 폴더"</string>
+    <string name="rootGroup">"그룹 최상위 폴더"</string>
 
     <!-- Course Settings -->
-    <string name="privatelyAvailable">Privately available</string>
-    <string name="publiclyAvailable">Publicly available</string>
-    <string name="starts">Starts: \u0020</string>
-    <string name="courseCode">Course Code: \u0020</string>
-    <string name="ends">Ends: \u0020</string>
-    <string name="visibility">Visibility: \u0020</string>
-    <string name="license">License: \u0020</string>
+    <string name="privatelyAvailable">"비공개적 사용 가능"</string>
+    <string name="publiclyAvailable">"공개적 사용 가능"</string>
+    <string name="starts">"시작 : \u0020"</string>
+    <string name="courseCode">"과목 코드 : \u0020"</string>
+    <string name="ends">"끝 : \u0020"</string>
+    <string name="visibility">"공개 설정 : \u0020"</string>
+    <string name="license">"라이센스 : \u0020"</string>
 
 
     <!-- Navigation String -->
-    <string name="collaborations">Collaborations</string>
-    <string name="conferences">Conferences</string>
-    <string name="chat">Chat</string>
-    <string name="outcomes">Outcomes</string>
+    <string name="collaborations">"협업"</string>
+    <string name="conferences">"회의"</string>
+    <string name="chat">"채팅"</string>
+    <string name="outcomes">"성과"</string>
 
     <!-- Submission View Strings -->
-    <string name="visitPage">Visit Page:</string>
-    <string name="clickToViewSubmission">A snapshot of the website was taken when you turned it in. Tap and hold the image below to open or download the full image.</string>
-    <string name="contentDescriptionPreviewImage">A preview of the submitted url</string>
-    <string name="itemStillProcessing">This item is still processing on the server. Please try again.</string>
+    <string name="visitPage">"페이지 방문 :"</string>
+    <string name="clickToViewSubmission">"웹 사이트를 제출하였을 때 웹 사이트의 스냅 샷이 찍혔습니다. 전체 이미지를 열거나 다운로드하려면 아래 이미지를 길게 누릅세요."</string>
+    <string name="urlSubmissionNoPreview">"이 제출은 외부 페이지에 대한 URL입니다. 해당 페이지는 제출된 이후에 변경되었을 수 있습니다."</string>
+    <string name="contentDescriptionPreviewImage">"제출된 URL 미리보기"</string>
+    <string name="itemStillProcessing">"이 항목은 아직 서버에서 처리 중입니다. 다시 시도하십시오."</string>
 
 
-    <string name="areNotSupported"> are not supported.</string>
-    <string name="isNotSupported">The link is not supported.</string>
-    <string name="openInBrowser">Open In Browser</string>
-    <string name="unsupported">Unsupported</string>
+    <string name="isNotSupportedFeature">"%1$s 은(는) 지원되지 않습니다."</string>
+    <string name="isNotSupported">"링크가 지원되지 않습니다."</string>
+    <string name="openInBrowser">"브라우저에서 열기"</string>
+    <string name="unsupported">"지원되지 않음"</string>
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Calendar starts on Monday</string>
-    <string name="profile">Profile</string>
+    <string name="calendarWeekSetting">"월요일에 캘린더 시작."</string>
+    <string name="profile">"프로필"</string>
 
-    <string name="noSubject">(No Subject)</string>
-    <string name="subject">Subject</string>
-    <string name="sadPanda">Sad Panda Image</string>
-    <string name="panda_fact_string">Panda Fact:&#160;</string>
-    <string name="remove">Remove</string>
-    <string name="founders">Founders</string>
-    <string name="image">Image</string>
+    <string name="noSubject">"(제목 없음)"</string>
+    <string name="subject">"제목"</string>
+    <string name="sadPanda">"슬픈 팬더 이미지"</string>
+    <string name="panda_fact_string">"팬더 팩트 : "</string>
+    <string name="remove">"제거"</string>
+    <string name="founders">"설립자"</string>
+    <string name="image">"이미지"</string>
 
-    <string name="EULA">EULA</string>
-    <string name="privacyPolicy">Privacy Policy</string>
-    <string name="termsOfUse">Terms of Use</string>
-    <string name="openSource">Open Source</string>
+    <string name="EULA">"EULA"</string>
+    <string name="privacyPolicy">"개인 정보 보호 정책"</string>
+    <string name="termsOfUse">"이용 약관"</string>
+    <string name="openSource">"오픈 소스"</string>
 
     <!-- Quiz Strings -->
-    <string name="assignmentQuizzes">Assignment Quizzes</string>
-    <string name="practiceQuizzes">Practice Quizzes</string>
-    <string name="gradedSurveys">Graded Surveys</string>
-    <string name="surveys">Surveys</string>
-    <string name="quizMatchingDefaultDisplay">[Choose]</string>
-    <string name="choose_answer_below">Choose your answer below</string>
-    <string name="choose_answers_below">Choose your answers below</string>
+    <string name="assignmentQuizzes">"과제 퀴즈"</string>
+    <string name="practiceQuizzes">"연습 퀴즈"</string>
+    <string name="gradedSurveys">"설문 조사(평가함)"</string>
+    <string name="surveys">"설문 조사"</string>
+    <string name="quizMatchingDefaultDisplay">"[선택]"</string>
+    <string name="choose_answer_below">"아래에서 답을 선택하십시오"</string>
+    <string name="choose_answers_below">"아래에서 답을 선택하십시오"</string>
 
 
     <!--Widget Strings-->
-    <string name="todoWidgetTitle">To-Do</string>
-    <string name="gradesWidgetTitle">Grades</string>
-    <string name="notificationWidgetTitle">Notifications</string>
-    <string name="todoWidgetTitleLong">Canvas - To-Do</string>
-    <string name="gradesWidgetTitleLong">Canvas - Grades</string>
-    <string name="notificationWidgetTitleLong">Canvas - Notifications</string>
-    <string name="notLoggedIn">You are not logged in</string>
-    <string name="widgetStyle">Choose your widget style</string>
-    <string name="widgetMinimumStyle">Hide details on widget</string>
-    <string name="light">Light</string>
-    <string name="dark">Dark</string>
+    <string name="todoWidgetTitle">"할 일"</string>
+    <string name="gradesWidgetTitle">"성적"</string>
+    <string name="notificationWidgetTitle">"알림"</string>
+    <string name="todoWidgetTitleLong">"Canvas - 할 일"</string>
+    <string name="gradesWidgetTitleLong">"Canvas - 성적"</string>
+    <string name="notificationWidgetTitleLong">"Canvas - 알림"</string>
+    <string name="notLoggedIn">"로그인하지 않았습니다."</string>
+    <string name="widgetStyle">"위젯 스타일 선택"</string>
+    <string name="widgetMinimumStyle">"위젯에 대한 세부 정보 숨기기"</string>
+    <string name="light">"밝음"</string>
+    <string name="dark">"어두움"</string>
 
-    <string name="invalidExternal">This external tool is either expired or configured incorrectly.</string>
+    <string name="invalidExternal">"이 외부 도구가 만료되었거나 잘못 구성되었습니다."</string>
 
     <!-- Help dialog strings -->
-    <string name="askInstructor">Ask Your Instructor a Question</string>
-    <string name="askInstructorDetails">Questions are submitted to your instructor</string>
-    <string name="searchGuides">Search the Canvas Guides</string>
-    <string name="canvasGuides">Canvas Guides</string>
-    <string name="searchGuidesDetails">Find answers to common questions</string>
-    <string name="reportProblem">Report a Problem</string>
-    <string name="reportProblemDetails">If the app misbehaves, let us know</string>
-    <string name="requestFeature">Request a Feature</string>
-    <string name="requestFeatureDetails">Have an idea to improve the app?</string>
-    <string name="shareYourLove">Share Your Love for the App</string>
-    <string name="shareYourLoveDetails">Tell us about your favorite parts of the app</string>
+    <string name="askInstructor">"강사에게 질문하십시오."</string>
+    <string name="askInstructorDetails">"질문은 강사에게 제출됩니다."</string>
+    <string name="searchGuides">"Canvas 가이드 검색"</string>
+    <string name="canvasGuides">"Canvas 가이드"</string>
+    <string name="searchGuidesDetails">"일반적인 질문에 대한 답변 찾기"</string>
+    <string name="reportProblem">"문제 보고"</string>
+    <string name="reportProblemDetails">"앱에 문제가 있으면 알려주세요."</string>
+    <string name="requestFeature">"기능 요청"</string>
+    <string name="requestFeatureDetails">"앱 개선을 위한 아이디어가 있으십니까?"</string>
+    <string name="shareYourLove">"앱에 대한 평가 나누기"</string>
+    <string name="shareYourLoveDetails">"앱에서 가장 좋아하는 부분에 대해 알려주세요."</string>
 
     <!-- Feature Request -->
-    <string name="featureSubject">Idea for Canvas [Android]</string>
-    <string name="understandRequest">The following information will help us better understand your idea:</string>
+    <string name="featureSubject">"Canvas에 대한 아이디어 [Android]"</string>
+    <string name="understandRequest">"다음 정보는 귀하의 아이디어를 더 잘 이해하는 데 도움이됩니다."</string>
 
     <!-- Ask Instructor -->
-    <string name="whichCourse">Which course is this question about?</string>
-    <string name="allTeachers">This message will be sent to all Teachers and TAs in the course</string>
-    <string name="sending">Sending&#8230;</string>
-    <string name="error">Error</string>
+    <string name="whichCourse">"어떤 과목에 대한 질문입니까?"</string>
+    <string name="allTeachers">"이 메시지는 과정의 모든 교수 및 TA에게 전송됩니다."</string>
+    <string name="sending">"보내는 중…"</string>
+    <string name="error">"오류"</string>
 
     <!-- Tablet Strings -->
-    <string name="courses">Courses</string>
-    <string name="toDoList">To-Do List</string>
-    <string name="notifications">Notifications</string>
-    <string name="pushNotifications">Push Notifications</string>
+    <string name="courses">"과목"</string>
+    <string name="toDoList">"할 일 목록"</string>
+    <string name="notifications">"알림"</string>
+    <string name="pushNotifications">"푸시 알림"</string>
+    <string name="pushNotificationsError">"이 장치에 대한 푸시 알림이 등록되지 않았습니다."</string>
+    <string name="profileSettings">"프로필 설정"</string>
+    <string name="accountPreferences">"계정 설정"</string>
+    <string name="pinAndFingerprint">"PIN 및 지문"</string>
 
-    <string name="launchSpeedgrader">Open Speedgrader</string>
+    <string name="launchSpeedgrader">"Speedgrader 열기"</string>
 
-    <string name="search_todo">todo to do todos todo list</string>
-    <string name="search_course">course courses class classes</string>
-    <string name="search_grades">grade grades</string>
+    <string name="search_todo">"todo to do todos todo list"</string>
+    <string name="search_course">"course courses class classes"</string>
+    <string name="search_grades">"grade grades
+"</string>
 
     <!-- ShareFileOptions Dialog-->
-    <string name="uploadTo">Upload To </string>
-    <string name="uploadToCanvas">Upload To Canvas</string>
-    <string name="uploadMyFiles">My Files</string>
-    <string name="uploadCourseFiles">Course Files</string>
-
+    <string name="uploadTo">"업로드 대상 "</string>
+    <string name="uploadToCanvas">"Canvas에 업로드"</string>
+    <string name="uploadMyFiles">"내 파일"</string>
+    <string name="uploadCourseFiles">"과목 파일"</string>
+    <string name="uploadToSubmissionComment">"제출물 댓글에 업로드"</string>
     <!-- ChangeLog Dialog-->
-    <string name="changelog">Changelog</string>
+    <string name="changelog">"변경 로그"</string>
 
-    <string name="editUserName">Edit user name</string>
+    <string name="editUserName">"사용자 이름 편집"</string>
     <!-- Choose Profile Image -->
-    <string name="takeANewPhoto">Take a new photo</string>
-    <string name="chooseFromGallery">Choose from gallery</string>
-    <string name="setToDefault">Set to default</string>
-    <string name="chooseBackgroundImage">Choose backdrop image</string>
+    <string name="takeANewPhoto">"새로운 사진 찍기"</string>
+    <string name="chooseFromGallery">"갤러리에서 선택하십시오."</string>
+    <string name="setToDefault">"기본값으로 설정"</string>
+    <string name="chooseBackgroundImage">"배경 이미지 선택"</string>
 
-    <string name="no_courses">Tap to add a course</string>
-    <string name="no_courses_available">No courses here, take the day off!</string>
-    <string name="no_courses_grades">Please enroll in a course to see your grades</string>
+    <string name="no_courses">"탭하여 과목 추가"</string>
+    <string name="no_courses_available">"과목이 없습니다. 오늘은 쉬십시오!"</string>
+    <string name="no_courses_grades">"성적을 보려면 과목에 등록하십시오."</string>
 
     <!--Navigation Drawer-->
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">"탐색 창 열기"</string>
+    <string name="navigation_drawer_close">"탐색 창 닫기"</string>
 
-    <string name="preferred_land_page">Landing Page</string>
-    <string name="could_not_route_course">Could not find the course enrollment.</string>
-    <string name="could_not_route_group">Could not find the group enrollment.</string>
-    <string name="could_not_route_locked">This page is hidden or locked and cannot be accessed.</string>
+    <string name="preferred_land_page">"랜딩 페이지"</string>
+    <string name="could_not_route_course">"과목 등록을 찾을 수 없습니다."</string>
+    <string name="could_not_route_group">"그룹 등록을 찾을 수 없습니다."</string>
+    <string name="could_not_route_locked">"이 페이지는 숨겨졌거나 잠겨있어 액세스 할 수 없습니다."</string>
 
-    <string name="close">Close</string>
-    <string name="closed">Closed</string>
+    <string name="close">"마감"</string>
+    <string name="closed">"마감됨"</string>
 
-    <string name="overdueAssignments">Overdue Assignments</string>
-    <string name="upcomingAssignments">Upcoming Assignments</string>
-    <string name="undatedAssignments">Undated Assignments</string>
-    <string name="pastAssignments">Past Assignments</string>
+    <string name="overdueAssignments">"지각 제출"</string>
+    <string name="upcomingAssignments">"예정된 과제"</string>
+    <string name="undatedAssignments">"마감일 없는 과제"</string>
+    <string name="pastAssignments">"지난 과제"</string>
 
-    <string name="could_not_find_course">There was an error getting the course for this item.</string>
-    <string name="could_not_find_group">There was an error getting the group for this item.</string>
+    <string name="could_not_find_course">"이 항목에 대한 과목을 가져 오는 중에 오류가 발생했습니다."</string>
+    <string name="could_not_find_group">"이 항목에 대한 그룹을 가져 오는 중 오류가 발생했습니다."</string>
 
-    <string name="selectBackground">Select a backdrop</string>
+    <string name="selectBackground">"배경 선택"</string>
 
-    <string name="notoriousSubmissionInProgress">Submitting files&#8230; Check notification bar for updates.</string>
-    <string name="notoriousSubmissionSuccessful">Finished submitting file</string>
+    <string name="notoriousSubmissionInProgress">"파일 제출 중 ... 알림 표시 줄에서 업데이트를 확인하십시오."</string>
+    <string name="notoriousSubmissionSuccessful">"파일 제출 완료"</string>
 
-    <string name="poll_title">What did you come to Canvas to do?</string>
-    <string name="poll_warning">An item has not been selected.</string>
-    <string name="poll_item_1">Check my grades</string>
-    <string name="poll_item_2">Send or view a message</string>
-    <string name="poll_item_3">Turn in an assignment</string>
-    <string name="poll_item_4">Look at course content</string>
-    <string name="poll_item_5">Take a quiz</string>
-    <string name="poll_item_6">Other:</string>
+    <string name="bio">"이력"</string>
+    <string name="draft">"초안"</string>
+    <string name="publish">"게시"</string>
 
-    <string name="pinned_icon">Icon for pinned discussion</string>
-    <string name="pin_discussion">Pin Discussion</string>
-    <string name="unpin_discussion">Unpin Discussion</string>
-    <string name="discussion_pinned">Discussion Pinned</string>
-    <string name="pinned_discussions">Pinned Discussions</string>
-    <string name="discussion_unpinned">Discussion Unpinned</string>
-    <string name="empty_discussions">There are no discussions to show in this section.</string>
+    <string name="createPandaAvatar">"팬더 아바타 만들기"</string>
+    <string name="back">"뒤로"</string>
+    <string name="setAsAvatar">"아바타로 설정"</string>
+    <string name="avatarSuccessfullySaved">"팬더 아바타가 성공적으로 저장되었습니다."</string>
+    <string name="regularAvatarSuccessfullySaved">"아바타가 성공적으로 저장되었습니다."</string>
+    <string name="errorSavingAvatar">"팬더 아바타를 저장하는 중 오류가 발생했습니다."</string>
+    <string name="pandaAvatar">"팬더 아바타"</string>
+    <string name="pandaHead">"팬더 아바타 머리"</string>
+    <string name="pandaBody">"팬더 아바타 몸"</string>
+    <string name="pandaLegs">"팬더 아바타 다리"</string>
+    <string name="pandaAvatarsFolderName">"PandaAvatars"</string>
+    <string name="share">"공유"</string>
 
+    <string name="speedgrader">"SpeedGrader"</string>
+    <string name="gauge">"게이지"</string>
 
-    <string name="tutorialSkip">Skip</string>
-    <string name="tutorialPage1">Easily navigate your courses.</string>
-    <string name="tutorialPage2">Quickly switch between accounts.</string>
-    <string name="tutorialPage3">Connect with improved messaging.</string>
-    <string name="tutorialPage4">Cards show details at a glance.</string>
+    <string name="calendarDay">"일"</string>
+    <string name="calendarWeek">"주"</string>
+    <string name="calendarMonth">"월"</string>
+    <string name="selectCalendars">"캘린더 선택"</string>
+    <string name="createNewCalendarEvent">"새 이벤트 만들기"</string>
+    <string name="calendarDialog10Warning">"표시할 캘린더는 10개만 선택할 수 있습니다."</string>
+    <string name="calendarDialogNoneWarning">"캘린더를 하나 이상 선택하십시오."</string>
+    <string name="enableFunMode">"팬더 끄기"</string>
 
-    <string name="tutorialShow">Show Tutorial</string>
+    <string name="accountNotifications">"공지 사항"</string>`
+    <string name="addAccount">"계정 추가"</string>
 
-    <string name="bio">Bio</string>
-    <string name="draft">Draft</string>
-    <string name="publish">Publish</string>
+    <string name="changeUser">"사용자 변경"</string>
 
-    <string name="createPandaAvatar">Create panda avatar</string>
-    <string name="back">Back</string>
-    <string name="setAsAvatar">Set as avatar</string>
-    <string name="avatarSuccessfullySaved">The panda avatar was successfully saved</string>
-    <string name="errorSavingAvatar">There was an error saving the panda avatar</string>
-    <string name="pandaAvatar">Panda Avatar</string>
-    <string name="pandaHead">Panda Avatar Head</string>
-    <string name="pandaBody">Panda Avatar Body</string>
-    <string name="pandaLegs">Panda Avatar Legs</string>
-    <string name="pandaAvatarsFolderName">PandaAvatars</string>
-    <string name="share">Share</string>
-
-    <string name="speedgrader">SpeedGrader</string>
-    <string name="gauge">Gauge</string>
-
-    <string name="contentDescriptionSuperPanda">Super Panda Image</string>
-    <string name="newFeatureTitle">Mobile Notifications</string>
-    <string name="newFeatureMsg">To receive mobile push notifications go to Canvas Settings > Notifications > And select \"For All Devices\"</string>
-
-    <string name="calendarDay">Day</string>
-    <string name="calendarWeek">Week</string>
-    <string name="calendarMonth">Month</string>
-    <string name="selectCalendars">Select Calendars</string>
-    <string name="createNewCalendarEvent">Create New Event</string>
-    <string name="calendarDialog10Warning">You may only choose 10 Calendars to display</string>
-    <string name="calendarDialogNoneWarning">Please select at least one Calendar</string>
-    <string name="enableFunMode">Turn off the pandas</string>
-
-    <string name="accountNotifications">Announcements</string>`
-    <string name="addAccount">Add Account</string>
-
-    <string name="changeUser">Change User</string>
-
-    <string name="no_data_connection">Please check your data connection and try again.</string>
+    <string name="no_data_connection">"데이터 연결을 확인하고 다시 시도하십시오."</string>
 
     <!--Notification Preferences-->
 
-    <string name="notification_primary_inbox_title">Canvas Notification</string>
-    <string name="notification_channel_name_primary">General Canvas Notifications</string>
-    <string name="notification_channel_description_primary">Further configuration of notifications can be done within the Canvas Notification Preferences section.</string>
+    <string name="notification_primary_inbox_title">"LearningX 알림"</string>
+    <string name="notification_channel_name_primary">"일반 LearningX 알림"</string>
+    <string name="notification_channel_description_primary">"알림에 대한 추가 구성은 알림 환경 설정 화면에서 설정할 수 있습니다."</string>
 
-    <string name="notification_cat_course_activities">Course Activities</string>
-    <string name="notification_cat_discussions">Discussions</string>
-    <string name="notification_cat_conversations">Conversations</string>
-    <string name="notification_cat_scheduling">Scheduling</string>
-    <string name="notification_cat_groups">Groups</string>
+    <string name="notification_cat_course_activities">"과목 활동"</string>
+    <string name="notification_cat_discussions">"토론"</string>
+    <string name="notification_cat_conversations">"대화"</string>
+    <string name="notification_cat_scheduling">"스케줄링"</string>
+    <string name="notification_cat_groups">"그룹"</string>
+    <string name="notification_cat_alerts">"알림"</string>
+    <string name="notification_cat_conferences">"회의"</string>
 
-    <string name="notification_pref_due_date">Due Date</string>
-    <string name="notification_pref_grading_policies">Grading Policies</string>
-    <string name="notification_pref_course_content">Course Content</string>
-    <string name="notification_pref_files">Files</string>
-    <string name="notification_pref_announcement">Announcement</string>
-    <string name="notification_pref_announcement_created_by_you">Announcement Created By You</string>
-    <string name="notification_pref_grading">Grading</string>
-    <string name="notification_pref_invitation">Invitation</string>
-    <string name="notification_pref_all_submissions">All Submissions</string>
-    <string name="notification_pref_late_grading">Late Grading</string>
-    <string name="notification_pref_submission_comment">Submission Comment</string>
+    <string name="notification_pref_due_date">"마감일"</string>
+    <string name="notification_pref_grading_policies">"성적 정책"</string>
+    <string name="notification_pref_course_content">"과목 콘텐츠"</string>
+    <string name="notification_pref_files">"파일"</string>
+    <string name="notification_pref_announcement">"공지"</string>
+    <string name="notification_pref_announcement_created_by_you">"귀하가 작성한 공지"</string>
+    <string name="notification_pref_grading">"평가"</string>
+    <string name="notification_pref_invitation">"초대"</string>
+    <string name="notification_pref_all_submissions">"모든 제출물"</string>
+    <string name="notification_pref_late_grading">"지연된 평가"</string>
+    <string name="notification_pref_submission_comment">"제출물 댓글"</string>
 
-    <string name="notification_pref_discussion">Discussion</string>
-    <string name="notification_pref_discussion_post">Discussion Post</string>
+    <string name="notification_pref_discussion">"토론"</string>
+    <string name="notification_pref_discussion_post">"토론 게시"</string>
 
-    <string name="notification_pref_add_to_conversation">Add To Conversation</string>
-    <string name="notification_pref_conversation_message">Conversation Message</string>
-    <string name="notification_pref_conversations_created_by_you">Conversations Created By You</string>
+    <string name="notification_pref_add_to_conversation">"대화에 추가"</string>
+    <string name="notification_pref_conversation_message">"대화 메시지"</string>
+    <string name="notification_pref_conversations_created_by_you">"귀하가 생성한 대화"</string>
 
-    <string name="notification_pref_student_appointment_signups">Student Appointment Signups</string>
-    <string name="notification_pref_appointment_signups">Appointment Signups</string>
-    <string name="notification_pref_appointment_cancelations">Appointment Cancelations</string>
-    <string name="notification_pref_appointment_availability">Appointment Availability</string>
-    <string name="notification_pref_calendar">Calendar</string>
+    <string name="notification_pref_student_appointment_signups">"학생 약속 등록"</string>
+    <string name="notification_pref_appointment_signups">"예약 등록"</string>
+    <string name="notification_pref_appointment_cancelations">"약속 취소"</string>
+    <string name="notification_pref_appointment_availability">"약속 가능 여부"</string>
+    <string name="notification_pref_calendar">"캘린더"</string>
 
-    <string name="notification_pref_membership_update">Membership Update</string>
+    <string name="notification_pref_membership_update">"회원 정보 업데이트"</string>
+    <string name="notification_pref_admin">"행정 통고"</string>
+    <string name="notification_pref_recording_ready">"녹음 준비"</string>
 
-    <string name="notification_pref_type_email">Email</string>
-    <string name="notification_pref_type_push">Device</string>
-    <string name="notification_pref_type_sms">SMS</string>
+    <string name="notification_pref_type_email">"이메일"</string>
+    <string name="notification_pref_type_push">"장치"</string>
+    <string name="notification_pref_type_sms">"SMS"</string>
 
-    <string name="notification_pref_dialog_title">Device Notifications</string>
-    <string name="notification_pref_dialog_message">Would you like to turn on device notifications? These settings can be changed later in Settings &gt; Notifications &gt; For all Devices</string>
-    <string name="notification_pref_toast_success">Notifications have been enabled.</string>
+    <string name="notification_pref_dialog_title">"장치 알림"</string>
+    <string name="notification_pref_dialog_message">"기기 알림을 사용 하시겠습니까? 이 설정은 나중에 설정&gt; 알림&gt; 모든 장치에서 변경할 수 있습니다"</string>
+    <string name="notification_pref_toast_success">"알림이 활성화되었습니다."</string>
 
-    <string name="enterAnswer">Enter Answer</string>
-    <string name="resumeQuiz">Resume Quiz</string>
-    <string name="allowed_attempts">Allowed Attempts</string>
-    <string name="viewQuestions">View Questions</string>
-    <string name="unlimited">Unlimited</string>
-    <string name="viewResults">View Results</string>
+    <string name="notification_desc_due_date">"과제 마감일이 변경되면 알림을 받습니다."</string>
+    <string name="notification_desc_grading_policies">"과목 평가 정책이 변경되면 알림을 받습니다."</string>
+    <string name="notification_desc_course_content">"위키페이지, 퀴즈 및 과제에서 과목 내용이 변경되면 알림을 받습니다."</string>
+    <string name="notification_desc_files">"새로운 파일이 과목에 추가되면 알림을 받습니다."</string>
+    <string name="notification_desc_announcement">"과목에 새로운 공지가 있을 때 알림을 받습니다."</string>
+    <string name="notification_desc_announcement_created_by_you">"공지 사항을 작성하고 및 누군가가 귀하의 공지 사항에 댓글을 등록하였을때 알림을 받습니다."</string>
+    <string name="notification_desc_grading">"과제/제출물의 성적이 매겨지거나 변경되었을 때, 그리고 채점 가중치가 변경되었을 때 알림을 받습니다."</string>
+    <string name="notification_desc_invitation">"웹 회의, 그룹, 공동 작업, 피어 리뷰 및 알리미에 대한 초대 알림을 받습니다."</string>
+    <string name="notification_desc_all_submissions">"강사 및 관리자 전용. 과제가 제출되거나 다시 제출되면 알림을 받습니다."</string>
+    <string name="notification_desc_late_grading">"강사 및 관리자 전용. 늦게 과제가 제출되면 알림을 받습니다."</string>
+    <string name="notification_desc_submission_comment">"귀하의 제출물에 대한 댓글이 작성되었을 때 알림을 받습니다."</string>
+    <string name="notification_desc_discussion">"귀하의 과목에 새로운 토론 주제가 있을 때 알림을 받습니다."</string>
+    <string name="notification_desc_discussion_post">"구독중인 토론에 새로운 게시물이 있을 때 알림을 받습니다."</string>
+    <string name="notification_desc_add_to_conversation">"대화에 추가되면 알림을 받습니다."</string>
+    <string name="notification_desc_conversation_message">"새 메시지가 도착하면 알림을 받습니다."</string>
+    <string name="notification_desc_conversations_created_by_you">"새 대화를 만들 때 알림을 받습니다."</string>
+    <string name="notification_desc_student_appointment_signups">"강사 및 관리자 전용. 약속이 등록될 때 알림을 받습니다."</string>
+    <string name="notification_desc_appointment_signups">"캘린더에 새 등록사항이 있는 경우 알림을 받습니다."</string>
+    <string name="notification_desc_appointment_cancelations">"약속 취소가 있을 때 알림을 받습니다."</string>
+    <string name="notification_desc_appointment_availability">"약속 시간대를 사용할 수 있게 되면 알림을 받습니다."</string>
+    <string name="notification_desc_calendar">"신규 및 업데이트된 캘린더 항목에 대한 알림을 받습니다."</string>
+    <string name="notification_desc_membership_update">"관리자만, 보류중인 등록이 활성화되었습니다. 그룹 등록이 수락 또는 거부 될 때 알림을 받습니다."</string>
+    <string name="notification_desc_admin">"강사 및 관리자 전용. 교육 과정 등록, 보고서 생성, 콘텐츠 내보내기, 마이그레이션 보고서, 새 계정 사용자 및 새 학생 그룹에 대한 알림을 받습니다."</string>
+    <string name="notification_desc_recording_ready">"회의 녹음이 준비되면 알림을 받습니다."</string>
 
-    <string name="toggleTimer">Toggle Timer</string>
-    <string name="thirtySecondWarning">30 seconds left</string>
-    <string name="timeSpentFormat" formatted="false">Time Spent: %d minutes</string>
-    <string name="lockedIPAddress">This quiz is locked. It is only available in certain locations.</string>
-    <string name="lockedInvalidAccessCode">Invalid access code</string>
+    <string name="enterAnswer">"답변 입력"</string>
+    <string name="resumeQuiz">"퀴즈 재개"</string>
+    <string name="allowed_attempts">"시도 허용"</string>
+    <string name="viewQuestions">"질문 보기"</string>
+    <string name="unlimited">"제한 없음"</string>
+    <string name="viewResults">"결과 보기"</string>
 
-    <string name="showFlaggedQuestions">Show flagged/unanswered questions</string>
-    <string name="question">Question</string>
-    <string name="questions">Questions</string>
+    <string name="toggleTimer">"타이머 토글"</string>
+    <string name="thirtySecondWarning">"30초 남음"</string>
+    <string name="timeSpentFormat" formatted="false">"소요된 시간 : %d 분"</string>
+    <string name="lockedIPAddress">"이 퀴즈는 잠겨 있습니다. 특정 위치에서만 사용 가능합니다."</string>
+    <string name="lockedInvalidAccessCode">"잘못된 액세스 코드"</string>
+
+    <string name="showFlaggedQuestions">"플래그 되거나 미답변 질문 표시"</string>
+    <string name="question">"질문"</string>
+    <string name="questions">"질문"</string>
     <plurals name="question_count">
-        <item quantity="one">%d question</item>
-        <item quantity="other">%d questions</item>
+        <item quantity="one">"%d 질문"</item>
+        <item quantity="other">"%d 질문"</item>
     </plurals>
-    <string name="flagged">Flagged</string>
+    <string name="flagged">"플래그 됨"</string>
 
-    <string name="areYouSure">Are you sure you want to submit this quiz?</string>
-    <string name="submitQuiz">Submit Quiz?</string>
+    <string name="areYouSure">"이 퀴즈를 제출하시겠습니까?"</string>
+    <string name="submitQuiz">"퀴즈를 제출하시겠습니까?"</string>
     <plurals name="unanswered_quiz_questions">
-        <item quantity="one">You have %d unanswered question.\nAre you sure you want to submit this quiz?</item>
-        <item quantity="other">You have %d unanswered questions.\nAre you sure you want to submit this quiz?</item>
+        <item quantity="one">"답변이 없는 질문이 %d 있습니다. \ n이 퀴즈를 제출하시겠습니까?"</item>
+        <item quantity="other">"답변이 없는 질문이 %d 있습니다. \ n이 퀴즈를 제출 하시겠습니까?"</item>
     </plurals>
-    <string name="takeQuizAgain">Take Quiz Again</string>
-    <string name="autoSubmitting">Auto submitting quiz&#8230;</string>
-    <string name="submitReasonTimedQuiz">Submitted the quiz because time limit was up.</string>
-    <string name="submitReasonLockAt">Submitted the quiz because the lock at date was reached.</string>
-    <string name="quizSubmittedSuccessfully">Quiz submitted successfully.</string>
-    <string name="quizSubmittedFailure">Quiz could not be submitted at this time.</string>
-    <string name="almostDue">Almost Due!</string>
-    <string name="almostDueMsg">The due date is almost here. Submit now to prevent your quiz from being marked late?</string>
-    <string name="timeLimit">Time Limit</string>
-    <string name="cantStartQuiz">Unable to start quiz.</string>
-    <string name="start">Start</string>
-    <string name="newPushNotifications">%1$s New Notifications</string>
-    <string name="like">like</string>
-    <string name="likes">likes</string>
+    <string name="takeQuizAgain">"퀴즈 다시 풀기"</string>
+    <string name="autoSubmitting">"자동 퀴즈 제출 ..."</string>
+    <string name="submitReasonTimedQuiz">"시간 제한이 있었기 때문에 퀴즈를 제출했습니다."</string>
+    <string name="submitReasonLockAt">"마감일이 되었기 때문에 퀴즈를 제출했습니다."</string>
+    <string name="quizSubmittedSuccessfully">"퀴즈가 성공적으로 제출되었습니다."</string>
+    <string name="quizSubmittedFailure">"현재 퀴즈를 제출할 수 없습니다."</string>
+    <string name="almostDue">"거의 끝나갑니다!"</string>
+    <string name="almostDueMsg">"마감일이 임박했습니다. 늦지 않도록 지금 제출 하시겠습니까?"</string>
+    <string name="timeLimit">"시간 제한"</string>
+    <string name="cantStartQuiz">"퀴즈를 시작할 수 없습니다."</string>
+    <string name="start">"시작"</string>
+    <string name="newPushNotifications">"새 알림 %1$s"</string>
+    <string name="like">"좋아요"</string>
+    <string name="likes">"좋아요"</string>
 
-    <string name="wear_reminder">Schedule Due Date Reminders</string>
-    <string name="wear_notifications">Turn on Wear Notifications</string>
+    <string name="wear_reminder">"마감일 미리 알림 일정"</string>
+    <string name="wear_notifications">"Wear Notification 사용"</string>
 
-    <string name="color_1">Red</string>
-    <string name="color_2">Hot Pink</string>
-    <string name="color_3">Lavender</string>
-    <string name="color_4">Violet</string>
-    <string name="color_5">Purple</string>
-    <string name="color_6">Slate</string>
-    <string name="color_7">Blue</string>
-    <string name="color_8">Cyan</string>
-    <string name="color_9">Green</string>
-    <string name="color_10">Chartreuse</string>
-    <string name="color_11">Yellow</string>
-    <string name="color_12">Gold</string>
-    <string name="color_13">Orange</string>
-    <string name="color_14">Pink</string>
-    <string name="color_15">Gray</string>
+    <string name="color_1">"빨간색"</string>
+    <string name="color_2">"핫 핑크"</string>
+    <string name="color_3">"라벤더"</string>
+    <string name="color_4">"보라색"</string>
+    <string name="color_5">"자주색"</string>
+    <string name="color_6">"슬레이트"</string>
+    <string name="color_7">"파란색"</string>
+    <string name="color_8">"청록색"</string>
+    <string name="color_9">"녹색"</string>
+    <string name="color_10">"연두색"</string>
+    <string name="color_11">"노란색"</string>
+    <string name="color_12">"금색"</string>
+    <string name="color_13">"주황색"</string>
+    <string name="color_14">"담홍색"</string>
+    <string name="color_15">"회색"</string>
+
+    <string name="edit_course_nickname">"과목 별명 편집"</string>
+    <string name="courseNicknameError">"현재 과목 별명을 설정할 수 없습니다."</string>
+
+    <string name="colorPickerDialogTitle">"과목 색상"</string>
+    <string name="colorPickerDialogMessage">"새 색상을 설정하여 과목를 맞춤 설정하십시오."</string>
+    <string name="colorPickerError">"현재 과목 색상을 설정할 수 없습니다."</string>
+
+    <string name="contentDescriptionColorCottonCandy">"담홍색"</string>
+    <string name="contentDescriptionColorBarbie">"핫 핑크"</string>
+    <string name="contentDescriptionColorBarneyPurple">"보라색"</string>
+    <string name="contentDescriptionColorEggplant">"자주색"</string>
+    <string name="contentDescriptionColorUltramarine">"진한 파란색"</string>
+    <string name="contentDescriptionColorOcean11">"파란색"</string>
+    <string name="contentDescriptionColorCyan">"청록색"</string>
+    <string name="contentDescriptionColorAquaMarine">"아쿠아 블루"</string>
+    <string name="contentDescriptionColorEmeraldGreen">"에메랄드 그린"</string>
+    <string name="contentDescriptionColorFreshCutLawn">"녹색"</string>
+    <string name="contentDescriptionColorChartreuse">"연두색"</string>
+    <string name="contentDescriptionColorSunFlower">"노란색"</string>
+    <string name="contentDescriptionColorTangerine">"주황색"</string>
+    <string name="contentDescriptionColorBloodOrange">"다크 오렌지"</string>
+    <string name="contentDescriptionColorSriracha">"빨간색"</string>
+
+    <string name="courseFavorited">"좋아하는 과목 %s ."</string>
+    <string name="courseNotFavorited">"과목 %s , 즐겨찾기가 아닙니다."</string>
+    <string name="groupFavorited">"그룹 %s , 즐겨찾기"</string>
+    <string name="groupNotFavorited">"그룹 %s , 즐겨찾기가 아닙니다."</string>
+    <string name="accountGroup">"계정 그룹"</string>
 
     <!--Recents-->
-    <string name="recents_empty">From the course customization screen add a course or group to view them here.</string>
+    <string name="recents_empty">"과목 사용자 정의 화면에서 과목이나 그룹을 추가하여 여기에서 확인하십시오."</string>
 
-    <string name="toolbar_close">Toolbar close</string>
-    <string name="favoriteDescription">Show in \"My Courses\"</string>
-    <string name="about">About</string>
-    <string name="courseShortcuts">Add a shortcut to your course</string>
-    <string name="courseNickname">Course Nickname</string>
+    <string name="toolbar_close">"툴바 닫기"</string>
+    <string name="favoriteDescription">"\"내 과목\"에 표시"</string>
+    <string name="about">"정보"</string>
+    <string name="courseShortcuts">"과목 바로 가기 추가"</string>
+    <string name="courseNickname">"과목 별명"</string>
 
-    <string name="notAvailableOffline">Functionality unavailable while offline</string>
-    <string name="selectFavorites">Course &amp; Group Selection</string>
-    <string name="selectFavoritesHint">Select what you want to see.</string>
+    <string name="notAvailableOffline">"오프라인 상태에서 사용할 수 없는 기능"</string>
+    <string name="editFavorites">"과목 편집"</string>
 
-    <string name="dashboard">Dashboard</string>
-    <string name="previous">Previous</string>
-    <string name="pageNum" formatted="false">Page %d of %d</string>
-    <string name="language">Language</string>
-    <string name="systemDefault">System Default</string>
-    <string name="restartingCanvas">Restarting Canvas</string>
-    <string name="languageDialogText">Changing the language will require the app to restart, are you sure?</string>
-    <string name="defaultLanguageWarning">Your system default language is not guaranteed to be supported and will require a restart, are you sure?</string>
-    <string name="locked_mastery_paths">Locked until \"%s\" is graded</string>
-    <string name="locked_icon">Locked Icon</string>
-    <string name="choose_assignment_group">Choose Assignment Group</string>
-    <string name="select">Select</string>
-    <string name="choice_position">Choice %d</string>
-    <string name="updating_module_info">Updating module information&#8230;</string>
-    <string name="arc">Arc</string>
-    <string name="pending_review">Pending review</string>
-    <string name="totalPoints">%s pts</string>
+    <string name="dashboard">"대시보드"</string>
+    <string name="previous">"이전"</string>
+    <string name="pageNum" formatted="false">"페이지 %d / %d"</string>
+    <string name="language">"언어"</string>
+    <string name="systemDefault">"시스템 기본값"</string>
+    <string name="restartingCanvas">"Canvas 재시작"</string>
+    <string name="languageDialogText">"언어를 변경하려면 앱을 다시 시작해야합니다. 계속 하시겠습니까?"</string>
+    <string name="defaultLanguageWarning">"시스템 기본 언어가 지원되지 않을 수 있으며 다시 시작해야합니다. 계속 하시겠습니까?"</string>
+    <string name="locked_mastery_paths">"\" %s \"이 채점 될 때까지 잠금"</string>
+    <string name="locked_icon">"잠금 아이콘"</string>
+    <string name="choose_assignment_group">"과제 그룹 선택"</string>
+    <string name="select">"선택"</string>
+    <string name="choice_position">"선택 %d"</string>
+    <string name="updating_module_info">"모듈 정보 업데이트 중 ..."</string>
+    <string name="arc">"Arc"</string>
+    <string name="pending_review">"검토 보류"</string>
+    <string name="totalPoints">"%s 점"</string>
+    <string name="totalPointsText">"총점"</string>
+    <string name="contentDescriptionPoints">"%s 점"</string>
+    <string name="contentDescriptionRubricRangeGrade">"%1$s / %2$s 점"</string>
+    <string name="score">"점수"</string>
+    <string name="rangedRubricTotal" formatted="false">"%s / %s 점"</string>
+    <string name="seeAll">"모두 보기"</string>
+    <string name="welcome">"환영합니다!"</string>
+    <string name="emptyCourseListMessage">"여기를 홈으로 만들기 위해서는 즐겨찾기 과목 몇 개를 추가하십시오."</string>
+    <string name="addCoursesGroups">"과목 / 그룹 추가"</string>
+    <string name="dismiss">"해제"</string>
+    <string name="tapToViewAnnouncement">"공지 사항을 보려면 탭하세요."</string>
+    <string name="acceptCourseInvitation">"동의"</string>
+    <string name="declineCourseInvitation">"거절"</string>
 
     <!-- File Strings -->
     <array name="file_size_units">
@@ -763,5 +880,58 @@
         <item>GB</item>
         <item>TB</item>
     </array>
+
+    <string name="launch_link_in_external_browser">"외부 브라우저에서 링크 열기"</string>
+    <string name="gaugeLaunchFailure">"현재 게이지를 로드할 수 없습니다."</string>
+    <string name="urlSubmission">"URL 제출"</string>
+
+    <string name="assignmentDeletedError">"이 과제는 더 이상 이용 가능하지 않습니다."</string>
+
+    <string name="homePageIdForNotifications">"최근 활동"</string>
+    <string name="homePageIdForModules">"모듈"</string>
+    <string name="homePageIdForAssignments">"과제"</string>O
+    <string name="homePageIdForSyllabus">"강의 계획서"</string>
+
+    <string name="contentDescriptionWidgetRefresh">"위젯 새로 고침"</string>
+
+    <string name="copy">"복사"</string>
+    <string name="courseInviteTitle">"초대되었습니다."</string>
+    <string name="inviteAccepted">"초대장을 수락했습니다."</string>
+    <string name="inviteDeclined">"초대가 거부되었습니다."</string>
+    <string name="latePenalty">"지각 패널티 (- %s )"</string>
+    <string name="finalGrade">"최종 성​​적"</string>
+
+    <string name="moreThan99">"99+"</string>
+    <string name="max_count">"99+"</string>
+
+    <string name="opensInWebView">"webview에서 열기"</string>
+    <string name="unsupportedTabLabel">"이 기기에서 지원되지 않음"</string>
+
+    <string name="full_due_date_details">"전체 마감일 상세"</string>
+    <string name="submissions">"제출물"</string>
+    <string name="attachment">"첨부"</string>
+    <string name="contentDescription_back">"돌아가기"</string>
+
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">"%s 점"</item>
+        <item quantity="other">"%s 점"</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">"%s 점"</item>
+        <item quantity="other">"%s 점"</item>
+    </plurals>
+    <string name="capitalTo">"To"</string>
+    <string name="unableToViewInBrowser">"이 LTI 도구를 보기 위한 외부 앱을 찾을 수 없습니다."</string>
+    <string name="commentUpload">"댓글 올리기"</string>
+    <string name="unableToUploadMediaComment">"미디어 댓글을 보내려면 보내지 않은 텍스트 댓글을 보내거나 삭제하십시오."</string>
+
+    <string name="frontPage">"프론트 페이지"</string>
+    <string name="editPage">"페이지 편집"</string>
+    <string name="description">"설명"</string>
+    <string name="pageSuccessfullyUpdated">"페이지가 성공적으로 업데이트 되었습니다."</string>
+    <string name="errorSavingPage">"이 페이지를 저장하는 중 오류가 발생했습니다. 다시 시도하십시오."</string>
+    <string name="pageTitleMustBeSet">"페이지 제목을 설정해야 합니다."</string>
+    <string name="pageDetails">"페이지 상세 정보"</string>
+    <string name="saving">"저장…"</string>
 
 </resources>

@@ -49,18 +49,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/profileSettings"
-                style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/listPreferredItemHeight"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/profileSettings"
-                android:textSize="16sp"/>
-
-            <TextView
                 android:id="@+id/accountPreferences"
                 style="@style/TextFont.Medium"
                 android:layout_width="match_parent"
@@ -82,54 +70,6 @@
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
                 android:text="@string/pushNotifications"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/pinAndFingerprint"
-                style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/listPreferredItemHeight"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/pinAndFingerprint"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/about"
-                style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/listPreferredItemHeight"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/about"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/legal"
-                style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/listPreferredItemHeight"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/legal"
-                android:textSize="16sp"/>
-
-            <TextView
-                android:id="@+id/help"
-                style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/listPreferredItemHeight"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:text="@string/help"
                 android:textSize="16sp"/>
 
         </LinearLayout>

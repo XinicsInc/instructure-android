@@ -18,8 +18,10 @@ package com.instructure.loginapi.login.activities;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -92,7 +94,6 @@ public abstract class BaseLoginLandingPageActivity extends AppCompatActivity {
 
     protected abstract Intent beginFindSchoolFlow();
     protected abstract Intent signInActivityIntent(@NonNull SnickerDoodle snickerDoodle);
-    protected abstract Intent beginCanvasNetworkFlow(String url);
     protected abstract @ColorInt int themeColor();
     protected abstract @StringRes int appTypeName();
     protected abstract Intent launchApplicationMainActivityIntent();
@@ -114,26 +115,12 @@ public abstract class BaseLoginLandingPageActivity extends AppCompatActivity {
         mFindMySchoolButton = (Button) findViewById(R.id.findMySchool);
         mAppDescriptionType = (TextView) findViewById(R.id.appDescriptionType);
         mCanvasLogo = (ImageView) findViewById(R.id.canvasLogo);
-        View canvasNetwork = findViewById(R.id.canvasNetwork);
 
         mFindMySchoolButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(APIHelper.hasNetworkConnection()) {
                     Intent intent = beginFindSchoolFlow();
-                    intent.putExtra(Const.CANVAS_LOGIN, mCanvasLogin);
-                    startActivity(intent);
-                } else {
-                    NoInternetConnectionDialog.show(getSupportFragmentManager());
-                }
-            }
-        });
-
-        canvasNetwork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(APIHelper.hasNetworkConnection()) {
-                    Intent intent = beginCanvasNetworkFlow(Const.URL_CANVAS_NETWORK);
                     intent.putExtra(Const.CANVAS_LOGIN, mCanvasLogin);
                     startActivity(intent);
                 } else {
@@ -201,8 +188,9 @@ public abstract class BaseLoginLandingPageActivity extends AppCompatActivity {
         DrawableCompat.setTint(wrapDrawable, buttonColor);
         mFindMySchoolButton.setBackground(DrawableCompat.unwrap(wrapDrawable));
 
-        //Icon
-        ColorUtils.colorIt(color, mCanvasLogo);
+        if(getApplicationName().toLowerCase().contains("teacher")) {
+            mCanvasLogo.setImageResource(R.drawable.vd_find_school_teacher);
+        }
 
         if(mAppDescriptionType != null) {
             //App Name/Type
@@ -211,6 +199,13 @@ public abstract class BaseLoginLandingPageActivity extends AppCompatActivity {
         }
 
         ViewStyler.setStatusBarLight(this);
+    }
+
+    private String getApplicationName() {
+        Context context = getApplicationContext();
+        PackageManager packageManager = context.getPackageManager();
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        return (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "Unknown");
     }
 
     private void setupGesture() {
